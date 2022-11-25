@@ -1,11 +1,17 @@
-# Solar Car Repository Template
+# Solar Car Helios Telemetry
 
 This repository is a template for other Solar Car software repositories. It comes with a template Github Actions workflow and pre-commit-configuration file.
 
-## Usage
+### Start Web App
+```
+cd web-app
+npm start
+```
 
-To create a repository using this template, hit the 'Use this template' button on Github.
+### Start Server (Dev build)
+```
+cd server
+npm run dev
+```
 
-Make sure to install pre-commit using the instructions on the pre-commit repo.
 
-**To install pre-commit use the command `pre-commit install --hook-style commit-msg`**
