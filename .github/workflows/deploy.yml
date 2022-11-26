@@ -9,8 +9,10 @@ on:
 
 jobs:
   build:
-    working-directory: ./web-app
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web-app
     steps:
     - uses: actions/checkout@v2
     - name: Deploy react app to github pages
