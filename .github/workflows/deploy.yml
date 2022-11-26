@@ -8,11 +8,8 @@ on:
     branches: [ main ]
 
 jobs:
-  defaults:
-    runs-on: ubuntu-latest
-    shell: bash
-    working-directory: ./web-app
   build:
+    working-directory: ./web-app
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
