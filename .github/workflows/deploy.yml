@@ -15,6 +15,10 @@ jobs:
   build-deploy:
     name: Build and deploy app
 
+    defaults:
+      run:
+        working-directory: ./web-app
+
     runs-on: ubuntu-latest
 
     steps:
