@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/HeliosTelemetry/static/css/main.073c9b0a.css",
+    "main.js": "/HeliosTelemetry/static/js/main.aec75d3b.js",
+    "static/js/787.c6006e9a.chunk.js": "/HeliosTelemetry/static/js/787.c6006e9a.chunk.js",
+    "static/media/logo.svg": "/HeliosTelemetry/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/HeliosTelemetry/index.html",
+    "main.073c9b0a.css.map": "/HeliosTelemetry/static/css/main.073c9b0a.css.map",
+    "main.aec75d3b.js.map": "/HeliosTelemetry/static/js/main.aec75d3b.js.map",
+    "787.c6006e9a.chunk.js.map": "/HeliosTelemetry/static/js/787.c6006e9a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.aec75d3b.js"
+  ]
+}
