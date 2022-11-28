@@ -1,16 +1,35 @@
-name: Template workflow
+name: Web App workflow
 
 on:
-  # Comment this out if you only want Github Actions
-  # to run on pull requests.
   push:
+    paths-ignore:
+      - '*.md'
+      - '*.yaml'
+      - '.gitingore'
+      - 'server/**'
   pull_request:
+    paths-ignore:
+      - '*.md'
+      - '*.yaml'
+      - '.gitingore'
+      - 'server/**'
 
 jobs:
   build:
     runs-on: ubtuntu-latest
 
+    defaults:
+      run:
+        working-directory: web-app
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Run template workflow
-        run: echo This is a template, please update this.
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      
+      - name: Install dependencies 🔧
+        run: npm install
+      
+      - name: Build 🔨
+        run: npm run build
