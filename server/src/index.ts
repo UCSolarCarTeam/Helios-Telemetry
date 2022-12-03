@@ -3,16 +3,16 @@ import * as http from 'http';
 import { debug } from 'console';
 import express from 'express';
 import { database } from "./scripts/database";
+import { Config } from "./config"
 //const express = require('express');
 const app = express();
-const port = 8080; // default port to listen
 
 /**
  * Create HTTP server and setup websocket
  */
  const server = http.createServer(app);
 
- server.listen(port);
+ server.listen(Config.port);
 
  server.on('error', function(error) {
     console.error(error.message);
@@ -37,4 +37,3 @@ server.on('listening', function() {
  db.connectToDatabase().then(() => {
     console.log('connected to database');
  });
- console.log('fdsfs');

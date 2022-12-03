@@ -1,11 +1,10 @@
 import mongoDB from "mongodb";
 const { MongoClient } = require('mongodb');
-import * as dotenv from "dotenv";
+import { Config } from "../config"
 
 export class database {
     constructor() {
-        dotenv.config();
-        this.uri = 'mongodb+srv://JensVarughese:test1234@cluster0.63bmf.mongodb.net/test';
+        this.uri = Config.mongoUri;
         this.client = new MongoClient(this.uri);
         this.db = this.client.db('Elysia');
     }
