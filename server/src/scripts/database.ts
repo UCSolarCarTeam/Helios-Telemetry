@@ -1,8 +1,8 @@
 import mongoDB from "mongodb";
 const { MongoClient } = require('mongodb');
-import { Config } from "../config"
+import Config  from "../config"
 
-export class database {
+export default class Database {
     constructor() {
         this.uri = Config.mongoUri;
         this.client = new MongoClient(this.uri);

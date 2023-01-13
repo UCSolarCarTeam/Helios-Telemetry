@@ -2,8 +2,8 @@
 import * as http from 'http';
 import { debug } from 'console';
 import express from 'express';
-import { database } from "./scripts/database";
-import { Config } from "./config"
+import Database from "./scripts/database";
+import Config from "./config"
 //const express = require('express');
 const app = express();
 
@@ -33,7 +33,7 @@ server.on('listening', function() {
 
   module.exports.server = server;
 
- let db = new database();
+ let db = new Database();
  db.connectToDatabase().then(() => {
     console.log('connected to database');
  });
