@@ -4,13 +4,14 @@ import { debug } from 'console';
 import express from 'express';
 import Database from "./scripts/database";
 import Config from "./config"
+import WS from './scripts/websocket';
 //const express = require('express');
 const app = express();
 
 /**
  * Create HTTP server and setup websocket
  */
- const server = http.createServer(app);
+ export const server = http.createServer(app);
 
  server.listen(Config.port);
 
@@ -34,6 +35,8 @@ server.on('listening', function() {
   module.exports.server = server;
 
  let db = new Database();
+ let ws = new WS(server);
  db.connectToDatabase().then(() => {
     console.log('connected to database');
+    ws.startWebSocket(db);
  });
