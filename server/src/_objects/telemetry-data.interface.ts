@@ -14,9 +14,25 @@ export default interface ITelemetryData {
 }
 
 export class LapData {
+    constructor(timestamp: number, lapTime: number, totalPowerIn: number,
+        totalPowerOut: number, netPowerOut: number, distance: number, amphours: number, averagePackCurrent: number, 
+        batterySecondsRemaining: number, averageSpeed: number) {
+
+        this.timestamp = timestamp;
+        this.lapTime = lapTime;
+        this.totalPowerIn = totalPowerIn;
+        this.totalPowerOut = totalPowerOut;
+        this.netPowerOut = netPowerOut;
+        this.distance = distance;
+        this.amphours = amphours;
+        this.averagePackCurrent = averagePackCurrent;
+        this.batterySecondsRemaining = batterySecondsRemaining;
+        this.averageSpeed = averageSpeed;
+    }
+
     lapNumber = -1;
     timestamp = -1;
-    lapTime = 'stringTime';
+    lapTime = -1;
     totalPowerIn = -1;
     totalPowerOut = -1;
     netPowerOut = -1;

@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 import Config  from "../config"
 import TelemetryPacket, { LapData } from "../_objects/telemetry-data.interface"
 
-export default class Database {
+export default class DatabaseService {
     constructor() {
         let uri = Config.mongoUri;
         this.client = new MongoClient(uri);

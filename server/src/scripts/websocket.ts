@@ -1,9 +1,9 @@
 import { Server, WebSocket } from 'ws';
 import * as http from 'http';
 import TelemetryPacket, { LapData } from "../_objects/telemetry-data.interface"
-import Database from './database';
+import DatabaseService from './database';
 
-export default class WS {
+export default class WebSocketService {
     constructor(server: http.Server) {
         this.wss = new WebSocket.Server({server});
     }
@@ -14,7 +14,7 @@ export default class WS {
      * Starts up the web socket
      * @param db database class instance
      */
-    startWebSocket(db: Database) {
+    startWebSocket(db: DatabaseService) {
         this.wss.on('connection', function(ws, req) {
         // when client connects, fetch last row in db
         console.log('New client connected!');
@@ -43,7 +43,7 @@ export default class WS {
      * Sends the packets to all connected clients
      * @param data The new telemetry packet to be broadcasted
      */
-    broadcast(data: TelemetryPacket) {
+    broadcast(data: any) {
         this.wss.clients.forEach(function each(client) {
             try {
                 client.send(JSON.stringify(data));

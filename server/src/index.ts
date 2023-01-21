@@ -4,7 +4,8 @@ import { debug } from 'console';
 import express from 'express';
 import Database from "./scripts/database";
 import Config from "./config"
-import WS from './scripts/websocket';
+import WebSocketService from './scripts/websocket';
+import RabbitMQService from './scripts/amqp';
 //const express = require('express');
 const app = express();
 
@@ -35,8 +36,12 @@ server.on('listening', function() {
   module.exports.server = server;
 
  let db = new Database();
- let ws = new WS(server);
+ let ws = new WebSocketService(server);
+ let mq = new RabbitMQService();
  db.connectToDatabase().then(() => {
     console.log('connected to database');
     ws.startWebSocket(db);
+    if(Config.isProd) {
+      mq.startQueue(db, ws);
+    }
  });
