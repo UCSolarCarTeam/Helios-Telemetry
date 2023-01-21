@@ -19,7 +19,7 @@ function App() {
         </div>
       </div>
       <div className='grid w-full h-3/6 bg-blue-500 grid-cols-3 pt-1'>
-        <div className='grid col-span-1 bg-purple-500 pr-1'>
+        <div className='grid pr-1'>
           <MapContainer />
         </div>
         <div className='grid col-span-2 bg-blue-500 pl-1'>
