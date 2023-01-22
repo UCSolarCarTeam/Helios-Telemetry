@@ -6,7 +6,7 @@ import Database from "./scripts/database";
 import Config from "./config"
 import WebSocketService from './scripts/websocket';
 import RabbitMQService from './scripts/amqp';
-//const express = require('express');
+import ExpressRouter from './app';
 const app = express();
 
 /**
@@ -38,9 +38,12 @@ server.on('listening', function() {
  let db = new Database();
  let ws = new WebSocketService(server);
  let mq = new RabbitMQService();
+ let er = new ExpressRouter();
+
  db.connectToDatabase().then(() => {
     console.log('connected to database');
     ws.startWebSocket(db);
+    er.setRoutes(db);
     if(Config.isProd) {
       mq.startQueue(db, ws);
     }

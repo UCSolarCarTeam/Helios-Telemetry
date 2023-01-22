@@ -1,4 +1,4 @@
-import TelemetryPacket, { LapData } from "../_objects/telemetry-data.interface"
+import TelemetryPacket from "../_objects/telemetry-data.interface"
 export default class RaceService {
 
     /**

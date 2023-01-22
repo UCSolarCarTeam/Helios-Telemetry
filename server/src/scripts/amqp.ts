@@ -2,7 +2,7 @@ import amqp from 'amqplib';
 import DatabaseService from './database';
 import RaceService from './race';
 import WebSocketService from './websocket';
-import config, { RabbitMQ }  from "../config";
+import { RabbitMQ }  from "../config";
 import TelemetryPacket, { LapData } from "../_objects/telemetry-data.interface"
 
 export default class RabbitMQService {
@@ -17,7 +17,7 @@ export default class RabbitMQService {
     lastLapTimestamp: number;
 
     /**
-     * 
+     * Binds with rabbit mq server and sends data to websocket
      * @param db 
      * @param wss 
      */
@@ -78,7 +78,7 @@ export default class RabbitMQService {
     }
 
     /**
-     * 
+     * calculates race data and pushes it out as a LapData
      * @param packet 
      * @param db 
      * @param wss 
