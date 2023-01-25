@@ -18,6 +18,6 @@ npm run dev
 ```
 cd server
 npm run build
-npm run start
+npm run prod
 ```
 
