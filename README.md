@@ -16,4 +16,10 @@ cd server
 npm run dev
 ```
 
+### Start Server (Production build)
+```
+cd server
+npm run build
+npm run prod
+```
 
