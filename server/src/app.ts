@@ -34,7 +34,7 @@ export default class ExpressRouter {
         });
 
         this.app.use('/api/getPackets', (req: Request, res: Response) => {
-            db.between(Number(req.query.startTime), Number(req.query.endTime),
+            db.betweenPacketsByPage(Number(req.query.startTime), Number(req.query.endTime),
                 Number(req.query.page), Number(req.query.pageSize)).then(function(result) {
                 res.send(result)
             }).catch((err) => {

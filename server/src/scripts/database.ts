@@ -43,14 +43,15 @@ export default class DatabaseService {
     }
 
     /**
-     * Gets the packets between the two timestamps at the specified page size
+     * Gets the packets between the two timestamps of a page at the specified page size.
+     * Pagination is used to split the fetched data into pages to improve performance.
      * @param lowestTime lower time bound in time unix milliseconds
      * @param highestTime higher time bound in time unix milliseconds
      * @param page page number for pagination
      * @param pageSize size of each page
      * @returns {Promise}
      */
-    between(lowestTime: number, highestTime: number, page: number = 1, pageSize: number = 10) { 
+    betweenPacketsByPage(lowestTime: number, highestTime: number, page: number = 1, pageSize: number = 10) { 
         if(pageSize > 120) {
             pageSize = 120;
         }
