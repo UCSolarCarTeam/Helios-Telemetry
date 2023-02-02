@@ -9,7 +9,7 @@ function HeroContainer(props: any) {
     const [variable, setVariable] = useState();
 
     return (
-      <h1  className="bg-pink-300">Hero Container</h1>
+      <h1>Hero Container</h1>
     );
   }
 
