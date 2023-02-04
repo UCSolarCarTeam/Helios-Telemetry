@@ -31,7 +31,7 @@
     "eject": "DISABLE_ESLINT_PLUGIN=true react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "prepare": "cd .. && npx husky install &&  npx husky add .husky/pre-commit \"cd web-app && npx lint-staged\""
+    "prepare": "cd .. && npx husky install"
   },
   "browserslist": {
     "production": [
