@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Loader } from "@googlemaps/js-api-loader"
-import mapStyles from "./mapStyles";
-import Config from "../../../config";
+import React from 'react'
+import { Loader } from '@googlemaps/js-api-loader'
+import mapStyles from './mapStyles'
 
 function Map (props: any) {
   const { carLocation, mapLocation } = props
   let map: google.maps.Map | undefined
-
-    const loader = new Loader({
-        apiKey: Config.mapsAPIKey,
-        version: "weekly",
-    });
+  const loader = new Loader({
+    apiKey: process.env.REACT_APP_MAPSAPIKEY as string,
+    version: 'weekly'
+  })
 
   loader.load().then(() => {
     map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
@@ -41,7 +39,7 @@ function Map (props: any) {
 
   return (
         <>
-            <div id="map"></div>
+            <div id="map" ></div>
         </>
   )
 }
