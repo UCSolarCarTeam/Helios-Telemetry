@@ -1,11 +1,7 @@
-import React, {useState} from "react";
+import React from "react";
 
 function BatteryThrottleComponent(props: any) {
+  return <h1>Battery and Throttle</h1>;
+}
 
-    return (
-      <h1></h1>
-    );
-  }
-
-  export default BatteryThrottleComponent;
-  
+export default BatteryThrottleComponent;

@@ -1,9 +1,7 @@
-import React, {useState} from "react";
+import React from "react";
 
 function MpptTab() {
-    return (
-        <p>Mppt Tab</p>
-    );
+  return <p>Mppt Tab</p>;
 }
 
 export default MpptTab;
