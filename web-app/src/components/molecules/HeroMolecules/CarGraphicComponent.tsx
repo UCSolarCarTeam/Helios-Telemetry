@@ -31,7 +31,6 @@ function CarGraphicComponent(props: any) {
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
           <pointLight position={[-10, -10, -10]} />
           <Box position={[-1, 0, 0]} />
-          <Box position={[1, 0, 0]} />
           <OrbitControls />
         </Canvas>
     );
