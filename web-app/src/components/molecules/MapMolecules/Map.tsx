@@ -13,7 +13,7 @@ function Map(props: any) {
   loader.load().then(() => {
     map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
       center: mapLocation,
-      zoom: 20,
+      zoom: 15,
       mapTypeControl: false,
       gestureHandling: "none",
       zoomControl: false,
