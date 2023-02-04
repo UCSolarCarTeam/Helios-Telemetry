@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import BatteryThrottleComponent from "../molecules/HeroMolecules/BatteryThrottleComponent";
-import CarGraphicComponent from "../molecules/HeroMolecules/CarGraphicComponent";
-import FaultsComponent from "../molecules/HeroMolecules/FaultsComponent";
-import GearParkBrakeComponent from "../molecules/HeroMolecules/GearParkBrakeComponent";
+import React from 'react'
+import BatteryThrottleComponent from '../molecules/HeroMolecules/BatteryThrottleComponent'
+import CarGraphicComponent from '../molecules/HeroMolecules/CarGraphicComponent'
+import FaultsComponent from '../molecules/HeroMolecules/FaultsComponent'
+import GearParkBrakeComponent from '../molecules/HeroMolecules/GearParkBrakeComponent'
 
-function HeroContainer(props: any) {
-
-  const [variable, setVariable] = useState();
-
+function HeroContainer (props: any) {
   return (
     <>
       <div className="grid w-full h-full bg-black grid-cols-6">
@@ -32,7 +29,7 @@ function HeroContainer(props: any) {
 
     </>
 
-  );
+  )
 }
 
-export default HeroContainer;
+export default HeroContainer

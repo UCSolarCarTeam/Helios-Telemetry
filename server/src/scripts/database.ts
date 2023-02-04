@@ -23,7 +23,7 @@ export default class DatabaseService {
      * Connects to the mongo database
      * @returns {Promise}
      */
-  connectToDatabase () {
+  async connectToDatabase () {
     return this.client.connect()
   }
 
@@ -32,7 +32,7 @@ export default class DatabaseService {
      * @param packet
      * @returns {Promise}
      */
-  addPacket (packet: TelemetryPacket) {
+  async addPacket (packet: TelemetryPacket) {
     return this.collection.insertOne(packet)
   }
 
@@ -40,7 +40,7 @@ export default class DatabaseService {
      * Gets the most recent packet from Packets collection
      * @returns {Promise}
      */
-  lastPacket () {
+  async lastPacket () {
     return this.collection.find().sort({ TimeStamp: -1 }).limit(1).toArray()
   }
 
@@ -53,7 +53,7 @@ export default class DatabaseService {
      * @param pageSize size of each page
      * @returns {Promise}
      */
-  betweenPacketsByPage (lowestTime: number, highestTime: number, page: number = 1, pageSize: number = 10) {
+  async betweenPacketsByPage (lowestTime: number, highestTime: number, page: number = 1, pageSize: number = 10) {
     if (pageSize > 120) {
       pageSize = 120
     }
@@ -72,7 +72,7 @@ export default class DatabaseService {
      * @param endTime end of lap in time unix milliseconds
      * @returns {Promise}
      */
-  betweenLap (startTime: number, endTime: number) {
+  async betweenLap (startTime: number, endTime: number) {
     const filter: Filter<TelemetryPacket> = {
       TimeStamp: { $gte: startTime, $lte: endTime }
     }
@@ -84,7 +84,7 @@ export default class DatabaseService {
      * Gets the 80 most recent laps (Not eveery lap to improve load times)
      * @returns {Promise}
      */
-  getLaps () {
+  async getLaps () {
     return this.lapCollection.find().sort({ timestamp: -1 }).limit(80).toArray()
   };
 
@@ -92,7 +92,7 @@ export default class DatabaseService {
      * Get the most recent lap
      * @returns {Promise}
      */
-  lastLap () {
+  async lastLap () {
     return this.lapCollection.find().sort({ timestamp: -1 }).limit(1).toArray()
   };
 
@@ -101,7 +101,7 @@ export default class DatabaseService {
      * @param lap the lap to be added
      * @returns {Promise}
      */
-  addLap (lap: LapData) {
+  async addLap (lap: LapData) {
     return this.lapCollection.insertOne(lap)
   };
 }

@@ -35,7 +35,7 @@ export default class RabbitMQService {
     const rabbitmq = new RabbitMQ()
     amqp.connect(rabbitmq.host)
     // connect with amqp server
-      .then((conn) => {
+      .then(async (conn) => {
         return conn.createChannel()
       })
     // check if exchange exists and is valid
@@ -47,7 +47,7 @@ export default class RabbitMQService {
           .then(async (q) => {
             // bind internal queue with external exchange and enter ready state
             await ch.bindQueue(q.queue, ex, '')
-            console.log(`Express: waiting for messages in ${q}`)
+            console.log(`Express: waiting for messages in ${q.queue}`)
             return await ch.consume(q.queue, (msg) => {
               const packet: TelemetryPacket = JSON.parse(
                 JSON.stringify(msg?.content)

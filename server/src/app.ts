@@ -12,7 +12,7 @@ export default class ExpressRouter {
     this.app.use(bodyParser.json())
     this.app.use(bodyParser.urlencoded({ extended: false }))
 
-    if (Config.isProd === true) {
+    if (Config.isProd) {
       this.app.use(cors({ origin: 'http://telemetry.calgarysolarcar.ca' }))
     } else {
       this.app.use(cors({ origin: 'http://localhost:4200' }))

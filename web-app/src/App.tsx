@@ -1,13 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import TabsContainer from './components/containers/TabsContainer';
-import BottomInformationContainer from './components/containers/BottomInformationContainer';
-import MapContainer from './components/containers/MapContainer';
-import HeroContainer from './components/containers/HeroContainer';
-import LogoStatusContainer from './components/containers/LogoStatusContainer';
+import React from 'react'
+import './App.css'
+import TabsContainer from './components/containers/TabsContainer'
+import BottomInformationContainer from './components/containers/BottomInformationContainer'
+import MapContainer from './components/containers/MapContainer'
+import HeroContainer from './components/containers/HeroContainer'
+import LogoStatusContainer from './components/containers/LogoStatusContainer'
 
-function App() {
+function App () {
   return (
     <div className='w-screen h-screen p-3'>
       <div className='grid w-full h-2/6 bg-green-500 grid-cols-6 pt-1'>
@@ -30,7 +29,7 @@ function App() {
         <BottomInformationContainer />
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
