@@ -22,7 +22,7 @@ function Map(props: any) {
             streetViewControl: false,
             fullscreenControl: false,
             keyboardShortcuts: false,
-            
+
         });
 
         map.setOptions({ styles: mapStyles['light'] });

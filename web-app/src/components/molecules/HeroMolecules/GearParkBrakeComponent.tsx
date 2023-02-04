@@ -9,4 +9,3 @@ function GearParkBrakeComponent(props: any) {
   }
 
   export default GearParkBrakeComponent;
-  
