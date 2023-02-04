@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import ITelemetryData from "./objects/telemetry-data.interface";
+import ITelemetryData from "../objects/telemetry-data.interface";
 
 interface Props {
     children: ReactNode | ReactNode[]
