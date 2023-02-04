@@ -30,6 +30,8 @@ function CarGraphicComponent(props: any) {
           <ambientLight intensity={0.5} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
           <pointLight position={[-10, -10, -10]} />
+          <Box position={[5, 0, 0]} />
+          <Box position={[1, 0, 0]} />
           <Box position={[-1, 0, 0]} />
           <OrbitControls />
         </Canvas>
@@ -37,4 +39,3 @@ function CarGraphicComponent(props: any) {
   }
 
   export default CarGraphicComponent;
-  
