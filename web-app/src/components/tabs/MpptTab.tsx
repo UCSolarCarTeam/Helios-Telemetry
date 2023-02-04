@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function MpptTab () {
-  return (
-        <p>Mppt Tab</p>
-  )
+function MpptTab() {
+  return <p>Mppt Tab</p>;
 }
 
-export default MpptTab
+export default MpptTab;

@@ -19,13 +19,19 @@
     "typescript": "^4.9.3",
     "web-vitals": "^2.1.4"
   },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
     "eject": "DISABLE_ESLINT_PLUGIN=true react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "prepare": "cd .. && npx husky install"
   },
   "browserslist": {
     "production": [
@@ -43,7 +49,15 @@
     "@types/googlemaps": "^3.43.3",
     "autoprefixer": "^10.4.13",
     "gh-pages": "^4.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "postcss": "^8.4.19",
+    "prettier": "^2.8.3",
     "tailwindcss": "^3.2.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
