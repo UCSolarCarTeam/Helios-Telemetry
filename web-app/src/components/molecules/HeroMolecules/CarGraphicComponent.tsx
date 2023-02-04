@@ -8,4 +8,3 @@ function CarGraphicComponent(props: any) {
   }
 
   export default CarGraphicComponent;
-  

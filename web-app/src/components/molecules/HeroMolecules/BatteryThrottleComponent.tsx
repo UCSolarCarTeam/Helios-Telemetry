@@ -8,4 +8,3 @@ function BatteryThrottleComponent(props: any) {
   }
 
   export default BatteryThrottleComponent;
-  

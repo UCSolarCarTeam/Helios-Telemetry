@@ -9,4 +9,3 @@ function FaultsComponent(props: any) {
   }
 
   export default FaultsComponent;
-  
