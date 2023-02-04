@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React from 'react'
 
-function PlaybackTab() {
-    return (
+function PlaybackTab () {
+  return (
         <p>Playback Tab</p>
-    );
+  )
 }
 
-export default PlaybackTab;
+export default PlaybackTab

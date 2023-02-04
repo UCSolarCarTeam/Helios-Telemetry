@@ -22,4 +22,3 @@ cd server
 npm run build
 npm run prod
 ```
-
