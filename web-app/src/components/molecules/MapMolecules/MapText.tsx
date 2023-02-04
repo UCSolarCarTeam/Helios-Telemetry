@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from 'react'
 
-function MapText() {
-    const [lapsLeft, setLapsLeft] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(0);
-    return (
+function MapText () {
+  const lapsLeft = 0
+  const timeLeft = 0
+  return (
         <>
             <div className="w-full text-center mt-1">
                 <div className="grid grid-cols-2">
@@ -16,7 +16,7 @@ function MapText() {
                 </div>
             </div>
         </>
-    );
+  )
 }
 
-export default MapText;
+export default MapText

@@ -1,0 +1,25 @@
+env:
+  browser: true
+  es2021: true
+extends:
+  - plugin:react/recommended
+  - standard-with-typescript
+overrides: []
+parserOptions:
+  ecmaVersion: latest
+  sourceType: module
+  project: [./web-app/tsconfig.json, ./server/tsconfig.json]
+ignorePatterns: [
+  "index.ts",
+  "configExample.ts",
+  "react-app-env.d.ts",
+  "reportWebVitals.ts",
+  "setupTests.ts",
+]
+rules: {
+  "@typescript-eslint/explicit-function-return-type": "off",
+  "@typescript-eslint/return-await": "off",
+  "@typescript-eslint/restrict-template-expressions": "off",
+  "@typescript-eslint/no-floating-promises": "off",
+  "no-new": "off",
+}
