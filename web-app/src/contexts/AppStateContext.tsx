@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+i
 
 interface Props {
     children: ReactNode | ReactNode[]
@@ -11,7 +12,7 @@ interface IAppState {
 
 const appStateContext = createContext({});
 
-export function AppStateContextProvider({ children }: Props) {
+export function PacketContextProvider({ children }: Props) {
     const [currentPacket, setCurrentPacket] = useState<IAppState>({ loading: false, error: false});
 
     return (
