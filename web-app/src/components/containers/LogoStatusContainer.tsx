@@ -1,10 +1,13 @@
-import React, {useState} from "react";
+import React from "react";
+import LogoComponent from "../molecules/LogoStatusMolecules/LogoComponent"
+import StatusComponent from "../molecules/LogoStatusMolecules/StatusComponent"
 
-function LogoStatusContainer(props: any) {
-
+function LogoStatusContainer() {
     return (
-      <h1> Logo container</h1>
-      
+      <div className="grid w-full">
+        <LogoComponent/>
+        <StatusComponent/>
+      </div>
     );
   }
 

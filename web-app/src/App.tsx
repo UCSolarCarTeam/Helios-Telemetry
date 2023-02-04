@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import TabsContainer from './components/containers/TabsContainer';
 import BottomInformationContainer from './components/containers/BottomInformationContainer';
@@ -9,9 +8,9 @@ import LogoStatusContainer from './components/containers/LogoStatusContainer';
 
 function App() {
   return (
-    <div className='w-screen h-screen p-3'>
-      <div className='grid w-full h-2/6 bg-green-500 grid-cols-6'>
-        <div className='grid col-span-1 bg-pink-500 pr-1'>
+    <div className='bg-background-gray dark:bg-background-gray-dark w-screen h-screen p-5'>
+      <div className='grid w-full h-2/6 grid-cols-6'>
+        <div className='grid col-span-1 pr-1'>
           <LogoStatusContainer />
         </div>
         <div className='grid col-span-5 bg-red-500 pl-1'>
