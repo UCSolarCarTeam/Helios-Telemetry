@@ -4,7 +4,7 @@ function LogoStatusContainer(props: any) {
 
     return (
       <h1> Logo container</h1>
-      
+
     );
   }
 
