@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function BatteryTab () {
-  return (
-        <p>Battery Tab</p>
-  )
+function BatteryTab() {
+  return <p>Battery Tab</p>;
 }
 
-export default BatteryTab
+export default BatteryTab;

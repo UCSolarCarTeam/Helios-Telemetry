@@ -84,4 +84,4 @@ function CarGraphicComponent (props: any) {
   )
 }
 
-export default CarGraphicComponent
+export default CarGraphicComponent;

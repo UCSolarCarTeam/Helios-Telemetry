@@ -1,48 +1,46 @@
-import React from 'react'
-import { Loader } from '@googlemaps/js-api-loader'
-import mapStyles from './mapStyles'
+import React from "react";
+import { Loader } from "@googlemaps/js-api-loader";
+import mapStyles from "./mapStyles";
 
-function Map (props: any) {
-  const { carLocation, mapLocation } = props
-  let map: google.maps.Map | undefined
-
+function Map(props: any) {
+  const { carLocation, mapLocation } = props;
+  let map: google.maps.Map | undefined;
   const loader = new Loader({
-    apiKey: '',
-    version: 'weekly'
-  })
+    apiKey: process.env.REACT_APP_MAPSAPIKEY as string,
+    version: "weekly",
+  });
 
   loader.load().then(() => {
-    map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+    map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
       center: mapLocation,
       zoom: 15,
       mapTypeControl: false,
-      gestureHandling: 'none',
+      gestureHandling: "none",
       zoomControl: false,
       streetViewControl: false,
       fullscreenControl: false,
-      keyboardShortcuts: false
+      keyboardShortcuts: false,
+    });
 
-    })
-
-    map.setOptions({ styles: mapStyles.light })
+    map.setOptions({ styles: mapStyles.light });
     new google.maps.Marker({
       position: carLocation,
       icon: {
         path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        strokeColor: '#AC516C',
+        strokeColor: "#AC516C",
         scale: 5,
-        rotation: 0
+        rotation: 0,
       },
       draggable: false,
-      map
-    })
-  })
+      map,
+    });
+  });
 
   return (
-        <>
-            <div id="map"></div>
-        </>
-  )
+    <>
+      <div id="map"></div>
+    </>
+  );
 }
 
-export default Map
+export default Map;

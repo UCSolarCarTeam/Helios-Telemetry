@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function RaceTab () {
-  return (
-        <p>Race Tab</p>
-  )
+function RaceTab() {
+  return <p>Race Tab</p>;
 }
 
-export default RaceTab
+export default RaceTab;

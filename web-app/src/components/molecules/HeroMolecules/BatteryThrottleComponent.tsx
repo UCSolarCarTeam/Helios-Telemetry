@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function BatteryThrottleComponent (props: any) {
-  return (
-      <h1>Battery and Throttle</h1>
-  )
+function BatteryThrottleComponent(props: any) {
+  return <h1>Battery and Throttle</h1>;
 }
 
-export default BatteryThrottleComponent
+export default BatteryThrottleComponent;
