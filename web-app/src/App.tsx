@@ -29,7 +29,6 @@ function App () {
       <div className='grid w-full h-1/6 bg-orange-500 pt-1'>
         <BottomInformationContainer />
       </div>
-      <CarGraphicComponent />
     </div>
   )
 }

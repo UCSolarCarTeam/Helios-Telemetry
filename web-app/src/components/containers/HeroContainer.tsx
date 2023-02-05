@@ -7,7 +7,7 @@ import GearParkBrakeComponent from '../molecules/HeroMolecules/GearParkBrakeComp
 function HeroContainer (props: any) {
   return (
     <>
-      <div className="grid w-full h-full bg-black grid-cols-6">
+      <div className="grid w-full h-full bg-white grid-cols-6">
         <div className=' h-full col-span-4'>
           <div className=' grid h-1/6 bg-orange-500 pl-1 '>
             <BatteryThrottleComponent />
@@ -16,7 +16,7 @@ function HeroContainer (props: any) {
             <div className='grid h-full col-span-1 bg-green-500 pl-1'>
               <GearParkBrakeComponent />
             </div>
-            <div className='grid h-full col-span-3 bg-pink-500 pl-1'>
+            <div className='grid h-full col-span-3 pl-1'>
               <CarGraphicComponent />
             </div>
           </div>
