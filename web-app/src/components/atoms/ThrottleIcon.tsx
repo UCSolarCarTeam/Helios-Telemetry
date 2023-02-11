@@ -18,7 +18,7 @@ function ThrottleIcon(props: any) {
 
   return (
     <>
-      <div className="grid w-full h-10 justify-items-center content-center">
+      <div className="grid w-full h-10 justify-items-center col-span-7 content-center">
         <span
           className=" w-full h-1 place-self-center"
           style={{ backgroundImage: throttleStyleString }}
