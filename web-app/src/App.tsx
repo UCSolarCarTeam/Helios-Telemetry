@@ -25,7 +25,7 @@ function App() {
           <HeroContainer />
         </div>
       </div>
-      <div className="grid w-full h-1/6 bg-orange-500 pt-1">
+      <div className="grid w-full h-1/6  pt-1">
         <BottomInformationContainer />
       </div>
     </div>
