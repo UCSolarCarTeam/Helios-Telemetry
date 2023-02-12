@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { CarModelComponent } from "./CarMolecules/CarModelComponent";
+import { RoadComponent } from "./CarMolecules/RoadComponent";
 
 function CarGraphicComponent(props: any) {
   /**
@@ -40,12 +41,13 @@ function CarGraphicComponent(props: any) {
 
   return (
     <>
-      <Canvas camera={{ position: [-6, 4, 6] }}>
+      <Canvas camera={{ position: [-7, 4, 7] }}>
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.2} penumbra={1} />
         <pointLight position={[-10, -10, -10]} />
-        <Box position={[1, 5, -2]} />
+        <Box position={[1, 5, -10]} />
         <CarModelComponent />
+        <RoadComponent />
         <OrbitControls />
       </Canvas>
     </>

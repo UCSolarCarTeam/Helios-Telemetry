@@ -1,7 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
-import { Color, Mesh } from "three";
+import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { GLTF } from "three-stdlib";
 
@@ -155,7 +152,7 @@ export function CarModelComponent(props: any) {
       {...props}
       dispose={null}
       scale={0.003}
-      rotation={[0, 3.2, 0]}
+      rotation={[0, Math.PI, 0]}
       position={[-1.5, 0, -2.5]}
     >
       <mesh
