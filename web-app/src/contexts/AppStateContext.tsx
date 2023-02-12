@@ -1,27 +1,42 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-i
 
 interface Props {
-    children: ReactNode | ReactNode[]
+  children: ReactNode | ReactNode[];
 }
 
 interface IAppState {
-    loading: boolean;
-    error: boolean;
+  loading: boolean;
+  error: boolean;
+  theme: string;
 }
 
-const appStateContext = createContext({});
+const appStateContext = createContext({
+  appState: {
+    loading: false,
+    error: false,
+    theme: window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light",
+  } as IAppState,
+  setAppState: (appState: IAppState) => {},
+});
 
-export function PacketContextProvider({ children }: Props) {
-    const [currentPacket, setCurrentPacket] = useState<IAppState>({ loading: false, error: false});
+export function AppStateContextProvider({ children }: Props) {
+  const [appState, setAppState] = useState<IAppState>({
+    loading: false,
+    error: false,
+    theme: window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light",
+  });
 
-    return (
-        <appStateContext.Provider value={{ currentPacket, setCurrentPacket }}>
-            {children}
-        </appStateContext.Provider>
-    )
+  return (
+    <appStateContext.Provider value={{ appState, setAppState }}>
+      {children}
+    </appStateContext.Provider>
+  );
 }
 
-export function usePacket() {
-    return useContext(appStateContext);
+export function useAppContext() {
+  return useContext(appStateContext);
 }
