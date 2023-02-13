@@ -1,7 +1,15 @@
 import React from "react";
 
-function LogoStatusContainer(props: any) {
-  return <h1> Logo container</h1>;
-}
+import LogoComponent from "../molecules/LogoStatusMolecules/LogoComponent"
+import StatusComponent from "../molecules/LogoStatusMolecules/StatusComponent"
 
-export default LogoStatusContainer;
+function LogoStatusContainer() {
+    return (
+      <div className="grid w-full">
+        <LogoComponent/>
+        <StatusComponent/>
+      </div>
+    );
+  }
+
+  export default LogoStatusContainer;
