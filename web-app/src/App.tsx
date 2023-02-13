@@ -5,6 +5,7 @@ import BottomInformationContainer from "./components/containers/BottomInformatio
 import MapContainer from "./components/containers/MapContainer";
 import HeroContainer from "./components/containers/HeroContainer";
 import LogoStatusContainer from "./components/containers/LogoStatusContainer";
+import CarGraphicComponent from "./components/molecules/HeroMolecules/CarGraphicComponent";
 
 function App() {
   return (
