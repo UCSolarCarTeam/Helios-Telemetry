@@ -1,7 +1,8 @@
 import React from "react";
+import BatteryIconComponent from "../../containers/atoms/BatteryIcon";
 
 function BatteryThrottleComponent(props: any) {
-  return <h1>Battery and Throttle</h1>;
+  return <BatteryIconComponent/>
 }
 
 export default BatteryThrottleComponent;
