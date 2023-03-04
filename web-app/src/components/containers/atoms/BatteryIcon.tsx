@@ -12,7 +12,10 @@ function BatteryIconComponent(props: any) {
   }, [batteryLevel]);
 
   return (
-    <div className="rounded" style={{ backgroundImage: batteryStyleString }}>
+    <div
+      className="rounded-lg w-battery"
+      style={{ backgroundImage: batteryStyleString }}
+    >
       <div className="flex justify-center items-stretch text-1xl min-h-full text-[#FFFFFF]">
         <div className="min-h-full self-center">{batteryLevel.toString()}%</div>
       </div>
