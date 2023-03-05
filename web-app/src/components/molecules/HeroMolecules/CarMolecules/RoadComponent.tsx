@@ -14,7 +14,7 @@ export function RoadComponent(props: any) {
       >
         <meshBasicMaterial color="white" side={THREE.DoubleSide} />
       </mesh>
-      <RoadStripGroup />
+      <RoadStripGroup size={13} />
     </>
   );
 }
@@ -29,8 +29,10 @@ function RoadStripComponent(props: any) {
     }
 
     mesh.current.position.z -= delta * 7;
-    if (mesh.current.position.z < -30) {
-      mesh.current.position.z += 55;
+    const back = (props.size / 2) * -5 - 5;
+    const front = props.size * 5;
+    if (mesh.current.position.z < back) {
+      mesh.current.position.z += front;
     }
   });
 
@@ -48,20 +50,17 @@ function RoadStripComponent(props: any) {
 }
 
 function RoadStripGroup(props: any) {
+  let roadStrips: number[] = [];
+  for (let i = 0; i < props.size; i++) {
+    const back = (props.size / 2) * -5;
+    roadStrips.push(back + i * 5);
+  }
+
   return (
     <>
-      <RoadStripComponent position={[-5.5, 0, 30]} />
-      <RoadStripComponent position={[-5.5, 0, 25]} />
-      <RoadStripComponent position={[-5.5, 0, 20]} />
-      <RoadStripComponent position={[-5.5, 0, 15]} />
-      <RoadStripComponent position={[-5.5, 0, 10]} />
-      <RoadStripComponent position={[-5.5, 0, 5]} />
-      <RoadStripComponent position={[-5.5, 0, 0]} />
-      <RoadStripComponent position={[-5.5, 0, -5]} />
-      <RoadStripComponent position={[-5.5, 0, -10]} />
-      <RoadStripComponent position={[-5.5, 0, -15]} />
-      <RoadStripComponent position={[-5.5, 0, -20]} />
-      <RoadStripComponent position={[-5.5, 0, -25]} />
+      {roadStrips.map((z) => (
+        <RoadStripComponent position={[-5.5, 0, z]} size={props.size} />
+      ))}
     </>
   );
 }

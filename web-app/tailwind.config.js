@@ -15,7 +15,7 @@ module.exports = {
         'background-gray': '#D2D2D2',
         'background-gray-dark': '#212121'
       }
-    },
+    }
   },
   plugins: []
 }
