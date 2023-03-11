@@ -5,28 +5,32 @@ import BottomInformationContainer from "./components/containers/BottomInformatio
 import MapContainer from "./components/containers/MapContainer";
 import HeroContainer from "./components/containers/HeroContainer";
 import LogoStatusContainer from "./components/containers/LogoStatusContainer";
+import CarGraphicComponent from "./components/molecules/HeroMolecules/CarGraphicComponent";
 
 function App() {
+  let darkMode = false;
   return (
-    <div className="w-screen h-screen p-3">
-      <div className="grid w-full h-2/6 bg-green-500 grid-cols-6 pt-1">
-        <div className="grid col-span-1 bg-pink-500 pr-1">
-          <LogoStatusContainer />
+    <div className={darkMode ? "dark" : ""}>
+      <div className="bg-background-gray dark:bg-background-gray-dark w-screen h-screen p-5">
+        <div className="grid w-full h-2/6 grid-cols-6">
+          <div className="grid col-span-1 pr-1">
+            <LogoStatusContainer />
+          </div>
+          <div className="grid col-span-5 pl-1">
+            <TabsContainer />
+          </div>
         </div>
-        <div className="grid col-span-5 bg-red-500 pl-1">
-          <TabsContainer />
+        <div className="grid w-full h-3/6 grid-cols-3 pt-1">
+          <div className="grid pr-1">
+            <MapContainer />
+          </div>
+          <div className="grid col-span-2 pl-1">
+            <HeroContainer />
+          </div>
         </div>
-      </div>
-      <div className="grid w-full h-3/6 bg-blue-500 grid-cols-3 pt-1">
-        <div className="grid pr-1">
-          <MapContainer />
+        <div className="grid w-full h-1/6 pt-1">
+          <BottomInformationContainer />
         </div>
-        <div className="grid col-span-2 bg-blue-500 pl-1">
-          <HeroContainer />
-        </div>
-      </div>
-      <div className="grid w-full h-1/6 bg-orange-500 pt-1">
-        <BottomInformationContainer />
       </div>
     </div>
   );

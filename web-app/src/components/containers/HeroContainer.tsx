@@ -16,7 +16,7 @@ function HeroContainer(props: any) {
             <div className="grid h-full col-span-1 bg-green-500 pl-1">
               <GearParkBrakeComponent />
             </div>
-            <div className="grid h-full col-span-3 bg-pink-500 pl-1">
+            <div className="grid h-full col-span-3 pl-1">
               <CarGraphicComponent />
             </div>
           </div>
