@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 function ThrottleIcon(props: any) {
-  const [regenPos, setRegenPos] = useState<number>(60);
-  const [gasPos, setGasPos] = useState<number>(10);
+  const [regenPos, setRegenPos] = useState<number>(100);
+  const [gasPos, setGasPos] = useState<number>(100);
 
   const [throttleStyleString, setThrottleStyleString] = useState<string>("");
   useEffect(() => {
