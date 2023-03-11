@@ -33,7 +33,7 @@ function BatteryIconComponent(props: any) {
         </div>
       </div>
       <div
-        className="flex self-center rounded-r-md w-terminal h-1/3"
+        className="flex self-center rounded-r-sm w-terminal h-1/4"
         style={{ backgroundImage: terminalStyleString }}
       ></div>
     </div>
