@@ -2,8 +2,8 @@ import React from "react";
 
 function LogoComponent() {
   return (
-    <div className="logo-component grid w-full pt-4 pb-4">
-      <img className="w-1/2 m-auto" src={require("../../../assets/Logo.png")} />
+    <div className="logo-component grid w-full pt-2">
+      <img className="w-3/4 m-auto" src={require("../../../assets/Logo.png")} />
     </div>
   );
 }
