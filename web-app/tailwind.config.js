@@ -17,7 +17,8 @@ module.exports = {
       }
     },
     width: {
-      'battery': 'calc(98%)'
+      'battery': 'calc(98%)',
+      'terminal': 'calc(2%)'
     }
   },
   plugins: []
