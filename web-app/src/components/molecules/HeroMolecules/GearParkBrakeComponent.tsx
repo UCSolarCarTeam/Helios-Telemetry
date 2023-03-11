@@ -16,40 +16,20 @@ function GearParkBrakeComponent(props: any) {
       <div className="flex items-center flex-col">
         <div className="grid grid-rows-4 grid-flow-col pt-8 text-xl space-y-1">
           <div>
-            <h1
-              className={
-                g.valueOf() == gear.park ? "text-red-700" : "text-gray-700"
-              }
-            >
-              P
-            </h1>
+            <h1 className={g.valueOf() == gear.park ? "text-zesty" : ""}>P</h1>
           </div>
           <div>
-            <h1
-              className={
-                g.valueOf() == gear.reverse ? "text-red-700" : "text-gray-700"
-              }
-            >
+            <h1 className={g.valueOf() == gear.reverse ? "text-zesty" : ""}>
               R
             </h1>
           </div>
           <div>
-            <h1
-              className={
-                g.valueOf() == gear.neutral ? "text-red-700" : "text-gray-700"
-              }
-            >
+            <h1 className={g.valueOf() == gear.neutral ? "text-zesty" : ""}>
               N
             </h1>
           </div>
           <div>
-            <h1
-              className={
-                g.valueOf() == gear.drive ? "text-red-700" : "text-gray-700"
-              }
-            >
-              D
-            </h1>
+            <h1 className={g.valueOf() == gear.drive ? "text-zesty" : ""}>D</h1>
           </div>
         </div>
 
