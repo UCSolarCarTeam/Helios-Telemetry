@@ -6,7 +6,7 @@ import "./LogoStatusContainer.css";
 
 function LogoStatusContainer() {
   return (
-    <div className="logo-status-container grid w-full">
+    <div className=" grid w-full">
       <LogoComponent />
       <StatusComponent />
     </div>
