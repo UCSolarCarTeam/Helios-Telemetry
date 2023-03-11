@@ -23,7 +23,7 @@ function BatteryIconComponent(props: any) {
   return (
     <div className="flex flex-nowrap">
       <div
-        className="flex justify-start rounded-lg w-battery h-full"
+        className="flex justify-start rounded-lg w-[98%] h-full"
         style={{ backgroundImage: batteryStyleString }}
       >
         <div className="flex justify-center self-center items-stretch text-3xl min-h-full min-w-full text-[#FFFFFF]">
@@ -33,7 +33,7 @@ function BatteryIconComponent(props: any) {
         </div>
       </div>
       <div
-        className="flex self-center rounded-r-sm w-terminal h-1/4"
+        className="flex self-center rounded-r-sm w-[2%] h-1/4"
         style={{ backgroundImage: terminalStyleString }}
       ></div>
     </div>

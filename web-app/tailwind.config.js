@@ -16,10 +16,6 @@ module.exports = {
         'background-gray-dark': '#212121'
       }
     },
-    width: {
-      'battery': 'calc(98%)',
-      'terminal': 'calc(2%)'
-    }
   },
   plugins: []
 }
