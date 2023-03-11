@@ -19,13 +19,6 @@ export function RoadComponent(props: roadComponentProps) {
       >
         <meshBasicMaterial color="white" side={THREE.DoubleSide} />
       </mesh>
-      <mesh
-        geometry={planeGeom}
-        position={[-1.5, -0.02, -3]}
-        rotation={[Math.PI / 2, 0, 0]}
-      >
-        <meshStandardMaterial opacity={0} side={THREE.DoubleSide} />
-      </mesh>
       <RoadStripGroup {...props} />
     </>
   );
