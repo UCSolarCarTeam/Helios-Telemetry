@@ -12,16 +12,16 @@ function HeroContainer(props: any) {
           <div className=" grid h-1/6 pl-1 ">
             <BatteryThrottleComponent />
           </div>
-          <div className="grid h-5/6 grid-cols-4">
+          <div className="grid h-5/6 grid-cols-10">
             <div className="grid h-full col-span-1 bg-green-500 pl-1">
               <GearParkBrakeComponent />
             </div>
-            <div className="grid h-full col-span-3 pl-1">
+            <div className="grid h-full col-span-9 pl-1">
               <CarGraphicComponent />
             </div>
           </div>
         </div>
-        <div className="grid col-span-2 bg-red-500 pl-1">
+        <div className="grid col-span-2 border border-dashed border-black pl-1">
           <FaultsComponent />
         </div>
       </div>

@@ -16,7 +16,12 @@ interface IAppState {
   speedUnits: speedUnits;
 }
 
-const appStateContext = createContext({});
+interface IAppStateReturn {
+  currentAppState: IAppState;
+  setCurrentAppState: (state: IAppState) => void;
+}
+
+const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
@@ -33,6 +38,6 @@ export function AppStateContextProvider({ children }: Props) {
   );
 }
 
-export function useAppState() {
+export function useAppState(): IAppStateReturn {
   return useContext(appStateContext);
 }

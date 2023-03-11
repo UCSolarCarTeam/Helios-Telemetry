@@ -17,7 +17,7 @@ function BottomInformationContainer(props: any) {
   return (
     <div className="">
       <div className="h-px bg-black"></div>
-      <div className="text-xl flex flex-nowrap justify-evenly text-center py-5">
+      <div className="text-xl flex flex-nowrap justify-evenly text-center h-full">
         <div className="">
           <div className="text-xs"> Motor Temperature </div>
           <div>{fakeData["Motor Temp"]}</div>
