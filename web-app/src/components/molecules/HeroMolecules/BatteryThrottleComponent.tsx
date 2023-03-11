@@ -1,8 +1,17 @@
-import React from "react";
-import BatteryIconComponent from "../../containers/atoms/BatteryIcon";
+import SpeedAtom from "../../atoms/SpeedAtom";
+import ThrottleIcon from "../../atoms/ThrottleIcon";
+import BatteryIconComponent from "../../atoms/BatteryIcon";
 
 function BatteryThrottleComponent(props: any) {
-  return <BatteryIconComponent />;
+  return (
+    <>
+      <div className="grid w-full grid-cols-12 justify-items-center content-center">
+        <BatteryIconComponent />
+        <ThrottleIcon />
+        <SpeedAtom />
+      </div>
+    </>
+  );
 }
 
 export default BatteryThrottleComponent;

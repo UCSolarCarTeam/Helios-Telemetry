@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 function BatteryIconComponent(props: any) {
   const [batteryLevel, setBatteryLevel] = useState<number>(38.5);
 
@@ -21,21 +22,23 @@ function BatteryIconComponent(props: any) {
   }, [batteryLevel]);
 
   return (
-    <div className="flex flex-nowrap">
-      <div
-        className="flex justify-start rounded-lg w-[98%] h-full"
-        style={{ backgroundImage: batteryStyleString }}
-      >
-        <div className="flex justify-center self-center items-stretch text-3xl min-h-full min-w-full text-[#FFFFFF]">
-          <div className="min-h-full self-center">
-            {batteryLevel.toString()}%
+    <div className="grid col-span-3 w-full pr-2">
+      <div className="flex flex-nowrap w-full">
+        <div
+          className="flex justify-start rounded-lg w-[98%] h-full"
+          style={{ backgroundImage: batteryStyleString }}
+        >
+          <div className="flex justify-center self-center items-stretch min-h-full min-w-full text-[#FFFFFF]">
+            <div className="text-lg min-h-full self-center">
+              {batteryLevel.toString()}%
+            </div>
           </div>
         </div>
+        <div
+          className="flex self-center rounded-r-sm w-[2%] h-1/4"
+          style={{ backgroundImage: terminalStyleString }}
+        ></div>
       </div>
-      <div
-        className="flex self-center rounded-r-sm w-[2%] h-1/4"
-        style={{ backgroundImage: terminalStyleString }}
-      ></div>
     </div>
   );
 }

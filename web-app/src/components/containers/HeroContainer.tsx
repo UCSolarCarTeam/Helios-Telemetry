@@ -9,7 +9,7 @@ function HeroContainer(props: any) {
     <>
       <div className="grid w-full h-full grid-cols-6">
         <div className=" h-full col-span-4">
-          <div className=" grid h-1/6 bg-orange-500 pl-1 ">
+          <div className=" grid h-1/6 pl-1 ">
             <BatteryThrottleComponent />
           </div>
           <div className="grid h-5/6 grid-cols-4">
