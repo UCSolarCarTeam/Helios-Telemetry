@@ -8,15 +8,23 @@ interface roadComponentProps {
   speed: number;
 }
 export function RoadComponent(props: roadComponentProps) {
-  const geometry = new PlaneGeometry(0.5, 63);
+  const geometry = new PlaneGeometry(0.5, props.size * 5);
+  const planeGeom = new PlaneGeometry(9, props.size * 7);
   return (
     <>
       <mesh
         geometry={geometry}
-        position={[2.5, 0, -3]}
+        position={[2.5, -0.01, -3]}
         rotation={[Math.PI / 2, 0, 0]}
       >
         <meshBasicMaterial color="white" side={THREE.DoubleSide} />
+      </mesh>
+      <mesh
+        geometry={planeGeom}
+        position={[-1.5, -0.02, -3]}
+        rotation={[Math.PI / 2, 0, 0]}
+      >
+        <meshStandardMaterial opacity={0} side={THREE.DoubleSide} />
       </mesh>
       <RoadStripGroup {...props} />
     </>
@@ -69,7 +77,7 @@ function RoadStripGroup(props: roadComponentProps) {
       {roadStrips.map((z, i) => (
         <RoadStripComponent
           key={i}
-          position={[-5.5, 0, z]}
+          position={[-5.5, -0.01, z]}
           size={props.size}
           speed={props.speed}
         />
