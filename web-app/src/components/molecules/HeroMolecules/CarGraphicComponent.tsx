@@ -9,15 +9,6 @@ import {
 import * as THREE from "three";
 import { CarModelComponent } from "./CarMolecules/CarModelComponent";
 import { RoadComponent } from "./CarMolecules/RoadComponent";
-import {
-  EffectComposer,
-  SSAO,
-  DepthOfField,
-} from "@react-three/postprocessing";
-
-function Effects() {
-  return <EffectComposer></EffectComposer>;
-}
 
 function CarGraphicComponent(props: any) {
   /**
