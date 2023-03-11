@@ -1,26 +1,43 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface Props {
-    children: ReactNode | ReactNode[]
+  children: ReactNode | ReactNode[];
+}
+
+enum speedUnits {
+  "km/h",
+  "mph",
 }
 
 interface IAppState {
-    loading: boolean;
-    error: boolean;
+  loading: boolean;
+  error: boolean;
+  darkMode: boolean;
+  speedUnits: speedUnits;
 }
 
-const appStateContext = createContext({});
+interface IAppStateReturn {
+  currentAppState: IAppState;
+  setCurrentAppState: (state: IAppState) => void;
+}
+
+const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 
 export function AppStateContextProvider({ children }: Props) {
-    const [currentPacket, setCurrentPacket] = useState<IAppState>({ loading: false, error: false});
+  const [currentAppState, setCurrentAppState] = useState<IAppState>({
+    loading: false,
+    error: false,
+    darkMode: false,
+    speedUnits: speedUnits["km/h"],
+  });
 
-    return (
-        <appStateContext.Provider value={{ currentPacket, setCurrentPacket }}>
-            {children}
-        </appStateContext.Provider>
-    )
+  return (
+    <appStateContext.Provider value={{ currentAppState, setCurrentAppState }}>
+      {children}
+    </appStateContext.Provider>
+  );
 }
 
-export function usePacket() {
-    return useContext(appStateContext);
+export function useAppState(): IAppStateReturn {
+  return useContext(appStateContext);
 }
