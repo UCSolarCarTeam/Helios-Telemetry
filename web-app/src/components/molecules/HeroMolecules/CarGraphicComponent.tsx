@@ -47,7 +47,7 @@ function CarGraphicComponent(props: any) {
         <pointLight position={[-10, -10, -10]} />
         <Box position={[1, 5, -10]} />
         <CarModelComponent />
-        <RoadComponent />
+        <RoadComponent speed={7} size={13} />
         <OrbitControls />
       </Canvas>
     </>
