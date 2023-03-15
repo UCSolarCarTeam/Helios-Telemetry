@@ -15,47 +15,46 @@ const fakeData = {
 
 function BottomInformationContainer(props: any) {
   return (
-    <div className="">
-      <div className="h-px bg-black text-gray"></div>
-      <div className="text-xl flex flex-nowrap justify-evenly text-center h-full">
-        <div className="">
-          <div className="text-xs"> Motor Temperature </div>
+    <div className="align-middle	">
+      <div className="pt-2 text-base 2xl:text-xl flex flex-nowrap justify-evenly text-center h-full">
+        <div>
+          <div className="text-xs 2xl:text-base"> MOTOR TEMPERATURE </div>
           <div className="text-zesty">{fakeData["Motor Temp"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Battery Power </div>
+          <div className="text-xs 2xl:text-sm"> BATTERY POWER </div>
           <div className="text-zesty">{fakeData["Battery Power"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Motor </div>
+          <div className="text-xs 2xl:text-sm"> MOTOR </div>
           <div className="text-zesty">{fakeData["Motor"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Motor Temperature </div>
+          <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE</div>
           <div className="text-zesty">{fakeData["Motor Temp1"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Motor Temperature </div>
+          <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE </div>
           <div className="text-zesty">{fakeData["Motor Temp2"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Motor Temperature </div>
+          <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE </div>
           <div className="text-zesty">{fakeData["Motor Temp3"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Pack Voltage </div>
+          <div className="text-xs 2xl:text-sm"> PACK VOLTAGE </div>
           <div className="text-zesty">{fakeData["Pack Voltage"]}</div>
         </div>
         <div>
-          <div className="text-xs"> MPPT </div>
+          <div className="text-xs 2xl:text-sm"> MPPT </div>
           <div className="text-zesty">{fakeData["MPPT"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Battery Current </div>
+          <div className="text-xs 2xl:text-sm"> BATTERY CURRENT </div>
           <div className="text-zesty">{fakeData["Battery Current"]}</div>
         </div>
         <div>
-          <div className="text-xs"> Bus Voltage </div>
+          <div className="text-xs 2xl:text-sm"> BUS VOLTAGE </div>
           <div className="text-zesty">{fakeData["Bus Voltage"]}</div>
         </div>
       </div>
