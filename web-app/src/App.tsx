@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import TabsContainer from "./components/containers/TabsContainer";
 import BottomInformationContainer from "./components/containers/BottomInformationContainer";
@@ -17,7 +18,9 @@ function App() {
             <LogoStatusContainer />
           </div>
           <div className="grid col-span-5 pl-1">
-            <TabsContainer />
+            <BrowserRouter>
+              <TabsContainer />
+            </BrowserRouter>
           </div>
         </div>
         <div className="grid w-full h-3/6 grid-cols-3 pt-1">
