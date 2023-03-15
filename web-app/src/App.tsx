@@ -6,6 +6,7 @@ import MapContainer from "./components/containers/MapContainer";
 import HeroContainer from "./components/containers/HeroContainer";
 import LogoStatusContainer from "./components/containers/LogoStatusContainer";
 import { useAppState } from "./contexts/AppStateContext";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   const { currentAppState } = useAppState();
@@ -18,7 +19,9 @@ function App() {
               <LogoStatusContainer />
             </div>
             <div className="grid w-[90%] pl-1">
-              <TabsContainer />
+              <BrowserRouter>
+                <TabsContainer />
+              </BrowserRouter>
             </div>
           </div>
           <div className="grid w-full h-[55%] grid-cols-3 pt-1 ">
