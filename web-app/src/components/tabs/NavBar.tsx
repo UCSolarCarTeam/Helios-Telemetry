@@ -51,7 +51,7 @@ function NavBar(props: any) {
           <Tab
             key={i}
             value={route.value}
-            label={<span style={{ color: "3A3A3A" }}>{route.id}</span>}
+            label={<h3 className="dark:text-dark text-light">{route.id}</h3>}
           ></Tab>
         ))}
       </Tabs>
