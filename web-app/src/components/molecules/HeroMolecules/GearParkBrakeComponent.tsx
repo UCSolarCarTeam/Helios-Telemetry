@@ -1,6 +1,4 @@
 import React from "react";
-import { ReactComponent as Logo } from "./../../../assets/warning.svg";
-//<img src={imageToAdd} alt="explanation-mark" />
 
 function GearParkBrakeComponent(props: any) {
   enum gear {
@@ -35,7 +33,7 @@ function GearParkBrakeComponent(props: any) {
 
         <div className="grid grid-rows-1 gap-4">
           <div className="row-start-4 row-end-4">
-            <Logo fill="#444444" width={30} height={30} className=""></Logo>
+            <img width={30} height={30} src="/assets/warning.svg" />
           </div>
         </div>
       </div>

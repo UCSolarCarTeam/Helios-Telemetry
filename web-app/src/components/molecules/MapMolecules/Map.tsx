@@ -6,7 +6,9 @@ function Map(props: any) {
   const { carLocation, mapLocation } = props;
   let map: google.maps.Map | undefined;
   const loader = new Loader({
-    apiKey: process.env.REACT_APP_MAPSAPIKEY as string,
+    apiKey: import.meta.env.DEV
+      ? (import.meta.env.REACT_APP_MAPSAPIKEY as string)
+      : "",
     version: "weekly",
   });
 
