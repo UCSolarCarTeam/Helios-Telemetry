@@ -21,7 +21,7 @@ function FaultCard(props: FaultCardProps) {
 
   return (
     <div className="h-1/6">
-      <div className="h-1/2"></div>
+      <img src="/Warning.svg" alt="WarningIcon"></img>
     </div>
   );
 }
