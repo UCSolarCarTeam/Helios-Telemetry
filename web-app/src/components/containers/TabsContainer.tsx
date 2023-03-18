@@ -10,7 +10,7 @@ function TabsContainer(props: any) {
       <NavBar />
       <Routes>
         {routes.map((route: SolarCarRoutes, i: number) => (
-          <Route path={route.path} element={route.element} />
+          <Route path={route.path} element={route.element} key={i} />
         ))}
       </Routes>
     </h1>

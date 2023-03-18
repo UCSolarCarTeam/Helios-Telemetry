@@ -144,7 +144,7 @@ type HeliosCar = GLTF & {
 };
 
 export function CarModelComponent(props: any) {
-  let path = process.env.PUBLIC_URL + "/models/Helios.glb";
+  let path = "/models/Helios.glb";
   const { nodes, materials } = useGLTF(path) as unknown as HeliosCar;
 
   return (
