@@ -18,12 +18,13 @@ function NavBar(props: any) {
   const navigate = useNavigate();
 
   const getCurrentPath = () => {
+    let currIndex: String = "1";
     routes.map((route: SolarCarRoutes, i: number) => {
       if (route.path === location.pathname) {
-        return route.value;
+        currIndex = route.value;
       }
     });
-    return "1";
+    return currIndex;
   };
 
   const redirect = () => {
@@ -35,10 +36,13 @@ function NavBar(props: any) {
   };
 
   const [value, setValue] = React.useState<String>(getCurrentPath());
-
   useEffect(() => {
     redirect();
   }, [value]);
+
+  useEffect(() => {
+    getCurrentPath();
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: String) => {
     setValue(newValue);
