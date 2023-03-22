@@ -32,8 +32,7 @@ function App() {
               <HeroContainer />
             </div>
           </div>
-          <div className="grid w-full h-[7%] pt-1">
-            <div className="h-px bg-black text-gray"></div>
+          <div className="grid w-full h-[7%] pt-1 border-t border-light dark:border-dark">
             <BottomInformationContainer />
           </div>
         </div>
