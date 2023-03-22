@@ -1,5 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { MeshStandardMaterial } from "three";
 import { GLTF } from "three-stdlib";
 
 type HeliosCar = GLTF & {
@@ -146,7 +147,6 @@ type HeliosCar = GLTF & {
 export function CarModelComponent(props: any) {
   let path = "/models/Helios.glb";
   const { nodes, materials } = useGLTF(path) as unknown as HeliosCar;
-
   return (
     <group
       {...props}
@@ -159,7 +159,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet.geometry}
-        material={materials.Shape}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -183,7 +183,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet003.geometry}
-        material={materials["Shape.003"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -343,7 +343,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet023.geometry}
-        material={materials["Shape.023"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -351,66 +351,66 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet024.geometry}
-        material={materials["Shape.024"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet025.geometry}
-        material={materials["Shape.025"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet026.geometry}
-        material={materials["Shape.026"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet027.geometry}
-        material={materials["Shape.027"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet028.geometry}
-        material={materials["Shape.028"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet029.geometry}
-        material={materials["Shape.029"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet030.geometry}
-        material={materials["Shape.030"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet031.geometry}
-        material={materials["Shape.031"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
@@ -423,18 +423,18 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet033.geometry}
-        material={materials["Shape.033"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet034.geometry}
-        material={materials["Shape.034"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
@@ -607,7 +607,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet056.geometry}
-        material={materials["Shape.056"]}
+        material={materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -631,7 +631,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet059.geometry}
-        material={materials["Shape.059"]}
+        material={materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -639,7 +639,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet060.geometry}
-        material={materials["Shape.060"]}
+        material={materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -647,7 +647,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet061.geometry}
-        material={materials["Shape.061"]}
+        material={materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
