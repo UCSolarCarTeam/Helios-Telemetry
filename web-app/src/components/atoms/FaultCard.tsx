@@ -1,6 +1,4 @@
 import React from "react";
-import { ReactComponent as WarningIcon } from "./../../assets/faults/warning.svg";
-import { ReactComponent as ErrorIcon } from "./../../assets/faults/Error.svg";
 
 export enum ISeverity {
   "Error",
@@ -20,8 +18,23 @@ function FaultCard(props: FaultCardProps) {
   }
 
   return (
-    <div className="h-1/6">
-      <img src="/Warning.svg" alt="WarningIcon"></img>
+    <div>
+      <div className="border-t border-[#9C0534] mt-2"></div>
+      <div className="flex p-1 mt-2">
+        <div className="flex justify-self-start"></div>
+        <div className="flex justify-bot h-full">
+          <div className="flex justify-start w-1/2">
+            <img
+              src="/assets/faults/Warning.svg"
+              alt="WarningIcon"
+              className="h-full"
+            ></img>
+          </div>
+          <div className="flex self-center justify-end text-2xl min-w-[66%]">
+            {faultName}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

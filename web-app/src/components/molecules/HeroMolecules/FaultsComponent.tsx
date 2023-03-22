@@ -4,7 +4,9 @@ import { ISeverity } from "../../atoms/FaultCard";
 
 function FaultsComponent(props: any) {
   return (
-    <FaultCard severity={ISeverity.Error} faultName={"Fuel injector issue"} />
+    <div className="h-[15%]">
+      <FaultCard severity={ISeverity.Error} faultName={"Help us"} />
+    </div>
   );
 }
 
