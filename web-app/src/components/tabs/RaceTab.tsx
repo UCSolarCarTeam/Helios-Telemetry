@@ -9,7 +9,9 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { MdClose } from "react-icons/md";
+import { FiMenu } from "react-icons/fi";
 
 ChartJS.register(
   CategoryScale,
@@ -20,7 +22,53 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
+function generateTableData(): any[] {
+  var tableData = [];
+  for (var i = 0; i < 100; i++) {
+    tableData.push({
+      dataPoint: faker.datatype.number({ min: 0, max: 100 }),
+      time: faker.datatype.number({ min: 1553236613, max: 1711089413 }),
+      powerIn: faker.datatype.number({ min: 0, max: 100 }),
+      powerOut: faker.datatype.number({ min: 0, max: 100 }),
+      netPowerOut: faker.datatype.number({ min: 0, max: 100 }),
+      speed: faker.datatype.number({ min: 0, max: 100 }),
+      distance: faker.datatype.number({ min: 0, max: 100 }),
+      energy: faker.datatype.number({ min: 0, max: 100 }),
+      efficiency: faker.datatype.number({ min: 0, max: 100 }),
+    });
+  }
+  return tableData;
+}
+
+const tableData = generateTableData();
+
+const GraphOptions = [
+  { id: "time", name: "TIME" },
+  { id: "power", name: "POWER" },
+  { id: "distance", name: "DISTANCE" },
+  { id: "amp_hours", name: "AMP HOURS" },
+  { id: "current", name: "CURRENT" },
+  { id: "battery", name: "BATTERY" },
+];
+
+const timeGraphOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: "Lap Time (minutes)",
+      },
+    },
+  },
+  plugins: {
+    legend: false,
+  },
+  animation: false,
+};
+
+const powerGraphOptions = {
   responsive: true,
   maintainAspectRatio: false,
   scales: {
@@ -36,11 +84,91 @@ export const options = {
       position: "bottom" as const,
     },
   },
+  animation: false,
+};
+
+const distanceGraphOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: "Distance Remaining (km)",
+      },
+    },
+  },
+  plugins: {
+    legend: false,
+  },
+  animation: false,
+};
+
+const ampHoursGraphOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: "Amp Hours (Ah)",
+      },
+    },
+  },
+  plugins: {
+    legend: false,
+  },
+  animation: false,
+};
+
+const currentGraphOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: "Average Pack Current (A)",
+      },
+    },
+  },
+  plugins: {
+    legend: false,
+  },
+  animation: false,
+};
+
+const batteryGraphOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: "Battery Seconds Remaining (s)",
+      },
+    },
+  },
+  plugins: {
+    legend: false,
+  },
+  animation: false,
 };
 
 const labels = [0, 5, 10, 15, 20, 25, 30, 35];
 
-export const data = {
+const timeGraphData = {
+  labels,
+  datasets: [
+    {
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 3000 })),
+      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+  ],
+};
+
+const powerGraphData = {
   labels,
   datasets: [
     {
@@ -64,43 +192,99 @@ export const data = {
   ],
 };
 
-function generateTableData(): any[] {
-  var tableData = [];
-  for (var i = 0; i < 100; i++) {
-    tableData.push({
-      dataPoint: faker.datatype.number({ min: 0, max: 100 }),
-      time: faker.datatype.number({ min: 1553236613, max: 1711089413 }),
-      powerIn: faker.datatype.number({ min: 0, max: 100 }),
-      powerOut: faker.datatype.number({ min: 0, max: 100 }),
-      netPowerOut: faker.datatype.number({ min: 0, max: 100 }),
-      speed: faker.datatype.number({ min: 0, max: 100 }),
-      distance: faker.datatype.number({ min: 0, max: 100 }),
-      energy: faker.datatype.number({ min: 0, max: 100 }),
-      efficiency: faker.datatype.number({ min: 0, max: 100 }),
-    });
-  }
-  return tableData;
-}
+const distanceGraphData = {
+  labels,
+  datasets: [
+    {
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 3000 })),
+      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+  ],
+};
 
-export const tableData = generateTableData();
+const ampHoursGraphData = {
+  labels,
+  datasets: [
+    {
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 3000 })),
+      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+  ],
+};
 
-const GraphMenu = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  return (
-    <div>
-      <button onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? "close" : "open"}
-      </button>
-      <ul className={menuOpen ? "block" : "hidden"}>
-        <li>Graph 1</li>
-        <li>Graph 2</li>
-        <li>Graph 3</li>
-      </ul>
-    </div>
-  );
+const currentGraphData = {
+  labels,
+  datasets: [
+    {
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 3000 })),
+      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+  ],
+};
+
+const batteryGraphData = {
+  labels,
+  datasets: [
+    {
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 3000 })),
+      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+  ],
 };
 
 function RaceTab() {
+  const [currentGraph, setCurrentGraph] = useState("time");
+  const [menuOpen, setMenuOpen] = useState(false);
+  function handleGraphChange(id: string) {
+    setCurrentGraph(id);
+    setMenuOpen(false);
+  }
+  const ref = useRef();
+  useEffect(() => {
+    const handler = (event) => {
+      if (menuOpen && ref.current && !ref.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [menuOpen]);
+  function GraphMenu() {
+    return (
+      <div ref={ref}>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="float-right bg-light dark:bg-dark
+            border-2 rounded border-light dark:border-dark p-1"
+        >
+          {menuOpen ? (
+            <MdClose style={{ width: "16px", height: "16px" }} />
+          ) : (
+            <FiMenu style={{ width: "16px", height: "16px" }} />
+          )}
+        </button>
+        <ul className={menuOpen ? "block pt-7" : "hidden"}>
+          {GraphOptions.map((option) => (
+            <li
+              key={option.id}
+              className="text-right dark:text-dark text-light bg-light
+              dark:bg-dark p-2 pl-4 hover:bg-primary hover:text-dark hover:dark:bg-primary"
+              onClick={() => handleGraphChange(option.id)}
+            >
+              {option.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
   return (
     <div className="w-full h-full">
       <div className="grid grid-cols-2">
@@ -108,31 +292,58 @@ function RaceTab() {
           <table className="border-collapse h-full">
             <thead className="top-0 sticky">
               <tr>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="lap"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Lap Number
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="time"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Time
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="power_in"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Power In
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="power_out"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Power Out
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="net_power"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Net Power Out
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="speed"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Avg Speed
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="distance"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Distance
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="amphours"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   AmpHours
                 </th>
-                <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
+                <th
+                  key="current"
+                  className="uppercase text-xs w-1/12 dark:text-dark text-light"
+                >
                   Avg Pack Current
                 </th>
               </tr>
@@ -140,31 +351,58 @@ function RaceTab() {
             <tbody className="overflow-scroll">
               {tableData.map((data) => (
                 <tr>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.dataPoint}
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.time}
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.powerIn} W
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.powerOut} W
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.netPowerOut} W
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.speed} km/h
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.distance} km
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.energy} Ah
                   </td>
-                  <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
+                  <td
+                    key={data.id}
+                    className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light"
+                  >
                     {data.efficiency} %
                   </td>
                 </tr>
@@ -172,8 +410,60 @@ function RaceTab() {
             </tbody>
           </table>
         </div>
-        <div className="h-full w-full">
-          <Line height={"100%"} width={"100%"} options={options} data={data} />
+        <div className="h-full w-full relative">
+          <div className={currentGraph === "time" ? "block h-full" : "hidden"}>
+            <Line
+              height={"100%"}
+              options={timeGraphOptions}
+              data={timeGraphData}
+            />
+          </div>
+          <div className={currentGraph === "power" ? "block h-full" : "hidden"}>
+            <Line
+              height={"100%"}
+              options={powerGraphOptions}
+              data={powerGraphData}
+            />
+          </div>
+          <div
+            className={currentGraph === "distance" ? "block h-full" : "hidden"}
+          >
+            <Line
+              height={"100%"}
+              options={distanceGraphOptions}
+              data={distanceGraphData}
+            />
+          </div>
+          <div
+            className={currentGraph === "amp_hours" ? "block h-full" : "hidden"}
+          >
+            <Line
+              height={"100%"}
+              options={ampHoursGraphOptions}
+              data={ampHoursGraphData}
+            />
+          </div>
+          <div
+            className={currentGraph === "current" ? "block h-full" : "hidden"}
+          >
+            <Line
+              height={"100%"}
+              options={currentGraphOptions}
+              data={currentGraphData}
+            />
+          </div>
+          <div
+            className={currentGraph === "battery" ? "block h-full" : "hidden"}
+          >
+            <Line
+              height={"100%"}
+              options={batteryGraphOptions}
+              data={batteryGraphData}
+            />
+          </div>
+          <div className="absolute top-1 right-0">
+            <GraphMenu />
+          </div>
         </div>
       </div>
     </div>
