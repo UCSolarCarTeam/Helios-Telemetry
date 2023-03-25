@@ -9,7 +9,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { FiMenu } from "react-icons/fi";
 
@@ -243,22 +243,9 @@ function RaceTab() {
     setCurrentGraph(id);
     setMenuOpen(false);
   }
-  const ref = useRef();
-  useEffect(() => {
-    const handler = (event) => {
-      if (menuOpen && ref.current && !ref.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      // Cleanup the event listener
-      document.removeEventListener("mousedown", handler);
-    };
-  }, [menuOpen]);
   function GraphMenu() {
     return (
-      <div ref={ref}>
+      <div>
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="float-right bg-light dark:bg-dark
