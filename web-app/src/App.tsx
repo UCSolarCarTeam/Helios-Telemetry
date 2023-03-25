@@ -14,7 +14,7 @@ function App() {
     <div className={currentAppState.darkMode ? "dark" : ""}>
       <div className="dark:bg-dark bg-light dark:text-dark text-light">
         <div className="bg-background-gray dark:bg-background-gray-dark w-screen h-screen p-4">
-          <div className="flex w-full h-[38%]">
+          <div className="flex w-full max-h-[38%]">
             <div className="grid w-[10%] pr-1">
               <LogoStatusContainer />
             </div>

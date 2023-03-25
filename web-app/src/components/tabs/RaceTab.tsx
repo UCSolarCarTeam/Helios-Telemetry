@@ -9,6 +9,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
+import { useState } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -65,7 +66,7 @@ export const data = {
 
 function generateTableData(): any[] {
   var tableData = [];
-  for (var i = 0; i < 9; i++) {
+  for (var i = 0; i < 100; i++) {
     tableData.push({
       dataPoint: faker.datatype.number({ min: 0, max: 100 }),
       time: faker.datatype.number({ min: 1553236613, max: 1711089413 }),
@@ -83,13 +84,29 @@ function generateTableData(): any[] {
 
 export const tableData = generateTableData();
 
+const GraphMenu = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  return (
+    <div>
+      <button onClick={() => setMenuOpen(!menuOpen)}>
+        {menuOpen ? "close" : "open"}
+      </button>
+      <ul className={menuOpen ? "block" : "hidden"}>
+        <li>Graph 1</li>
+        <li>Graph 2</li>
+        <li>Graph 3</li>
+      </ul>
+    </div>
+  );
+};
+
 function RaceTab() {
   return (
     <div className="w-full h-full">
       <div className="grid grid-cols-2">
-        <div>
-          <table className="border-collapse">
-            <thead>
+        <div className="block max-h-96 overflow-y-auto">
+          <table className="border-collapse h-full">
+            <thead className="top-0 sticky">
               <tr>
                 <th className="uppercase text-xs w-1/12 dark:text-dark text-light">
                   Lap Number
@@ -120,7 +137,7 @@ function RaceTab() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="overflow-scroll">
               {tableData.map((data) => (
                 <tr>
                   <td className="border-t border-light dark:border-dark text-center text-xs dark:text-dark text-light">
