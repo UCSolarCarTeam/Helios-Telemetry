@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, ContactShadows } from "@react-three/drei";
 import { CarModelComponent } from "./CarMolecules/CarModelComponent";
 import { RoadComponent } from "./CarMolecules/RoadComponent";
+import { Button } from "@mui/material";
 
 function CarGraphicComponent(props: any) {
+  const [isClear, changeClear] = useState(false);
+
   return (
     <>
       <Canvas camera={{ position: [-7, 4, 7] }} shadows dpr={[1, 2]}>
@@ -14,7 +17,7 @@ function CarGraphicComponent(props: any) {
           shadow-mapSize={[512, 512]}
           castShadow
         />
-        <CarModelComponent />
+        <CarModelComponent isClear={isClear} />
         <RoadComponent speed={7} size={15} />
         <ContactShadows
           position={[0, 0, 0]}
@@ -26,6 +29,15 @@ function CarGraphicComponent(props: any) {
         <OrbitControls maxDistance={20} minDistance={10} />
         {/* <Stats/> */}
       </Canvas>
+
+      {/* This is a temporary button to show transperency functionality*/}
+      <button
+        className="border-2 border-helios text-helios hover:bg-helios hover:text-white 
+      font-bold  rounded px-1 absolute self-end"
+        onClick={() => changeClear(!isClear)}
+      >
+        View Inside
+      </button>
     </>
   );
 }

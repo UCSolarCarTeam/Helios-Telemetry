@@ -1,5 +1,7 @@
 import { useGLTF } from "@react-three/drei";
+import { useEffect } from "react";
 import * as THREE from "three";
+import { MeshStandardMaterial } from "three";
 import { GLTF } from "three-stdlib";
 
 type HeliosCar = GLTF & {
@@ -60,14 +62,14 @@ type HeliosCar = GLTF & {
     Shape_IndexedFaceSet052: THREE.Mesh;
     Shape_IndexedFaceSet053: THREE.Mesh; // Wheel
     Shape_IndexedFaceSet054: THREE.Mesh;
-    Shape_IndexedFaceSet055: THREE.Mesh;
-    Shape_IndexedFaceSet056: THREE.Mesh;
+    Shape_IndexedFaceSet055: THREE.Mesh; // LDoor Window
+    Shape_IndexedFaceSet056: THREE.Mesh; // LDoor
     Shape_IndexedFaceSet057: THREE.Mesh;
     Shape_IndexedFaceSet058: THREE.Mesh; // Wheel
     Shape_IndexedFaceSet059: THREE.Mesh;
     Shape_IndexedFaceSet060: THREE.Mesh;
-    Shape_IndexedFaceSet061: THREE.Mesh;
-    Shape_IndexedFaceSet062: THREE.Mesh;
+    Shape_IndexedFaceSet061: THREE.Mesh; // RDoor
+    Shape_IndexedFaceSet062: THREE.Mesh; // RDoor Window
     Shape_IndexedFaceSet063: THREE.Mesh;
     Shape_IndexedFaceSet064: THREE.Mesh; // Wheel
     Shape_IndexedFaceSet065: THREE.Mesh; // Wheel
@@ -147,6 +149,8 @@ export function CarModelComponent(props: any) {
   let path = "/models/Helios.glb";
   const { nodes, materials } = useGLTF(path) as unknown as HeliosCar;
 
+  let clear = materials["Shape.050"];
+
   return (
     <group
       {...props}
@@ -159,7 +163,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet.geometry}
-        material={materials.Shape}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -183,7 +187,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet003.geometry}
-        material={materials["Shape.003"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -343,7 +347,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet023.geometry}
-        material={materials["Shape.023"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -351,66 +355,66 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet024.geometry}
-        material={materials["Shape.024"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet025.geometry}
-        material={materials["Shape.025"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet026.geometry}
-        material={materials["Shape.026"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet027.geometry}
-        material={materials["Shape.027"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet028.geometry}
-        material={materials["Shape.028"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet029.geometry}
-        material={materials["Shape.029"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet030.geometry}
-        material={materials["Shape.030"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet031.geometry}
-        material={materials["Shape.031"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
@@ -423,18 +427,18 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet033.geometry}
-        material={materials["Shape.033"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
-      <mesh
+      {/* <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet034.geometry}
-        material={materials["Shape.034"]}
+        material={materials["Shape.001"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
-      />
+      /> */}
       <mesh
         castShadow
         receiveShadow
@@ -543,7 +547,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet048.geometry}
-        material={materials["Shape.048"]}
+        material={props.isClear ? clear : materials["Shape.048"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -551,7 +555,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet049.geometry}
-        material={materials["Shape.049"]}
+        material={props.isClear ? clear : materials["Shape.049"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -567,15 +571,16 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet051.geometry}
-        material={materials["Shape.051"]}
+        material={props.isClear ? clear : materials["Shape.051"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
+      <meshStandardMaterial color="#ff0000" opacity={0.1} transparent />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet052.geometry}
-        material={materials["Shape.052"]}
+        material={props.isClear ? clear : materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -591,7 +596,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet054.geometry}
-        material={materials["Shape.054"]}
+        material={props.isClear ? clear : materials["Shape.054"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -607,7 +612,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet056.geometry}
-        material={materials["Shape.056"]}
+        material={props.isClear ? clear : materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -631,7 +636,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet059.geometry}
-        material={materials["Shape.059"]}
+        material={props.isClear ? clear : materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -639,7 +644,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet060.geometry}
-        material={materials["Shape.060"]}
+        material={props.isClear ? clear : materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
@@ -647,7 +652,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet061.geometry}
-        material={materials["Shape.061"]}
+        material={props.isClear ? clear : materials["Shape.052"]}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
