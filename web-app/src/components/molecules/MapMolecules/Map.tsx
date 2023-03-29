@@ -7,7 +7,8 @@ function Map(props: any) {
   let map: google.maps.Map | undefined;
   const loader = new Loader({
     apiKey: import.meta.env.DEV
-      ? (import.meta.env.VITE_REACT_APP_MAPSAPIKEY as string)
+      ? (import.meta.env.VITE_REACT_APP_MAPSAPIKEY as string) ||
+        process.env.VITE_REACT_APP_MAPSAPIKEY
       : "",
     version: "weekly",
   });
