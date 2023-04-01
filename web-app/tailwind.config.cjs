@@ -15,11 +15,16 @@ module.exports = {
       textColor: {
         'light': '#3A3A3A',
         'dark': '#D2D2D2',
-        'zesty': '#B94A6C'
+        'helios': '#B94A6C'
       },
       backgroundColor: {
         'light': '#D2D2D2',
-        'dark': '#212121'
+        'dark': '#212121',
+        'helios': '#B94A6C',
+        'helios-compliment': '#963A56',
+      },
+      borderColor: {
+        'helios': '#B94A6C',
       }
     }
   },
