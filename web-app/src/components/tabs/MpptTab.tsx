@@ -1,32 +1,48 @@
 import React from "react";
-
+import { faker } from "@faker-js/faker";
 const fakeData = {
   Unit0: {
     Channel0: {
-      arrayVoltage: "42.00V",
-      arrayCurrent: "69.00C",
-      batteryVoltage: "42.00V",
-      temperature: "23.00C",
+      arrayVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      arrayCurrent:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      batteryVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      temperature:
+        faker.datatype.number({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
     },
     Channel1: {
-      arrayVoltage: "42.00V",
-      arrayCurrent: "69.00C",
-      batteryVoltage: "42.00V",
-      temperature: "23.00C",
+      arrayVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      arrayCurrent:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      batteryVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      temperature:
+        faker.datatype.number({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
     },
   },
   Unit1: {
     Channel0: {
-      arrayVoltage: "42.00V",
-      arrayCurrent: "69.00C",
-      batteryVoltage: "42.00V",
-      temperature: "23.00C",
+      arrayVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      arrayCurrent:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      batteryVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      temperature:
+        faker.datatype.number({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
     },
     Channel1: {
-      arrayVoltage: "42.00V",
-      arrayCurrent: "69.00C",
-      batteryVoltage: "42.00V",
-      temperature: "23.00C",
+      arrayVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      arrayCurrent:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      batteryVoltage:
+        faker.datatype.number({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
+      temperature:
+        faker.datatype.number({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
     },
   },
 };
