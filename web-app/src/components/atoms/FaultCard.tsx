@@ -1,8 +1,9 @@
 import React from "react";
-
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import DangerousIcon from "@mui/icons-material/Dangerous";
 export enum ISeverity {
-  "Error",
-  "Warning",
+  ERROR,
+  WARNING,
 }
 
 type FaultCardProps = {
@@ -13,66 +14,28 @@ type FaultCardProps = {
 function FaultCard(props: FaultCardProps) {
   const { severity, faultName } = props;
 
-  if (severity == ISeverity.Error) {
-    return (
-      <div>
-        <div className="border-t border-[#9C0534] mt-2"></div>
-        <div className="flex p-1 mt-1">
-          <div className="flex justify-self-start"></div>
-          <div className="flex justify-bot h-full">
-            <div className="flex justify-start w-[33%]">
-              <img
-                src="/assets/faults/Error.svg"
-                alt="ErrorIcon"
-                className="h-full"
-              ></img>
-            </div>
-            <div className="flex self-center justify-end text-2xl min-w-[66%]">
-              {faultName}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  } else if (severity == ISeverity.Warning) {
-    return (
-      <div>
-        <div className="border-t border-[#9C0534] mt-2"></div>
-        <div className="flex p-1 mt-1">
-          <div className="flex justify-self-start"></div>
-          <div className="flex justify-bot h-full">
-            <div
-              className="flex justify-start w-1/2"
-              //style={{ backgroundImage: WarningAmberIcon }}
-            ></div>
-            <div className="flex self-center justify-end text-2xl min-w-[66%]">
-              {faultName}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div className="border-t border-[#9C0534] mt-2"></div>
-      <div className="flex p-1 mt-2">
+    <>
+      <div className="flex p-2">
         <div className="flex justify-self-start"></div>
-        <div className="flex justify-bot h-full">
-          <div className="flex justify-start w-1/2">
-            <img
-              src="/assets/faults/Warning.svg"
-              alt="WarningIcon"
-              className="h-full"
-            ></img>
+        <div
+          className={`flex h-full w-full justify-start items-center p-2 border ${
+            severity == ISeverity.ERROR
+              ? "border-[#9C0534]"
+              : "border-[#F98D10]"
+          }`}
+        >
+          <div className="flex justify-start h-full w-[20%]">
+            {severity == ISeverity.ERROR ? (
+              <DangerousIcon sx={{ color: "#9C0534", fontSize: "40px" }} />
+            ) : severity == ISeverity.WARNING ? (
+              <WarningAmberIcon sx={{ color: "#F98D10", fontSize: "40px" }} />
+            ) : null}
           </div>
-          <div className="flex self-center justify-end text-2xl min-w-[66%]">
-            {faultName}
-          </div>
+          <div className="flex text-2xl w-[80%]">{faultName}</div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

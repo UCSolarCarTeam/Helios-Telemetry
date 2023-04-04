@@ -6,10 +6,10 @@ function FaultsComponent(props: any) {
   return (
     <div>
       <div className="h-[15%]">
-        <FaultCard severity={ISeverity.Error} faultName={"fuel injector"} />
+        <FaultCard severity={ISeverity.WARNING} faultName={"FAULT 1"} />
       </div>
       <div className="h-[15%]">
-        <FaultCard severity={ISeverity.Warning} faultName={"help me"} />
+        <FaultCard severity={ISeverity.ERROR} faultName={"FAULT 2"} />
       </div>
     </div>
   );
