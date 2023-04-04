@@ -26,14 +26,14 @@ function FaultCard(props: FaultCardProps) {
               : "border-[#F98D10]"
           }`}
         >
-          <div className="flex justify-start h-full w-[20%]">
+          <div className="flex justify-start h-full w-[15%]">
             {severity == ISeverity.ERROR ? (
               <DangerousIcon sx={{ color: "#9C0534", fontSize: "40px" }} />
             ) : severity == ISeverity.WARNING ? (
               <WarningAmberIcon sx={{ color: "#F98D10", fontSize: "40px" }} />
             ) : null}
           </div>
-          <div className="flex text-2xl w-[80%]">{faultName}</div>
+          <div className="flex text-2xl w-[85%]">{faultName}</div>
         </div>
       </div>
     </>
