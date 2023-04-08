@@ -63,28 +63,28 @@ function MpptTab() {
                 <div id="ArrayVoltage">
                   <div>Array Voltage</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.arrayVoltage}</div>
+                    <div>{fakeData.Unit0.Channel0.arrayVoltage}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
                 <div id="ArrayCurrent">
                   <div>Array Current</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel1.arrayCurrent}</div>
+                    <div>{fakeData.Unit0.Channel0.arrayCurrent}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
                 <div id="BatteryVoltage">
                   <div>Battery Voltage</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.batteryVoltage}</div>
+                    <div>{fakeData.Unit0.Channel0.batteryVoltage}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
                 <div id="Temperature">
                   <div>Temperature</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.temperature}</div>
+                    <div>{fakeData.Unit0.Channel0.temperature}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
@@ -102,28 +102,28 @@ function MpptTab() {
                 <div id="ArrayVoltage">
                   <div>Array Voltage</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.arrayVoltage}</div>
+                    <div>{fakeData.Unit0.Channel1.arrayVoltage}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
                 <div id="ArrayCurrent">
                   <div>Array Current</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel1.arrayCurrent}</div>
+                    <div>{fakeData.Unit0.Channel1.arrayCurrent}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
                 <div id="BatteryVoltage">
                   <div>Battery Voltage</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.batteryVoltage}</div>
+                    <div>{fakeData.Unit0.Channel1.batteryVoltage}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
                 <div id="Temperature">
                   <div>Temperature</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.temperature}</div>
+                    <div>{fakeData.Unit0.Channel1.temperature}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
@@ -153,7 +153,7 @@ function MpptTab() {
                 <div id="ArrayCurrent">
                   <div>Array Current</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel1.arrayCurrent}</div>
+                    <div>{fakeData.Unit1.Channel0.arrayCurrent}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
@@ -185,7 +185,7 @@ function MpptTab() {
                 <div id="ArrayVoltage">
                   <div>Array Voltage</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.arrayVoltage}</div>
+                    <div>{fakeData.Unit1.Channel1.arrayVoltage}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
@@ -199,14 +199,14 @@ function MpptTab() {
                 <div id="BatteryVoltage">
                   <div>Battery Voltage</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.batteryVoltage}</div>
+                    <div>{fakeData.Unit1.Channel1.batteryVoltage}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
                 <div id="Temperature">
                   <div>Temperature</div>
                   <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.temperature}</div>
+                    <div>{fakeData.Unit1.Channel1.temperature}</div>
                     <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
                   </div>
                 </div>
