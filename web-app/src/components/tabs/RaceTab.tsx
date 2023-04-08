@@ -63,9 +63,13 @@ const timeGraphOptions = {
     },
   },
   plugins: {
-    legend: false,
+    legend: {
+      display: false,
+    },
   },
-  animation: false,
+  animation: {
+    duration: 0,
+  },
 };
 
 const powerGraphOptions = {
@@ -84,7 +88,9 @@ const powerGraphOptions = {
       position: "bottom" as const,
     },
   },
-  animation: false,
+  animation: {
+    duration: 0,
+  },
 };
 
 const distanceGraphOptions = {
@@ -99,9 +105,13 @@ const distanceGraphOptions = {
     },
   },
   plugins: {
-    legend: false,
+    legend: {
+      display: false,
+    },
   },
-  animation: false,
+  animation: {
+    duration: 0,
+  },
 };
 
 const ampHoursGraphOptions = {
@@ -116,9 +126,13 @@ const ampHoursGraphOptions = {
     },
   },
   plugins: {
-    legend: false,
+    legend: {
+      display: false,
+    },
   },
-  animation: false,
+  animation: {
+    duration: 0,
+  },
 };
 
 const currentGraphOptions = {
@@ -133,9 +147,13 @@ const currentGraphOptions = {
     },
   },
   plugins: {
-    legend: false,
+    legend: {
+      display: false,
+    },
   },
-  animation: false,
+  animation: {
+    duration: 0,
+  },
 };
 
 const batteryGraphOptions = {
@@ -150,9 +168,13 @@ const batteryGraphOptions = {
     },
   },
   plugins: {
-    legend: false,
+    legend: {
+      display: false,
+    },
   },
-  animation: false,
+  animation: {
+    duration: 0,
+  },
 };
 
 const labels = [0, 5, 10, 15, 20, 25, 30, 35];
