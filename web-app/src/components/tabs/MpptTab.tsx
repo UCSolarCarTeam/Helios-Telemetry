@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { faker } from "@faker-js/faker";
+import MpptComponent from "../molecules/HeroMolecules/MpptTabMolecules/MpptComponent";
+
 const fakeData = {
   Unit0: {
     Channel0: {
@@ -59,36 +61,7 @@ function MpptTab() {
                 <h2 className="font-medium">Channel 0</h2>
                 <div className="h-3 w-3 mt-1.5 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
-              <div className="flex text-xs justify-around ">
-                <div id="ArrayVoltage">
-                  <div>Array Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel0.arrayVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="ArrayCurrent">
-                  <div>Array Current</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel0.arrayCurrent}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="BatteryVoltage">
-                  <div>Battery Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel0.batteryVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="Temperature">
-                  <div>Temperature</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel0.temperature}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-              </div>
+              <MpptComponent channelData={fakeData.Unit0.Channel0} />
               <div className="h-36 bg-slate-300 rounded-lg">
                 Placeholder Graph
               </div>
@@ -98,36 +71,7 @@ function MpptTab() {
                 <h2 className="font-medium">Channel 1</h2>
                 <div className="h-3 w-3 mt-1.5 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
-              <div className="flex text-xs justify-around ">
-                <div id="ArrayVoltage">
-                  <div>Array Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel1.arrayVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="ArrayCurrent">
-                  <div>Array Current</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel1.arrayCurrent}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="BatteryVoltage">
-                  <div>Battery Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel1.batteryVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="Temperature">
-                  <div>Temperature</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit0.Channel1.temperature}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-              </div>
+              <MpptComponent channelData={fakeData.Unit0.Channel1} />
               <div className="h-36 bg-slate-200 rounded-lg">
                 Placeholder Graph
               </div>
@@ -142,36 +86,7 @@ function MpptTab() {
                 <h2 className="font-medium">Channel 0</h2>
                 <div className="h-3 w-3 mt-1.5 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
-              <div className="flex text-xs justify-around ">
-                <div id="ArrayVoltage">
-                  <div>Array Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.arrayVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="ArrayCurrent">
-                  <div>Array Current</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.arrayCurrent}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="BatteryVoltage">
-                  <div>Battery Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.batteryVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="Temperature">
-                  <div>Temperature</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel0.temperature}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-              </div>
+              <MpptComponent channelData={fakeData.Unit1.Channel0} />
               <div className="h-36 bg-slate-300 rounded-lg">
                 Placeholder Graph
               </div>
@@ -181,36 +96,7 @@ function MpptTab() {
                 <h2 className="font-medium">Channel 1</h2>
                 <div className="h-3 w-3 mt-1.5 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
-              <div className="flex text-xs justify-around ">
-                <div id="ArrayVoltage">
-                  <div>Array Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel1.arrayVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="ArrayCurrent">
-                  <div>Array Current</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel1.arrayCurrent}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="BatteryVoltage">
-                  <div>Battery Voltage</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel1.batteryVoltage}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-                <div id="Temperature">
-                  <div>Temperature</div>
-                  <div className="flex justify-center text-[#9C0534]">
-                    <div>{fakeData.Unit1.Channel1.temperature}</div>
-                    <div className="h-2 w-2 mt-1 ml-2 rounded-full bg-green dark:bg-green-dark"></div>
-                  </div>
-                </div>
-              </div>
+              <MpptComponent channelData={fakeData.Unit1.Channel1} />
               <div className="h-36 bg-slate-200 rounded-lg">
                 Placeholder Graph
               </div>
