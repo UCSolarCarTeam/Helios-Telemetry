@@ -1,6 +1,11 @@
 import React, { useState } from "react";
+import { ChannelData } from "../../../../objects/MpptProps";
 
-export default function MpptComponent({ channelData }) {
+export default function MpptComponent({
+  channelData,
+}: {
+  channelData: ChannelData;
+}) {
   const myString = [
     "Array Voltage",
     "Array Current",
