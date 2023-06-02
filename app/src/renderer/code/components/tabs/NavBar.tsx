@@ -6,6 +6,7 @@ import Tabs from "@mui/material/Tabs";
 
 import { routes, SolarCarRoutes } from "../../objects/TabRoutes";
 import { styled } from "@mui/material";
+import ScrollContainer from 'react-indiana-drag-scroll'
 
 function NavBar(props: any) {
   const location = useLocation();
@@ -44,6 +45,7 @@ function NavBar(props: any) {
 
   return (
     <>
+    <ScrollContainer>
       <Tabs
         value={value}
         variant="fullWidth"
@@ -51,16 +53,19 @@ function NavBar(props: any) {
         TabIndicatorProps={{ style: { backgroundColor: "#B94A6C" } }}
         sx={{ minHeight: "4vh" }}
       >
-        {routes.map((route: SolarCarRoutes, i: number) => (
-          <Tab
-            sx={{ minHeight: "4vh", height: "4vh" }}
-            disableRipple
-            key={i}
-            value={route.value}
-            label={<h3 className="dark:text-dark text-light">{route.id}</h3>}
-          ></Tab>
-        ))}
+        
+          {routes.map((route: SolarCarRoutes, i: number) => (
+            <Tab
+              sx={{ minHeight: "4vh", height: "4vh" }}
+              disableRipple
+              key={i}
+              value={route.value}
+              label={<h3 className="dark:text-dark text-light">{route.id}</h3>}
+            ></Tab>
+          ))}
+        
       </Tabs>
+      </ScrollContainer>
     </>
   );
 }

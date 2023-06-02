@@ -12,27 +12,27 @@ function App() {
   const { currentAppState } = useAppState();
   return (
     <div className={currentAppState.darkMode ? "dark" : ""}>
-      <div className="dark:bg-dark bg-light dark:text-dark text-light">
-        <div className="bg-background-gray dark:bg-background-gray-dark w-screen h-screen p-4">
-          <div className="flex w-full max-h-[38%]">
-            <div className="grid w-[10%] pr-1">
+      <div className="dark:bg-dark bg-light dark:text-dark text-light w-screen h-screen">
+        <div className="p-4 h-screen flex flex-col">
+          <div className="flex flex-wrap h-[38%] overflow-hidden">
+            <div className="w-36 flex-none mx-auto">
               <LogoStatusContainer />
             </div>
-            <div className="grid w-[90%] pl-1">
+            <div className="grid flex-1 h-96">
               <BrowserRouter>
                 <TabsContainer />
               </BrowserRouter>
             </div>
           </div>
-          <div className="grid w-full h-[55%] grid-cols-3 pt-1 ">
-            <div className="grid pr-1">
+          <div className="flex flex-wrap h-[55%]">
+            <div className="grid basis-1/3 flex-1">
               <MapContainer />
             </div>
-            <div className="grid col-span-2 pl-1">
+            <div className="basis-2/3 flex-1">
               <HeroContainer />
             </div>
           </div>
-          <div className="grid w-full h-[7%] pt-1 border-t border-light dark:border-dark">
+          <div className="h-[7%]">
             <BottomInformationContainer />
           </div>
         </div>

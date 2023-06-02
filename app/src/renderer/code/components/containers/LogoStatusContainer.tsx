@@ -5,7 +5,7 @@ import StatusComponent from "../molecules/LogoStatusMolecules/StatusComponent";
 
 function LogoStatusContainer() {
   return (
-    <div className="grid w-full">
+    <div className="">
       <LogoComponent />
       <StatusComponent />
     </div>
