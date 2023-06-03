@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { IKeyMotor, IMotorDetail } from '../../objects/telemetry-data.interface'
-import MotorDetailsContainer from '../containers/MotorKeyDetailsContainer'
-import MotorKeyDetailsContainer from '../containers/MotorDetailsContainer'
+import MotorKeyDetailsContainer from '../containers/MotorKeyDetailsContainer'
+import MotorDetailsContainer from '../containers/MotorDetailsContainer'
 
 const fakeKeyMotor0Data: IKeyMotor = {
   Alive: faker.datatype.boolean(),
@@ -68,13 +68,15 @@ const fakeData = {
 function MotorTab(): JSX.Element {
   return (
     <>
-      <p>Motor Tab </p>
-      <MotorDetailsContainer KeyMotorDetails={fakeData.Motor0.KeyMotor} />
-      <MotorKeyDetailsContainer MotorDetails={fakeData.Motor1.MotorDetail} />
-      <div className="flex flex-nowrap justify-evenly text-center h-full">
-        Motor0 SetCurrent: {fakeData.Motor0.KeyMotor.SetCurrent}
-        <br />
-        Motor1 PhaseCCurrent: {fakeData.Motor1.MotorDetail.PhaseCCurrent}
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-col w-1/2">
+          <MotorKeyDetailsContainer KeyMotorDetails={fakeData.Motor0.KeyMotor} direction={'Left'} />
+          <MotorDetailsContainer MotorDetails={fakeData.Motor0.MotorDetail} direction={'Left'} />
+        </div>
+        <div className="flex flex-col w-1/2">
+          <MotorKeyDetailsContainer KeyMotorDetails={fakeData.Motor1.KeyMotor} direction="Right" />
+          <MotorDetailsContainer MotorDetails={fakeData.Motor0.MotorDetail} direction={'Right'} />
+        </div>
       </div>
     </>
   )
