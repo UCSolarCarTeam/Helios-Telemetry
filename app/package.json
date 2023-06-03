@@ -15,7 +15,8 @@
     "electron:build-linux": "electron-vite build && electron-builder --linux --config",
     "react:dev": "vite",
     "react:build": "DISABLE_ESLINT_PLUGIN=true tsc && vite build",
-    "react:serve": "vite preview"
+    "react:serve": "vite preview",
+    "prepare": "cd .. && npx husky install"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
