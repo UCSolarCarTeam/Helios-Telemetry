@@ -68,8 +68,12 @@ const fakeData = {
 function MotorTab(): JSX.Element {
   return (
     <>
+      {/* I see 2 containers  */}
       <div className="flex flex-row justify-between">
         <div className="flex flex-col w-1/2">
+          {/* add 2 columns in each details container instead of justify-between. 
+          define the width to be half the parent container.
+          Instead of gap-8, use justify-between*/}
           <MotorKeyDetailsContainer KeyMotorDetails={fakeData.Motor0.KeyMotor} direction={'Left'} />
           <MotorDetailsContainer MotorDetails={fakeData.Motor0.MotorDetail} direction={'Left'} />
         </div>
