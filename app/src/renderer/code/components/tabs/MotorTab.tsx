@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { IKeyMotor, IMotorDetail } from '../../objects/telemetry-data.interface'
+import MotorDetailsContainer from '../containers/MotorKeyDetailsContainer'
+import MotorKeyDetailsContainer from '../containers/MotorDetailsContainer'
 
 const fakeKeyMotor0Data: IKeyMotor = {
   Alive: faker.datatype.boolean(),
@@ -63,10 +65,12 @@ const fakeData = {
     MotorDetail: fakeMotor1DetailsData
   }
 }
-function MotorTab() {
+function MotorTab(): JSX.Element {
   return (
     <>
       <p>Motor Tab </p>
+      <MotorDetailsContainer KeyMotorDetails={fakeData.Motor0.KeyMotor} />
+      <MotorKeyDetailsContainer MotorDetails={fakeData.Motor1.MotorDetail} />
       <div className="flex flex-nowrap justify-evenly text-center h-full">
         Motor0 SetCurrent: {fakeData.Motor0.KeyMotor.SetCurrent}
         <br />
