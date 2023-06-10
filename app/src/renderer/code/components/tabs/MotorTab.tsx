@@ -79,7 +79,7 @@ function MotorTab(): JSX.Element {
         </div>
         <div className="flex flex-col w-1/2">
           <MotorKeyDetailsContainer KeyMotorDetails={fakeData.Motor1.KeyMotor} direction="Right" />
-          <MotorDetailsContainer MotorDetails={fakeData.Motor0.MotorDetail} direction={'Right'} />
+          <MotorDetailsContainer MotorDetails={fakeData.Motor1.MotorDetail} direction={'Right'} />
         </div>
       </div>
     </>
