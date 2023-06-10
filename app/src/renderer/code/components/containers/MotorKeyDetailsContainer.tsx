@@ -11,7 +11,13 @@ export default function MotorKeyDetailsContainer({
     <>
       <div className="flex flex-row ">
         <h1 className="font-bold ">Key {direction} Motor Details</h1>
-        <div className="h-3 w-3 mt-2 ml-2 rounded-full bg-green dark:bg-green-dark" />
+        <div
+          className={`h-3 w-3 mt-2 ml-2 rounded-full ${
+            KeyMotorDetails.Alive ? 'bg-green' : ' bg-red-700'
+          }`}
+        />
+
+        {/* <div className="h-3 w-3 mt-2 ml-2 rounded-full {KeyMotorDetails.alive ? bg-green : bg-red}" /> */}
       </div>
       <section className="flex flex-row text-sm justify-between">
         <div className="flex flex-col px-2 w-1/2">
