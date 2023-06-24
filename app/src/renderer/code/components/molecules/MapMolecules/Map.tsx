@@ -1,46 +1,33 @@
-import React from "react";
-import { Loader } from "@googlemaps/js-api-loader";
-import mapStyles from "./mapStyles";
+import ReactMap from 'react-map-gl'
 
-function Map(props: any) {
-  const { carLocation, mapLocation } = props;
-  let map: google.maps.Map | undefined;
-  const loader = new Loader({
-    apiKey: import.meta.env.VITE_REACT_APP_MAPSAPIKEY as string,
-    version: "weekly",
-  });
+type ILocation = {
+  lat: number
+  lng: number
+}
 
-  loader.load().then(() => {
-    map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-      center: mapLocation,
-      zoom: 15,
-      mapTypeControl: false,
-      gestureHandling: "none",
-      zoomControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      keyboardShortcuts: false,
-    });
+type IMapProps = {
+  carLocation: ILocation
+  mapLocation: ILocation
+}
 
-    map.setOptions({ styles: mapStyles.light });
-    new google.maps.Marker({
-      position: carLocation,
-      icon: {
-        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        strokeColor: "#AC516C",
-        scale: 5,
-        rotation: 0,
-      },
-      draggable: false,
-      map,
-    });
-  });
+function Map(props: IMapProps): JSX.Element {
+  const { carLocation, mapLocation } = props
 
   return (
     <>
-      <div id="map"></div>
+      <ReactMap
+        mapLib={import('mapbox-gl')}
+        mapboxAccessToken={process.env.VITE_REACT_APP_MAPSAPIKEY}
+        initialViewState={{
+          longitude: -100,
+          latitude: 40,
+          zoom: 3.5
+        }}
+        style={{ width: 600, height: 400 }}
+        mapStyle="mapbox://styles/mapbox/streets-v9"
+      />
     </>
-  );
+  )
 }
 
-export default Map;
+export default Map
