@@ -4,10 +4,17 @@ Front End: https://ucsolarcarteam.github.io/Helios-Telemetry/
 
 This repository is a template for other Solar Car software repositories. It comes with a template Github Actions workflow and pre-commit-configuration file.
 
-### Start Web App
+### Start Web App (Dev Build)
+Website:
 ```
-cd web-app
-npm start
+cd app
+npm react:dev 
+```
+
+App:
+```
+cd app
+npm run electron:dev
 ```
 
 ### Start Server (Dev build)
