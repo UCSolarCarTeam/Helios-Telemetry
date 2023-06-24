@@ -1,46 +1,42 @@
-import React from "react";
-import { Loader } from "@googlemaps/js-api-loader";
-import mapStyles from "./mapStyles";
+import ReactMap, { Marker } from 'react-map-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
-function Map(props: any) {
-  const { carLocation, mapLocation } = props;
-  let map: google.maps.Map | undefined;
-  const loader = new Loader({
-    apiKey: import.meta.env.VITE_REACT_APP_MAPSAPIKEY as string,
-    version: "weekly",
-  });
-
-  loader.load().then(() => {
-    map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-      center: mapLocation,
-      zoom: 15,
-      mapTypeControl: false,
-      gestureHandling: "none",
-      zoomControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      keyboardShortcuts: false,
-    });
-
-    map.setOptions({ styles: mapStyles.light });
-    new google.maps.Marker({
-      position: carLocation,
-      icon: {
-        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        strokeColor: "#AC516C",
-        scale: 5,
-        rotation: 0,
-      },
-      draggable: false,
-      map,
-    });
-  });
-
-  return (
-    <>
-      <div id="map"></div>
-    </>
-  );
+type ILocation = {
+  lat: number
+  lng: number
 }
 
-export default Map;
+type IMapProps = {
+  carLocation: ILocation
+  mapLocation: ILocation
+}
+
+function Map(props: IMapProps): JSX.Element {
+  const { carLocation, mapLocation } = props
+
+  return (
+    <ReactMap
+      mapLib={import('mapbox-gl')}
+      mapboxAccessToken={import.meta.env.VITE_REACT_APP_MAPSAPIKEY as string}
+      initialViewState={{
+        longitude: mapLocation.lng,
+        latitude: mapLocation.lat,
+        zoom: 14
+      }}
+      style={{ width: '100%', height: '100%' }}
+      mapStyle="mapbox://styles/mapbox/dark-v11"
+      boxZoom={false}
+      doubleClickZoom={false}
+      dragPan={false}
+      dragRotate={false}
+      scrollZoom={false}
+      keyboard={false}
+    >
+      <Marker longitude={carLocation.lng} latitude={carLocation.lat} anchor={'center'}>
+        <img src="/assets/HeliosBirdseye.png" alt="map-pin" width={20} />
+      </Marker>
+    </ReactMap>
+  )
+}
+
+export default Map
