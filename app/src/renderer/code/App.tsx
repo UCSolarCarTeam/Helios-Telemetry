@@ -15,11 +15,11 @@ function App() {
     <div className={currentAppState.darkMode ? 'dark' : ''}>
       <div className="dark:bg-dark bg-light dark:text-dark text-light p-4 h-screen w-screen overflow-x-hidden">
         <div className="flex flex-col gap-y-2 h-full ">
-          <div className="flex flex-row flex-wrap gap-x-2 gap-y-2">
-            <div className="w-36 mx-auto ">
+          <div className="flex flex-wrap gap-x-2 gap-y-2">
+            <div className="w-36 mx-auto">
               <LogoStatusContainer />
             </div>
-            <div className="grow">
+            <div className="grow flex-1">
               <BrowserRouter>
                 <TabsContainer />
               </BrowserRouter>

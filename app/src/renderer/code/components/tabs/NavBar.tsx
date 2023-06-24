@@ -44,27 +44,26 @@ function NavBar(props: any): JSX.Element {
   }
 
   return (
-    <>
-      <ScrollContainer className="w-screen">
-        <Tabs
-          value={value}
-          variant="fullWidth"
-          onChange={handleChange}
-          TabIndicatorProps={{ style: { backgroundColor: '#B94A6C' } }}
-          sx={{ minHeight: '4vh' }}
-        >
-          {routes.map((route: SolarCarRoutes, i: number) => (
-            <Tab
-              sx={{ minHeight: '4vh', height: '4vh' }}
-              disableRipple
-              key={i}
-              value={route.value}
-              label={<h3 className="dark:text-dark text-light">{route.id}</h3>}
-            ></Tab>
-          ))}
-        </Tabs>
-      </ScrollContainer>
-    </>
+    <ScrollContainer className="">
+      <Tabs
+        className="w-full"
+        value={value}
+        variant="fullWidth"
+        onChange={handleChange}
+        TabIndicatorProps={{ style: { backgroundColor: '#B94A6C' } }}
+        sx={{ minHeight: '4vh' }}
+      >
+        {routes.map((route: SolarCarRoutes, i: number) => (
+          <Tab
+            sx={{ minHeight: '4vh', height: '4vh' }}
+            disableRipple
+            key={i}
+            value={route.value}
+            label={<h3 className="dark:text-dark text-light">{route.id}</h3>}
+          ></Tab>
+        ))}
+      </Tabs>
+    </ScrollContainer>
   )
 }
 
