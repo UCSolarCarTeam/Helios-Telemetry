@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useAppState } from "../../contexts/AppStateContext";
+import React, { useEffect, useState } from 'react'
+import { useAppState } from '../../contexts/AppStateContext'
 
 function SpeedAtom(props: any) {
-  const {} = useAppState;
-  let speed = 53;
+  const {} = useAppState
+  const speed = 53
 
   return (
     <>
@@ -18,7 +18,7 @@ function SpeedAtom(props: any) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default SpeedAtom;
+export default SpeedAtom

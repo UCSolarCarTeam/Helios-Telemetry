@@ -1,6 +1,6 @@
-import SpeedAtom from "../../atoms/SpeedAtom";
-import ThrottleIcon from "../../atoms/ThrottleIcon";
-import BatteryIconComponent from "../../atoms/BatteryIcon";
+import SpeedAtom from '../../atoms/SpeedAtom'
+import ThrottleIcon from '../../atoms/ThrottleIcon'
+import BatteryIconComponent from '../../atoms/BatteryIcon'
 
 function BatteryThrottleComponent(props: any) {
   return (
@@ -11,7 +11,7 @@ function BatteryThrottleComponent(props: any) {
         <SpeedAtom />
       </div>
     </>
-  );
+  )
 }
 
-export default BatteryThrottleComponent;
+export default BatteryThrottleComponent

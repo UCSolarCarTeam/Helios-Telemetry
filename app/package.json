@@ -16,7 +16,8 @@
     "react:dev": "vite",
     "react:build": "DISABLE_ESLINT_PLUGIN=true tsc && vite build",
     "react:serve": "vite preview",
-    "prepare": "cd .. && npx husky install"
+    "prepare": "cd .. && npx husky install",
+    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx ."
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [

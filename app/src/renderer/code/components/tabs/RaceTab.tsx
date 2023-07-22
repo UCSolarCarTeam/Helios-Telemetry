@@ -16,8 +16,8 @@ import { FiMenu } from 'react-icons/fi'
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend)
 
 function generateTableData(): any[] {
-  var tableData = []
-  for (var i = 0; i < 100; i++) {
+  const tableData = []
+  for (let i = 0; i < 100; i++) {
     tableData.push({
       dataPoint: faker.datatype.number({ min: 0, max: 100 }),
       time: faker.datatype.number({ min: 1553236613, max: 1711089413 }),
