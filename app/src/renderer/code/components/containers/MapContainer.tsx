@@ -4,6 +4,7 @@ import MapText from '../molecules/MapMolecules/MapText'
 
 function MapContainer(): JSX.Element {
   const [carLocation, setCarLocation] = useState({ lat: 38.9277572, lng: -95.6777937 })
+  const [followMap, setFollowMap] = useState<boolean>(true)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -15,10 +16,14 @@ function MapContainer(): JSX.Element {
   return (
     <div className="h-full w-full">
       <div className="grid h-[90%]">
-        <Map carLocation={carLocation} mapLocation={{ lat: 38.9277572, lng: -95.6777937 }} />
+        <Map
+          carLocation={carLocation}
+          mapLocation={{ lat: 38.9277572, lng: -95.6777937 }}
+          followMap={followMap}
+        />
       </div>
       <div className="grid h-[10%]">
-        <MapText />
+        <MapText setFollowMap={setFollowMap} followMap={followMap} />
       </div>
     </div>
   )

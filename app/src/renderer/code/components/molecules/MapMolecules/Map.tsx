@@ -1,5 +1,7 @@
 import ReactMap, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { useEffect } from 'react'
+import mapboxgl from 'mapbox-gl'
 
 type ILocation = {
   lat: number
@@ -9,10 +11,11 @@ type ILocation = {
 type IMapProps = {
   carLocation: ILocation
   mapLocation: ILocation
+  followMap: boolean
 }
 
 function Map(props: IMapProps): JSX.Element {
-  const { carLocation, mapLocation } = props
+  const { carLocation, mapLocation, followMap } = props
 
   return (
     <ReactMap
@@ -25,12 +28,12 @@ function Map(props: IMapProps): JSX.Element {
       }}
       style={{ width: '100%', height: '100%' }}
       mapStyle="mapbox://styles/mapbox/dark-v11"
-      boxZoom={false}
-      doubleClickZoom={false}
-      dragPan={false}
-      dragRotate={false}
-      scrollZoom={false}
-      keyboard={false}
+      boxZoom={!followMap}
+      doubleClickZoom={!followMap}
+      dragPan={!followMap}
+      dragRotate={!followMap}
+      scrollZoom={!followMap}
+      keyboard={!followMap}
     >
       <Marker longitude={carLocation.lng} latitude={carLocation.lat} anchor={'center'}>
         <img src="/assets/HeliosBirdseye.png" alt="map-pin" width={20} />
