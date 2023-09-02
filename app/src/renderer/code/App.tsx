@@ -14,18 +14,18 @@ function App() {
   return (
     <div className={currentAppState.darkMode ? 'dark' : ''}>
       <div className="dark:bg-dark bg-light dark:text-dark text-light p-4 h-screen w-screen overflow-x-hidden">
-        <div className="flex flex-col gap-y-2 h-full ">
-          <div className="flex flex-wrap gap-x-2 gap-y-2">
+        <div className="flex flex-col justify-end gap-y-2 h-full">
+          <div className="flex flex-wrap gap-2 h-full ">
             <div className="w-36 mx-auto">
               <LogoStatusContainer />
             </div>
-            <div className="grow flex-1">
+            <div className="w-full flex-1 ">
               <BrowserRouter>
                 <TabsContainer />
               </BrowserRouter>
             </div>
           </div>
-          <div className="flex flex-row flex-wrap gap-x-2 gap-y-2">
+          <div className="flex flex-row flex-wrap gap-2 h-full grow-0">
             <div className="grow h-96 w-96">
               <MapContainer />
             </div>
@@ -33,7 +33,7 @@ function App() {
               <HeroContainer />
             </div>
           </div>
-          <div className="grid">
+          <div className="flex h-fit-content">
             <BottomInformationContainer />
           </div>
         </div>
