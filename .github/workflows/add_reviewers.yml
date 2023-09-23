@@ -9,4 +9,5 @@ jobs:
       - uses: hkusu/review-assign-action@v1
         with:
           assignees: ${{ github.actor }}
-          reviewers: ideen1 
+          reviewers: ideen1, haley-lynn, justin-phxm, jjason-nn, IshaHaider, CalebBourb
+
