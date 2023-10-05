@@ -15,7 +15,7 @@ function MapContainer(): JSX.Element {
   return (
     <div className="h-full w-full">
       <div className="grid h-[90%]">
-        <Map carLocation={carLocation} mapLocation={{ lat: 38.9277572, lng: -95.6777937 }} />
+        <Map carLocation={carLocation} mapLocation={carLocation} />
       </div>
       <div className="grid h-[10%]">
         <MapText />
