@@ -1,5 +1,6 @@
 import ReactMap, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { useEffect, useState } from 'react'
 
 type ILocation = {
   lat: number
@@ -13,11 +14,12 @@ type IMapProps = {
 
 function Map(props: IMapProps): JSX.Element {
   const { carLocation, mapLocation } = props
-
   return (
     <ReactMap
       mapLib={import('mapbox-gl')}
       mapboxAccessToken={import.meta.env.VITE_REACT_APP_MAPSAPIKEY as string}
+      longitude={mapLocation.lng}
+      latitude={mapLocation.lat}
       initialViewState={{
         longitude: mapLocation.lng,
         latitude: mapLocation.lat,
