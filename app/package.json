@@ -68,7 +68,7 @@
     "@vitejs/plugin-react-swc": "^3.2.0",
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.3.0",
-    "electron": "^22.3.4",
+    "electron": "^22.3.25",
     "electron-builder": "^23.6.0",
     "electron-vite": "^1.0.21",
     "eslint": "^8.36.0",
