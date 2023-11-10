@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 
 function ThrottleIcon(props: any) {
-  const [regenPos, setRegenPos] = useState<number>(0);
-  const [gasPos, setGasPos] = useState<number>(62);
+  const [regenPos, setRegenPos] = useState<number>(0)
+  const [gasPos, setGasPos] = useState<number>(62)
 
-  const [throttleStyleString, setThrottleStyleString] = useState<string>("");
+  const [throttleStyleString, setThrottleStyleString] = useState<string>('')
   useEffect(() => {
     const nextString = `linear-gradient(
             90deg, 
@@ -12,9 +12,9 @@ function ThrottleIcon(props: any) {
             #96be25 ${50 - regenPos / 2}%, #96be25 50%,
             #B94A6C 50%, #B94A6C ${50 + gasPos / 2}%, 
             rgba(0,0,0,0) ${50 + gasPos / 2}%, rgba(0,0,0,0) 100% 
-            )`;
-    setThrottleStyleString(nextString);
-  }, [regenPos, gasPos]);
+            )`
+    setThrottleStyleString(nextString)
+  }, [regenPos, gasPos])
 
   return (
     <>
@@ -27,7 +27,7 @@ function ThrottleIcon(props: any) {
         <span className="m-auto w-full h-[0.12rem] bg-[#505050] -mt-[9.5px] z-0" />
       </div>
     </>
-  );
+  )
 }
 
-export default ThrottleIcon;
+export default ThrottleIcon
