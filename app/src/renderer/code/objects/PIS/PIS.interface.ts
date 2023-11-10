@@ -7,3 +7,5 @@ const PIS = {
   Motor: motor,
   MPPT: mppt
 }
+
+export default PIS
