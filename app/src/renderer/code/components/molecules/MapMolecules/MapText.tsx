@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react'
 
 function MapText() {
-  const lapsLeft = 0;
-  const timeLeft = 0;
+  const lapsLeft = 0
+  const timeLeft = 0
   return (
     <>
       <div className="w-full text-center mt-1">
@@ -16,7 +16,7 @@ function MapText() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default MapText;
+export default MapText
