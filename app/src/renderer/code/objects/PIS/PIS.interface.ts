@@ -1,11 +1,22 @@
-import battery from './battery.interface'
-import motor from './motor.interface'
-import mppt from './mppt.interface'
+import ITelemetryData from '../telemetry-data.interface'
 
-const PIS = {
-  Battery: battery,
-  Motor: motor,
-  MPPT: mppt
+type I_PISFieldData = {
+  value: number | string | boolean
+  unit?: string
+  min?: number
+  max?: number
+  hover?: string
 }
 
-export default PIS
+type I_PISField = {
+  Name: string
+  FString?: string
+  data: I_PISFieldData[]
+}
+
+type I_PIS = {
+  [id: string]: I_PISField[] | I_PIS
+}
+
+export default I_PIS
+export type { I_PISField }

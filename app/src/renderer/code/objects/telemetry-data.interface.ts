@@ -1,3 +1,7 @@
+enum Motor {
+  RightMotor = 1,
+  LeftMotor = 0
+}
 export default interface ITelemetryData {
   PacketTitle: string
   TimeStamp: number
@@ -218,6 +222,7 @@ export interface IMotorErrorFlags {
   Wail15VUnderVoltageLockOut: boolean
   DesaturationFault: boolean
 }
+
 export interface IMotorLimitFlags {
   OutputVoltagePwm: boolean
   MotorCurrent: boolean

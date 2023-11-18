@@ -1,14 +1,19 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 import ITelemetryData from '../objects/telemetry-data.interface'
 
-interface Props {
+interface PacketContextProps {
   children: ReactNode | ReactNode[]
 }
 
-const packetContext = createContext({})
+interface IPackContextReturn {
+  currentPacket: ITelemetryData
+  setCurrentPacket: (packet: ITelemetryData) => void
+}
 
-export function PacketContextProvider({ children }: Props) {
-  const [currentPacket, setCurrentPacket] = useState<ITelemetryData>()
+const packetContext = createContext<IPackContextReturn>({} as IPackContextReturn)
+
+export function PacketContextProvider({ children }: PacketContextProps): JSX.Element {
+  const [currentPacket, setCurrentPacket] = useState<ITelemetryData>({} as ITelemetryData)
 
   return (
     <packetContext.Provider value={{ currentPacket, setCurrentPacket }}>
@@ -17,6 +22,6 @@ export function PacketContextProvider({ children }: Props) {
   )
 }
 
-export function usePacket() {
+export function usePacket(): IPackContextReturn {
   return useContext(packetContext)
 }
