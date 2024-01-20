@@ -1,35 +1,36 @@
-import React from 'react'
-import './App.css'
-import TabsContainer from './components/containers/TabsContainer'
-import BottomInformationContainer from './components/containers/BottomInformationContainer'
-import MapContainer from './components/containers/MapContainer'
-import HeroContainer from './components/containers/HeroContainer'
-import LogoStatusContainer from './components/containers/LogoStatusContainer'
-import { useAppState } from './contexts/AppStateContext'
-import { BrowserRouter } from 'react-router-dom'
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+
+import "./App.css";
+import BottomInformationContainer from "./components/containers/BottomInformationContainer";
+import HeroContainer from "./components/containers/HeroContainer";
+import LogoStatusContainer from "./components/containers/LogoStatusContainer";
+import MapContainer from "./components/containers/MapContainer";
+import TabsContainer from "./components/containers/TabsContainer";
+import { useAppState } from "./contexts/AppStateContext";
 
 function App() {
-  const { currentAppState } = useAppState()
+  const { currentAppState } = useAppState();
   // 38, 55, 7
   return (
-    <div className={currentAppState.darkMode ? 'dark' : ''}>
-      <div className="dark:bg-dark bg-light dark:text-dark text-light p-4 h-screen w-screen overflow-x-hidden">
-        <div className="flex flex-col gap-y-2 h-full ">
+    <div className={currentAppState.darkMode ? "dark" : ""}>
+      <div className="h-screen w-screen overflow-x-hidden bg-light p-4 text-light dark:bg-dark dark:text-dark">
+        <div className="flex h-full flex-col gap-y-2 ">
           <div className="flex flex-wrap gap-x-2 gap-y-2">
-            <div className="w-36 mx-auto">
+            <div className="mx-auto w-36">
               <LogoStatusContainer />
             </div>
-            <div className="grow flex-1">
+            <div className="flex-1 grow">
               <BrowserRouter>
                 <TabsContainer />
               </BrowserRouter>
             </div>
           </div>
           <div className="flex flex-row flex-wrap gap-x-2 gap-y-2">
-            <div className="grow h-96 w-96">
+            <div className="h-96 w-96 grow">
               <MapContainer />
             </div>
-            <div className="basis-2/3 grow">
+            <div className="grow basis-2/3">
               <HeroContainer />
             </div>
           </div>
@@ -39,7 +40,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

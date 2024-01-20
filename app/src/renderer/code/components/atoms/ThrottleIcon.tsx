@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 
 function ThrottleIcon(props: any) {
-  const [regenPos, setRegenPos] = useState<number>(0)
-  const [gasPos, setGasPos] = useState<number>(62)
+  const [regenPos, setRegenPos] = useState<number>(0);
+  const [gasPos, setGasPos] = useState<number>(62);
 
-  const [throttleStyleString, setThrottleStyleString] = useState<string>('')
+  const [throttleStyleString, setThrottleStyleString] = useState<string>("");
   useEffect(() => {
     const nextString = `linear-gradient(
             90deg, 
@@ -12,22 +12,22 @@ function ThrottleIcon(props: any) {
             #96be25 ${50 - regenPos / 2}%, #96be25 50%,
             #B94A6C 50%, #B94A6C ${50 + gasPos / 2}%, 
             rgba(0,0,0,0) ${50 + gasPos / 2}%, rgba(0,0,0,0) 100% 
-            )`
-    setThrottleStyleString(nextString)
-  }, [regenPos, gasPos])
+            )`;
+    setThrottleStyleString(nextString);
+  }, [regenPos, gasPos]);
 
   return (
     <>
-      <div className="grid w-full h-10 justify-items-center col-span-7 content-center">
+      <div className="col-span-7 grid h-10 w-full content-center justify-items-center">
         <span
-          className=" w-full h-1 place-self-center z-10"
+          className=" z-10 h-1 w-full place-self-center"
           style={{ backgroundImage: throttleStyleString }}
         />
-        <span className="m-auto w-0.5 h-4 bg-[#505050] -mt-[9.5px] z-10" />
-        <span className="m-auto w-full h-[0.12rem] bg-[#505050] -mt-[9.5px] z-0" />
+        <span className="z-10 m-auto -mt-[9.5px] h-4 w-0.5 bg-[#505050]" />
+        <span className="z-0 m-auto -mt-[9.5px] h-[0.12rem] w-full bg-[#505050]" />
       </div>
     </>
-  )
+  );
 }
 
-export default ThrottleIcon
+export default ThrottleIcon;

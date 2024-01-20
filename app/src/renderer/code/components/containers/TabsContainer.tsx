@@ -1,8 +1,8 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 
-import { routes, SolarCarRoutes } from '../../objects/TabRoutes'
-import NavBar from '../tabs/NavBar'
+import { SolarCarRoutes, routes } from "../../objects/TabRoutes";
+import NavBar from "../tabs/NavBar";
 
 function TabsContainer(props: any) {
   return (
@@ -14,7 +14,7 @@ function TabsContainer(props: any) {
         ))}
       </Routes>
     </div>
-  )
+  );
 }
 
-export default TabsContainer
+export default TabsContainer;

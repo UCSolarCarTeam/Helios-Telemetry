@@ -1,44 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 
 function BatteryIconComponent(props: any) {
-  const [batteryLevel, setBatteryLevel] = useState<number>(38.5)
+  const [batteryLevel, setBatteryLevel] = useState<number>(38.5);
 
-  const [batteryStyleString, setBatteryStyleString] = useState<string>('')
+  const [batteryStyleString, setBatteryStyleString] = useState<string>("");
   useEffect(() => {
     const nextString = `linear-gradient(
             90deg,
             #9C0534 0%, #9C0534 ${(batteryLevel / 98) * 100}%, 
-            #BAB8B8 ${(batteryLevel / 98) * 100}%, #BAB8B8 50%`
-    setBatteryStyleString(nextString)
-  }, [batteryLevel])
+            #BAB8B8 ${(batteryLevel / 98) * 100}%, #BAB8B8 50%`;
+    setBatteryStyleString(nextString);
+  }, [batteryLevel]);
 
-  const [terminalStyleString, setTerminalStyleString] = useState<string>('')
+  const [terminalStyleString, setTerminalStyleString] = useState<string>("");
   useEffect(() => {
     const nextString = `linear-gradient(
             90deg, 
             #9C0534 0%, #9C0534 ${((batteryLevel - 98) / 2) * 100}%, 
-            #BAB8B8 ${batteryLevel - 98 - 2 * 100}%, #BAB8B8 50%`
-    setTerminalStyleString(nextString)
-  }, [batteryLevel])
+            #BAB8B8 ${batteryLevel - 98 - 2 * 100}%, #BAB8B8 50%`;
+    setTerminalStyleString(nextString);
+  }, [batteryLevel]);
 
   return (
-    <div className="grid col-span-3 w-full pr-2">
-      <div className="flex flex-nowrap w-full">
+    <div className="col-span-3 grid w-full pr-2">
+      <div className="flex w-full flex-nowrap">
         <div
-          className="flex justify-start rounded-lg w-[98%] h-full"
+          className="flex h-full w-[98%] justify-start rounded-lg"
           style={{ backgroundImage: batteryStyleString }}
         >
-          <div className="flex justify-center self-center items-stretch min-h-full min-w-full text-[#FFFFFF]">
-            <div className="text-lg min-h-full self-center">{batteryLevel.toString()}%</div>
+          <div className="flex min-h-full min-w-full items-stretch justify-center self-center text-[#FFFFFF]">
+            <div className="min-h-full self-center text-lg">
+              {batteryLevel.toString()}%
+            </div>
           </div>
         </div>
         <div
-          className="flex self-center rounded-r-sm w-[2%] h-1/4"
+          className="flex h-1/4 w-[2%] self-center rounded-r-sm"
           style={{ backgroundImage: terminalStyleString }}
         ></div>
       </div>
     </div>
-  )
+  );
 }
 
-export default BatteryIconComponent
+export default BatteryIconComponent;

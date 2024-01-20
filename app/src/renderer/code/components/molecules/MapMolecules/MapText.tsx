@@ -1,22 +1,22 @@
-import React from 'react'
+import React from "react";
 
 function MapText() {
-  const lapsLeft = 0
-  const timeLeft = 0
+  const lapsLeft = 0;
+  const timeLeft = 0;
   return (
     <>
-      <div className="w-full text-center mt-1">
+      <div className="mt-1 w-full text-center">
         <div className="grid grid-cols-2">
-          <div className="grid col-span-1">
+          <div className="col-span-1 grid">
             <p>Laps Left: {lapsLeft}</p>
           </div>
-          <div className="grid col-span-1">
+          <div className="col-span-1 grid">
             <p>Time Left: {timeLeft}</p>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default MapText
+export default MapText;

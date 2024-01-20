@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import Map from '../molecules/MapMolecules/Map'
-import MapText from '../molecules/MapMolecules/MapText'
+import React, { useEffect, useState } from "react";
+
+import Map from "../molecules/MapMolecules/Map";
+import MapText from "../molecules/MapMolecules/MapText";
 
 function MapContainer(): JSX.Element {
-  const [carLocation, setCarLocation] = useState({ lat: 38.9277572, lng: -95.6777937 })
+  const [carLocation, setCarLocation] = useState({
+    lat: 38.9277572,
+    lng: -95.6777937,
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCarLocation({ lat: carLocation.lat + 0.0001, lng: carLocation.lng })
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [carLocation])
+      setCarLocation({ lat: carLocation.lat + 0.0001, lng: carLocation.lng });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [carLocation]);
 
   return (
     <div className="h-full w-full">
@@ -21,7 +25,7 @@ function MapContainer(): JSX.Element {
         <MapText />
       </div>
     </div>
-  )
+  );
 }
 
-export default MapContainer
+export default MapContainer;
