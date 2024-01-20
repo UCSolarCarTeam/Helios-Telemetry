@@ -79,6 +79,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-tailwindcss": "^3.14.0",
     "gh-pages": "^4.0.0",
+    "gltf-pipeline": "^4.1.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "postcss": "^8.4.19",
