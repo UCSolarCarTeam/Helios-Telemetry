@@ -6,11 +6,11 @@ const Battery = (): I_PIS => {
   const data = {
     BMSRelayStatusFlags: [
       {
-        Name: "Heartbeat", //this is the bigger heartbeat
+        name: "Heartbeat", //this is the bigger heartbeat
         data: [{ value: currentPacket?.Battery?.Alive }],
       },
       {
-        Name: "Discharge Relay Enabled",
+        name: "Discharge Relay Enabled",
         data: [
           {
             value:
@@ -20,7 +20,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Charge Relay Enabled",
+        name: "Charge Relay Enabled",
         data: [
           {
             value:
@@ -29,7 +29,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Charger Safety Enabled",
+        name: "Charger Safety Enabled",
         data: [
           {
             value:
@@ -38,7 +38,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Multipurpose Input Signal",
+        name: "Multipurpose Input Signal",
         data: [
           {
             value:
@@ -48,7 +48,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Is Ready",
+        name: "Is Ready",
         data: [
           {
             value:
@@ -57,7 +57,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Is Charging",
+        name: "Is Charging",
         data: [
           {
             value:
@@ -67,7 +67,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Malfunction Indicator Active",
+        name: "Malfunction Indicator Active",
         data: [
           {
             value:
@@ -77,7 +77,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Always On",
+        name: "Always On",
         data: [
           {
             value:
@@ -89,7 +89,7 @@ const Battery = (): I_PIS => {
 
     Fan: [
       {
-        Name: "Fan Voltage",
+        name: "Fan Voltage",
         data: [
           {
             value: currentPacket?.Battery?.FanVoltage,
@@ -100,11 +100,11 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Fan Speed",
+        name: "Fan Speed",
         data: [{ value: currentPacket?.Battery?.FanSpeed, min: 0, max: 100 }],
       },
       {
-        Name: "Requested Fan Speed",
+        name: "Requested Fan Speed",
         data: [
           {
             value: currentPacket?.Battery?.RequestedFanSpeed,
@@ -118,7 +118,7 @@ const Battery = (): I_PIS => {
 
     Temperature: [
       {
-        Name: "Battery Temperature",
+        name: "Battery Temperature",
         FString: "%s (%s) - %s (%s)",
         data: [
           {
@@ -146,7 +146,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Average Temperature",
+        name: "Average Temperature",
         data: [
           {
             value: currentPacket?.Battery?.AverageTemperature,
@@ -157,7 +157,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Internal Temperature",
+        name: "Internal Temperature",
         data: [
           {
             value: currentPacket?.Battery?.InternalTemperature,
@@ -171,7 +171,7 @@ const Battery = (): I_PIS => {
 
     Cell: [
       {
-        Name: "Battery Cell Voltage",
+        name: "Battery Cell Voltage",
         FString: "%s (%s) - %s (%s)",
         data: [
           {
@@ -191,7 +191,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Battery Average Voltage",
+        name: "Battery Average Voltage",
         data: [
           {
             value: currentPacket?.Battery?.AverageCellVoltage,
@@ -202,7 +202,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Battery Populated Cells",
+        name: "Battery Populated Cells",
         data: [
           { value: currentPacket?.Battery?.PopulatedCells, min: 0, max: 100 },
         ],
@@ -211,7 +211,7 @@ const Battery = (): I_PIS => {
 
     Pack: [
       {
-        Name: "Pack Current",
+        name: "Pack Current",
         data: [
           {
             value: currentPacket?.Battery?.PackCurrent,
@@ -222,7 +222,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Pack Voltage",
+        name: "Pack Voltage",
         data: [
           {
             value: currentPacket?.Battery?.PackVoltage,
@@ -233,7 +233,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Pack Amphours",
+        name: "Pack Amphours",
         data: [
           {
             value: currentPacket?.Battery?.PackAmphours,
@@ -244,7 +244,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Pack State of Charge",
+        name: "Pack State of Charge",
         data: [
           {
             value: currentPacket?.Battery?.PackStateOfCharge,
@@ -255,7 +255,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Pack Depth of Discharge",
+        name: "Pack Depth of Discharge",
         data: [
           {
             value: currentPacket?.Battery?.PackDepthOfDischarge,
@@ -266,7 +266,7 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "12V Input Voltage",
+        name: "12V Input Voltage",
         data: [
           {
             value: currentPacket?.Battery["12vInputVoltage"],
@@ -280,49 +280,49 @@ const Battery = (): I_PIS => {
 
     AuxBMS: [
       {
-        Name: "Heartbeat",
+        name: "Heartbeat",
         data: [{ value: currentPacket?.AuxBms?.AuxBmsAlive }],
       },
       {
-        Name: "Strobe BMS",
+        name: "Strobe BMS",
         data: [{ value: currentPacket?.AuxBms?.StrobeBmsLight }],
       },
       {
-        Name: "Allow Charge",
+        name: "Allow Charge",
         data: [{ value: currentPacket?.AuxBms?.AllowCharge }],
       },
       {
-        Name: "Allow Discharge",
+        name: "Allow Discharge",
         data: [{ value: currentPacket?.AuxBms?.AllowDischarge }],
       },
       {
-        Name: "High Voltage Enable",
+        name: "High Voltage Enable",
         data: [{ value: currentPacket?.AuxBms?.HighVoltageEnableState }],
       },
       {
-        Name: "Orion CAN Received",
+        name: "Orion CAN Received",
         data: [{ value: currentPacket?.AuxBms?.OrionCANReceivedRecently }],
       },
       {
-        Name: "Discharge Should Trip",
+        name: "Discharge Should Trip",
         data: [{ value: currentPacket?.AuxBms?.DischargeShouldTrip }],
       },
       {
-        Name: "Charge Should Trip",
+        name: "Charge Should Trip",
         data: [{ value: currentPacket?.AuxBms?.ChargeShouldTrip }],
       },
       {
-        Name: "Charge Open but Should be Closed",
+        name: "Charge Open but Should be Closed",
         data: [{ value: currentPacket?.AuxBms?.ChargeOpenButShouldBeClosed }],
       },
       {
-        Name: "Discharge Open but Should be Closed",
+        name: "Discharge Open but Should be Closed",
         data: [
           { value: currentPacket?.AuxBms?.DischargeOpenButShouldBeClosed },
         ],
       },
       {
-        Name: "Aux Voltage",
+        name: "Aux Voltage",
         data: [
           {
             value: currentPacket?.AuxBms?.AuxVoltage,
@@ -333,21 +333,21 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Precharge State",
+        name: "Precharge State",
         data: [{ value: currentPacket?.AuxBms?.PrechargeState }],
       },
       {
-        Name: "Charge Contactor Error",
+        name: "Charge Contactor Error",
         data: [{ value: currentPacket?.AuxBms?.ChargeContactorError }],
       },
       {
-        Name: "Charge Trip Due To High Cell Voltage",
+        name: "Charge Trip Due To High Cell Voltage",
         data: [
           { value: currentPacket?.AuxBms?.ChargeTripDueToHighCellVoltage },
         ],
       },
       {
-        Name: "Charge Trip Due To High Temperature And Current",
+        name: "Charge Trip Due To High Temperature And Current",
         data: [
           {
             value:
@@ -356,19 +356,19 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Charge Trip Due To Pack Current",
+        name: "Charge Trip Due To Pack Current",
         data: [{ value: currentPacket?.AuxBms?.ChargeTripDueToPackCurrent }],
       },
       {
-        Name: "Common Contactor Error",
+        name: "Common Contactor Error",
         data: [{ value: currentPacket?.AuxBms?.CommonContactorError }],
       },
       {
-        Name: "Discharge Contactor Error",
+        name: "Discharge Contactor Error",
         data: [{ value: currentPacket?.AuxBms?.DischargeContactorError }],
       },
       {
-        Name: "Discharge Trip Due To High Temperature And Current",
+        name: "Discharge Trip Due To High Temperature And Current",
         data: [
           {
             value:
@@ -378,31 +378,31 @@ const Battery = (): I_PIS => {
         ],
       },
       {
-        Name: "Discharge Trip Due To Low Cell Voltage",
+        name: "Discharge Trip Due To Low Cell Voltage",
         data: [
           { value: currentPacket?.AuxBms?.DischargeTripDueToLowCellVoltage },
         ],
       },
       {
-        Name: "Discharge Trip Due To Pack Current",
+        name: "Discharge Trip Due To Pack Current",
         data: [{ value: currentPacket?.AuxBms?.DischargeTripDueToPackCurrent }],
       },
       {
-        Name: "Protection Trip",
+        name: "Protection Trip",
         data: [{ value: currentPacket?.AuxBms?.ProtectionTrip }],
       },
       {
-        Name: "Trip Due To Orion Message Timeout",
+        name: "Trip Due To Orion Message Timeout",
         data: [{ value: currentPacket?.AuxBms?.TripDueToOrionMessageTimeout }],
       },
       {
-        Name: "Charge Not Closed Due To High Current",
+        name: "Charge Not Closed Due To High Current",
         data: [
           { value: currentPacket?.AuxBms?.ChargeNotClosedDueToHighCurrent },
         ],
       },
       {
-        Name: "Discharge Not Closed Due To High Current",
+        name: "Discharge Not Closed Due To High Current",
         data: [
           { value: currentPacket?.AuxBms?.DischargeNotClosedDueToHighCurrent },
         ],

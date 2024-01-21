@@ -3,7 +3,7 @@ import { I_PISField, I_PISFieldData } from "../../objects/PIS/PIS.interface";
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
 };
-function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): string {
+function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
   const inRange =
     // If value is of type string range is true
@@ -21,8 +21,12 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): string {
 
   const color = inRange ? "text-green-500" : "text-red-500";
 
-  return `<span className='${color}'>${value} </span>`;
-  return { value: value, color: color };
+  return (
+    <span className={color}>
+      {value}
+      {unit}
+    </span>
+  );
 }
 
 type FieldDataFormatterProps = {
@@ -36,16 +40,26 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 
   const formatString = (string: string, params: I_PISFieldData[]) => {
     // %s •C (%s) - %s •C (%s)
-
-    return string.replace(/%s/g, (_, index) => {
-      return typeof params[index] === "undefined"
-        ? ""
-        : RangeCheckedFieldData({ fieldData: data[index] });
-    });
+    console.log("TEST", string.split("%s"));
+    return string
+      .split("%s")
+      .map((part, index) => {
+        typeof params[index] === "undefined" ? (
+          ""
+        ) : (
+          <>
+            <RangeCheckedFieldData fieldData={params[index]} />
+            {part}
+          </>
+        );
+      })
+      .join("");
   };
 
   return fstring === undefined ? (
-    <div>{RangeCheckedFieldData({ fieldData: data[0] })}</div>
+    <div>
+      <RangeCheckedFieldData fieldData={data[0]} />
+    </div>
   ) : (
     <div>{formatString(fstring, data)}</div>
   );
@@ -68,8 +82,8 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   }
   return (
     <div>
-      {field.name}:{" "}
-      <FieldDataFormatter data={field.data} fstring={field.fstring} />{" "}
+      {field.name}:
+      <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
   );
 }
@@ -95,31 +109,33 @@ type PIStransformerProps = {
 
 function PIStransformer(props: PIStransformerProps): JSX.Element {
   const { root, depth = 0 } = props;
-
+  console.log(root);
   return (
-    <div className="flex w-full justify-between gap-4 ">
-      {Object.keys(root).map((key, index) => {
-        const value = root[key];
-        return (
-          <div key={index} className={`flex flex-col `}>
-            <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
-              <p
-                className={`text-helios ${
-                  depth >= 2 ? `text-xs` : depth == 1 ? "text-sm" : "text-lg"
-                }`}
-              >
-                {key}
-              </p>
+    root && (
+      <div className="flex w-full justify-between gap-4 ">
+        {Object.keys(root).map((key, index) => {
+          const value = root[key];
+          return (
+            <div key={index} className={`flex flex-col `}>
+              <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
+                <p
+                  className={`text-helios ${
+                    depth >= 2 ? `text-xxs` : depth == 1 ? "text-sm" : "text-lg"
+                  }`}
+                >
+                  {key}
+                </p>
+              </div>
+              {Array.isArray(value) ? (
+                <FieldsPrinter fields={value} />
+              ) : (
+                <PIStransformer root={value} depth={depth + 1} />
+              )}
             </div>
-            {Array.isArray(value) ? (
-              <FieldsPrinter fields={value} />
-            ) : (
-              <PIStransformer root={value} depth={depth + 1} />
-            )}
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    )
   );
 }
 

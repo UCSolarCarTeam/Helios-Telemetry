@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 
 import ITelemetryData from "../objects/telemetry-data.interface";
+import fakeData from "./fakePacket.json";
 
 interface PacketContextProps {
   children: ReactNode | ReactNode[];
@@ -19,7 +20,7 @@ export function PacketContextProvider({
   children,
 }: PacketContextProps): JSX.Element {
   const [currentPacket, setCurrentPacket] = useState<ITelemetryData>(
-    {} as ITelemetryData,
+    fakeData as ITelemetryData,
   );
 
   return (
