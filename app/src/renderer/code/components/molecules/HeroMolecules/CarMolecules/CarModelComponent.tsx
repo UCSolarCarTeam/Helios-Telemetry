@@ -567,7 +567,7 @@ export function CarModelComponent(props: CarModelComponentProps) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet050.geometry}
-        material={materials["Shape.050"]}
+        material={props.testMaterial}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
