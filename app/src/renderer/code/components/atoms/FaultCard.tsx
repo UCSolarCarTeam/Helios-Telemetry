@@ -9,11 +9,11 @@ export enum ISeverity {
 type FaultCardProps = {
   severity: ISeverity;
   faultName: string;
+  faultTime: number;
 };
 
 function FaultCard(props: FaultCardProps) {
   const { severity, faultName } = props;
-
   return (
     <>
       <div className="flex p-2">
