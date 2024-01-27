@@ -8,7 +8,7 @@ export enum ISeverity {
 
 type FaultCardProps = {
   severity: ISeverity;
-  faultName: string;
+  faultName: String;
   faultTime: number;
 };
 
