@@ -7,13 +7,13 @@ import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as TWEEN from "@tweenjs/tween.js";
 
-enum IndicationStates {
+export enum IndicationStates {
   RED,
   ORANGE,
   CLEAR,
 }
 
-type IndicationLocations = {
+export type IndicationLocations = {
   leftMotor: IndicationStates;
   rightMotor: IndicationStates;
   battery: IndicationStates;
@@ -33,45 +33,40 @@ function CarGraphicComponent(props: any) {
     solarPanel: IndicationStates.CLEAR,
   });
 
-  const [errorMaterial, setErrorMaterial] = useState(
-    new THREE.MeshStandardMaterial({ color: 0xff0000 }),
-  );
-  const [warningMaterial, setWarningMaterial] = useState(
-    new THREE.MeshStandardMaterial({ color: 0xffa500 }),
-  );
+  const errorMaterial = new THREE.MeshStandardMaterial({
+    color: 0xff0000,
+    transparent: true,
+    opacity: 0.8,
+  });
 
-  useEffect(() => {
-    animateEmissive();
-  }, []);
+  const warningMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffa500,
+    transparent: true,
+    opacity: 0.8,
+  });
 
-  // new TWEEN.Tween(errorMaterial)
-  //   .to({ r: 1, g: 0, b: 0 }, 1000)
-  //   .easing(TWEEN.Easing.Quartic.In)
-  //   .onUpdate(function () {
-  //     setErrorMaterial(new THREE.MeshStandardMaterial({ color: 0xff0000 }));
-  //   })
-  //   .start();
+  const initialIntensity = 0.1;
+  const targetIntensity = 0.8;
+  const duration = 500;
 
-  const animateEmissive = () => {
-    const initialIntensity = 0.5;
-    const targetIntensity = 2.0;
-    const duration = 1000;
+  const tween = new TWEEN.Tween({ intensity: initialIntensity })
+    .to({ intensity: targetIntensity }, duration)
+    .easing(TWEEN.Easing.Quadratic.InOut)
 
-    new TWEEN.Tween({ intensity: initialIntensity })
-      .to({ intensity: targetIntensity }, duration)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .start()
-      .onUpdate(({ intensity }) => {
-        console.log("Intensity:", intensity);
-        // setErrorMaterial((prevMaterial) => {
-        //   const newMaterial = prevMaterial.clone();
-        //   newMaterial.emissiveIntensity = intensity;
-        //   return newMaterial;
-        // });
-      })
-      .yoyo(true)
-      .repeat(-1);
-  };
+    .onUpdate(({ intensity }) => {
+      errorMaterial.opacity = intensity;
+      warningMaterial.opacity = intensity;
+    })
+    .yoyo(true)
+    .start()
+    .repeat(Infinity);
+
+  // Setup the animation loop.
+  function animate(time: number) {
+    tween.update(time);
+    requestAnimationFrame(animate);
+  }
+  animate(1);
 
   return (
     <>
@@ -82,7 +77,12 @@ function CarGraphicComponent(props: any) {
           shadow-mapSize={[512, 512]}
           castShadow
         />
-        <CarModelComponent isClear={isClear} testMaterial={errorMaterial} />
+        <CarModelComponent
+          isClear={isClear}
+          errorMaterial={errorMaterial}
+          warningMaterial={warningMaterial}
+          indications={indications}
+        />
         <RoadComponent speed={7} size={15} />
         <ContactShadows
           position={[0, 0, 0]}
