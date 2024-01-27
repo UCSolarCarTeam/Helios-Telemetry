@@ -1,5 +1,4 @@
-import React from "react";
-import { Routes } from "react-router-dom";
+import type React from "react";
 
 import BatteryTab from "../components/tabs/BatteryTab";
 import FaultsTab from "../components/tabs/FaultsTab";
@@ -10,10 +9,10 @@ import RaceTab from "../components/tabs/RaceTab";
 
 export interface SolarCarRoutes {
   path: string;
-  id: String;
+  id: string;
   element?: React.ReactNode;
   Component?: React.ComponentType;
-  value: String;
+  value: string;
 }
 
 export const routes: SolarCarRoutes[] = [

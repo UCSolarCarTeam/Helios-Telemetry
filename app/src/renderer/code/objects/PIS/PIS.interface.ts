@@ -1,5 +1,3 @@
-import ITelemetryData from "../telemetry-data.interface";
-
 type I_PISFieldData = {
   value: number | string | boolean;
   unit?: string;

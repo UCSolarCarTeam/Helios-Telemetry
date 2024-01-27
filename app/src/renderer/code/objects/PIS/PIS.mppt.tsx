@@ -1,5 +1,6 @@
 import { usePacket } from "../../contexts/PacketContext";
-import I_PIS, { I_PISField } from "./PIS.interface";
+import type I_PIS from "./PIS.interface";
+import { type I_PISField } from "./PIS.interface";
 
 const mppt = (): I_PIS => {
   const { currentPacket } = usePacket();
@@ -62,7 +63,7 @@ const mppt = (): I_PIS => {
             },
           ],
         },
-      ] as I_PISField[],
+      ] as unknown as I_PISField[],
       Channel1: [
         {
           Name: "Array Voltage",
@@ -120,7 +121,7 @@ const mppt = (): I_PIS => {
             },
           ],
         },
-      ] as I_PISField[],
+      ] as unknown as I_PISField[],
     },
     Unit1: {
       Channel0: [
@@ -180,7 +181,7 @@ const mppt = (): I_PIS => {
             },
           ],
         },
-      ] as I_PISField[],
+      ] as unknown as I_PISField[],
       Channel1: [
         {
           Name: "Array Voltage",
@@ -238,7 +239,7 @@ const mppt = (): I_PIS => {
             },
           ],
         },
-      ] as I_PISField[],
+      ] as unknown as I_PISField[],
     },
   };
 };

@@ -1,6 +1,4 @@
-import React from "react";
-
-import {
+import type {
   AuxBMSInterface,
   BMSRelayStatusFlagsInterface,
   BatteryProps,
