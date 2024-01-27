@@ -5,7 +5,7 @@ import { usePacket } from "../../../contexts/PacketContext";
 import FaultCard from "../../atoms/FaultCard";
 import { ISeverity } from "../../atoms/FaultCard";
 
-type FaultStateType = { timer: number; name: string; on: boolean };
+type FaultStateType = { timer: number; name: String; on: boolean };
 type TestFaultType = {
   fault1: boolean;
   fault2: boolean;
