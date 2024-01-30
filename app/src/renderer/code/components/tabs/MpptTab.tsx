@@ -1,53 +1,39 @@
-import React, { useState } from "react";
-
 import { faker } from "@faker-js/faker";
 
-import { MpptData } from "../../objects/MpptProps";
+import { type MpptData } from "../../objects/MpptProps";
 import MpptComponent from "../molecules/HeroMolecules/MpptTabMolecules/MpptComponent";
 
 const fakeData: MpptData = {
   Unit0: {
     Channel0: {
-      arrayVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      arrayCurrent:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      arrayVoltage: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      arrayCurrent: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "C",
       batteryVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      temperature:
-        faker.number.int({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
+        faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      temperature: faker.number.int({ min: 22.0, max: 100.0 }).toString() + "C",
     },
     Channel1: {
-      arrayVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      arrayCurrent:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      arrayVoltage: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      arrayCurrent: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "C",
       batteryVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      temperature:
-        faker.number.int({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
+        faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      temperature: faker.number.int({ min: 22.0, max: 100.0 }).toString() + "C",
     },
   },
   Unit1: {
     Channel0: {
-      arrayVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      arrayCurrent:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      arrayVoltage: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      arrayCurrent: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "C",
       batteryVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      temperature:
-        faker.number.int({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
+        faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      temperature: faker.number.int({ min: 22.0, max: 100.0 }).toString() + "C",
     },
     Channel1: {
-      arrayVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      arrayCurrent:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "C",
+      arrayVoltage: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      arrayCurrent: faker.number.int({ min: 0.0, max: 100.0 }).toString() + "C",
       batteryVoltage:
-        faker.number.int({ min: 0.0, max: 100.0, precision: 0.01 }) + "V",
-      temperature:
-        faker.number.int({ min: 22.0, max: 100.0, precision: 0.01 }) + "C",
+        faker.number.int({ min: 0.0, max: 100.0 }).toString() + "V",
+      temperature: faker.number.int({ min: 22.0, max: 100.0 }).toString() + "C",
     },
   },
 };
@@ -62,7 +48,7 @@ function MpptTab() {
             <div id="Channel 0" className=" w-full pr-2">
               <div className="flex justify-center">
                 <h2 className="font-medium">Channel 0</h2>
-                <div className="ml-2 mt-1.5 h-3 w-3 rounded-full bg-green dark:bg-green-dark"></div>
+                <div className="ml-2 mt-1.5 size-3 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
               <MpptComponent channelData={fakeData.Unit0.Channel0} />
               <div className="h-36 rounded-lg bg-slate-300">
@@ -72,7 +58,7 @@ function MpptTab() {
             <div id="Channel 1" className=" w-full pr-2">
               <div className="flex justify-center">
                 <h2 className="font-medium">Channel 1</h2>
-                <div className="ml-2 mt-1.5 h-3 w-3 rounded-full bg-green dark:bg-green-dark"></div>
+                <div className="ml-2 mt-1.5 size-3 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
               <MpptComponent channelData={fakeData.Unit0.Channel1} />
               <div className="h-36 rounded-lg bg-slate-200">
@@ -87,7 +73,7 @@ function MpptTab() {
             <div id="Channel 0" className=" w-full pr-2">
               <div className="flex justify-center">
                 <h2 className="font-medium">Channel 0</h2>
-                <div className="ml-2 mt-1.5 h-3 w-3 rounded-full bg-green dark:bg-green-dark"></div>
+                <div className="ml-2 mt-1.5 size-3 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
               <MpptComponent channelData={fakeData.Unit1.Channel0} />
               <div className="h-36 rounded-lg bg-slate-300">
@@ -97,7 +83,7 @@ function MpptTab() {
             <div id="Channel 1" className=" w-full">
               <div className="flex justify-center">
                 <h2 className="font-medium">Channel 1</h2>
-                <div className="ml-2 mt-1.5 h-3 w-3 rounded-full bg-green dark:bg-green-dark"></div>
+                <div className="ml-2 mt-1.5 size-3 rounded-full bg-green dark:bg-green-dark"></div>
               </div>
               <MpptComponent channelData={fakeData.Unit1.Channel1} />
               <div className="h-36 rounded-lg bg-slate-200">

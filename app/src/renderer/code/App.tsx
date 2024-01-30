@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import "./App.css";
@@ -14,9 +13,9 @@ function App() {
   // 38, 55, 7
   return (
     <div className={currentAppState.darkMode ? "dark" : ""}>
-      <div className="h-screen w-screen overflow-x-hidden bg-light p-4 text-light dark:bg-dark dark:text-dark">
+      <div className="size-screen overflow-x-hidden bg-light p-4 text-light dark:bg-dark dark:text-dark">
         <div className="flex h-full flex-col gap-y-2 ">
-          <div className="flex flex-wrap gap-x-2 gap-y-2">
+          <div className="flex flex-wrap gap-2">
             <div className="mx-auto w-36">
               <LogoStatusContainer />
             </div>
@@ -26,8 +25,8 @@ function App() {
               </BrowserRouter>
             </div>
           </div>
-          <div className="flex flex-row flex-wrap gap-x-2 gap-y-2">
-            <div className="h-96 w-96 grow">
+          <div className="flex flex-row flex-wrap gap-2">
+            <div className="size-96 grow">
               <MapContainer />
             </div>
             <div className="grow basis-2/3">

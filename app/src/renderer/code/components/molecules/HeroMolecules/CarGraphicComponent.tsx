@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+/* eslint-disable react/no-unknown-property */
+import { useState } from "react";
 
-import { Button } from "@mui/material";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 

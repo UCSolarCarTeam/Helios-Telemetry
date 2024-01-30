@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useAppState } from "../../../contexts/AppStateContext";
 
 function LogoComponent() {

@@ -8,7 +8,7 @@ import {
 
 import { faker } from "@faker-js/faker";
 
-import ITelemetryData from "../objects/telemetry-data.interface";
+import type ITelemetryData from "../objects/telemetry-data.interface";
 import fakeData from "./fakePacket.json";
 
 interface PacketContextProps {

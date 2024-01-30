@@ -24,8 +24,8 @@ ChartJS.register(
 );
 
 function generateTableData(): any[] {
-  var tableData = [];
-  for (var i = 0; i < 100; i++) {
+  const tableData = [];
+  for (let i = 0; i < 100; i++) {
     tableData.push({
       dataPoint: faker.number.int({ min: 0, max: 100 }),
       time: faker.number.int({ min: 1553236613, max: 1711089413 }),
@@ -297,7 +297,7 @@ function RaceTab() {
   }
   return (
     <div className="h-full w-full">
-      <div className="grid grid-cols-2">
+      {/* <div className="grid grid-cols-2">
         <div className="block max-h-96 overflow-y-auto">
           <table className="h-full border-collapse">
             <thead className="sticky top-0">
@@ -360,7 +360,7 @@ function RaceTab() {
             </thead>
             <tbody className="">
               {tableData.map((data) => (
-                <tr>
+                <tr                    key={data.id}>
                   <td
                     key={data.id}
                     className="border-light dark:border-dark border-t text-center text-xs text-light dark:text-dark"
@@ -475,7 +475,7 @@ function RaceTab() {
             <GraphMenu />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
