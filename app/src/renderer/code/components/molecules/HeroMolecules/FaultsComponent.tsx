@@ -5,17 +5,15 @@ import { usePacket } from "../../../contexts/PacketContext";
 import FaultCard from "../../atoms/FaultCard";
 import { ISeverity } from "../../atoms/FaultCard";
 
-type FaultStateType = {
-  timer: number;
-  name: String;
-  on: boolean;
-  severity: ISeverity;
-};
 type TestFaultType = {
   fault1: boolean;
   fault2: boolean;
   fault3: boolean;
   fault4: boolean;
+};
+
+type CurrentFaultsType = {
+  [key in keyof TestFaultType]: number;
 };
 
 function FaultsComponent(props: any) {
