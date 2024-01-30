@@ -7,7 +7,7 @@ const Battery = (): I_PIS => {
     BMSRelayStatusFlags: [
       {
         name: "Heartbeat", //this is the bigger heartbeat
-        data: [{ value: currentPacket?.Battery?.Alive }],
+        data: [{ value: currentPacket?.Battery?.Alive, expectedBool: true }],
       },
       {
         name: "Discharge Relay Enabled",
@@ -119,7 +119,7 @@ const Battery = (): I_PIS => {
     Temperature: [
       {
         name: "Battery Temperature",
-        FString: "%s (%s) - %s (%s)",
+        fstring: "%s (%s) - %s (%s)",
         data: [
           {
             value: currentPacket?.Battery?.LowTemperature,
@@ -172,7 +172,7 @@ const Battery = (): I_PIS => {
     Cell: [
       {
         name: "Battery Cell Voltage",
-        FString: "%s (%s) - %s (%s)",
+        fstring: "%s (%s) - %s (%s)",
         data: [
           {
             value: currentPacket?.Battery?.LowCellVoltage,
