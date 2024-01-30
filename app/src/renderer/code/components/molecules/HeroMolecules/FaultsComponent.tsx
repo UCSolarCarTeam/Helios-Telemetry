@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 import { usePacket } from "../../../contexts/PacketContext";
@@ -18,16 +17,10 @@ type CurrentFaultsType = {
 
 function FaultsComponent(props: any) {
   return (
-    <div>
-      <motion.div
-        className="h-[15%]"
-        animate={{ y: 0, opacity: 1 }}
-        initial={{ y: 100, opacity: 0 }}
-      >
-        {currentFaults.map((fault) => (
-          <FaultCard severity={fault.severity} faultName={fault.name} />
-        ))}
-      </motion.div>
+    <div className="flex flex-col gap-4">
+      {Object.keys(demoPacketFaults).map((fault) => (
+        <FaultCard severity={ISeverity.WARNING} faultName={fault} />
+      ))}
     </div>
   );
 }

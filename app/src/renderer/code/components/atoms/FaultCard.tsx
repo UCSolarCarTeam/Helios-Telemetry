@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import React from "react";
+
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
@@ -8,14 +11,18 @@ export enum ISeverity {
 
 type FaultCardProps = {
   severity: ISeverity;
-  faultName: String;
-  faultTime: number;
+  faultName: string;
+  faultTime?: number;
 };
 
 function FaultCard(props: FaultCardProps) {
   const { severity, faultName } = props;
   return (
-    <>
+    <motion.div
+      className="h-[15%]"
+      animate={{ y: 0, opacity: 1 }}
+      initial={{ y: 100, opacity: 0 }}
+    >
       <div className="flex p-2">
         <div className="flex justify-self-start"></div>
         <div
@@ -35,7 +42,7 @@ function FaultCard(props: FaultCardProps) {
           <div className="flex w-[85%] text-2xl">{faultName}</div>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }
 
