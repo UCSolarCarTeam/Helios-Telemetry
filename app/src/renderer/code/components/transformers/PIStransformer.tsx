@@ -48,22 +48,19 @@ type FieldDataFormatterProps = {
 function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
   const { data, fstring } = props;
 
-  const formatString = (string: string, params: I_PISFieldData[]) => {
+  const formatString = (
+    string: string,
+    params: I_PISFieldData[],
+  ): JSX.Element | string => {
     // %s •C (%s) - %s •C (%s)
-    console.log("TEST", string.split("%s"));
-    return string
-      .split("%s")
-      .map((part, index) => {
-        typeof params[index] === "undefined" ? (
-          ""
-        ) : (
-          <>
-            <RangeCheckedFieldData fieldData={params[index]} />
-            {part}
-          </>
-        );
-      })
-      .join("");
+
+    return string.replace(/%s/g, (_, index) => {
+      return typeof params[new Number(index).valueOf()] === "undefined"
+        ? ""
+        : RangeCheckedFieldData({
+            fieldData: data[new Number(index).valueOf()],
+          });
+    });
   };
 
   return fstring === undefined ? (
@@ -113,7 +110,7 @@ function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   );
 }
 type PIStransformerProps = {
-  root: any;
+  root: { [key: string]: I_PISField[] };
   depth?: number;
 };
 

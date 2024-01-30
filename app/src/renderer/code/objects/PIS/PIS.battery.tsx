@@ -86,7 +86,7 @@ const Battery = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
 
     Fan: [
       {
@@ -115,7 +115,7 @@ const Battery = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
 
     Temperature: [
       {
@@ -168,7 +168,7 @@ const Battery = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
 
     Cell: [
       {
@@ -208,7 +208,7 @@ const Battery = (): I_PIS => {
           { value: currentPacket?.Battery?.PopulatedCells, min: 0, max: 100 },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
 
     Pack: [
       {
@@ -277,7 +277,7 @@ const Battery = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
 
     AuxBMS: [
       {
@@ -408,7 +408,7 @@ const Battery = (): I_PIS => {
           { value: currentPacket?.AuxBms?.DischargeNotClosedDueToHighCurrent },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
   };
 
   return data;

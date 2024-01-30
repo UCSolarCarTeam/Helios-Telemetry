@@ -19,7 +19,7 @@ function FaultCard(props: FaultCardProps) {
       <div className="flex p-2">
         <div className="flex justify-self-start"></div>
         <div
-          className={`flex size-full items-center justify-start border p-2 ${
+          className={`flex size-full items-center justify-start border p-2${
             severity === ISeverity.ERROR
               ? "border-[#9C0534]"
               : "border-[#F98D10]"

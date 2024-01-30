@@ -13,7 +13,7 @@ function App() {
   // 38, 55, 7
   return (
     <div className={currentAppState.darkMode ? "dark" : ""}>
-      <div className="h-screen w-screen overflow-x-hidden bg-light p-4 text-light dark:bg-dark dark:text-dark">
+      <div className="size-screen overflow-x-hidden bg-light p-4 text-light dark:bg-dark dark:text-dark">
         <div className="flex h-full flex-col gap-y-2 ">
           <div className="flex flex-wrap gap-2">
             <div className="mx-auto w-36">
