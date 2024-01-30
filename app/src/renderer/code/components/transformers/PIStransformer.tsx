@@ -1,4 +1,7 @@
-import { I_PISField, I_PISFieldData } from "../../objects/PIS/PIS.interface";
+import type {
+  I_PISField,
+  I_PISFieldData,
+} from "../../objects/PIS/PIS.interface";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
@@ -11,12 +14,12 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
       ? true
       : // If value is of type number range is true if min and max are undefined or value is between min and max
         typeof value == "number"
-        ? (min == undefined || value >= min) &&
-          (max == undefined || value <= max)
+        ? (min === undefined || value >= min) &&
+          (max === undefined || value <= max)
         : // If value is of type boolean range is true if expectedBool is undefined and value is false or value is equal to expectedBool
           typeof value == "boolean"
-          ? (expectedBool == undefined && value == false) ||
-            expectedBool == value
+          ? (expectedBool === undefined && value === false) ||
+            expectedBool === value
           : false;
 
   const color = inRange ? "text-green-500" : "text-red-500";
@@ -38,22 +41,19 @@ type FieldDataFormatterProps = {
 function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
   const { data, fstring } = props;
 
-  const formatString = (string: string, params: I_PISFieldData[]) => {
+  const formatString = (
+    string: string,
+    params: I_PISFieldData[],
+  ): JSX.Element | string => {
     // %s •C (%s) - %s •C (%s)
-    console.log("TEST", string.split("%s"));
-    return string
-      .split("%s")
-      .map((part, index) => {
-        typeof params[index] === "undefined" ? (
-          ""
-        ) : (
-          <>
-            <RangeCheckedFieldData fieldData={params[index]} />
-            {part}
-          </>
-        );
-      })
-      .join("");
+
+    return string.replace(/%s/g, (_, index) => {
+      return typeof params[new Number(index).valueOf()] === "undefined"
+        ? ""
+        : RangeCheckedFieldData({
+            fieldData: data[new Number(index).valueOf()],
+          });
+    });
   };
 
   return fstring === undefined ? (
@@ -72,7 +72,7 @@ type FieldPrinterProps = {
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const { field } = props;
   if (
-    field.fstring != undefined &&
+    field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
   ) {
     console.error(
@@ -103,7 +103,7 @@ function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   );
 }
 type PIStransformerProps = {
-  root: any;
+  root: { [key: string]: I_PISField[] };
   depth?: number;
 };
 
@@ -111,31 +111,29 @@ function PIStransformer(props: PIStransformerProps): JSX.Element {
   const { root, depth = 0 } = props;
   console.log(root);
   return (
-    root && (
-      <div className="flex w-full justify-between gap-4 ">
-        {Object.keys(root).map((key, index) => {
-          const value = root[key];
-          return (
-            <div key={index} className={`flex flex-col `}>
-              <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
-                <p
-                  className={`text-helios ${
-                    depth >= 2 ? `text-xxs` : depth == 1 ? "text-sm" : "text-lg"
-                  }`}
-                >
-                  {key}
-                </p>
-              </div>
-              {Array.isArray(value) ? (
-                <FieldsPrinter fields={value} />
-              ) : (
-                <PIStransformer root={value} depth={depth + 1} />
-              )}
+    <div className="flex w-full justify-between gap-4 ">
+      {Object.keys(root).map((key, index) => {
+        const value = root[key];
+        return (
+          <div key={index} className={`flex flex-col `}>
+            <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
+              <p
+                className={`text-helios ${
+                  depth >= 2 ? `text-xs` : depth === 1 ? "text-sm" : "text-lg"
+                }`}
+              >
+                {key}
+              </p>
             </div>
-          );
-        })}
-      </div>
-    )
+            {Array.isArray(value) ? (
+              <FieldsPrinter fields={value} />
+            ) : (
+              <PIStransformer root={value} depth={depth + 1} />
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

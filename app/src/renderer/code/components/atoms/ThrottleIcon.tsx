@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function ThrottleIcon(props: any) {
   const [regenPos, setRegenPos] = useState<number>(0);

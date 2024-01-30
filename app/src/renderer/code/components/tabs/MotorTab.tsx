@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import {
+import type {
   IKeyMotor,
   IMotorDetail,
 } from "../../objects/telemetry-data.interface";

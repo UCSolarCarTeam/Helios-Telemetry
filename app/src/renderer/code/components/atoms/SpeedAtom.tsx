@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-
 import { useAppState } from "../../contexts/AppStateContext";
 
 function SpeedAtom(props: any) {
   const {} = useAppState;
-  let speed = 53;
+  const speed = 53;
 
   return (
     <>

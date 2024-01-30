@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import React from "react";
 
 import FaultCard from "../../atoms/FaultCard";
 import { ISeverity } from "../../atoms/FaultCard";
