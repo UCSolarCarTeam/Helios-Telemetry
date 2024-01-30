@@ -13,28 +13,56 @@ import {
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
 };
+
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
   const inRange =
     // If value is of type string range is true
-    typeof value == "string"
+    typeof value === "string"
       ? true
       : // If value is of type number range is true if min and max are undefined or value is between min and max
-        typeof value == "number"
+        typeof value === "number"
         ? (min === undefined || value >= min) &&
           (max === undefined || value <= max)
         : // If value is of type boolean range is true if expectedBool is undefined and value is false or value is equal to expectedBool
-          typeof value == "boolean"
+          typeof value === "boolean"
           ? (expectedBool === undefined && value === false) ||
             expectedBool === value
           : false;
 
-  const color = inRange ? "text-green-500" : "text-red-500";
+  const color = inRange ? "text-green" : "text-red-500";
+  const displayValue = typeof value === "boolean" ? (value ? "T" : "F") : value;
 
   return (
     <span className={color}>
-      {value}
+      {displayValue}
       {unit}
+    </span>
+  );
+}
+
+type FormatStringProps = {
+  fstring: string;
+  data: I_PISFieldData[];
+};
+
+function FormatString(props: FormatStringProps): JSX.Element {
+  const { fstring, data } = props;
+  // %s •C (%s) - %s •C (%s)
+  // console.log("TEST", fstring.split("%s"));
+
+  return (
+    <span>
+      {fstring.split("%s").map((part, index) => {
+        return index === fstring.split("%s").length - 1 ? (
+          <span key={index}>{part}</span>
+        ) : (
+          <span key={index}>
+            {part}
+            <RangeCheckedFieldData fieldData={data[index]} />
+          </span>
+        );
+      })}
     </span>
   );
 }
@@ -68,7 +96,9 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
       <RangeCheckedFieldData fieldData={data[0]} />
     </div>
   ) : (
-    <div>{formatString(fstring, data)}</div>
+    <div>
+      <FormatString fstring={fstring} data={data} />
+    </div>
   );
 }
 
@@ -88,7 +118,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     return <div>PIS ERROR: </div>;
   }
   return (
-    <div>
+    <div className="mt-1 flex items-center justify-between text-xs">
       {field.name}:
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
@@ -114,7 +144,7 @@ type PIStransformerProps = {
   depth?: number;
 };
 
-function PIStransformer(props: PIStransformerProps): JSX.Element {
+function PISTransformer(props: PIStransformerProps): JSX.Element {
   const { root, depth = 0 } = props;
   console.log(root);
   return (
@@ -126,12 +156,8 @@ function PIStransformer(props: PIStransformerProps): JSX.Element {
             <div key={index} className={`flex flex-col `}>
               <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
                 <p
-                  className={`text-helios ${
-                    depth >= 2
-                      ? `text-xxs`
-                      : depth === 1
-                        ? "text-sm"
-                        : "text-lg"
+                  className={`pt-3 font-bold text-helios ${
+                    depth >= 2 ? `text-xs` : depth == 1 ? "text-sm" : "text-lg"
                   }`}
                 >
                   {key}
@@ -140,7 +166,7 @@ function PIStransformer(props: PIStransformerProps): JSX.Element {
               {Array.isArray(value) ? (
                 <FieldsPrinter fields={value} />
               ) : (
-                <PIStransformer root={value} depth={depth + 1} />
+                <PISTransformer root={value} depth={depth + 1} />
               )}
             </div>
           );
@@ -150,4 +176,4 @@ function PIStransformer(props: PIStransformerProps): JSX.Element {
   );
 }
 
-export default PIStransformer;
+export default PISTransformer;
