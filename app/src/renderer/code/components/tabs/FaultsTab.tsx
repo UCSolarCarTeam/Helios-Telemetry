@@ -5,7 +5,6 @@ import PISTransformers from "../transformers/PISTransformer";
 function FaultsTab(): JSX.Element {
   return (
     <div>
-      <p>Faults Tab</p>
       <PISTransformers root={Battery()} />
     </div>
   );
