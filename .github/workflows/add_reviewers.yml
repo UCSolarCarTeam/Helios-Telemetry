@@ -7,7 +7,7 @@ jobs:
     # if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: hkusu/review-assign-action@v1
+      - uses: hkusu/review-assign-action@v1.3.1
         with:
           assignees: ${{ github.actor }}
           reviewers: ideen1, haley-lynn, justin-phxm, jjason-nn, IshaHaider, CalebBourb
