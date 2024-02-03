@@ -3,11 +3,23 @@ on:
   pull_request:
     types: [opened, ready_for_review]
 jobs:
-  assign:
+  setAssignee:
     # if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: hkusu/review-assign-action@v1.3.1
         with:
           assignees: ${{ github.actor }}
-          reviewers: ideen1, haley-lynn, justin-phxm, jjason-nn, IshaHaider, CalebBourb
+          # reviewers: ideen1, haley-lynn, justin-phxm, jjason-nn, IshaHaider, CalebBourb, 
+  
+  setReviewers:
+    # if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+        steps:
+          - name: "Assign Team and Persons"
+            uses: rowi1de/auto-assign-review-teams@v1.1.3
+            with:
+              repo-token: ${{ secrets.GITHUB_TOKEN }}
+              teams: "Telemetry"
+              skip-with-manual-reviewers: 0
+              pick-one-from-persons-or-team: false
