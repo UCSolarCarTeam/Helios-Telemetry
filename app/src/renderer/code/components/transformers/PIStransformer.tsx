@@ -5,10 +5,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
 import {
   type I_PISField,
   type I_PISFieldData,
 } from "@/objects/PIS/PIS.interface";
+import I_PIS from "@/objects/PIS/PIS.interface";
+import { Button } from "@mui/material";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
@@ -80,6 +83,7 @@ type FieldPrinterProps = {
 };
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
+  const { openNewGraph } = useGraphOverlay();
   const { field } = props;
   if (
     field.fstring !== undefined &&
@@ -94,6 +98,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     <div>
       {field.name}:
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
+      <Button onClick={() => openNewGraph("")}>G</Button>
     </div>
   );
 }
