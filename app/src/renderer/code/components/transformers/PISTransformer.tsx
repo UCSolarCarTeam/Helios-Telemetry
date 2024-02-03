@@ -2,6 +2,7 @@ import type {
   I_PISField,
   I_PISFieldData,
 } from "../../objects/PIS/PIS.interface";
+import I_PIS from "../../objects/PIS/PIS.interface";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
@@ -69,21 +70,6 @@ type FieldDataFormatterProps = {
 function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
   const { data, fstring } = props;
 
-  const formatString = (
-    string: string,
-    params: I_PISFieldData[],
-  ): JSX.Element | string => {
-    // %s •C (%s) - %s •C (%s)
-
-    return string.replace(/%s/g, (_, index) => {
-      return typeof params[new Number(index).valueOf()] === "undefined"
-        ? ""
-        : RangeCheckedFieldData({
-            fieldData: data[new Number(index).valueOf()],
-          });
-    });
-  };
-
   return fstring === undefined ? (
     <div>
       <RangeCheckedFieldData fieldData={data[0]} />
@@ -133,7 +119,7 @@ function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   );
 }
 type PIStransformerProps = {
-  root: { [key: string]: I_PISField[] };
+  root: I_PIS;
   depth?: number;
 };
 
