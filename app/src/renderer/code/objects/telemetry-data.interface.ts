@@ -227,7 +227,7 @@ export interface IMotorLimitFlags {
   OutputVoltagePwm: boolean;
   MotorCurrent: boolean;
   Velocity: boolean;
-  BusCurrent: false;
+  BusCurrent: false; // TO DO - check this, why is this false?
   BusVoltageUpper: boolean;
   BusVoltageLower: boolean;
   IpmOrMotorTemperature: true;

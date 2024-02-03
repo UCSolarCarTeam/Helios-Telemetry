@@ -1,65 +1,12 @@
-import React from "react";
-
-import {
-  AuxBMSInterface,
-  BMSRelayStatusFlagsInterface,
-  BatteryProps,
-} from "../../objects/BatteryProps";
-
-const fakeBMSRelayStatusFlags: BMSRelayStatusFlagsInterface = {
-  DischargeRelayEnabled: true,
-  ChargeRelayEnabled: true,
-  ChargerSafetyEnabled: false,
-  MalfunctionIndicatorActive: false,
-  MultiPurposeInputSignalStatus: true,
-  AlwaysOnSignalStatus: true,
-  IsReadySignalStatus: true,
-  IsChargingSignalStatus: true,
-};
-
-const fakeBatteryData: BatteryProps = {
-  BMSRelayStatusFlags: fakeBMSRelayStatusFlags,
-  PopulatedCells: 30,
-  "12vInputVoltage": 12.1,
-  FanVoltage: 0,
-  PackCurrent: 0.5,
-  PackVoltage: 109.3,
-  PackStateofCharge: 38.5,
-  PackAmphours: 64.4,
-  PackDepthofDischarge: 61,
-  HighTemperature: 25,
-  HighThermistorId: 3,
-  LowTemperature: 19,
-  LowThermistorId: 1,
-  AverageTemperature: 21,
-  InternalTemperature: 1,
-  FanSpeed: 0,
-  RequestedFanSpeed: 0,
-  LowCellVoltage: 3.639,
-  LowCellVoltageId: 1,
-  HighCellVoltage: 3.647,
-  HighCellVoltageId: 28,
-  AverageCellVoltage: 3.643,
-};
-
-const fakeAuxBMSData: AuxBMSInterface = {
-  PrechargeState: "All Engaged",
-  AuxVoltage: 13,
-  AuxBmsAlive: true,
-  StrobeBMSLight: false,
-  AllowCharge: true,
-  ContactorError: false,
-  HighVoltageEnable: true,
-  ChargeTripDueToHighCellVoltage: false,
-  ChargeTripDueToHighTemperatureAndCurrent: true,
-  ChargeTripDueToPackCurrent: false,
-  DischargeTripDueToLowCellVoltage: false,
-  DischargeTripDueToHighTemperatureAndCurrent: true,
-  DischargeTripDueToPackCurrent: false,
-  ProtectionTrip: true,
-};
+import { usePacket } from "../../contexts/PacketContext";
 
 function BatteryTab() {
+  const { currentPacket } = usePacket();
+
+  const fakeBatteryData = currentPacket.Battery;
+
+  const fakeAuxBMSData = currentPacket.AuxBms;
+
   return (
     <>
       <div className="flex flex-col space-y-3">
