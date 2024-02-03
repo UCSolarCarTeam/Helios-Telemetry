@@ -126,7 +126,7 @@ type FieldsPrinterProps = {
 function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   const { fields } = props;
   return (
-    <div className=" xl:[12rem] columns-[7rem] md:columns-[10rem]">
+    <div className="  columns-[7rem] md:columns-[10rem]">
       {fields.map((field, index) => (
         <FieldPrinter field={field} key={index} />
       ))}
@@ -143,7 +143,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
   console.log(root);
   return (
     root && (
-      <div className="flex h-[350px] w-full flex-col flex-wrap justify-start gap-x-2">
+      <div className="flex h-[350px] w-full flex-col gap-x-2 lg:flex-wrap">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
