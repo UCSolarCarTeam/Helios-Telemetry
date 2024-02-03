@@ -1,3 +1,6 @@
+import { Button } from "@mui/material";
+
+import { useGraphOverlay } from "../../contexts/GraphOverlayContext";
 import type {
   I_PISField,
   I_PISFieldData,
@@ -86,6 +89,7 @@ type FieldPrinterProps = {
 };
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
+  const { openNewGraph } = useGraphOverlay();
   const { field } = props;
   if (
     field.fstring !== undefined &&
@@ -100,6 +104,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     <div className="mt-1 flex items-center justify-between text-xs">
       {field.name}:
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
+      <Button onClick={() => openNewGraph("")}>G</Button>
     </div>
   );
 }
