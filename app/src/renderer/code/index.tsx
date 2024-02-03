@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 
 import App from "@/App";
 import { AppStateContextProvider } from "@/contexts/AppStateContext";
+import { GraphOverlayContextProvider } from "@/contexts/GraphOverlayContext";
 import { PacketContextProvider } from "@/contexts/PacketContext";
 import "@/index.css";
 import reportWebVitals from "@/reportWebVitals";
@@ -15,7 +16,9 @@ root.render(
   <React.StrictMode>
     <AppStateContextProvider>
       <PacketContextProvider>
-        <App />
+        <GraphOverlayContextProvider>
+          <App />
+        </GraphOverlayContextProvider>
       </PacketContextProvider>
     </AppStateContextProvider>
   </React.StrictMode>,
