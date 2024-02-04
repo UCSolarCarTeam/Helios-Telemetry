@@ -1,5 +1,6 @@
-import { usePacket } from "../../contexts/PacketContext";
-import I_PIS, { I_PISField } from "./PIS.interface";
+import { usePacket } from "@/contexts/PacketContext";
+import type I_PIS from "@/objects/PIS/PIS.interface";
+import { type I_PISField } from "@/objects/PIS/PIS.interface";
 
 const Battery = (): I_PIS => {
   const { currentPacket } = usePacket();

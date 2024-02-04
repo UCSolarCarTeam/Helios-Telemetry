@@ -1,6 +1,4 @@
-import React from "react";
-
-import { useAppState } from "../../../contexts/AppStateContext";
+import { useAppState } from "@/contexts/AppStateContext";
 
 function LogoComponent() {
   const { toggleDarkMode } = useAppState();

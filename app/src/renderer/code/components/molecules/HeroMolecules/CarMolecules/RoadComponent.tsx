@@ -1,8 +1,9 @@
+/* eslint-disable react/no-unknown-property */
 import { useRef } from "react";
 import * as THREE from "three";
 import { PlaneGeometry } from "three";
 
-import { Vector3, useFrame } from "@react-three/fiber";
+import { type Vector3, useFrame } from "@react-three/fiber";
 
 interface roadComponentProps {
   size: number;
@@ -28,7 +29,7 @@ export function RoadComponent(props: roadComponentProps) {
 interface roadStripComponentProps {
   size: number;
   speed: number;
-  position: Vector3 | any;
+  position: Vector3;
 }
 function RoadStripComponent(props: roadStripComponentProps) {
   const mesh = useRef<THREE.Mesh>(null!);
@@ -60,7 +61,7 @@ function RoadStripComponent(props: roadStripComponentProps) {
 }
 
 function RoadStripGroup(props: roadComponentProps) {
-  let roadStrips: number[] = [];
+  const roadStrips: number[] = [];
   for (let i = 0; i < props.size; i++) {
     const back = (props.size / 2) * -5;
     roadStrips.push(back + i * 5);

@@ -1,5 +1,3 @@
-import React from "react";
-
 const fakeData = {
   "Motor Temp": 55,
   "Battery Power": 54.35,

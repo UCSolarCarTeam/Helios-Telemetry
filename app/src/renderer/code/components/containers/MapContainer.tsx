@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import Map from "../molecules/MapMolecules/Map";
-import MapText from "../molecules/MapMolecules/MapText";
+import Map from "@/components/molecules/MapMolecules/Map";
+import MapText from "@/components/molecules/MapMolecules/MapText";
 
 function MapContainer(): JSX.Element {
   const [carLocation, setCarLocation] = useState({
@@ -17,7 +17,7 @@ function MapContainer(): JSX.Element {
   }, [carLocation]);
 
   return (
-    <div className="h-full w-full">
+    <div className="size-full">
       <div className="grid h-[90%]">
         <Map carLocation={carLocation} mapLocation={carLocation} />
       </div>

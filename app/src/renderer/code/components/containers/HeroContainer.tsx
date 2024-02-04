@@ -1,14 +1,12 @@
-import React from "react";
-
-import BatteryThrottleComponent from "../molecules/HeroMolecules/BatteryThrottleComponent";
-import CarGraphicComponent from "../molecules/HeroMolecules/CarGraphicComponent";
-import FaultsComponent from "../molecules/HeroMolecules/FaultsComponent";
-import GearParkBrakeComponent from "../molecules/HeroMolecules/GearParkBrakeComponent";
+import BatteryThrottleComponent from "@/components/molecules/HeroMolecules/BatteryThrottleComponent";
+import CarGraphicComponent from "@/components/molecules/HeroMolecules/CarGraphicComponent";
+import FaultsComponent from "@/components/molecules/HeroMolecules/FaultsComponent";
+import GearParkBrakeComponent from "@/components/molecules/HeroMolecules/GearParkBrakeComponent";
 
 function HeroContainer(props: any) {
   return (
     <>
-      <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-6">
+      <div className="grid size-full grid-cols-1 gap-4 md:grid-cols-6">
         <div className="col-span-1 md:col-span-4 md:h-full">
           <div className="grid h-1/6 pl-1 ">
             <BatteryThrottleComponent />

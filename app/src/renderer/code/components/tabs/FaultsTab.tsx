@@ -1,6 +1,5 @@
-import PIS from "../../objects/PIS/PIS";
-import Battery from "../../objects/PIS/PIS.battery";
-import PIStransformers from "../transformers/PIStransformer";
+import PIStransformers from "@/components/transformers/PIStransformer";
+import Battery from "@/objects/PIS/PIS.battery";
 
 function FaultsTab(): JSX.Element {
   return (

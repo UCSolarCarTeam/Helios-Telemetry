@@ -1,5 +1,3 @@
-import React from "react";
-
 function MapText() {
   const lapsLeft = 0;
   const timeLeft = 0;

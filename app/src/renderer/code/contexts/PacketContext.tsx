@@ -6,10 +6,9 @@ import {
   useState,
 } from "react";
 
+import fakeData from "@/contexts/fakePacket.json";
+import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { faker } from "@faker-js/faker";
-
-import ITelemetryData from "../objects/telemetry-data.interface";
-import fakeData from "./fakePacket.json";
 
 interface PacketContextProps {
   children: ReactNode | ReactNode[];

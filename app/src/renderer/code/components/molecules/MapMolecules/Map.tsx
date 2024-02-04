@@ -1,5 +1,4 @@
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useState } from "react";
 import ReactMap, { Marker } from "react-map-gl";
 
 type ILocation = {

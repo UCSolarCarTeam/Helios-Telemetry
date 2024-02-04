@@ -1,4 +1,14 @@
-import { I_PISField, I_PISFieldData } from "../../objects/PIS/PIS.interface";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import {
+  type I_PISField,
+  type I_PISFieldData,
+} from "@/objects/PIS/PIS.interface";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
@@ -11,12 +21,12 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
       ? true
       : // If value is of type number range is true if min and max are undefined or value is between min and max
         typeof value == "number"
-        ? (min == undefined || value >= min) &&
-          (max == undefined || value <= max)
+        ? (min === undefined || value >= min) &&
+          (max === undefined || value <= max)
         : // If value is of type boolean range is true if expectedBool is undefined and value is false or value is equal to expectedBool
           typeof value == "boolean"
-          ? (expectedBool == undefined && value == false) ||
-            expectedBool == value
+          ? (expectedBool === undefined && value === false) ||
+            expectedBool === value
           : false;
 
   const color = inRange ? "text-green-500" : "text-red-500";
@@ -72,7 +82,7 @@ type FieldPrinterProps = {
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const { field } = props;
   if (
-    field.fstring != undefined &&
+    field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
   ) {
     console.error(
@@ -120,7 +130,11 @@ function PIStransformer(props: PIStransformerProps): JSX.Element {
               <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
                 <p
                   className={`text-helios ${
-                    depth >= 2 ? `text-xxs` : depth == 1 ? "text-sm" : "text-lg"
+                    depth >= 2
+                      ? `text-xxs`
+                      : depth === 1
+                        ? "text-sm"
+                        : "text-lg"
                   }`}
                 >
                   {key}

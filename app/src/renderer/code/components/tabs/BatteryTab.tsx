@@ -1,4 +1,4 @@
-import { usePacket } from "../../contexts/PacketContext";
+import { usePacket } from "@/contexts/PacketContext";
 
 function BatteryTab() {
   const { currentPacket } = usePacket();
@@ -124,7 +124,7 @@ function BatteryTab() {
                 </p>
                 <p
                   className={`text-xxs ${
-                    fakeAuxBMSData["StrobeBMSLight"]
+                    fakeAuxBMSData["StrobeBmsLight"]
                       ? "text-black"
                       : "text-gray"
                   }`}
@@ -140,7 +140,7 @@ function BatteryTab() {
                 </p>
                 <p
                   className={`text-xxs ${
-                    fakeAuxBMSData["ContactorError"]
+                    fakeAuxBMSData["CommonContactorError"]
                       ? "text-black"
                       : "text-gray"
                   }`}
@@ -218,7 +218,7 @@ function BatteryTab() {
                 </p>
                 <p
                   className={`text-xxs ${
-                    fakeAuxBMSData["HighVoltageEnable"]
+                    fakeAuxBMSData["HighVoltageEnableState"]
                       ? "text-black"
                       : "text-gray"
                   }`}
@@ -322,11 +322,11 @@ function BatteryTab() {
                 <p className="text-xxs">{fakeBatteryData["PackCurrent"]}A</p>
                 <p className="text-xxs">{fakeBatteryData["PackAmphours"]}Ah</p>
                 <p className="text-xxs">
-                  {fakeBatteryData["PackDepthofDischarge"]}%
+                  {fakeBatteryData["PackDepthOfDischarge"]}%
                 </p>
                 <p className="text-xxs">{fakeBatteryData["PackVoltage"]}V</p>
                 <p className="text-xxs">
-                  {fakeBatteryData["PackStateofCharge"]}%
+                  {fakeBatteryData["PackStateOfCharge"]}%
                 </p>
                 <p className="text-xxs">
                   {fakeBatteryData["12vInputVoltage"]}V

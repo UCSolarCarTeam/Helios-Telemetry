@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+/* eslint-disable react/no-unknown-property */
+import { useState } from "react";
 
-import { Button } from "@mui/material";
+import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
+import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-
-import { CarModelComponent } from "./CarMolecules/CarModelComponent";
-import { RoadComponent } from "./CarMolecules/RoadComponent";
 
 function CarGraphicComponent(props: any) {
   const [isClear, changeClear] = useState(false);

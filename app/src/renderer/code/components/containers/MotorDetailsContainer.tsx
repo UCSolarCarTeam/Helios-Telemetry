@@ -1,4 +1,4 @@
-import { IMotorDetail } from "../../objects/telemetry-data.interface";
+import { type IMotorDetail } from "@/objects/telemetry-data.interface";
 
 export default function MotorDetailsContainer({
   MotorDetails,
