@@ -1,0 +1,5 @@
+{
+  "app/src/renderer/code/**/*.{js,jsx,ts,tsx}": [
+    "yarn --cwd app/src/renderer/code prettier --write ."
+  ]
+}

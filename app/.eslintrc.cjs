@@ -2,7 +2,7 @@
 const path = require("path");
 const prettierConfig = require("./prettier.config.cjs");
 
-const project = path.join(__dirname, "tsconfig.web.json");
+const project = path.join(__dirname, "./src/renderer/tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
