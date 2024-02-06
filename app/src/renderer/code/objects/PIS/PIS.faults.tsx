@@ -1,5 +1,5 @@
-import { usePacket } from "../../contexts/PacketContext";
-import I_PIS, { I_PISField } from "./PIS.interface";
+import { usePacket } from "@/contexts/PacketContext";
+import type I_PIS from "@/objects/PIS/PIS.interface";
 
 const faults = (): I_PIS => {
   const { currentPacket } = usePacket();
@@ -7,7 +7,7 @@ const faults = (): I_PIS => {
     BatteryFaults: {
       ErrorFlags: [
         {
-          Name: "Internal Communication Fault",
+          name: "Internal Communication Fault",
           data: [
             {
               value:
@@ -17,7 +17,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Internal Conversion Fault",
+          name: "Internal Conversion Fault",
           data: [
             {
               value:
@@ -26,13 +26,13 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Weak Cell Fault",
+          name: "Weak Cell Fault",
           data: [
             { value: currentPacket?.BatteryFaults.ErrorFlags.WeakCellFault },
           ],
         },
         {
-          Name: "Low Cell Voltage Fault",
+          name: "Low Cell Voltage Fault",
           data: [
             {
               value:
@@ -41,13 +41,13 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Open Wiring Fault",
+          name: "Open Wiring Fault",
           data: [
             { value: currentPacket?.BatteryFaults.ErrorFlags.OpenWiringFault },
           ],
         },
         {
-          Name: "Current Sensor Fault",
+          name: "Current Sensor Fault",
           data: [
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.CurrentSensorFault,
@@ -55,7 +55,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Pack Voltage Sensor Fault",
+          name: "Pack Voltage Sensor Fault",
           data: [
             {
               value:
@@ -64,13 +64,13 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Weak Pack Fault",
+          name: "Weak Pack Fault",
           data: [
             { value: currentPacket?.BatteryFaults.ErrorFlags.WeakPackFault },
           ],
         },
         {
-          Name: "Voltage Redundancy Fault",
+          name: "Voltage Redundancy Fault",
           data: [
             {
               value:
@@ -79,19 +79,19 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Fan Monitor Fault",
+          name: "Fan Monitor Fault",
           data: [
             { value: currentPacket?.BatteryFaults.ErrorFlags.FanMonitorFault },
           ],
         },
         {
-          Name: "Thermistor Fault",
+          name: "Thermistor Fault",
           data: [
             { value: currentPacket?.BatteryFaults.ErrorFlags.ThermistorFault },
           ],
         },
         {
-          Name: "CANBUS Communications Fault",
+          name: "CANBUS Communications Fault",
           data: [
             {
               value:
@@ -101,7 +101,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Always On Supply Fault",
+          name: "Always On Supply Fault",
           data: [
             {
               value:
@@ -110,7 +110,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "High Voltage Isolation Fault",
+          name: "High Voltage Isolation Fault",
           data: [
             {
               value:
@@ -120,7 +120,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "12V Power Supply Fault",
+          name: "12V Power Supply Fault",
           data: [
             {
               value:
@@ -129,7 +129,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Charge Limit Enforcement Fault",
+          name: "Charge Limit Enforcement Fault",
           data: [
             {
               value:
@@ -139,7 +139,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Discharge Limit Enforcement Fault",
+          name: "Discharge Limit Enforcement Fault",
           data: [
             {
               value:
@@ -149,7 +149,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Charger Safety Relay Fault",
+          name: "Charger Safety Relay Fault",
           data: [
             {
               value:
@@ -158,7 +158,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Internal Memory Fault",
+          name: "Internal Memory Fault",
           data: [
             {
               value:
@@ -167,7 +167,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Internal Thermistors Fault",
+          name: "Internal Thermistors Fault",
           data: [
             {
               value:
@@ -177,7 +177,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Internal Logic Fault",
+          name: "Internal Logic Fault",
           data: [
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.InternalLogicFault,
@@ -187,7 +187,7 @@ const faults = (): I_PIS => {
       ],
       LimitFlags: [
         {
-          Name: "Dcl Reduced Due To Low Soc",
+          name: "Dcl Reduced Due To Low Soc",
           data: [
             {
               value:
@@ -196,7 +196,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Dcl Reduced Due to HighCell Resistance",
+          name: "Dcl Reduced Due to HighCell Resistance",
           data: [
             {
               value:
@@ -206,7 +206,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Dcl Reduced Due to Temperature",
+          name: "Dcl Reduced Due to Temperature",
           data: [
             {
               value:
@@ -216,7 +216,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Dcl Reduced Due to Low Cell Voltage",
+          name: "Dcl Reduced Due to Low Cell Voltage",
           data: [
             {
               value:
@@ -226,7 +226,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Dcl Reduced Due to Low Pack Voltage",
+          name: "Dcl Reduced Due to Low Pack Voltage",
           data: [
             {
               value:
@@ -236,7 +236,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
+          name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
           data: [
             {
               value:
@@ -246,7 +246,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
+          name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
           data: [
             {
               value:
@@ -256,7 +256,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Ccl Reduced Due to High Soc",
+          name: "Ccl Reduced Due to High Soc",
           data: [
             {
               value:
@@ -265,7 +265,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Ccl Reduced to High Cell Resistance",
+          name: "Ccl Reduced to High Cell Resistance",
           data: [
             {
               value:
@@ -275,7 +275,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Ccl Reduced Due to Temperature",
+          name: "Ccl Reduced Due to Temperature",
           data: [
             {
               value:
@@ -285,7 +285,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Ccl Reduced Due to High Cell Voltage",
+          name: "Ccl Reduced Due to High Cell Voltage",
           data: [
             {
               value:
@@ -295,7 +295,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Ccl Reduced Due to High Pack Voltage",
+          name: "Ccl Reduced Due to High Pack Voltage",
           data: [
             {
               value:
@@ -305,7 +305,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Ccl Reduced Due to Charger Latch",
+          name: "Ccl Reduced Due to Charger Latch",
           data: [
             {
               value:
@@ -315,7 +315,7 @@ const faults = (): I_PIS => {
           ],
         },
         {
-          Name: "Ccl Reduced Due to Alternate Current Limit",
+          name: "Ccl Reduced Due to Alternate Current Limit",
           data: [
             {
               value:
@@ -330,7 +330,7 @@ const faults = (): I_PIS => {
       MotorLeft: {
         ErrorFlags: [
           {
-            Name: "Motor Over Speed",
+            name: "Motor Over Speed",
             data: [
               {
                 value: currentPacket?.MotorFaults[0].ErrorFlags.MotorOverSpeed,
@@ -338,7 +338,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Software Over Current",
+            name: "Software Over Current",
             data: [
               {
                 value:
@@ -347,7 +347,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Dc Bus Over Voltage",
+            name: "Dc Bus Over Voltage",
             data: [
               {
                 value:
@@ -356,7 +356,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Bad Motor Position Hall Sequence",
+            name: "Bad Motor Position Hall Sequence",
             data: [
               {
                 value:
@@ -366,7 +366,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Watch Dog Caused Last Reset",
+            name: "Watch Dog Caused Last Reset",
             data: [
               {
                 value:
@@ -376,7 +376,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Config Read Error",
+            name: "Config Read Error",
             data: [
               {
                 value: currentPacket?.MotorFaults[0].ErrorFlags.ConfigReadError,
@@ -384,7 +384,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Wail 15V Under Voltage Lock Out",
+            name: "Wail 15V Under Voltage Lock Out",
             data: [
               {
                 value:
@@ -394,7 +394,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Desaturation Fault",
+            name: "Desaturation Fault",
             data: [
               {
                 value:
@@ -405,7 +405,7 @@ const faults = (): I_PIS => {
         ],
         LimitFlags: [
           {
-            Name: "Output Voltage Pwm",
+            name: "Output Voltage Pwm",
             data: [
               {
                 value:
@@ -414,25 +414,25 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Motor Current",
+            name: "Motor Current",
             data: [
               { value: currentPacket?.MotorFaults[0].LimitFlags.MotorCurrent },
             ],
           },
           {
-            Name: "Velocity",
+            name: "Velocity",
             data: [
               { value: currentPacket?.MotorFaults[0].LimitFlags.Velocity },
             ],
           },
           {
-            Name: "Bus Current",
+            name: "Bus Current",
             data: [
               { value: currentPacket?.MotorFaults[0].LimitFlags.BusCurrent },
             ],
           },
           {
-            Name: "Bus Voltage Upper",
+            name: "Bus Voltage Upper",
             data: [
               {
                 value: currentPacket?.MotorFaults[0].LimitFlags.BusVoltageUpper,
@@ -440,7 +440,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Bus Voltage Lower",
+            name: "Bus Voltage Lower",
             data: [
               {
                 value: currentPacket?.MotorFaults[0].LimitFlags.BusVoltageLower,
@@ -448,7 +448,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Ipm or Motor Temperature",
+            name: "Ipm or Motor Temperature",
             data: [
               {
                 value:
@@ -462,7 +462,7 @@ const faults = (): I_PIS => {
       MotorRight: {
         ErrorFlags: [
           {
-            Name: "Motor Over Speed",
+            name: "Motor Over Speed",
             data: [
               {
                 value: currentPacket?.MotorFaults[1].ErrorFlags.MotorOverSpeed,
@@ -470,7 +470,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Software Over Current",
+            name: "Software Over Current",
             data: [
               {
                 value:
@@ -479,7 +479,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Dc Bus Over Voltage",
+            name: "Dc Bus Over Voltage",
             data: [
               {
                 value:
@@ -488,7 +488,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Bad Motor Position Hall Sequence",
+            name: "Bad Motor Position Hall Sequence",
             data: [
               {
                 value:
@@ -498,7 +498,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Watch Dog Caused Last Reset",
+            name: "Watch Dog Caused Last Reset",
             data: [
               {
                 value:
@@ -508,7 +508,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Config Read Error",
+            name: "Config Read Error",
             data: [
               {
                 value: currentPacket?.MotorFaults[1].ErrorFlags.ConfigReadError,
@@ -516,7 +516,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Wail 15V Under Voltage Lock Out",
+            name: "Wail 15V Under Voltage Lock Out",
             data: [
               {
                 value:
@@ -526,7 +526,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Desaturation Fault",
+            name: "Desaturation Fault",
             data: [
               {
                 value:
@@ -537,7 +537,7 @@ const faults = (): I_PIS => {
         ],
         LimitFlags: [
           {
-            Name: "Output Voltage Pwm",
+            name: "Output Voltage Pwm",
             data: [
               {
                 value:
@@ -546,25 +546,25 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Motor Current",
+            name: "Motor Current",
             data: [
               { value: currentPacket?.MotorFaults[1].LimitFlags.MotorCurrent },
             ],
           },
           {
-            Name: "Velocity",
+            name: "Velocity",
             data: [
               { value: currentPacket?.MotorFaults[1].LimitFlags.Velocity },
             ],
           },
           {
-            Name: "Bus Current",
+            name: "Bus Current",
             data: [
               { value: currentPacket?.MotorFaults[1].LimitFlags.BusCurrent },
             ],
           },
           {
-            Name: "Bus Voltage Upper",
+            name: "Bus Voltage Upper",
             data: [
               {
                 value: currentPacket?.MotorFaults[1].LimitFlags.BusVoltageUpper,
@@ -572,7 +572,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Bus Voltage Lower",
+            name: "Bus Voltage Lower",
             data: [
               {
                 value: currentPacket?.MotorFaults[1].LimitFlags.BusVoltageLower,
@@ -580,7 +580,7 @@ const faults = (): I_PIS => {
             ],
           },
           {
-            Name: "Ipm or Motor Temperature",
+            name: "Ipm or Motor Temperature",
             data: [
               {
                 value:

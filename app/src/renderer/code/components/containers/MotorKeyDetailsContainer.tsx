@@ -1,4 +1,4 @@
-import { IKeyMotor } from "../../objects/telemetry-data.interface";
+import { type IKeyMotor } from "@/objects/telemetry-data.interface";
 
 export default function MotorKeyDetailsContainer({
   KeyMotorDetails,
@@ -12,7 +12,7 @@ export default function MotorKeyDetailsContainer({
       <div className="flex flex-row ">
         <h1 className="font-bold ">Key {direction} Motor Details</h1>
         <div
-          className={`ml-2 mt-2 h-3 w-3 rounded-full ${
+          className={`ml-2 mt-2 size-3 rounded-full${
             KeyMotorDetails.Alive ? "bg-green" : " bg-red-700"
           }`}
         />

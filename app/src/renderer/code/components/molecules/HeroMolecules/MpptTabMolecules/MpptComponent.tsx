@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import { ChannelData } from "../../../../objects/MpptProps";
+import { type ChannelData } from "@/objects/MpptProps";
 
 export default function MpptComponent({
   channelData,
@@ -27,7 +27,7 @@ export default function MpptComponent({
         )}
         <div className="flex justify-center text-[#9C0534]">
           <div>{channelData.arrayVoltage}</div>
-          <div className="ml-2 mt-1 h-2 w-2 rounded-full bg-green dark:bg-green-dark"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
       <button id="ArrayCurrent" onClick={() => setU0C0(myString[1])}>
@@ -40,7 +40,7 @@ export default function MpptComponent({
         )}
         <div className="flex justify-center text-[#9C0534]">
           <div>{channelData.arrayCurrent}</div>
-          <div className="ml-2 mt-1 h-2 w-2 rounded-full bg-green dark:bg-green-dark"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
       <button id="BatteryVoltage" onClick={() => setU0C0(myString[2])}>
@@ -53,7 +53,7 @@ export default function MpptComponent({
         )}
         <div className="flex justify-center text-[#9C0534]">
           <div>{channelData.batteryVoltage}</div>
-          <div className="ml-2 mt-1 h-2 w-2 rounded-full bg-green dark:bg-green-dark"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
       <button id="Temperature" onClick={() => setU0C0(myString[3])}>
@@ -66,7 +66,7 @@ export default function MpptComponent({
         )}
         <div className="flex justify-center text-[#9C0534]">
           <div>{channelData.temperature}</div>
-          <div className="ml-2 mt-1 h-2 w-2 rounded-full bg-green dark:bg-green-dark"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
     </div>

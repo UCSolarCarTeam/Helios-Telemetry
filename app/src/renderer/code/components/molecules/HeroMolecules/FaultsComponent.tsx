@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
-import React from "react";
 
-import FaultCard from "../../atoms/FaultCard";
-import { ISeverity } from "../../atoms/FaultCard";
+import FaultCard from "@/components/atoms/FaultCard";
+import { ISeverity } from "@/components/atoms/FaultCard";
 
 function FaultsComponent(props: any) {
-  {
-  }
   return (
     <div>
       <motion.div

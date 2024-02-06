@@ -1,5 +1,3 @@
-import React from "react";
-
 function StatusComponent() {
   return (
     <div className="grid">
@@ -13,7 +11,7 @@ function StatusComponent() {
       </div>
       <div className="grid w-fit grid-cols-2 gap-4">
         <h5 className="text-text-gray dark:text-text-gray-dark">STATUS</h5>
-        <div className="mt-1 h-5 w-5 rounded-full bg-green dark:bg-green-dark"></div>
+        <div className="mt-1 size-5 rounded-full bg-green dark:bg-green-dark"></div>
       </div>
     </div>
   );

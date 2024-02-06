@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function BatteryIconComponent(props: any) {
   const [batteryLevel, setBatteryLevel] = useState<number>(38.5);
@@ -42,5 +42,4 @@ function BatteryIconComponent(props: any) {
     </div>
   );
 }
-
 export default BatteryIconComponent;

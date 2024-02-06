@@ -1,5 +1,6 @@
-import { usePacket } from "../../contexts/PacketContext";
-import I_PIS, { I_PISField } from "./PIS.interface";
+import { usePacket } from "@/contexts/PacketContext";
+import type I_PIS from "@/objects/PIS/PIS.interface";
+import { type I_PISField } from "@/objects/PIS/PIS.interface";
 
 const Motor = (): I_PIS => {
   const { currentPacket } = usePacket();
@@ -58,7 +59,7 @@ const Motor = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
     Key_Right_Motor_Details: [
       {
         Name: "Alive",
@@ -113,7 +114,7 @@ const Motor = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
     Left_Motor_Details: [
       {
         Name: "Phase C Current",
@@ -259,7 +260,7 @@ const Motor = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
     Right_Motor_Details: [
       {
         Name: "Phase C Current",
@@ -405,7 +406,7 @@ const Motor = (): I_PIS => {
           },
         ],
       },
-    ] as I_PISField[],
+    ] as unknown as I_PISField[],
   };
 };
 

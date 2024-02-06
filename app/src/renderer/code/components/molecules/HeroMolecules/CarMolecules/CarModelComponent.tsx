@@ -1,7 +1,6 @@
-import { useEffect } from "react";
-import * as THREE from "three";
-import { MeshStandardMaterial } from "three";
-import { GLTF } from "three-stdlib";
+/* eslint-disable react/no-unknown-property */
+import type * as THREE from "three";
+import { type GLTF } from "three-stdlib";
 
 import { useGLTF } from "@react-three/drei";
 
@@ -146,11 +145,15 @@ type HeliosCar = GLTF & {
   };
 };
 
-export function CarModelComponent(props: any) {
-  let path = "/models/Helios.glb";
+type CarModelComponentProps = {
+  isClear: boolean;
+};
+
+export function CarModelComponent(props: CarModelComponentProps) {
+  const path = "/models/Helios.glb";
   const { nodes, materials } = useGLTF(path) as unknown as HeliosCar;
 
-  let clear = materials["Shape.050"];
+  const clear = materials["Shape.050"];
 
   return (
     <group

@@ -1,12 +1,11 @@
-import { faker } from "@faker-js/faker";
-
-import { usePacket } from "../../contexts/PacketContext";
+import MotorDetailsContainer from "@/components/containers/MotorDetailsContainer";
+import MotorKeyDetailsContainer from "@/components/containers/MotorKeyDetailsContainer";
+import { usePacket } from "@/contexts/PacketContext";
 import type {
   IKeyMotor,
   IMotorDetail,
-} from "../../objects/telemetry-data.interface";
-import MotorDetailsContainer from "../containers/MotorDetailsContainer";
-import MotorKeyDetailsContainer from "../containers/MotorKeyDetailsContainer";
+} from "@/objects/telemetry-data.interface";
+import { faker } from "@faker-js/faker";
 
 // TO DO Remove this code
 const fakeKeyMotor0Data: IKeyMotor = {
