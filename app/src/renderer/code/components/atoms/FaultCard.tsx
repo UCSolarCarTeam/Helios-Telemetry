@@ -49,7 +49,7 @@ function FaultCard(props: FaultCardProps) {
               />
             ) : null}
           </div>
-          <div className="flex w-[93%] text-2xl">{faultName}</div>
+          <div className="flex w-[93%] text-lg">{faultName}</div>
         </div>
       </div>
     </motion.div>
