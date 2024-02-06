@@ -13,6 +13,7 @@ export default function MotorKeyDetailsContainer({
         <h1 className="font-bold ">Key {direction} Motor Details</h1>
         <div
           className={`ml-2 mt-2 size-3 rounded-full${
+          className={`ml-2 mt-2 size-3 rounded-full${
             KeyMotorDetails.Alive ? "bg-green" : " bg-red-700"
           }`}
         />

@@ -1,6 +1,9 @@
 /* eslint-disable react/no-unknown-property */
 import type * as THREE from "three";
 import { type GLTF } from "three-stdlib";
+/* eslint-disable react/no-unknown-property */
+import type * as THREE from "three";
+import { type GLTF } from "three-stdlib";
 
 import { useGLTF } from "@react-three/drei";
 

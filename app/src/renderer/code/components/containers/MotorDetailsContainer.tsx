@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { type IMotorDetail } from "@/objects/telemetry-data.interface";
+=======
+import { type IMotorDetail } from "../../objects/telemetry-data.interface";
+>>>>>>> 44927d81f3949a3bd77bde33fa09a5be76e73a9e
 
 export default function MotorDetailsContainer({
   MotorDetails,

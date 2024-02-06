@@ -10,10 +10,9 @@ import {
   YAxis,
 } from "recharts";
 
-import MotorDetailsContainer from "@/components/containers/MotorDetailsContainer";
-import MotorKeyDetailsContainer from "@/components/containers/MotorKeyDetailsContainer";
-import { usePacket } from "@/contexts/PacketContext";
+import { faker } from "@faker-js/faker";
 
+import { usePacket } from "../../contexts/PacketContext";
 import type {
   IKeyMotor,
   IMotorDetail,
