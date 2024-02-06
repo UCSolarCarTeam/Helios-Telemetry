@@ -289,7 +289,7 @@ export function PacketContextProvider({
         ],
         TimeStamp: faker.number.int({ min: 0, max: 100 }),
       });
-    }, 1000);
+    }, 2500);
     return () => clearInterval(interval);
   }, []);
 

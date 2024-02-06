@@ -38,7 +38,7 @@ function FaultCard(props: FaultCardProps) {
                   : ""
           }`}
         >
-          <div className="flex h-full w-[15%] justify-start">
+          <div className="flex h-full w-[7%] justify-start">
             {severity === ISeverity.ERROR ? (
               <DangerousIcon sx={{ color: "#9C0534", fontSize: "40px" }} />
             ) : severity === ISeverity.WARNING ? (
@@ -49,7 +49,7 @@ function FaultCard(props: FaultCardProps) {
               />
             ) : null}
           </div>
-          <div className="flex w-[85%] text-2xl">{faultName}</div>
+          <div className="flex w-[93%] text-2xl">{faultName}</div>
         </div>
       </div>
     </motion.div>

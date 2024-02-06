@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { usePacket } from "../../../contexts/PacketContext";
+import faults from "../../../objects/PIS/PIS.faults";
 import FaultCard from "../../atoms/FaultCard";
 import { ISeverity } from "../../atoms/FaultCard";
 
 type TestFaultType = {
-  fault1: boolean;
-  fault2: boolean;
-  fault3: boolean;
-  fault4: boolean;
+  [key: string]: boolean;
 };
 
 type CurrentFaultsType = {
@@ -16,57 +14,85 @@ type CurrentFaultsType = {
 };
 
 function FaultsComponent(props: any) {
-  const [demoPacketFaults, setDemoPacketFaults] = useState<TestFaultType>({
-    fault1: false,
-    fault2: false,
-    fault3: false,
-    fault4: false,
-  });
+  const { currentPacket } = usePacket();
+
+  function flattenNestedJson(obj, prefix = ""): TestFaultType {
+    return Object.keys(obj).reduce((acc, key) => {
+      const prefixedKey = prefix ? `${prefix}.${key}` : key;
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        // If the value is an object (nested JSON), call the function recursively
+        Object.assign(acc, flattenNestedJson(obj[key], prefixedKey));
+      } else {
+        // If the value is not an object, it's a leaf node, so assign it to the flattened object
+        acc[prefixedKey] = obj[key];
+      }
+      return acc;
+    }, {});
+  }
+
+  // const [demoPacketFaults, setDemoPacketFaults] = useState<TestFaultType>({
+  //   fault1: false,
+  //   fault2: false,
+  //   fault3: false,
+  //   fault4: false,
+  // });
 
   const [currentFaultTimers, setCurrentFaultTimers] =
     useState<CurrentFaultsType>({} as CurrentFaultsType);
 
-  useEffect(() => {
-    const fakeFaultInterval = setInterval(() => {
-      setDemoPacketFaults({
-        ...demoPacketFaults,
-        fault1: Math.random() > 0.9,
-        fault2: Math.random() > 0.9,
-        fault3: Math.random() > 0.9,
-        fault4: Math.random() > 0.9,
-      });
-    }, 250);
+  // useEffect(() => {
+  //   const fakeFaultInterval = setInterval(() => {
+  //     setDemoPacketFaults({
+  //       ...demoPacketFaults,
+  //       fault1: Math.random() > 0.9,
+  //       fault2: Math.random() > 0.9,
+  //       fault3: Math.random() > 0.9,
+  //       fault4: Math.random() > 0.9,
+  //     });
+  //   }, 250);
 
-    return () => {
-      clearInterval(fakeFaultInterval);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(fakeFaultInterval);
+  //   };
+  // }, []);
 
   useEffect(() => {
-    Object.keys(demoPacketFaults).map((fault) => {
-      demoPacketFaults[fault as keyof TestFaultType]
+    const flattenedFaults = flattenNestedJson({
+      // Battery: currentPacket.BatteryFaults,
+      // MotorFaults: currentPacket.MotorFaults,
+      BMSFaults: currentPacket.AuxBms,
+      // TODO: we need to add auxBMS faults, we'll ask embedded to restructure the packet.
+    });
+
+    Object.keys(flattenedFaults).map((fault) => {
+      console.log(typeof fault);
+      flattenedFaults[fault as keyof TestFaultType]
         ? // Packet Fault is true
           setCurrentFaultTimers({ ...currentFaultTimers, [fault]: 0 })
         : // Packet Fault is false
-          currentFaultTimers[fault as keyof TestFaultType] !== undefined
-          ? // Fault is currently timed
-            currentFaultTimers[fault as keyof TestFaultType] + 1 >= 10
-            ? setCurrentFaultTimers((prev) => {
-                const {
-                  [fault as keyof TestFaultType]: _,
-                  ...currentFaultTimers
-                } = prev;
-
-                return currentFaultTimers;
-              })
-            : setCurrentFaultTimers({
-                ...currentFaultTimers,
-                [fault]: currentFaultTimers[fault as keyof TestFaultType] + 1,
-              })
-          : // Fault is not timed
-            null;
+          console.log(fault);
+      currentFaultTimers[fault as keyof TestFaultType] !== undefined
+        ? // Fault is currently timed
+          currentFaultTimers[fault as keyof TestFaultType] + 1 >= 10
+          ? setCurrentFaultTimers((prev) => {
+              const {
+                [fault as keyof TestFaultType]: _,
+                ...currentFaultTimers
+              } = prev;
+              return currentFaultTimers;
+            })
+          : setCurrentFaultTimers({
+              ...currentFaultTimers,
+              [fault]: currentFaultTimers[fault as keyof TestFaultType] + 1,
+            })
+        : // Fault is not timed
+          null;
     });
-  }, [demoPacketFaults]);
+  }, [currentPacket]);
+
+  useEffect(() => {
+    console.log(currentFaultTimers);
+  }, [currentFaultTimers]);
 
   return (
     <div className="flex flex-col gap-4">
