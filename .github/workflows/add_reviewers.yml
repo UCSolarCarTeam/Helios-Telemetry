@@ -10,4 +10,4 @@ jobs:
       - uses: hkusu/review-assign-action@v1.3.1
         with:
           assignees: ${{ github.actor }}
-          reviewers: ideen1, IshaHaider, brian-ngyn, haley-lynn, jjason-nn, JenniferJa, justin-phxm, CalebBourb, alexwhelan12
+          reviewers: ideen1, IshaHaider, brian-ngyn, haley-lynn, jjason-nn, JenniferJa, justin-phxm, CalebBourb, alexwhelan12, maaryaahmed
