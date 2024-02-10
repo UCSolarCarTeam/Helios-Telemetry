@@ -8,6 +8,14 @@ const mppt = (): I_PIS => {
     Unit0: {
       Channel0: [
         {
+          name: "Alive",
+          data: [
+            {
+              value: currentPacket?.MPPT[0].Alive,
+            },
+          ],
+        },
+        {
           name: "Array Voltage",
           data: [
             {
@@ -42,17 +50,6 @@ const mppt = (): I_PIS => {
           ],
         },
         {
-          name: "Battery Current",
-          data: [
-            {
-              value: currentPacket?.MPPT[0].ArrayCurrent,
-              unit: "V",
-              min: 20,
-              max: 100,
-            },
-          ],
-        },
-        {
           name: "Temperature",
           data: [
             {
@@ -65,6 +62,14 @@ const mppt = (): I_PIS => {
         },
       ] as unknown as I_PISField[],
       Channel1: [
+        {
+          name: "Alive",
+          data: [
+            {
+              value: currentPacket?.MPPT[1].Alive,
+            },
+          ],
+        },
         {
           name: "Array Voltage",
           data: [
@@ -101,17 +106,6 @@ const mppt = (): I_PIS => {
           ],
         },
         {
-          name: "Battery Current",
-          data: [
-            {
-              value: currentPacket?.MPPT[1].ArrayCurrent,
-              unit: "V",
-              min: 20,
-              max: 100,
-            },
-          ],
-        },
-        {
           name: "Temperature",
           data: [
             {
@@ -126,6 +120,14 @@ const mppt = (): I_PIS => {
     },
     Unit1: {
       Channel0: [
+        {
+          name: "Alive",
+          data: [
+            {
+              value: currentPacket?.MPPT[2].Alive,
+            },
+          ],
+        },
         {
           name: "Array Voltage",
           data: [
@@ -173,6 +175,14 @@ const mppt = (): I_PIS => {
         },
       ] as unknown as I_PISField[],
       Channel1: [
+        {
+          name: "Alive",
+          data: [
+            {
+              value: currentPacket?.MPPT[3].Alive,
+            },
+          ],
+        },
         {
           name: "Array Voltage",
           data: [
