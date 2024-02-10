@@ -1,7 +1,6 @@
+import PISTransformer from "@/components/transformers/PIStransformer";
 import { usePacket } from "@/contexts/PacketContext";
-
-import Battery from "../../objects/PIS/PIS.battery";
-import PISTransformer from "../transformers/PISTransformer";
+import Battery from "@/objects/PIS/PIS.battery";
 
 function BatteryTab() {
   const { currentPacket } = usePacket();
