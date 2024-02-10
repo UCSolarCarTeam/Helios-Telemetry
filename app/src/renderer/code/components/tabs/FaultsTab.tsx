@@ -1,11 +1,11 @@
 import PIStransformers from "@/components/transformers/PIStransformer";
-import Battery from "@/objects/PIS/PIS.battery";
+import faults from "@/objects/PIS/PIS.faults";
 
 function FaultsTab(): JSX.Element {
   return (
     <div>
       <p>Faults Tab</p>
-      <PIStransformers root={Battery()} />
+      <PIStransformers root={faults()} />
     </div>
   );
 }
