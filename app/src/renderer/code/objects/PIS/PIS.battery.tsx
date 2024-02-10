@@ -327,7 +327,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.AuxBms?.AuxVoltage,
-            unit: "V",
+            unit: "mV",
             min: 0,
             max: 100,
           },
