@@ -55,7 +55,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[0].VehicleVelocity,
-            unit: "m/s",
+            unit: "km/h",
           },
         ],
       },
@@ -110,7 +110,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[1].VehicleVelocity,
-            unit: "m/s",
+            unit: "km/h",
           },
         ],
       },
@@ -238,7 +238,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].DcBusAmpHours,
-            unit: "Ah", //check
+            unit: "Ah",
           },
         ],
       },
