@@ -1,7 +1,5 @@
 /* eslint-disable react/no-unknown-property */
 import { useState } from "react";
-/* eslint-disable react/no-unknown-property */
-import { useState } from "react";
 
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";

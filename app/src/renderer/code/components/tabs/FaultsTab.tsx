@@ -1,4 +1,4 @@
-import PISTransformers from "@/components/transformers/PISTransformer";
+import PISTransformer from "@/components/transformers/PISTransformer";
 import Battery from "@/objects/PIS/PIS.battery";
 
 function FaultsTab(): JSX.Element {
