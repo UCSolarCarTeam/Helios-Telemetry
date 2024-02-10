@@ -1,11 +1,10 @@
-import PIS from "@/objects/PIS/PIS";
+import PIStransformer from "@/components/transformers/PIStransformer";
 import Motor from "@/objects/PIS/PIS.motor";
-import PISTransformer from "@/transformers/PISTransformer";
 
 function MotorTab(): JSX.Element {
   return (
     <div>
-      <PISTransformer root={Motor()} />
+      <PIStransformer root={Motor()} />
     </div>
   );
 }
