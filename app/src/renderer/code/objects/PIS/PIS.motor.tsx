@@ -19,7 +19,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[0].SetCurrent,
-            unit: "C",
+            unit: "%",
           },
         ],
       },
@@ -28,7 +28,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[0].SetVelocity,
-            unit: "km/h",
+            unit: "RPM",
           },
         ],
       },
@@ -37,7 +37,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[0].BusCurrent,
-            unit: "C",
+            unit: "A",
           },
         ],
       },
@@ -55,7 +55,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[0].VehicleVelocity,
-            unit: "km/h",
+            unit: "m/s",
           },
         ],
       },
@@ -74,7 +74,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[1].SetCurrent,
-            unit: "C",
+            unit: "%",
           },
         ],
       },
@@ -83,7 +83,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[1].SetVelocity,
-            unit: "km/h",
+            unit: "RPM",
           },
         ],
       },
@@ -92,7 +92,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[1].BusCurrent,
-            unit: "C",
+            unit: "A",
           },
         ],
       },
@@ -110,7 +110,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.KeyMotor[1].VehicleVelocity,
-            unit: "km/h",
+            unit: "m/s",
           },
         ],
       },
@@ -121,7 +121,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].PhaseCCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
@@ -130,7 +130,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].PhaseBCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
@@ -156,8 +156,8 @@ const Motor = (): I_PIS => {
         name: "Motor Current Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].MotorVoltageReal,
-            unit: "V",
+            value: currentPacket?.MotorDetails[0].MotorCurrentReal,
+            unit: "A",
           },
         ],
       },
@@ -166,7 +166,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].MotorVoltageImaginary,
-            unit: "V",
+            unit: "A",
           },
         ],
       },
@@ -175,7 +175,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].BackEmf,
-            unit: "",
+            unit: "V",
           },
         ],
       },
@@ -210,7 +210,7 @@ const Motor = (): I_PIS => {
         name: "Heat Sink Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].VoltageRail15VSupply,
+            value: currentPacket?.MotorDetails[0].HeatSinkTemp,
             unit: "°C",
           },
         ],
@@ -238,7 +238,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].DcBusAmpHours,
-            unit: "C",
+            unit: "Ah", //check
           },
         ],
       },
@@ -247,7 +247,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].Odometer,
-            unit: "M",
+            unit: "m",
           },
         ],
       },
@@ -256,7 +256,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[0].SlipSpeed,
-            unit: "M",
+            unit: "Hz",
           },
         ],
       },
@@ -267,7 +267,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[1].PhaseCCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
@@ -276,7 +276,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[1].PhaseBCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
@@ -302,8 +302,8 @@ const Motor = (): I_PIS => {
         name: "Motor Current Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].MotorVoltageReal,
-            unit: "V",
+            value: currentPacket?.MotorDetails[1].MotorCurrentReal,
+            unit: "A",
           },
         ],
       },
@@ -312,7 +312,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[1].MotorVoltageImaginary,
-            unit: "V",
+            unit: "A",
           },
         ],
       },
@@ -321,7 +321,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[1].BackEmf,
-            unit: "",
+            unit: "V",
           },
         ],
       },
@@ -356,7 +356,7 @@ const Motor = (): I_PIS => {
         name: "Heat Sink Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].VoltageRail15VSupply,
+            value: currentPacket?.MotorDetails[1].HeatSinkTemp,
             unit: "°C",
           },
         ],
@@ -384,7 +384,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[1].DcBusAmpHours,
-            unit: "C",
+            unit: "Ah",
           },
         ],
       },
@@ -393,7 +393,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[1].Odometer,
-            unit: "M",
+            unit: "m",
           },
         ],
       },
@@ -402,7 +402,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             value: currentPacket?.MotorDetails[1].SlipSpeed,
-            unit: "M",
+            unit: "Hz",
           },
         ],
       },
