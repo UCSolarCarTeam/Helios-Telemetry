@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react/no-unknown-property */
+// TO DO Remove that ^^
+import { useState } from "react";
 import * as THREE from "three";
 
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
+import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
+import { IndicationStates } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as TWEEN from "@tweenjs/tween.js";
-
-export enum IndicationStates {
-  RED,
-  ORANGE,
-  CLEAR,
-}
-
-export type IndicationLocations = {
-  leftMotor: IndicationStates;
-  rightMotor: IndicationStates;
-  battery: IndicationStates;
-  solarPanel: IndicationStates;
-};
 
 type IndicationTriggerList = {
   // TODO: Add indication triggers

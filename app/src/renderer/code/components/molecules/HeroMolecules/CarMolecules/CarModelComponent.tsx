@@ -2,9 +2,8 @@
 import type * as THREE from "three";
 import { type GLTF } from "three-stdlib";
 
+import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { useGLTF } from "@react-three/drei";
-
-import { IndicationLocations, IndicationStates } from "../CarGraphicComponent";
 
 type HeliosCar = GLTF & {
   nodes: {
