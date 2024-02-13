@@ -1,13 +1,72 @@
-/* eslint-disable react/no-unknown-property */
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as THREE from "three";
 
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import * as TWEEN from "@tweenjs/tween.js";
+
+export enum IndicationStates {
+  RED,
+  ORANGE,
+  CLEAR,
+}
+
+export type IndicationLocations = {
+  leftMotor: IndicationStates;
+  rightMotor: IndicationStates;
+  battery: IndicationStates;
+  solarPanel: IndicationStates;
+};
+
+type IndicationTriggerList = {
+  // TODO: Add indication triggers
+};
 
 function CarGraphicComponent(props: any) {
   const [isClear, changeClear] = useState(false);
+  const [indications, setIndications] = useState<IndicationLocations>({
+    leftMotor: IndicationStates.CLEAR,
+    rightMotor: IndicationStates.CLEAR,
+    battery: IndicationStates.CLEAR,
+    solarPanel: IndicationStates.CLEAR,
+  });
+
+  const errorMaterial = new THREE.MeshStandardMaterial({
+    color: 0xff0000,
+    transparent: true,
+    opacity: 0.8,
+  });
+
+  const warningMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffa500,
+    transparent: true,
+    opacity: 0.8,
+  });
+
+  const initialIntensity = 0.1;
+  const targetIntensity = 0.8;
+  const duration = 500;
+
+  const tween = new TWEEN.Tween({ intensity: initialIntensity })
+    .to({ intensity: targetIntensity }, duration)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+
+    .onUpdate(({ intensity }) => {
+      errorMaterial.opacity = intensity;
+      warningMaterial.opacity = intensity;
+    })
+    .yoyo(true)
+    .start()
+    .repeat(Infinity);
+
+  // Setup the animation loop.
+  function animate(time: number) {
+    tween.update(time);
+    requestAnimationFrame(animate);
+  }
+  animate(1);
 
   return (
     <>
@@ -18,7 +77,12 @@ function CarGraphicComponent(props: any) {
           shadow-mapSize={[512, 512]}
           castShadow
         />
-        <CarModelComponent isClear={isClear} />
+        <CarModelComponent
+          isClear={isClear}
+          errorMaterial={errorMaterial}
+          warningMaterial={warningMaterial}
+          indications={indications}
+        />
         <RoadComponent speed={7} size={15} />
         <ContactShadows
           position={[0, 0, 0]}

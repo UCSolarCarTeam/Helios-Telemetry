@@ -4,6 +4,8 @@ import { type GLTF } from "three-stdlib";
 
 import { useGLTF } from "@react-three/drei";
 
+import { IndicationLocations, IndicationStates } from "../CarGraphicComponent";
+
 type HeliosCar = GLTF & {
   nodes: {
     Plane: THREE.Mesh;
@@ -147,6 +149,9 @@ type HeliosCar = GLTF & {
 
 type CarModelComponentProps = {
   isClear: boolean;
+  errorMaterial: THREE.MeshStandardMaterial;
+  warningMaterial: THREE.MeshStandardMaterial;
+  indications: IndicationLocations;
 };
 
 export function CarModelComponent(props: CarModelComponentProps) {
@@ -567,7 +572,7 @@ export function CarModelComponent(props: CarModelComponentProps) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet050.geometry}
-        material={materials["Shape.050"]}
+        material={props.warningMaterial}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />
