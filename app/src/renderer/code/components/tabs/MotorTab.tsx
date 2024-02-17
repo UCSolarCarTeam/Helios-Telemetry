@@ -1,12 +1,13 @@
-import { faker } from "@faker-js/faker";
-
-import {
+import MotorDetailsContainer from "@/components/containers/MotorDetailsContainer";
+import MotorKeyDetailsContainer from "@/components/containers/MotorKeyDetailsContainer";
+import { usePacket } from "@/contexts/PacketContext";
+import type {
   IKeyMotor,
   IMotorDetail,
-} from "../../objects/telemetry-data.interface";
-import MotorDetailsContainer from "../containers/MotorDetailsContainer";
-import MotorKeyDetailsContainer from "../containers/MotorKeyDetailsContainer";
+} from "@/objects/telemetry-data.interface";
+import { faker } from "@faker-js/faker";
 
+// TO DO Remove this code
 const fakeKeyMotor0Data: IKeyMotor = {
   Alive: faker.datatype.boolean(),
   SetCurrent: faker.number.float({ min: 0, max: 100, precision: 0.01 }),
@@ -109,7 +110,10 @@ const fakeData = {
     MotorDetail: fakeMotor1DetailsData,
   },
 };
+// END OF TO DO
+
 function MotorTab(): JSX.Element {
+  const { currentPacket } = usePacket();
   return (
     <>
       {/* I see 2 containers  */}
@@ -119,21 +123,21 @@ function MotorTab(): JSX.Element {
           define the width to be half the parent container.
           Instead of gap-8, use justify-between*/}
           <MotorKeyDetailsContainer
-            KeyMotorDetails={fakeData.Motor0.KeyMotor}
+            KeyMotorDetails={currentPacket.KeyMotor[0]}
             direction={"Left"}
           />
           <MotorDetailsContainer
-            MotorDetails={fakeData.Motor0.MotorDetail}
+            MotorDetails={currentPacket.MotorDetails[0]}
             direction={"Left"}
           />
         </div>
         <div className="flex w-1/2 flex-col">
           <MotorKeyDetailsContainer
-            KeyMotorDetails={fakeData.Motor1.KeyMotor}
+            KeyMotorDetails={currentPacket.KeyMotor[1]}
             direction="Right"
           />
           <MotorDetailsContainer
-            MotorDetails={fakeData.Motor1.MotorDetail}
+            MotorDetails={currentPacket.MotorDetails[1]}
             direction={"Right"}
           />
         </div>

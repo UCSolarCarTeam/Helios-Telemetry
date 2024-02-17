@@ -2,21 +2,19 @@ import React, { useEffect } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { styled } from "@mui/material";
+import { type SolarCarRoutes, routes } from "@/objects/TabRoutes";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-
-import { SolarCarRoutes, routes } from "../../objects/TabRoutes";
 
 function NavBar(props: any): JSX.Element {
   const location = useLocation();
   const navigate = useNavigate();
 
   const getCurrentPath = () => {
-    let currIndex: String = "1";
+    let currIndex = "1";
     routes.map((route: SolarCarRoutes, i: number) => {
       if (route.path === location.pathname) {
-        currIndex = route.value;
+        currIndex = route.value.toString();
       }
     });
     return currIndex;
@@ -30,7 +28,7 @@ function NavBar(props: any): JSX.Element {
     });
   };
 
-  const [value, setValue] = React.useState<String>(getCurrentPath());
+  const [value, setValue] = React.useState<string>(getCurrentPath());
   useEffect(() => {
     redirect();
   }, [value]);
@@ -39,7 +37,7 @@ function NavBar(props: any): JSX.Element {
     getCurrentPath();
   }, []);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: String) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 

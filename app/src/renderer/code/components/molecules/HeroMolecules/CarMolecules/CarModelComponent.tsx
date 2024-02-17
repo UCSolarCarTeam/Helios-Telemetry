@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import * as THREE from "three";
-import { MeshStandardMaterial } from "three";
-import { GLTF } from "three-stdlib";
+/* eslint-disable react/no-unknown-property */
+import type * as THREE from "three";
+import { type GLTF } from "three-stdlib";
 
+import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { useGLTF } from "@react-three/drei";
 
 type HeliosCar = GLTF & {
@@ -146,11 +146,18 @@ type HeliosCar = GLTF & {
   };
 };
 
-export function CarModelComponent(props: any) {
-  let path = "/models/Helios.glb";
+type CarModelComponentProps = {
+  isClear: boolean;
+  errorMaterial: THREE.MeshStandardMaterial;
+  warningMaterial: THREE.MeshStandardMaterial;
+  indications: IndicationLocations;
+};
+
+export function CarModelComponent(props: CarModelComponentProps) {
+  const path = "/models/Helios.glb";
   const { nodes, materials } = useGLTF(path) as unknown as HeliosCar;
 
-  let clear = materials["Shape.050"];
+  const clear = materials["Shape.050"];
 
   return (
     <group
@@ -564,7 +571,7 @@ export function CarModelComponent(props: any) {
         castShadow
         receiveShadow
         geometry={nodes.Shape_IndexedFaceSet050.geometry}
-        material={materials["Shape.050"]}
+        material={props.warningMaterial}
         position={[-31.75, 0, -2872.13]}
         rotation={[Math.PI / 2, 0, -Math.PI]}
       />

@@ -1,8 +1,8 @@
-import Battery from "./PIS.battery";
-import faults from "./PIS.faults";
-import I_PIS from "./PIS.interface";
-import motor from "./PIS.motor";
-import mppt from "./PIS.mppt";
+import Battery from "@/objects/PIS/PIS.battery";
+import faults from "@/objects/PIS/PIS.faults";
+import type I_PIS from "@/objects/PIS/PIS.interface";
+import motor from "@/objects/PIS/PIS.motor";
+import mppt from "@/objects/PIS/PIS.mppt";
 
 const PIS = (): I_PIS => {
   return {

@@ -1,3 +1,4 @@
+import path from "path";
 import { defineConfig } from "vite";
 import svgrPlugin from "vite-plugin-svgr";
 import viteTsconfigPaths from "vite-tsconfig-paths";
@@ -11,4 +12,9 @@ export default defineConfig({
     outDir: "../../dist",
   },
   plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src/renderer/code/"),
+    },
+  },
 });

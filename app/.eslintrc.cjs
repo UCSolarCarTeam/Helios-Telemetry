@@ -2,17 +2,22 @@
 const path = require("path");
 const prettierConfig = require("./prettier.config.cjs");
 
-const project = path.join(__dirname, "tsconfig.web.json");
+const project = path.join(__dirname, "./src/renderer/tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
   overrides: [
     {
       extends: [
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:promise/recommended",
       ],
-      files: ["*.ts", "*.tsx"],
+      files: ["src/renderer/**/*.tsx", "src/renderer/**/*.ts"],
       parserOptions: {
         project,
       },
@@ -24,9 +29,6 @@ const config = {
     },
   ],
   parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project,
-  },
   plugins: ["@typescript-eslint", "prettier", "promise"],
   extends: [
     "plugin:react/recommended",
@@ -48,7 +50,7 @@ const config = {
     "prettier/prettier": ["error", prettierConfig],
     "no-eval": "error",
     "no-var": "error",
-    // "prettier/prettier": "error",
+    "prettier/prettier": "error",
     "no-restricted-imports": ["error", { patterns: [".*"] }],
     "tailwindcss/no-custom-classname": "off",
     "tailwindcss/classnames-order": "off", // tcss prettier plugin handles this

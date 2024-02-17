@@ -1,0 +1,276 @@
+{
+  "PacketTitle": "TelemetryData",
+  "TimeStamp": 1632900000,
+  "AuxBms": {
+    "AllowCharge": true,
+    "AllowDischarge": false,
+    "AuxBmsAlive": true,
+    "AuxVoltage": 12.5,
+    "ChargeContactorError": false,
+    "ChargeOpenButShouldBeClosed": true,
+    "ChargeShouldTrip": false,
+    "ChargeTripDueToHighCellVoltage": false,
+    "ChargeTripDueToHighTemperatureAndCurrent": true,
+    "ChargeTripDueToPackCurrent": false,
+    "CommonContactorError": true,
+    "DischargeContactorError": false,
+    "DischargeOpenButShouldBeClosed": true,
+    "DischargeShouldTrip": false,
+    "DischargeTripDueToHighTemperatureAndCurrent": true,
+    "DischargeTripDueToLowCellVoltage": false,
+    "DischargeTripDueToPackCurrent": true,
+    "HighVoltageEnableState": true,
+    "OrionCANReceivedRecently": false,
+    "PrechargeState": "Ready",
+    "ProtectionTrip": true,
+    "StrobeBmsLight": false,
+    "TripDueToOrionMessageTimeout": true,
+    "ChargeNotClosedDueToHighCurrent": false,
+    "DischargeNotClosedDueToHighCurrent": true
+  },
+  "KeyMotor": [
+    {
+      "Alive": true,
+      "SetCurrent": 50,
+      "SetVelocity": 1000,
+      "BusCurrent": 20,
+      "BusVoltage": 24,
+      "VehicleVelocity": 30
+    },
+    {
+      "Alive": false,
+      "SetCurrent": 0,
+      "SetVelocity": 0,
+      "BusCurrent": 0,
+      "BusVoltage": 0,
+      "VehicleVelocity": 0
+    }
+  ],
+  "MotorDetails": [
+    {
+      "PhaseCCurrent": 15,
+      "PhaseBCurrent": 20,
+      "MotorVoltageReal": 48,
+      "MotorVoltageImaginary": 5,
+      "MotorCurrentReal": 10,
+      "MotorCurrentImaginary": 2,
+      "BackEmf": 2,
+      "VoltageRail15VSupply": 15,
+      "VoltageRail3VSupply": 3.3,
+      "VoltageRail1VSupply": 1.2,
+      "HeatSinkTemp": 45,
+      "MotorTemp": 35,
+      "DspBoardTemp": 40,
+      "DcBusAmpHours": 50,
+      "Odometer": 10000,
+      "SlipSpeed": 5
+    },
+    {
+      "PhaseCCurrent": 18,
+      "PhaseBCurrent": 25,
+      "MotorVoltageReal": 52,
+      "MotorVoltageImaginary": 6,
+      "MotorCurrentReal": 12,
+      "MotorCurrentImaginary": 3,
+      "BackEmf": 3,
+      "VoltageRail15VSupply": 16,
+      "VoltageRail3VSupply": 3.5,
+      "VoltageRail1VSupply": 1.5,
+      "HeatSinkTemp": 50,
+      "MotorTemp": 40,
+      "DspBoardTemp": 45,
+      "DcBusAmpHours": 60,
+      "Odometer": 12000,
+      "SlipSpeed": 8
+    }
+  ],
+  "DriverControls": {
+    "Alive": true,
+    "HeadlightsOff": false,
+    "HeadlightsLow": true,
+    "HeadlightsHigh": false,
+    "SignalRight": false,
+    "SignalLeft": true,
+    "Hazard": false,
+    "Interior": true,
+    "Aux": false,
+    "VolumeUp": true,
+    "VolumeDown": false,
+    "NextSong": true,
+    "PrevSong": false,
+    "Acceleration": 50,
+    "RegenBraking": 20,
+    "Brakes": true,
+    "Forward": true,
+    "Reverse": false,
+    "PushToTalk": true,
+    "Horn": false,
+    "Reset": false,
+    "Lap": true
+  },
+  "MotorFaults": [
+    {
+      "ErrorFlags": {
+        "MotorOverSpeed": false,
+        "SoftwareOverCurrent": true,
+        "DcBusOverVoltage": false,
+        "BadMotorPositionHallSequence": true,
+        "WatchdogCausedLastReset": false,
+        "ConfigReadError": true,
+        "Wail15VUnderVoltageLockOut": false,
+        "DesaturationFault": true
+      },
+      "LimitFlags": {
+        "OutputVoltagePwm": true,
+        "MotorCurrent": false,
+        "Velocity": true,
+        "BusCurrent": false,
+        "BusVoltageUpper": true,
+        "BusVoltageLower": false,
+        "IpmOrMotorTemperature": true
+      },
+      "RxErrorCount": 2,
+      "TxErrorCount": 1
+    },
+    {
+      "ErrorFlags": {
+        "MotorOverSpeed": true,
+        "SoftwareOverCurrent": false,
+        "DcBusOverVoltage": true,
+        "BadMotorPositionHallSequence": false,
+        "WatchdogCausedLastReset": true,
+        "ConfigReadError": false,
+        "Wail15VUnderVoltageLockOut": true,
+        "DesaturationFault": false
+      },
+      "LimitFlags": {
+        "OutputVoltagePwm": false,
+        "MotorCurrent": true,
+        "Velocity": false,
+        "BusCurrent": true,
+        "BusVoltageUpper": false,
+        "BusVoltageLower": true,
+        "IpmOrMotorTemperature": false
+      },
+      "RxErrorCount": 1,
+      "TxErrorCount": 3
+    }
+  ],
+  "BatteryFaults": {
+    "ErrorFlags": {
+      "InternalCommunicationFault": false,
+      "InternalConversionFault": true,
+      "WeakCellFault": false,
+      "LowCellVoltageFault": true,
+      "OpenWiringFault": false,
+      "CurrentSensorFault": true,
+      "PackVoltageSensorFault": false,
+      "WeakPackFault": true,
+      "VoltageRedundancyFault": false,
+      "FanMonitorFault": true,
+      "ThermistorFault": false,
+      "CANBUSCommunicationsFault": true,
+      "AlwaysOnSupplyFault": false,
+      "HighVoltageIsolationFault": true,
+      "12vPowerSupplyFault": false,
+      "ChargeLimitEnforcementFault": true,
+      "DischargeLimitEnforcementFault": false,
+      "ChargerSafetyRelayFault": true,
+      "InternalMemoryFault": false,
+      "InternalThermistorsFault": true,
+      "InternalLogicFault": false
+    },
+    "LimitFlags": {
+      "DclReducedDueToLowSoc": true,
+      "DclReducedDueToHighCellResistance": false,
+      "DclReducedDueToTemperature": true,
+      "DclReducedDueToLowCellVoltage": false,
+      "DclReducedDueToLowPackVoltage": true,
+      "DclandCclReducedDueToVoltageFailsafe": false,
+      "DclandCclReducedDueToCommunicationFailsafe": true,
+      "CclReducedDueToHighSoc": false,
+      "CclReducedDueToHighCellResistance": true,
+      "CclReducedDueToTemperature": false,
+      "CclReducedDueToHighCellVoltage": true,
+      "CclReducedDueToHighPackVoltage": false,
+      "CclReducedDueToChargerLatch": true,
+      "CclReducedDueToAlternateCurrentLimit": false
+    }
+  },
+  "Battery": {
+    "Alive": true,
+    "BMSRelayStatusFlags": {
+      "DischargeRelayEnabled": true,
+      "ChargeRelayEnabled": false,
+      "ChargerSafetyEnabled": true,
+      "MalfunctionIndicatorActive": false,
+      "MultiPurposeInputSignalStatus": true,
+      "AlwaysOnSignalStatus": false,
+      "IsReadySignalStatus": true,
+      "IsChargingSignalStatus": false
+    },
+    "PopulatedCells": 96,
+    "12vInputVoltage": 12,
+    "FanVoltage": 5,
+    "PackCurrent": 100,
+    "PackVoltage": 384,
+    "PackStateOfCharge": 80,
+    "PackAmphours": 50,
+    "PackDepthOfDischarge": 20,
+    "HighTemperature": 40,
+    "HighThermistorId": 3,
+    "LowTemperature": -10,
+    "LowThermistorId": 1,
+    "AverageTemperature": 25,
+    "InternalTemperature": 30,
+    "FanSpeed": 2000,
+    "RequestedFanSpeed": 1800,
+    "LowCellVoltage": 3.2,
+    "LowCellVoltageId": 5,
+    "HighCellVoltage": 4.0,
+    "HighCellVoltageId": 10,
+    "AverageCellVoltage": 3.8
+  },
+  "Ccs": {
+    "CcsAlive": true
+  },
+  "MPPT": [
+    {
+      "Alive": true,
+      "ArrayVoltage": 30,
+      "ArrayCurrent": 5,
+      "BatteryVoltage": 48,
+      "Temperature": 25
+    },
+    {
+      "Alive": false,
+      "ArrayVoltage": 0,
+      "ArrayCurrent": 0,
+      "BatteryVoltage": 0,
+      "Temperature": 0
+    },
+    {
+      "Alive": true,
+      "ArrayVoltage": 30,
+      "ArrayCurrent": 5,
+      "BatteryVoltage": 48,
+      "Temperature": 25
+    },
+    {
+      "Alive": false,
+      "ArrayVoltage": 0,
+      "ArrayCurrent": 0,
+      "BatteryVoltage": 0,
+      "Temperature": 0
+    }
+  ],
+  "Lights": {
+    "LowBeams": true,
+    "HighBeams": false,
+    "Brakes": true,
+    "LeftSignal": false,
+    "RightSignal": true,
+    "BmsStrobeLight": false,
+    "Alive": true
+  }
+}
