@@ -7,7 +7,7 @@ const Motor = (): I_PIS => {
   return {
     Key_Left_Motor_Details: [
       {
-        Name: "Alive",
+        name: "Alive",
         data: [
           {
             value: currentPacket?.KeyMotor[0].Alive,
@@ -15,34 +15,34 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Set Current",
+        name: "Set Current",
         data: [
           {
             value: currentPacket?.KeyMotor[0].SetCurrent,
-            unit: "C",
+            unit: "%",
           },
         ],
       },
       {
-        Name: "Set Velocity",
+        name: "Set Velocity",
         data: [
           {
             value: currentPacket?.KeyMotor[0].SetVelocity,
-            unit: "km/h",
+            unit: "RPM",
           },
         ],
       },
       {
-        Name: "Bus Current",
+        name: "Bus Current",
         data: [
           {
             value: currentPacket?.KeyMotor[0].BusCurrent,
-            unit: "C",
+            unit: "A",
           },
         ],
       },
       {
-        Name: "Bus Voltage",
+        name: "Bus Voltage",
         data: [
           {
             value: currentPacket?.KeyMotor[0].BusVoltage,
@@ -51,7 +51,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Vehicle Velocity",
+        name: "Vehicle Velocity",
         data: [
           {
             value: currentPacket?.KeyMotor[0].VehicleVelocity,
@@ -62,7 +62,7 @@ const Motor = (): I_PIS => {
     ] as unknown as I_PISField[],
     Key_Right_Motor_Details: [
       {
-        Name: "Alive",
+        name: "Alive",
         data: [
           {
             value: currentPacket?.KeyMotor[1].Alive,
@@ -70,34 +70,34 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Set Current",
+        name: "Set Current",
         data: [
           {
             value: currentPacket?.KeyMotor[1].SetCurrent,
-            unit: "C",
+            unit: "%",
           },
         ],
       },
       {
-        Name: "Set Velocity",
+        name: "Set Velocity",
         data: [
           {
             value: currentPacket?.KeyMotor[1].SetVelocity,
-            unit: "km/h",
+            unit: "RPM",
           },
         ],
       },
       {
-        Name: "Bus Current",
+        name: "Bus Current",
         data: [
           {
             value: currentPacket?.KeyMotor[1].BusCurrent,
-            unit: "C",
+            unit: "A",
           },
         ],
       },
       {
-        Name: "Bus Voltage",
+        name: "Bus Voltage",
         data: [
           {
             value: currentPacket?.KeyMotor[1].BusVoltage,
@@ -106,7 +106,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Vehicle Velocity",
+        name: "Vehicle Velocity",
         data: [
           {
             value: currentPacket?.KeyMotor[1].VehicleVelocity,
@@ -117,25 +117,25 @@ const Motor = (): I_PIS => {
     ] as unknown as I_PISField[],
     Left_Motor_Details: [
       {
-        Name: "Phase C Current",
+        name: "Phase C Current",
         data: [
           {
             value: currentPacket?.MotorDetails[0].PhaseCCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
       {
-        Name: "Phase B Current",
+        name: "Phase B Current",
         data: [
           {
             value: currentPacket?.MotorDetails[0].PhaseBCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
       {
-        Name: "Motor Voltage Real",
+        name: "Motor Voltage Real",
         data: [
           {
             value: currentPacket?.MotorDetails[0].MotorVoltageReal,
@@ -144,7 +144,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Motor Voltage Imaginary",
+        name: "Motor Voltage Imaginary",
         data: [
           {
             value: currentPacket?.MotorDetails[0].MotorVoltageImaginary,
@@ -153,34 +153,34 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Motor Current Real",
+        name: "Motor Current Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].MotorVoltageReal,
-            unit: "V",
+            value: currentPacket?.MotorDetails[0].MotorCurrentReal,
+            unit: "A",
           },
         ],
       },
       {
-        Name: "Motor Current Imaginary",
+        name: "Motor Current Imaginary",
         data: [
           {
             value: currentPacket?.MotorDetails[0].MotorVoltageImaginary,
-            unit: "V",
+            unit: "A",
           },
         ],
       },
       {
-        Name: "Back EMF",
+        name: "Back EMF",
         data: [
           {
             value: currentPacket?.MotorDetails[0].BackEmf,
-            unit: "",
+            unit: "V",
           },
         ],
       },
       {
-        Name: "Voltage Rail 15V",
+        name: "Voltage Rail 15V",
         data: [
           {
             value: currentPacket?.MotorDetails[0].VoltageRail15VSupply,
@@ -189,7 +189,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Voltage Rail 3V",
+        name: "Voltage Rail 3V",
         data: [
           {
             value: currentPacket?.MotorDetails[0].VoltageRail3VSupply,
@@ -198,7 +198,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Voltage Rail 1V",
+        name: "Voltage Rail 1V",
         data: [
           {
             value: currentPacket?.MotorDetails[0].VoltageRail1VSupply,
@@ -207,16 +207,16 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Heat Sink Temp",
+        name: "Heat Sink Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].VoltageRail15VSupply,
+            value: currentPacket?.MotorDetails[0].HeatSinkTemp,
             unit: "°C",
           },
         ],
       },
       {
-        Name: "Motor Temp",
+        name: "Motor Temp",
         data: [
           {
             value: currentPacket?.MotorDetails[0].MotorTemp,
@@ -225,7 +225,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "DSP Board Temp",
+        name: "DSP Board Temp",
         data: [
           {
             value: currentPacket?.MotorDetails[0].DspBoardTemp,
@@ -234,54 +234,54 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Dc Bus Amp Hours",
+        name: "Dc Bus Amp Hours",
         data: [
           {
             value: currentPacket?.MotorDetails[0].DcBusAmpHours,
-            unit: "C",
+            unit: "Ah",
           },
         ],
       },
       {
-        Name: "Odometer",
+        name: "Odometer",
         data: [
           {
             value: currentPacket?.MotorDetails[0].Odometer,
-            unit: "M",
+            unit: "m",
           },
         ],
       },
       {
-        Name: "Slip Speed",
+        name: "Slip Speed",
         data: [
           {
             value: currentPacket?.MotorDetails[0].SlipSpeed,
-            unit: "M",
+            unit: "Hz",
           },
         ],
       },
     ] as unknown as I_PISField[],
     Right_Motor_Details: [
       {
-        Name: "Phase C Current",
+        name: "Phase C Current",
         data: [
           {
             value: currentPacket?.MotorDetails[1].PhaseCCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
       {
-        Name: "Phase B Current",
+        name: "Phase B Current",
         data: [
           {
             value: currentPacket?.MotorDetails[1].PhaseBCurrent,
-            unit: "C",
+            unit: "A(rms)",
           },
         ],
       },
       {
-        Name: "Motor Voltage Real",
+        name: "Motor Voltage Real",
         data: [
           {
             value: currentPacket?.MotorDetails[1].MotorVoltageReal,
@@ -290,7 +290,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Motor Voltage Imaginary",
+        name: "Motor Voltage Imaginary",
         data: [
           {
             value: currentPacket?.MotorDetails[1].MotorVoltageImaginary,
@@ -299,34 +299,34 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Motor Current Real",
+        name: "Motor Current Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].MotorVoltageReal,
-            unit: "V",
+            value: currentPacket?.MotorDetails[1].MotorCurrentReal,
+            unit: "A",
           },
         ],
       },
       {
-        Name: "Motor Current Imaginary",
+        name: "Motor Current Imaginary",
         data: [
           {
             value: currentPacket?.MotorDetails[1].MotorVoltageImaginary,
-            unit: "V",
+            unit: "A",
           },
         ],
       },
       {
-        Name: "Back EMF",
+        name: "Back EMF",
         data: [
           {
             value: currentPacket?.MotorDetails[1].BackEmf,
-            unit: "",
+            unit: "V",
           },
         ],
       },
       {
-        Name: "Voltage Rail 15V",
+        name: "Voltage Rail 15V",
         data: [
           {
             value: currentPacket?.MotorDetails[1].VoltageRail15VSupply,
@@ -335,7 +335,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Voltage Rail 3V",
+        name: "Voltage Rail 3V",
         data: [
           {
             value: currentPacket?.MotorDetails[1].VoltageRail3VSupply,
@@ -344,7 +344,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Voltage Rail 1V",
+        name: "Voltage Rail 1V",
         data: [
           {
             value: currentPacket?.MotorDetails[1].VoltageRail1VSupply,
@@ -353,16 +353,16 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Heat Sink Temp",
+        name: "Heat Sink Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].VoltageRail15VSupply,
+            value: currentPacket?.MotorDetails[1].HeatSinkTemp,
             unit: "°C",
           },
         ],
       },
       {
-        Name: "Motor Temp",
+        name: "Motor Temp",
         data: [
           {
             value: currentPacket?.MotorDetails[1].MotorTemp,
@@ -371,7 +371,7 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "DSP Board Temp",
+        name: "DSP Board Temp",
         data: [
           {
             value: currentPacket?.MotorDetails[1].DspBoardTemp,
@@ -380,29 +380,29 @@ const Motor = (): I_PIS => {
         ],
       },
       {
-        Name: "Dc Bus Amp Hours",
+        name: "Dc Bus Amp Hours",
         data: [
           {
             value: currentPacket?.MotorDetails[1].DcBusAmpHours,
-            unit: "C",
+            unit: "Ah",
           },
         ],
       },
       {
-        Name: "Odometer",
+        name: "Odometer",
         data: [
           {
             value: currentPacket?.MotorDetails[1].Odometer,
-            unit: "M",
+            unit: "m",
           },
         ],
       },
       {
-        Name: "Slip Speed",
+        name: "Slip Speed",
         data: [
           {
             value: currentPacket?.MotorDetails[1].SlipSpeed,
-            unit: "M",
+            unit: "Hz",
           },
         ],
       },
