@@ -4,10 +4,11 @@
     "src/renderer/code/env.d.ts",
     "src/renderer/code/**/*",
     "src/renderer/code/**/*.tsx",
+    "src/preload/*.d.ts",
     "src/prettier.config.cjs",
     "src/.eslintrc.cjs",
     "**/*.mjs",
-    "**/*.cjs"
+    "**/*.cjs",
   ],
   "compilerOptions": {
     "composite": true,

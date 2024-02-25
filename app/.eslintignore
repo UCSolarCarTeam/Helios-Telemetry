@@ -2,8 +2,3 @@ node_modules
 dist
 out
 .gitignore
-vite.config.ts
-tailwind.config.ts
-electron.vite.config.ts
-src/main/*
-src/preload/*
