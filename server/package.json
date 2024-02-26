@@ -1,0 +1,11 @@
+{
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "start": "node .",
+    "build": "npm-run-all clean tsc",
+    "dev:start": "npm-run-all build start",
+    "dev": "NODE_ENV=development nodemon --watch src -e ts,ejs --exec npm run dev:start",
+    "tsc": "tsc -p ./tsconfig.json"
+  }
+}

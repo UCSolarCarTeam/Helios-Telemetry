@@ -46,6 +46,8 @@ const config = {
     "no-eval": "error",
     "no-var": "error",
     "no-restricted-imports": ["error", { patterns: [".*"] }],
+    "no-console": ["warn", { allow: ["warn", "error"] }],
+    "no-debugger": "error",
   },
 };
 

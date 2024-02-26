@@ -7,13 +7,7 @@ specify that owners, authenticated via your Auth resource can "create",
 "read", "update", and "delete" their own records. Public users,
 authenticated via an API key, can only "read" records.
 =========================================================================*/
-const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization([a.allow.owner(), a.allow.public().to(["read"])]),
-});
+const schema = a.schema({});
 
 export type Schema = ClientSchema<typeof schema>;
 
