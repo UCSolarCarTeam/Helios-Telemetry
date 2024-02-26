@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "pinst": "^3.0.0"
+  }
+}
