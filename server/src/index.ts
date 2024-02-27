@@ -3,6 +3,7 @@ import axiosRetry from "axios-retry";
 import dotenv from "dotenv";
 import express from "express";
 import http from "http";
+import "module-alias";
 
 import router from "@/routes/health.route";
 import {

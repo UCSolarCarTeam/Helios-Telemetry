@@ -1,5 +1,6 @@
 {
   "type": "module",
+  "license": "ISC",
   "scripts": {
     "dev": "npx next dev",
     "build": "next build",

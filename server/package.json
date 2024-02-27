@@ -1,11 +1,12 @@
 {
-  "main": "dist/index.js",
+  "main": "dist/server.js",
+  "license": "ISC",
   "scripts": {
     "clean": "rm -rf dist",
-    "start": "node .",
+    "start": "node -r ts-node/register -r tsconfig-paths/register .",
     "build": "npm-run-all clean tsc",
     "dev:start": "npm-run-all build start",
-    "dev": "NODE_ENV=development nodemon --watch src -e ts,ejs --exec npm run dev:start",
+    "dev": "NODE_ENV=development nodemon --watch src -e ts,ejs --exec \"yarn dev:start\"",
     "tsc": "tsc -p ./tsconfig.json"
   }
 }
