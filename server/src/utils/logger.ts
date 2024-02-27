@@ -33,7 +33,7 @@ configure({
             // Position 1:n - Log message(s)
             if (logEvent.data.length > 1) {
               const logErrorStack = process.env.LOG_ERROR_STACK;
-              const logContent: Array<logContent | string> = [];
+              const logContent: logContent[] = [];
 
               logEvent.data.slice(1, logEvent.data.length).forEach((data) => {
                 if (data !== undefined) {
@@ -47,10 +47,14 @@ configure({
                         stack: data.stack,
                       });
                     } else {
-                      logContent.push(data.message);
+                      logContent.push({
+                        message: data.message,
+                        stack: undefined,
+                      });
                     }
-                  } else if (Array.isArray(data) && data.length > 0) {
-                    logContent.push(...(data as Array<logContent | string>));
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                  } else if (data.length && data.length > 0) {
+                    logContent.push(data as logContent);
                   }
                 }
               });
@@ -60,7 +64,8 @@ configure({
                 return JSON.stringify(logContent);
               }
             }
-            return JSON.stringify(logEvent.data);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return logEvent.data;
           },
         },
       },
@@ -92,7 +97,7 @@ export type LogContext = {
 
 export const createLightweightApplicationLogger = (filename?: string) => {
   const logger = createApplicationLogger(filename);
-  logger.setLogContext({});
+  logger.setLogContext(undefined);
   return logger;
 };
 
@@ -109,13 +114,13 @@ export const createApplicationLogger = (
   _response?: Response,
 ) => {
   const logger = getLogger(filename);
-  let context: LogContext = {};
+  let context: LogContext | undefined = {};
 
   return {
     getLogContext: () => {
       return context;
     },
-    setLogContext: (newLogContext: LogContext) => {
+    setLogContext: (newLogContext: LogContext | undefined) => {
       context = newLogContext;
     },
 
