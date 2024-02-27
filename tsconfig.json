@@ -14,8 +14,10 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/client/*": ["./client/*"],
-      "@/server/*": ["./server/*"]
+      "@/*": [
+        "client/src/*",
+        "server/src/*"
+      ]
     }
   },
   "include": ["client/src/**/*", "server/src/**/*"],
