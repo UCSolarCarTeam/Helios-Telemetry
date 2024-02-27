@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,18 +12,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "*"
-      ]
+      "@/client/*": ["./client/*"],
+      "@/server/*": ["./server/*"]
     }
   },
-  "include": [
-    "client/src/**/*",
-    "server/src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["client/src/**/*", "server/src/**/*"],
+  "exclude": ["node_modules"]
 }

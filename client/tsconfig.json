@@ -3,14 +3,11 @@
   "compilerOptions": {
     "noEmit": true,
     "jsx": "preserve",
-    "baseUrl": "./src"
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/.next/types/**/*.ts",
-  ],
-  "exclude": [
-    "../server"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/.next/types/**/*.ts"],
+  "exclude": ["../server"]
 }
