@@ -17,4 +17,4 @@ Appending `:client` or `:server` behind the dev command will start the servers i
 npm run build
 npm run start
 ```
-Appending `:client` or `:server` behind the build command will start the servers individually
+Appending `:client` or `:server` behind the build command will build/start the production servers individually
