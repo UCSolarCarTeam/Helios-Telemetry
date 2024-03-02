@@ -1,4 +1,5 @@
 import Draggable from "react-draggable";
+import { IoIosClose } from "react-icons/io";
 import {
   CartesianGrid,
   Legend,
@@ -20,23 +21,21 @@ function DraggableGraph({
 }) {
   return (
     <Draggable handle="strong">
-      <div className="box z-50 w-fit rounded bg-red-500">
-        <div className="flex flex-row justify-between">
+      <div className="box absolute z-50 w-fit rounded bg-white shadow-xl">
+        <div className="relative flex flex-row items-center justify-center">
           <strong>
-            <button className="rounded bg-orange-400">Drag here</button>
+            <div className="cursor-pointer select-none">{graphID}</div>
           </strong>
-          <strong>
-            <div className="select-none">{graphID}</div>
-          </strong>
-
-          <strong>
-            <button
-              onClick={() => closeGraph(graphID)}
-              className=" rounded bg-red-400"
-            >
-              Close Graph
-            </button>
-          </strong>
+          <IoIosClose
+            onClick={() => closeGraph(graphID)}
+            color={"black"}
+            size={40}
+            className=" absolute right-0 cursor-pointer"
+          />
+          {/* <button
+          >
+            X
+          </button> */}
         </div>
 
         <LineChart
