@@ -1,48 +1,72 @@
-// @ts-check
-import * as http from "http";
-import { debug } from "console";
+import axios from "axios";
+import axiosRetry from "axios-retry";
+import dotenv from "dotenv";
 import express from "express";
-import Database from "./scripts/database";
-import Config from "./config";
-import WebSocketService from "./scripts/websocket";
-import RabbitMQService from "./scripts/amqp";
-import ExpressRouter from "./app";
+import http from "http";
+import "module-alias";
+
+import router from "@/routes/health.route";
+import {
+  createLightweightApplicationLogger,
+  shutdownLoggers,
+} from "@/utils/logger";
+import { type TerminusOptions, createTerminus } from "@godaddy/terminus";
+
+dotenv.config();
+
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use("/", router);
 
-/**
- * Create HTTP server and setup websocket
- */
-export const server = http.createServer(app);
+const logger = createLightweightApplicationLogger("index.ts");
 
-server.listen(Config.port);
+axiosRetry(axios, {
+  retries: 2,
+  retryDelay: (retryCount) => {
+    return retryCount * 1000; // time interval between retries
+  },
+  retryCondition(error) {
+    return error.code === "ECONNABORTED";
+  },
 
-server.on("error", function (error) {
-  console.error(error.message);
-  process.exit(1);
+  onRetry: (retryCount) => {
+    logger.warn(`Retrying axios call. Retry count: `, retryCount);
+  },
 });
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-server.on("listening", function () {
-  const addr = server.address();
-  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
-  const mode = app.get("env");
-  debug("Listening on " + bind + " in " + mode + " mode");
-});
-
-module.exports.server = server;
-
-const db = new Database();
-const ws = new WebSocketService(server);
-const mq = new RabbitMQService();
-const er = new ExpressRouter();
-
-db.connectToDatabase().then(() => {
-  console.log("connected to database");
-  ws.startWebSocket(db);
-  er.setRoutes(db);
-  if (Config.isProd) {
-    mq.startQueue(db, ws);
+// eslint-disable-next-line @typescript-eslint/require-await
+const onSignal = async () => {
+  logger.info("🚀 Server is starting cleanup");
+  try {
+    logger.info("Kafka Consumer Disconnected");
+  } catch (err) {
+    logger.error("Error disconnecting the kafka consumer", err as Error);
   }
-});
+};
+
+// eslint-disable-next-line @typescript-eslint/require-await
+const onShutdown = async () => {
+  logger.info("Cleanup finished, 🚀 server is shutting down");
+};
+
+const gracefullyShutdown = (signal: string) => {
+  logger.info(`${signal} signal received: closing HTTP server.`);
+  server.close(() => {
+    logger.info("Closing remaining resources, then closing HTTP server.");
+    shutdownLoggers(); // Ensure any remaining async writes have finished.
+  });
+};
+
+const terminusOption: TerminusOptions = {
+  onSignal,
+  onShutdown,
+  timeout: 12 * 1000, // waits before closing the server
+  signals: ["SIGINT", "SIGTERM", "SIGUSR2"],
+};
+
+export const server = createTerminus(http.createServer(app), terminusOption);
+
+process.on("SIGQUIT", gracefullyShutdown);
+
+export default app;
