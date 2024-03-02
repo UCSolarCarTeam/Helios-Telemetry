@@ -1,3 +1,4 @@
+import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
 
@@ -102,6 +103,7 @@ type FieldPrinterProps = {
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const { field } = props;
+  const { openNewGraph } = useGraphOverlay();
   if (
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
@@ -115,6 +117,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     <div className="mt-1 flex items-center justify-between text-xs">
       {field.name}:
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
+      <button onClick={() => openNewGraph(field.name)}>G</button>
     </div>
   );
 }

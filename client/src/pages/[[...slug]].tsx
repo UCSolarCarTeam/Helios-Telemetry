@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 
+import GraphContainer from "@/components/GraphContainer";
 import BottomInformationContainer from "@/components/containers/BottomInformationContainer";
 import HeroContainer from "@/components/containers/HeroContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
@@ -38,6 +39,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <GraphContainer />
     </div>
   );
 }
