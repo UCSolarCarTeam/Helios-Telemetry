@@ -95,6 +95,9 @@ WORKDIR /opt/helios-backend/src/.
 run npm i -g yarn
 RUN yarn
 RUN yarn remove nodemon
+RUN npm prune --omit=dev 
+# error The prune command isn't necessary. `yarn install` will prune extraneous packages.
+# looks like yarn doesn't like the above command, thats why im running it w/ npm ^^^
 
 ###################################################################
 # Multi stage build - Stage 2 - Build production
