@@ -114,7 +114,7 @@ ENV SERVER_PORT 3001
 COPY --from=builder-tar /opt/helios-backend/tarStage/bin /usr/bin
 COPY --from=builder-tar /opt/helios-backend/tarStage/libexec /usr/libexec
 COPY --from=builder-tar /opt/helios-backend/tarStage/share /usr/share
-COPY --from=buildstageBackend /opt/helios-backend/src/dist ./dist
+COPY --from=buildstageBackend /opt/helios-backend/src/server/dist ./dist
 COPY --from=buildstageBackend /opt/helios-backend/src/node_modules ./node_modules
 COPY --from=buildstageBackend /opt/helios-backend/src/package.json ./package.json
 
