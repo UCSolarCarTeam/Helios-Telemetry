@@ -50,19 +50,17 @@ export default function GraphContainer() {
     },
   ];
   return (
-    <div className="flex items-center justify-center">
-      <div className="absolute z-50 m-auto">
-        {openGraphs.map((graph) => {
-          return (
-            <DraggableGraph
-              data={data}
-              closeGraph={closeGraph}
-              graphID={graph}
-              key={graph}
-            />
-          );
-        })}
-      </div>
+    <div className="absolute z-50 m-auto">
+      {openGraphs.map((graph) => {
+        return (
+          <DraggableGraph
+            data={data}
+            closeGraph={closeGraph}
+            graphID={graph}
+            key={graph}
+          />
+        );
+      })}
     </div>
   );
 }

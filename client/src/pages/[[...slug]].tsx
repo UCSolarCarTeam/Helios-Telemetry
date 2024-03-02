@@ -45,9 +45,9 @@ export default function Home() {
           <div className="grid">
             <BottomInformationContainer />
           </div>
+          <GraphContainer />
         </div>
       </div>
-      <GraphContainer />
     </div>
   );
 }
