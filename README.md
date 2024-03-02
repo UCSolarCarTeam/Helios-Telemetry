@@ -3,33 +3,18 @@
 Front End: https://ucsolarcarteam.github.io/Helios-Telemetry/
 
 
-### Start Web App (Dev Build)
-
-Website:
+### Start Web App + Backend (Dev Build)
 
 ```
-cd app
 npm run dev
 ```
 
-App:
+Appending `:client` or `:server` behind the dev command will start the servers individually
+
+### Build Web App + Backend (Production build)
 
 ```
-cd app
-npm run electron:dev
-```
-
-### Start Server (Dev build)
-
-```
-cd server
-npm run dev
-```
-
-### Start Server (Production build)
-
-```
-cd server
 npm run build
-npm run prod
+npm run start
 ```
+Appending `:client` or `:server` behind the build command will start the servers individually
