@@ -12,7 +12,6 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { currentAppState } = useAppState();
-  // 38, 55, 7
 
   return (
     <div className={currentAppState.darkMode ? "dark" : ""}>

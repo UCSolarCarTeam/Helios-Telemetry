@@ -32,12 +32,7 @@ function DraggableGraph({
             size={40}
             className=" absolute right-0 cursor-pointer"
           />
-          {/* <button
-          >
-            X
-          </button> */}
         </div>
-
         <LineChart
           width={500}
           height={300}
