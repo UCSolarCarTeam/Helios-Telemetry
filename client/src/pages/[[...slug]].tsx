@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 
+import GraphContainer from "@/components/GraphContainer";
 import BottomInformationContainer from "@/components/containers/BottomInformationContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
@@ -46,6 +47,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <GraphContainer />
     </div>
   );
 }
