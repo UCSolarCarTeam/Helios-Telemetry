@@ -45,42 +45,6 @@ RUN npm remove -g node \
   && npm install -g "${NODE_VERSION}" \
   && rpm -e nodejs npm nodejs-full-i18n nodejs-nodemon
 
-## remove test secret from 3rd party node-gyp package
-RUN rm -rf /opt/helios-backend/src/.npm-global/lib/node_modules/npm/node_modules/node-gyp/test
-
-
-###################################################################
-# Stage 2 - Build compliant tar version
-###################################################################
-FROM nodejs20-base as builder-tar
-USER root
-
-ENV TAR_VERSION tar-1.32
-RUN \
-  # Step 1: Download the latest source for tar
-  curl "https://ftp.gnu.org/gnu/tar/${TAR_VERSION}.tar.gz" -O \
-  # Step 2: Setup for compiling tar's source
-  && microdnf install gzip \
-  && microdnf install make \
-  && microdnf install gcc \
-  && mkdir -p "${TAR_VERSION}" \
-  && tar -xzf "${TAR_VERSION}.tar.gz" \
-  && mkdir -p /opt/helios-backend/tarStage \ 
-  && chown -R solarcar-user:root  /opt/helios-backend/tarStage \
-  && chown -R solarcar-user:root "/opt/helios-backend/src/${TAR_VERSION}"
-
-# Step 3: Don't build as root, build as solarcar-user user
-USER solarcar-user
-WORKDIR "/opt/helios-backend/src/${TAR_VERSION}"
-RUN ./configure --prefix=/opt/helios-backend/tarStage \ 
-  && make \
-  && make install 
-
-# Step 4: Clean up - Remove the downloaded file and the uncompressed dir.
-USER root
-WORKDIR /opt/helios-backend
-RUN rm -rf ./src 
-
 ###################################################################
 # Multi stage build - Stage 1 - build backend
 ###################################################################
@@ -111,13 +75,11 @@ WORKDIR /opt/solarcar-user
 ENV NODE_ENV production
 ENV SERVER_PORT 3001
 
-COPY --from=builder-tar /opt/helios-backend/tarStage/bin /usr/bin
-COPY --from=builder-tar /opt/helios-backend/tarStage/libexec /usr/libexec
-COPY --from=builder-tar /opt/helios-backend/tarStage/share /usr/share
-COPY --from=buildstageBackend /opt/helios-backend/src/server/dist ./dist
+COPY --from=buildstageBackend /opt/helios-backend/src/server ./server
 COPY --from=buildstageBackend /opt/helios-backend/src/node_modules ./node_modules
 COPY --from=buildstageBackend /opt/helios-backend/src/package.json ./package.json
+COPY --from=buildstageBackend /opt/helios-backend/src/tsconfig.json ./tsconfig.json
 
 EXPOSE ${SERVER_PORT}
 USER solarcar-user
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start:server"]
