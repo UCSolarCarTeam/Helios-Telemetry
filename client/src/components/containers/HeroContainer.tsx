@@ -20,7 +20,7 @@ function HeroContainer(props: any) {
             </div>
           </div>
         </div>
-        <div className="col-span-1 grid h-96 border border-dashed border-black pl-1 md:col-span-2 md:h-full">
+        <div className="col-span-1 grid h-96 border border-dashed border-black pl-1 md:col-span-2">
           <FaultsComponent />
         </div>
       </div>
