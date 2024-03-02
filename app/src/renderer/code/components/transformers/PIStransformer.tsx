@@ -98,7 +98,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     <div>
       {field.name}:
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
-      <Button onClick={() => openNewGraph("")}>G</Button>
+      <Button onClick={() => openNewGraph(field.name)}>G</Button>
     </div>
   );
 }

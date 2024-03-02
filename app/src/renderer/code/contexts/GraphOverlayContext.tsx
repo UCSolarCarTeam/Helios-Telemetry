@@ -28,11 +28,35 @@ const graphOverlayContext = createContext<IGraphOverlayContexttReturn>(
   {} as IGraphOverlayContexttReturn,
 );
 
-function DragableGraph({ data }: { data: any[] }) {
+function DraggableGraph({
+  data,
+  closeGraph,
+  graphID,
+}: {
+  data: any[];
+  graphID: string;
+  closeGraph: (field: string) => void;
+}) {
   return (
-    <div className="">
-      <Draggable handle=".handle">
-        <div className="handle">Drag from here</div>
+    <Draggable handle="strong">
+      <div className="box w-fit rounded bg-white">
+        <div className="flex flex-row justify-between">
+          <strong>
+            <button className="rounded bg-orange-400">Drag here</button>
+          </strong>
+          <strong>
+            <div className="select-none">{graphID}</div>
+          </strong>
+
+          <strong>
+            <button
+              onClick={() => closeGraph(graphID)}
+              className=" rounded bg-red-400"
+            >
+              Close Graph
+            </button>
+          </strong>
+        </div>
 
         <LineChart
           width={500}
@@ -58,8 +82,8 @@ function DragableGraph({ data }: { data: any[] }) {
           />
           <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
         </LineChart>
-      </Draggable>
-    </div>
+      </div>
+    </Draggable>
   );
 }
 
@@ -68,9 +92,14 @@ export function GraphOverlayContextProvider({
 }: GraphOverlayContextProps): JSX.Element {
   const [openGraphs, setOpenGraphs] = useState<string[]>([]);
 
-  const openNewGraph = (field: string) => setOpenGraphs([...openGraphs, field]);
-  const closeGraph = (field: string) =>
+  const openNewGraph = (field: string) => {
+    setOpenGraphs([...openGraphs, field]);
+    console.log(openGraphs);
+  };
+  const closeGraph = (field: string) => {
+    console.log("CLosing graph" + field);
     setOpenGraphs(openGraphs.filter((graph) => graph !== field));
+  };
   const data = [
     {
       name: "Page A",
@@ -117,11 +146,19 @@ export function GraphOverlayContextProvider({
   ];
   return (
     <graphOverlayContext.Provider value={{ openNewGraph }}>
-      {children}
-
-      {openGraphs.map((graph) => (
-        <DragableGraph key={graph} data={data} />
-      ))}
+      <div className="flex items-center justify-center">
+        <div className="absolute z-50 m-auto ">
+          {openGraphs.map((graph) => (
+            <DraggableGraph
+              key={graph}
+              data={data}
+              graphID={graph}
+              closeGraph={closeGraph}
+            />
+          ))}
+        </div>
+        {children}
+      </div>
     </graphOverlayContext.Provider>
   );
 }
