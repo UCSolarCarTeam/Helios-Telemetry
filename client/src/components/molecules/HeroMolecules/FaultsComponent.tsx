@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { ISeverity } from "@/components//atoms/FaultCard";
 import FaultCard from "@/components/atoms/FaultCard";
 import { usePacket } from "@/contexts/PacketContext";
-import { type IAuxBms } from "@/objects/telemetry-data.interface";
+import {
+  type IAuxBms,
+  type IBatteryFault,
+  type IMotorFault,
+} from "@/objects/telemetry-data.interface";
+import type ITelemetryData from "@/objects/telemetry-data.interface";
 
 type TestFaultType = {
   [key: string]: boolean;
@@ -19,17 +24,31 @@ function FaultsComponent(props: any) {
     useState<CurrentFaultsType>({} as CurrentFaultsType);
 
   function flattenNestedJson(
-    obj: { BMSFaults: IAuxBms },
+    obj:
+      | {
+          Battery: IBatteryFault;
+          MotorFaults: IMotorFault[];
+          BMSFaults: IAuxBms;
+        }
+      | IBatteryFault
+      | IMotorFault[]
+      | IAuxBms,
     prefix = "",
   ): TestFaultType {
     return Object.keys(obj).reduce((acc, key) => {
       const prefixedKey = prefix ? `${prefix}.${key}` : key;
-      if (typeof obj[key] === "object" && obj[key] !== null) {
+      if (
+        typeof obj[key as keyof typeof obj] === "object" &&
+        obj[key as keyof typeof obj] !== null
+      ) {
         // If the value is an object (nested JSON), call the function recursively
-        Object.assign(acc, flattenNestedJson(obj[key], prefixedKey));
+        Object.assign(
+          acc,
+          flattenNestedJson(obj[key as keyof typeof obj], prefixedKey),
+        );
       } else {
         // If the value is not an object, it's a leaf node, so assign it to the flattened object
-        acc[prefixedKey] = obj[key];
+        acc[prefixedKey as keyof typeof obj] = obj[key as keyof typeof obj];
       }
       return acc;
     }, {});
@@ -39,7 +58,7 @@ function FaultsComponent(props: any) {
     const flattenedFaults = flattenNestedJson({
       Battery: currentPacket.BatteryFaults,
       MotorFaults: currentPacket.MotorFaults,
-      // BMSFaults: currentPacket.AuxBms,
+      BMSFaults: currentPacket.AuxBms,
       // TODO: we need to add auxBMS faults, we'll ask embedded to restructure the packet.
     });
 
