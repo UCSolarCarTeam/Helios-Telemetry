@@ -21,7 +21,7 @@ function DraggableGraph({
 }) {
   return (
     <Draggable handle="strong">
-      <div className="box absolute z-50 w-fit rounded bg-white shadow-xl">
+      <div className="box bg-light text-light dark:bg-dark dark:text-dark absolute z-50 w-fit rounded shadow-2xl">
         <div className="relative flex flex-row items-center justify-center">
           <strong>
             <div className="cursor-pointer select-none">{graphID}</div>
@@ -34,8 +34,8 @@ function DraggableGraph({
           />
         </div>
         <LineChart
-          width={500}
-          height={300}
+          width={250}
+          height={150}
           data={data}
           margin={{
             top: 5,
