@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
 
-function BatteryIconComponent(props: any) {
-  const [batteryLevel, setBatteryLevel] = useState<number>(38.5);
+import ITelemetryData from "@/objects/telemetry-data.interface";
+
+function BatteryIconComponent({
+  packetBatteryLevel,
+}: {
+  packetBatteryLevel: number;
+}) {
+  const [batteryLevel, setBatteryLevel] = useState(packetBatteryLevel);
 
   const [batteryStyleString, setBatteryStyleString] = useState<string>("");
+
+  useEffect(() => {
+    setBatteryLevel(packetBatteryLevel);
+  }, [packetBatteryLevel]);
   useEffect(() => {
     const nextString = `linear-gradient(
             90deg,

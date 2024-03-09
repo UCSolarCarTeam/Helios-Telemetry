@@ -2,14 +2,21 @@ import BatteryThrottleComponent from "@/components/molecules/HeroMolecules/Batte
 import CarGraphicComponent from "@/components/molecules/HeroMolecules/CarGraphicComponent";
 import FaultsComponent from "@/components/molecules/HeroMolecules/FaultsComponent";
 import GearParkBrakeComponent from "@/components/molecules/HeroMolecules/GearParkBrakeComponent";
+import { usePacket } from "@/contexts/PacketContext";
 
-function HeroContainer(props: any) {
+function HeroContainer() {
+  const { currentPacket } = usePacket();
+
   return (
     <>
       <div className="grid size-full grid-cols-1 gap-4 md:grid-cols-6">
         <div className="col-span-1 md:col-span-4 md:h-full">
           <div className="grid h-1/6 pl-1 ">
-            <BatteryThrottleComponent />
+            <BatteryThrottleComponent
+              packetBattery={currentPacket.Battery}
+              packetDriverControls={currentPacket.DriverControls}
+              packetKeyMotor={currentPacket.KeyMotor}
+            />
           </div>
           <div className="grid h-5/6 grid-cols-10">
             <div className="col-span-1 grid h-full bg-green-500 pl-1">
