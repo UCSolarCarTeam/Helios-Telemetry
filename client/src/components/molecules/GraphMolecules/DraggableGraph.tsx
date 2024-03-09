@@ -22,15 +22,16 @@ function DraggableGraph({
   return (
     <Draggable handle="strong">
       <div className="box bg-light text-light dark:bg-dark dark:text-dark absolute z-50 w-fit rounded shadow-2xl">
-        <div className="relative flex flex-row items-center justify-center">
-          <strong>
-            <div className="cursor-pointer select-none">{graphID}</div>
+        <div className="flex w-full flex-row ">
+          <strong className="flex grow justify-center ">
+            <button className=" cursor-all-scroll  select-none text-center">
+              {graphID}
+            </button>
           </strong>
           <IoIosClose
             onClick={() => closeGraph(graphID)}
-            color={"black"}
             size={40}
-            className=" absolute right-0 cursor-pointer"
+            className=" cursor-pointer select-none text-black dark:text-white"
           />
         </div>
         <LineChart
@@ -43,6 +44,7 @@ function DraggableGraph({
             left: 20,
             bottom: 5,
           }}
+          style={{ cursor: "crosshair" }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />

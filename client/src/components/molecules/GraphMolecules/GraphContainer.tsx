@@ -1,6 +1,6 @@
 import React from "react";
 
-import DraggableGraph from "@/components/DraggableGraph";
+import DraggableGraph from "@/components/molecules/GraphMolecules/DraggableGraph";
 import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
 
 export default function GraphContainer() {
