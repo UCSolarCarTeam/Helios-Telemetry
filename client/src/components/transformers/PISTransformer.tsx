@@ -1,6 +1,9 @@
+import React from "react";
+
 import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
+import Tooltip from "@mui/material/Tooltip";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
@@ -115,13 +118,30 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   }
   return (
     <div className="mt-1 flex items-center justify-between text-xs">
-      {field.name}:
+      <Tooltip
+        title={
+          <button onClick={() => openNewGraph(field.name)}>Open Graph</button>
+        }
+        arrow
+        slotProps={{
+          popper: {
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -14],
+                },
+              },
+            ],
+          },
+        }}
+      >
+        <p>{field.name}:</p>
+      </Tooltip>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
-      <button onClick={() => openNewGraph(field.name)}>G</button>
     </div>
   );
 }
-
 type FieldsPrinterProps = {
   fields: I_PISField[];
 };

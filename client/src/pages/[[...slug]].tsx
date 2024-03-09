@@ -1,11 +1,11 @@
 import { Inter } from "next/font/google";
 
-import GraphContainer from "@/components/GraphContainer";
 import BottomInformationContainer from "@/components/containers/BottomInformationContainer";
 import HeroContainer from "@/components/containers/HeroContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
 import TabsContainer from "@/components/containers/TabsContainer";
+import GraphContainer from "@/components/molecules/GraphMolecules/GraphContainer";
 import { useAppState } from "@/contexts/AppStateContext";
 
 const inter = Inter({ subsets: ["latin"] });
