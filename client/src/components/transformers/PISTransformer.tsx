@@ -140,7 +140,6 @@ type PIStransformerProps = {
 
 function PISTransformer(props: PIStransformerProps): JSX.Element {
   const { root, depth = 0 } = props;
-  console.log(root);
   return (
     root && (
       <div className="flex h-[350px] w-full flex-col gap-x-2 lg:flex-wrap">

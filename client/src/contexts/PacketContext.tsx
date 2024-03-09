@@ -286,31 +286,10 @@ export function PacketContextProvider({
             BatteryVoltage: faker.number.int({ min: 0, max: 100 }),
             Temperature: faker.number.int({ min: 0, max: 100 }),
           },
-          {
-            Alive: faker.datatype.boolean(),
-            ArrayCurrent: faker.number.int({ min: 0, max: 100 }),
-            ArrayVoltage: faker.number.int({ min: 0, max: 100 }),
-            BatteryVoltage: faker.number.int({ min: 0, max: 100 }),
-            Temperature: faker.number.int({ min: 0, max: 100 }),
-          },
-          {
-            Alive: faker.datatype.boolean(),
-            ArrayCurrent: faker.number.int({ min: 0, max: 100 }),
-            ArrayVoltage: faker.number.int({ min: 0, max: 100 }),
-            BatteryVoltage: faker.number.int({ min: 0, max: 100 }),
-            Temperature: faker.number.int({ min: 0, max: 100 }),
-          },
-          {
-            Alive: faker.datatype.boolean(),
-            ArrayCurrent: faker.number.int({ min: 0, max: 100 }),
-            ArrayVoltage: faker.number.int({ min: 0, max: 100 }),
-            BatteryVoltage: faker.number.int({ min: 0, max: 100 }),
-            Temperature: faker.number.int({ min: 0, max: 100 }),
-          },
         ],
         TimeStamp: faker.number.int({ min: 0, max: 100 }),
       });
-    }, 1000);
+    }, 2500);
     return () => clearInterval(interval);
   }, []);
 
