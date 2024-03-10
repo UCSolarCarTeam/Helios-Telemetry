@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
 import Tooltip from "@mui/material/Tooltip";
+import type { Instance } from "@popperjs/core";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
@@ -103,10 +104,69 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 type FieldPrinterProps = {
   field: I_PISField;
 };
+function AnchorElTooltips({
+  children,
+  field,
+}: {
+  children: React.ReactNode;
+  field: I_PISField;
+}) {
+  const positionRef = useRef<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const popperRef = useRef<Instance>(null);
+  const areaRef = useRef<HTMLDivElement>(null);
 
+  const handleMouseMove = (event: React.MouseEvent) => {
+    positionRef.current = { x: event.clientX, y: event.clientY };
+
+    if (popperRef.current != null) {
+      void popperRef.current.update();
+    }
+  };
+  const { openNewGraph } = useGraphOverlay();
+
+  return (
+    <Tooltip
+      arrow
+      title={
+        <button onClick={() => openNewGraph(field.name)}>Open Graph</button>
+      }
+      slotProps={{
+        popper: {
+          modifiers: [
+            {
+              name: "offset",
+              options: {
+                offset: [0, 14],
+              },
+            },
+          ],
+        },
+      }}
+      PopperProps={{
+        popperRef,
+        anchorEl: {
+          getBoundingClientRect: () => {
+            return new DOMRect(
+              positionRef.current.x,
+              areaRef.current!.getBoundingClientRect().y,
+              0,
+              0,
+            );
+          },
+        },
+      }}
+    >
+      <div ref={areaRef} onMouseMove={handleMouseMove}>
+        {children}
+      </div>
+    </Tooltip>
+  );
+}
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const { field } = props;
-  const { openNewGraph } = useGraphOverlay();
   if (
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
@@ -118,26 +178,9 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   }
   return (
     <div className="mt-1 flex items-center justify-between text-xs">
-      <Tooltip
-        title={
-          <button onClick={() => openNewGraph(field.name)}>Open Graph</button>
-        }
-        arrow
-        slotProps={{
-          popper: {
-            modifiers: [
-              {
-                name: "offset",
-                options: {
-                  offset: [0, -14],
-                },
-              },
-            ],
-          },
-        }}
-      >
-        <p>{field.name}:</p>
-      </Tooltip>
+      <AnchorElTooltips {...props}>
+        <p>{field.name}</p>
+      </AnchorElTooltips>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
   );
