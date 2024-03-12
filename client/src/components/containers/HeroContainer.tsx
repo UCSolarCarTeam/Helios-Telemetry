@@ -23,7 +23,7 @@ function HeroContainer() {
               <GearParkBrakeComponent />
             </div>
             <div className="col-span-9 grid h-full max-h-[42vh] pl-1">
-              <CarGraphicComponent />
+              <CarGraphicComponent packetKeyMotor={currentPacket.KeyMotor} />
             </div>
           </div>
         </div>
