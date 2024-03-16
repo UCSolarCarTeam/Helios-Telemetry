@@ -1,4 +1,9 @@
-import React, { useRef } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from "react";
 
 import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
@@ -45,7 +50,6 @@ type FormatStringProps = {
 function FormatString(props: FormatStringProps): JSX.Element {
   const { fstring, data } = props;
   // %s •C (%s) - %s •C (%s)
-  // console.log("TEST", fstring.split("%s"));
 
   return (
     <span>
@@ -74,7 +78,6 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 
   const formatString = (string: string, params: I_PISFieldData[]) => {
     // %s •C (%s) - %s •C (%s)
-    console.log("TEST", string.split("%s"));
     return string
       .split("%s")
       .map((part, index) => {
@@ -104,13 +107,21 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 type FieldPrinterProps = {
   field: I_PISField;
 };
-function AnchorElTooltips({
-  children,
-  field,
-}: {
+
+export type AnchorElTooltipsRefHandle = {
+  getData: () => I_PISFieldData[];
+};
+
+type AnchorElTooltipsProps = {
   children: React.ReactNode;
   field: I_PISField;
-}) {
+};
+
+const AnchorElTooltips = forwardRef<
+  AnchorElTooltipsRefHandle,
+  AnchorElTooltipsProps
+>(function AnchorElTooltips(props: AnchorElTooltipsProps, ref) {
+  const { children, field } = props;
   const positionRef = useRef<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -127,11 +138,27 @@ function AnchorElTooltips({
   };
   const { openNewGraph } = useGraphOverlay();
 
+  const getData = useCallback(() => {
+    return field.data;
+  }, [field.data]);
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        getData,
+      };
+    },
+    [getData],
+  );
+
   return (
     <Tooltip
       arrow
       title={
-        <button onClick={() => openNewGraph(field.name)}>Open Graph</button>
+        <button onClick={() => openNewGraph(field.name, ref)}>
+          Open Graph
+        </button>
       }
       slotProps={{
         popper: {
@@ -164,9 +191,11 @@ function AnchorElTooltips({
       </div>
     </Tooltip>
   );
-}
+});
+
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const { field } = props;
+  const tooltipRef = useRef<AnchorElTooltipsRefHandle | null>(null);
   if (
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
@@ -178,7 +207,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   }
   return (
     <div className="mt-1 flex items-center justify-between text-xs">
-      <AnchorElTooltips {...props}>
+      <AnchorElTooltips {...props} ref={tooltipRef}>
         <p>{field.name}</p>
       </AnchorElTooltips>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />

@@ -1,3 +1,4 @@
+import { type MutableRefObject, useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { IoIosClose } from "react-icons/io";
 import {
@@ -10,15 +11,38 @@ import {
   YAxis,
 } from "recharts";
 
+import { type AnchorElTooltipsRefHandle } from "@/components/transformers/PISTransformer";
+import { usePacket } from "@/contexts/PacketContext";
+
 function DraggableGraph({
-  data,
+  myRef,
   closeGraph,
   graphID,
 }: {
-  data: any[];
+  myRef: MutableRefObject<AnchorElTooltipsRefHandle | null>;
   graphID: string;
   closeGraph: (field: string) => void;
 }) {
+  const { currentPacket } = usePacket();
+  const NUM_DATA_POINTS = 10;
+
+  useEffect(() => {
+    // console.log(myRef.current?.getData());
+    setArr((prevState) => {
+      if (prevState.length > NUM_DATA_POINTS) {
+        return [
+          ...prevState,
+          { X: myRef.current?.getData()[0].value as number },
+        ].slice(1);
+      } else {
+        return [...prevState, { X: 0 }];
+      }
+    });
+  }, [currentPacket]);
+  const [arr, setArr] = useState([{ X: 0 }, { X: 0 }, { X: 0 }, { X: 0 }]);
+
+  // const xDataKey = "time";
+  const yDataKey = "X";
   return (
     <Draggable handle="strong">
       <div className="box bg-light text-light dark:bg-dark dark:text-dark absolute z-50 w-fit rounded shadow-2xl">
@@ -37,27 +61,23 @@ function DraggableGraph({
         <LineChart
           width={250}
           height={150}
-          data={data}
+          data={arr}
           margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
+            left: -25,
           }}
           style={{ cursor: "crosshair" }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          {/* <XAxis dataKey={xDataKey} /> */}
           <YAxis />
           <Tooltip />
           <Legend />
           <Line
             type="monotone"
-            dataKey="pv"
+            dataKey={yDataKey}
             stroke="#8884d8"
             activeDot={{ r: 8 }}
           />
-          <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
         </LineChart>
       </div>
     </Draggable>
