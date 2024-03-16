@@ -5,13 +5,11 @@ import type ITelemetryData from "@/objects/telemetry-data.interface";
 
 function BatteryThrottleComponent() {
   return (
-    <>
-      <div className="grid w-full grid-cols-12 content-center justify-items-center">
-        <BatteryIconComponent />
-        <ThrottleIcon />
-        <SpeedAtom />
-      </div>
-    </>
+    <div className="grid w-full grid-cols-12 content-center justify-items-center">
+      <BatteryIconComponent />
+      <ThrottleIcon />
+      <SpeedAtom />
+    </div>
   );
 }
 
