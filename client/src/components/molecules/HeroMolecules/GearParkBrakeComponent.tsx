@@ -1,9 +1,7 @@
 import Image from "next/image";
 
+import ParkingBrakeIcon from "@/components/atoms/ParkingBreakIcon";
 import { usePacket } from "@/contexts/PacketContext";
-
-// eslint-disable-next-line no-restricted-imports
-import WarningIcon from "../../../../public/assets/warning.svg";
 
 function GearParkBrakeComponent() {
   const { currentPacket } = usePacket();
@@ -22,10 +20,10 @@ function GearParkBrakeComponent() {
 
         <div className="grid grid-rows-1 gap-4">
           <div className="row-start-4 row-end-4">
-            <WarningIcon
-              className={brake ? "fill-[#B94A6C] stroke-[2px]" : ""}
-              width="30"
-              height="30"
+            <ParkingBrakeIcon
+              color={brake ? "#B94A6C" : "#000000"}
+              width="30px"
+              height="30px"
             />
           </div>
         </div>
