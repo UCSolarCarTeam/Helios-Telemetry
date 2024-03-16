@@ -1,9 +1,58 @@
+import { useAppState } from "@/contexts/AppStateContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
-import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
+import {
+  type I_PISField,
+  type I_PISFieldData,
+  UnitType,
+} from "@/objects/PIS/PIS.interface";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
 };
+
+function FieldUnitsHandler(
+  unit: UnitType | undefined,
+  value: string | number | boolean,
+): JSX.Element {
+  const appState = useAppState();
+
+  let unitReturn;
+  let valueReturn;
+
+  if (unit === UnitType.TEMP) {
+    if (appState.speedUnits === "mph") {
+      unitReturn = "°F";
+      valueReturn = (value * 9) / 5 + 32;
+    }
+    unitReturn = "°C";
+    valueReturn = value;
+  }
+
+  if (unit === UnitType.SPEED) {
+    if (appState.speedUnits === "mph") {
+      unitReturn = "mph";
+      valueReturn = value * 0.621371;
+    }
+    unitReturn = "km/h";
+    valueReturn = value;
+  }
+
+  if (unit === UnitType.DISTANCE) {
+    if (appState.speedUnits === "mph") {
+      unitReturn = "mi";
+      valueReturn = value * 0.621371;
+    }
+    unitReturn = "km";
+    valueReturn = value;
+  }
+
+  if (unit === undefined || unit === UnitType.NONE) {
+    unitReturn = "";
+    valueReturn = value;
+  }
+  unitReturn = unit;
+  valueReturn = value;
+}
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
@@ -24,12 +73,7 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const color = inRange ? "text-green" : "text-red-500";
   const displayValue = typeof value === "boolean" ? (value ? "T" : "F") : value;
 
-  return (
-    <span className={color}>
-      {displayValue}
-      {unit}
-    </span>
-  );
+  return <span className={color}>{FieldUnitsHandler(unit, displayValue)}</span>;
 }
 
 type FormatStringProps = {

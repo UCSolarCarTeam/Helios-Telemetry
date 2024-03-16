@@ -1,6 +1,20 @@
+enum UnitType {
+  TEMP = "temperature",
+  SPEED = "speed",
+  DISTANCE = "distance",
+  NONE = "none",
+  VOLTAGE = "V",
+  AMPERAGE = "A",
+  AMPHOUR = "Ah",
+  MILLIVOLTS = "mV",
+  RPM = "RPM",
+  AMPRMS = "A(rms)",
+  HERTZ = "Hz",
+}
+
 type I_PISFieldData = {
   value: number | string | boolean;
-  unit?: string;
+  unit?: UnitType;
   min?: number;
   max?: number;
   expectedBool?: boolean;
@@ -19,3 +33,4 @@ type I_PIS = {
 
 export default I_PIS;
 export type { I_PISField, I_PISFieldData };
+export { UnitType };
