@@ -1,46 +1,81 @@
 import Modal from '@mui/material/Modal';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useAppState } from "@/contexts/AppStateContext";
 
 function SettingsComponent() {
-    const { toggleDarkMode } = useAppState();
-    
-
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
     enum AppearanceMode {
         Light = 'Light',
         Dark = 'Dark'
       }
       
-      enum UnitMode {
+    enum UnitMode {
         Metric = 'Metric',
         Imperial = 'Imperial'
-      }
-      
-      enum ConnectionMode {
+    }
+    
+    enum ConnectionMode {
         Network = 'Network',
         Radio = 'Radio'
-      }
-      
+    }
+    const { toggleDarkMode, currentAppState } = useAppState();
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [appearanceMode, setAppearanceMode] = useState<AppearanceMode | null>(null);
+    const [unitMode, setUnitMode] = useState<UnitMode| null>(null);
+    const [connectionMode, setConnectionMode] = useState<ConnectionMode| null>(null);
 
-    const [appearanceMode, setAppearanceMode] = useState<AppearanceMode>(AppearanceMode.Light);
-    const [unitMode, setUnitMode] = useState<UnitMode>(UnitMode.Metric);
-    const [connectionMode, setConnectionMode] = useState<ConnectionMode>(ConnectionMode.Network);
+    const saveSettingsToLocalStorage = () => {
+        if (appearanceMode!==null){
+            localStorage.setItem('settings', JSON.stringify({
+                appearanceMode,
+                unitMode,
+                connectionMode
+            }));
+        }
+    };
 
+    // Function to fetch settings state from local storage
+    const fetchSettingsFromLocalStorage = () => {
+        const savedSettings = localStorage.getItem('settings');
+        console.log(localStorage.getItem('settings'));
+        if (savedSettings) {
+            const { appearanceMode: savedAppearanceMode, unitMode: savedUnitMode, connectionMode: savedConnectionMode } = JSON.parse(savedSettings);
+            setAppearanceMode(savedAppearanceMode);
+            setUnitMode(savedUnitMode);
+            setConnectionMode(savedConnectionMode);
+            checkDarkState();  
+        } else {
+            setAppearanceMode(AppearanceMode.Light);
+            setUnitMode(UnitMode.Metric);
+            setConnectionMode(ConnectionMode.Network);
+        }
+    };
+    
+    useEffect(() => {
+        fetchSettingsFromLocalStorage();
+    }, []);
+
+    useEffect(() => {
+        saveSettingsToLocalStorage();
+    }, [appearanceMode, unitMode, connectionMode]);
+
+
+    const checkDarkState = () => {
+        if (appearanceMode===AppearanceMode.Dark && !currentAppState.darkMode){
+            toggleDarkMode(); 
+        }
+    }
     const handleAppearanceChange = (
         event: React.MouseEvent<HTMLElement>,
         newAppearance: AppearanceMode,
         ) => {
-            console.log(newAppearance);
-            
             if (newAppearance!==null && newAppearance!==appearanceMode){
                 toggleDarkMode(); 
                 setAppearanceMode(newAppearance);
+                checkDarkState();  
             } 
     };
 
@@ -65,15 +100,15 @@ function SettingsComponent() {
       
     return (
       <div className="grid">
-        <h2 onClick={handleOpen} className="text-text-gray dark:text-text-gray-dark">⚙</h2>
+        <h2 onClick={handleOpen} className="text-text-gray dark:text-text-gray-dark font-black text-xl cursor-pointer">⛭</h2>
         <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white shadow-lg p-4 rounded-lg flex flex-col">
-            <h5 className="text-text-gray dark:text-text-gray-dark font-bold text-lg mb-4">Settings</h5>
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white shadow-lg p-4 rounded-lg flex flex-col shadow-lg">
+            <h5 className="text-text-gray dark:text-text-gray-dark text-2xl mb-4">Settings</h5>
             
             <div className="mb-4 grid grid-cols-2 justify-between items-center">
                 <div className="col-span-1">
@@ -89,8 +124,8 @@ function SettingsComponent() {
                         className="w-full"
 
                     >
-                        <ToggleButton value="Dark" className="w-1/2">Dark</ToggleButton>
-                        <ToggleButton value="Light" className="w-1/2">Light</ToggleButton>
+                        <ToggleButton value={AppearanceMode.Light} className="w-1/2">{AppearanceMode.Light}</ToggleButton>
+                        <ToggleButton value={AppearanceMode.Dark} className="w-1/2">{AppearanceMode.Dark}</ToggleButton>
                     </ToggleButtonGroup>
                 </div>
             </div>
@@ -107,8 +142,8 @@ function SettingsComponent() {
                         aria-label="Units"
                         className="w-full"
                     >
-                        <ToggleButton value="Metric" className="w-1/2">Metric</ToggleButton>
-                        <ToggleButton value="Imperial" className="w-1/2">Imperial</ToggleButton>
+                        <ToggleButton value={UnitMode.Metric} className="w-1/2">{UnitMode.Metric}</ToggleButton>
+                        <ToggleButton value={UnitMode.Imperial} className="w-1/2">{UnitMode.Imperial} </ToggleButton>
                     </ToggleButtonGroup>
                 </div>
             </div>
@@ -125,8 +160,8 @@ function SettingsComponent() {
                         aria-label="Connection"
                         className="w-full"
                     >
-                        <ToggleButton value="Network" className="w-1/2">Network</ToggleButton>
-                        <ToggleButton value="Radio" className="w-1/2">Radio</ToggleButton>
+                        <ToggleButton value={ConnectionMode.Network} className="w-1/2">{ConnectionMode.Network}</ToggleButton>
+                        <ToggleButton value={ConnectionMode.Radio} className="w-1/2">{ConnectionMode.Radio} </ToggleButton>
                     </ToggleButtonGroup>
                 </div>
             </div>
