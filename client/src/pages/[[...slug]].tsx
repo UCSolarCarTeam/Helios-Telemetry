@@ -1,21 +1,13 @@
-import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 
 import BottomInformationContainer from "@/components/containers/BottomInformationContainer";
+import HeroContainer from "@/components/containers/HeroContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
 import TabsContainer from "@/components/containers/TabsContainer";
 import { useAppState } from "@/contexts/AppStateContext";
 
 const inter = Inter({ subsets: ["latin"] });
-
-const HeroContainer = dynamic(
-  () =>
-    import("@/components/containers/HeroContainer").then((mod) => mod.default),
-  {
-    ssr: false,
-  },
-);
 
 export default function Home() {
   const { currentAppState } = useAppState();
