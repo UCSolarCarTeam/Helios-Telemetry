@@ -1,26 +1,17 @@
 import { useEffect, useState } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
+import {
+  AppearanceMode,
+  ConnectionMode,
+  UnitMode,
+  useAppState,
+} from "@/contexts/AppStateContext";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 function SettingsComponent() {
-  enum AppearanceMode {
-    Light = "Light",
-    Dark = "Dark",
-  }
-
-  enum UnitMode {
-    Metric = "Metric",
-    Imperial = "Imperial",
-  }
-
-  enum ConnectionMode {
-    Network = "Network",
-    Radio = "Radio",
-  }
-  const { toggleDarkMode, currentAppState } = useAppState();
+  const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -82,12 +73,10 @@ function SettingsComponent() {
 
   const checkDarkState = (mode: AppearanceMode) => {
     //add more functions for connection and unit mode
-    if (
-      (mode === AppearanceMode.Dark && !currentAppState.darkMode) ||
-      (mode === AppearanceMode.Light && currentAppState.darkMode)
-    ) {
-      toggleDarkMode();
-    }
+    setCurrentAppState({
+      ...currentAppState,
+      darkMode: mode === AppearanceMode.Dark,
+    });
   };
   const handleAppearanceChange = (
     event: React.MouseEvent<HTMLElement>,

@@ -4,6 +4,21 @@ interface Props {
   children: ReactNode | ReactNode[];
 }
 
+export enum AppearanceMode {
+  Light = "Light",
+  Dark = "Dark",
+}
+
+export enum UnitMode {
+  Metric = "Metric",
+  Imperial = "Imperial",
+}
+
+export enum ConnectionMode {
+  Network = "Network",
+  Radio = "Radio",
+}
+
 enum speedUnits {
   "km/h",
   "mph",
