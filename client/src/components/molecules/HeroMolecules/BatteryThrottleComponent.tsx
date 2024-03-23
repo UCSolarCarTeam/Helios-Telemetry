@@ -1,7 +1,6 @@
 import BatteryIconComponent from "@/components/atoms/BatteryIcon";
 import SpeedAtom from "@/components/atoms/SpeedAtom";
 import ThrottleIcon from "@/components/atoms/ThrottleIcon";
-import type ITelemetryData from "@/objects/telemetry-data.interface";
 
 function BatteryThrottleComponent() {
   return (

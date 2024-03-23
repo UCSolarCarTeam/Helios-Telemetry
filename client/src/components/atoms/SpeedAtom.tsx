@@ -5,7 +5,6 @@ import { usePacket } from "@/contexts/PacketContext";
 
 function SpeedAtom() {
   const { currentPacket } = usePacket();
-  const {} = useAppState;
 
   return (
     <>

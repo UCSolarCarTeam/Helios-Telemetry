@@ -8,7 +8,6 @@ import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules
 import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { IndicationStates } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
-import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as TWEEN from "@tweenjs/tween.js";
