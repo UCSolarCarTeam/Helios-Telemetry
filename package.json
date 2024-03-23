@@ -17,6 +17,7 @@
     "postpack": "pinst --enable"
   },
   "dependencies": {
+    "@aws-sdk/types": "^3.535.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@faker-js/faker": "^8.4.1",
