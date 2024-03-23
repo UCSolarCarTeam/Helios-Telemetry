@@ -37,16 +37,16 @@ function SettingsComponent() {
         }
     };
 
-    // Function to fetch settings state from local storage
     const fetchSettingsFromLocalStorage = () => {
         const savedSettings = localStorage.getItem('settings');
-        console.log(localStorage.getItem('settings'));
         if (savedSettings) {
             const { appearanceMode: savedAppearanceMode, unitMode: savedUnitMode, connectionMode: savedConnectionMode } = JSON.parse(savedSettings);
             setAppearanceMode(savedAppearanceMode);
             setUnitMode(savedUnitMode);
             setConnectionMode(savedConnectionMode);
-            checkDarkState();  
+
+            checkDarkState(savedAppearanceMode); 
+            //add more checks for connection and unit mode 
         } else {
             setAppearanceMode(AppearanceMode.Light);
             setUnitMode(UnitMode.Metric);
@@ -63,8 +63,9 @@ function SettingsComponent() {
     }, [appearanceMode, unitMode, connectionMode]);
 
 
-    const checkDarkState = () => {
-        if (appearanceMode===AppearanceMode.Dark && !currentAppState.darkMode){
+    const checkDarkState = (mode: AppearanceMode) => { //add more functions for connection and unit mode 
+        if (mode===AppearanceMode.Dark && !currentAppState.darkMode
+            || mode===AppearanceMode.Light && currentAppState.darkMode){
             toggleDarkMode(); 
         }
     }
@@ -73,9 +74,8 @@ function SettingsComponent() {
         newAppearance: AppearanceMode,
         ) => {
             if (newAppearance!==null && newAppearance!==appearanceMode){
-                toggleDarkMode(); 
                 setAppearanceMode(newAppearance);
-                checkDarkState();  
+                checkDarkState(newAppearance);  
             } 
     };
 
