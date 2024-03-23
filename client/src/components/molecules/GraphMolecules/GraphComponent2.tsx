@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useEffect, useRef, useState } from "react";
 
@@ -9,19 +9,25 @@ export default function GraphComponent2({
 }: {
   graphData?: I_PISFieldData;
 }) {
-  const [chartOptions, setChartOptions] = useState({
+  const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
     chart: {
       backgroundColor: "#D2D2D2",
       type: "spline",
     },
     xAxis: {
-      categories: ["A", "B", "C"],
       title: { text: "Time" },
     },
     yAxis: {
-      title: { text: "Value" },
+      title: { text: `Value (${graphData?.unit})` },
     },
-    series: [{ data: new Array(15).fill(0) }],
+    series: [
+      {
+        data: new Array(15).fill(0),
+        name: undefined,
+        color: "#9C0534",
+        type: "spline",
+      },
+    ],
     credits: {
       enabled: false,
     },
@@ -29,16 +35,16 @@ export default function GraphComponent2({
       text: undefined,
     },
   });
-  const [chart, setChart] = useState(null);
-  const chartComponent = useRef(null);
+  const [chart, setChart] = useState<Highcharts.Chart | null>(null);
+  const chartComponent = useRef<HighchartsReact.RefObject>(null);
 
   useEffect(() => {
-    setChart(chartComponent.current.chart);
+    setChart(chartComponent.current && chartComponent.current.chart);
   }, []);
 
   const updateSeries = () => {
     if (chart) {
-      chart.series[0].addPoint([graphData?.time, graphData?.value], true, true);
+      chart.series[0].addPoint([graphData?.value], true, true);
     }
   };
   useEffect(() => {

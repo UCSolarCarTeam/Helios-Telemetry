@@ -1,4 +1,4 @@
-import { type MutableRefObject, useEffect, useState } from "react";
+import { type MutableRefObject, useEffect } from "react";
 import React from "react";
 import Draggable from "react-draggable";
 import { IoIosClose } from "react-icons/io";
@@ -17,9 +17,7 @@ function DraggableGraph({
   closeGraph: (field: string) => void;
 }) {
   const { currentPacket } = usePacket();
-  useEffect(() => {
-    console.log(myRef.current?.getData()[0]);
-  }, [currentPacket]);
+  useEffect(() => {}, [currentPacket, myRef]);
 
   return (
     <Draggable handle="strong">
