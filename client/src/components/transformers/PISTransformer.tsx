@@ -1,4 +1,5 @@
 import { useAppState } from "@/contexts/AppStateContext";
+import speedUnits from "@/contexts/AppStateContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import {
   type I_PISField,
@@ -16,11 +17,14 @@ function FieldUnitsHandler(
 ): JSX.Element {
   const appState = useAppState();
 
-  let unitReturn;
-  let valueReturn;
+  let unitReturn: string | undefined;
+  let valueReturn: string | number | boolean;
 
   if (unit === UnitType.TEMP) {
-    if (appState.speedUnits === "mph") {
+    if (
+      typeof value === "number" &&
+      appState.currentAppState.speedUnits === speedUnits.mph
+    ) {
       unitReturn = "°F";
       valueReturn = (value * 9) / 5 + 32;
     }
@@ -29,7 +33,10 @@ function FieldUnitsHandler(
   }
 
   if (unit === UnitType.SPEED) {
-    if (appState.speedUnits === "mph") {
+    if (
+      typeof value === "number" &&
+      appState.currentAppState.speedUnits === speedUnits.mph
+    ) {
       unitReturn = "mph";
       valueReturn = value * 0.621371;
     }
@@ -38,7 +45,10 @@ function FieldUnitsHandler(
   }
 
   if (unit === UnitType.DISTANCE) {
-    if (appState.speedUnits === "mph") {
+    if (
+      typeof value === "number" &&
+      appState.currentAppState.speedUnits === speedUnits.mph
+    ) {
       unitReturn = "mi";
       valueReturn = value * 0.621371;
     }
@@ -52,6 +62,8 @@ function FieldUnitsHandler(
   }
   unitReturn = unit;
   valueReturn = value;
+
+  return `${valueReturn} ${unitReturn}`;
 }
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {

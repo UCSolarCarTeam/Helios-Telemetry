@@ -20,6 +20,7 @@ interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: (state: IAppState) => void;
   toggleDarkMode: () => void;
+  toggleSpeedUnits: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
@@ -39,9 +40,24 @@ export function AppStateContextProvider({ children }: Props) {
     });
   };
 
+  const toggleSpeedUnits = () => {
+    setCurrentAppState({
+      ...currentAppState,
+      speedUnits:
+        currentAppState.speedUnits === speedUnits["km/h"]
+          ? speedUnits["mph"]
+          : speedUnits["km/h"],
+    });
+  };
+
   return (
     <appStateContext.Provider
-      value={{ currentAppState, setCurrentAppState, toggleDarkMode }}
+      value={{
+        currentAppState,
+        setCurrentAppState,
+        toggleDarkMode,
+        toggleSpeedUnits,
+      }}
     >
       {children}
     </appStateContext.Provider>
@@ -51,3 +67,5 @@ export function AppStateContextProvider({ children }: Props) {
 export function useAppState(): IAppStateReturn {
   return useContext(appStateContext);
 }
+
+export default speedUnits;
