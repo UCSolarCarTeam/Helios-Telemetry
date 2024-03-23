@@ -14,7 +14,7 @@ type RangeCheckedFieldDataProps = {
 function FieldUnitsHandler(
   unit: UnitType | undefined,
   value: string | number | boolean,
-): JSX.Element {
+) {
   const appState = useAppState();
 
   let unitReturn: string | undefined;
