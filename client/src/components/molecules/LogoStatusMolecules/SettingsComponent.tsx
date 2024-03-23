@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { useAppState } from "@/contexts/AppStateContext";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
