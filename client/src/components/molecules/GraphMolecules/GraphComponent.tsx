@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { type I_PISFieldData } from "@/objects/PIS/PIS.interface";
 
-export default function GraphComponent2({
+export default function GraphComponent({
   graphData,
 }: {
   graphData?: I_PISFieldData;

@@ -3,7 +3,7 @@ import Draggable from "react-draggable";
 import { IoIosClose } from "react-icons/io";
 
 import { type AnchorElTooltipsRefHandle } from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
-import GraphComponent2 from "@/components/molecules/GraphMolecules/GraphComponent2";
+import GraphComponent from "@/components/molecules/GraphMolecules/GraphComponent";
 import { usePacket } from "@/contexts/PacketContext";
 
 function DraggableGraph({
@@ -33,7 +33,7 @@ function DraggableGraph({
             className=" cursor-pointer select-none text-black dark:text-white"
           />
         </div>
-        <GraphComponent2 graphData={graphRef.current?.getData()[0]} />
+        <GraphComponent graphData={graphRef.current?.getData()[0]} />
       </div>
     </Draggable>
   );
