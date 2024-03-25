@@ -1,23 +1,22 @@
 import { type MutableRefObject, useEffect } from "react";
-import React from "react";
 import Draggable from "react-draggable";
 import { IoIosClose } from "react-icons/io";
 
+import { type AnchorElTooltipsRefHandle } from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
 import GraphComponent2 from "@/components/molecules/GraphMolecules/GraphComponent2";
-import { type AnchorElTooltipsRefHandle } from "@/components/transformers/PISTransformer";
 import { usePacket } from "@/contexts/PacketContext";
 
 function DraggableGraph({
-  myRef,
+  graphRef,
   closeGraph,
   graphID,
 }: {
-  myRef: MutableRefObject<AnchorElTooltipsRefHandle | null>;
+  graphRef: MutableRefObject<AnchorElTooltipsRefHandle | null>;
   graphID: string;
   closeGraph: (field: string) => void;
 }) {
   const { currentPacket } = usePacket();
-  useEffect(() => {}, [currentPacket, myRef]);
+  useEffect(() => {}, [currentPacket, graphRef]);
 
   return (
     <Draggable handle="strong">
@@ -34,7 +33,7 @@ function DraggableGraph({
             className=" cursor-pointer select-none text-black dark:text-white"
           />
         </div>
-        <GraphComponent2 graphData={myRef.current?.getData()[0]} />
+        <GraphComponent2 graphData={graphRef.current?.getData()[0]} />
       </div>
     </Draggable>
   );

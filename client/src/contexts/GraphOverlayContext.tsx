@@ -6,12 +6,12 @@ import {
   useState,
 } from "react";
 
-import { type AnchorElTooltipsRefHandle } from "@/components/transformers/PISTransformer";
+import { type AnchorElTooltipsRefHandle } from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
 
 interface GraphOverlayContextProps {
   children: ReactNode | ReactNode[];
 }
-interface graphThing {
+interface GraphElement {
   name: string;
   ref: ForwardedRef<AnchorElTooltipsRefHandle>;
 }
@@ -20,7 +20,7 @@ interface IGraphOverlayContexttReturn {
     name: string,
     ref: React.ForwardedRef<AnchorElTooltipsRefHandle>,
   ) => void;
-  openGraphs: graphThing[];
+  openGraphs: GraphElement[];
   closeGraph: (field: string) => void;
 }
 
@@ -31,7 +31,7 @@ const graphOverlayContext = createContext<IGraphOverlayContexttReturn>(
 export function GraphOverlayContextProvider({
   children,
 }: GraphOverlayContextProps): JSX.Element {
-  const [openGraphs, setOpenGraphs] = useState<graphThing[]>([]);
+  const [openGraphs, setOpenGraphs] = useState<GraphElement[]>([]);
 
   const openNewGraph = (
     name: string,
