@@ -1,21 +1,14 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import React, { useRef } from "react";
 
-import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
+import AnchorElTooltips, {
+  type AnchorElTooltipsRefHandle,
+} from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
-import Tooltip from "@mui/material/Tooltip";
-import type { Instance } from "@popperjs/core";
 
-type RangeCheckedFieldDataProps = {
+function RangeCheckedFieldData(props: {
   fieldData: I_PISFieldData;
-};
-
-function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
+}): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
   const inRange =
     // If value is of type string range is true
@@ -104,96 +97,7 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
   );
 }
 
-type FieldPrinterProps = {
-  field: I_PISField;
-};
-
-export type AnchorElTooltipsRefHandle = {
-  getData: () => I_PISFieldData[];
-};
-
-type AnchorElTooltipsProps = {
-  children: React.ReactNode;
-  field: I_PISField;
-};
-
-const AnchorElTooltips = forwardRef<
-  AnchorElTooltipsRefHandle,
-  AnchorElTooltipsProps
->(function AnchorElTooltips(props: AnchorElTooltipsProps, ref) {
-  const { children, field } = props;
-  const positionRef = useRef<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-  const popperRef = useRef<Instance>(null);
-  const areaRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (event: React.MouseEvent) => {
-    positionRef.current = { x: event.clientX, y: event.clientY };
-
-    if (popperRef.current != null) {
-      void popperRef.current.update();
-    }
-  };
-  const { openNewGraph } = useGraphOverlay();
-
-  const getData = useCallback(() => {
-    return field.data;
-  }, [field.data]);
-
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        getData,
-      };
-    },
-    [getData],
-  );
-
-  return (
-    <Tooltip
-      arrow
-      title={
-        <button onClick={() => openNewGraph(field.name, ref)}>
-          Open Graph
-        </button>
-      }
-      slotProps={{
-        popper: {
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 14],
-              },
-            },
-          ],
-        },
-      }}
-      PopperProps={{
-        popperRef,
-        anchorEl: {
-          getBoundingClientRect: () => {
-            return new DOMRect(
-              positionRef.current.x,
-              areaRef.current!.getBoundingClientRect().y,
-              0,
-              0,
-            );
-          },
-        },
-      }}
-    >
-      <div ref={areaRef} onMouseMove={handleMouseMove}>
-        {children}
-      </div>
-    </Tooltip>
-  );
-});
-
-function FieldPrinter(props: FieldPrinterProps): JSX.Element {
+function FieldPrinter(props: { field: I_PISField }): JSX.Element {
   const { field } = props;
   const tooltipRef = useRef<AnchorElTooltipsRefHandle | null>(null);
   if (
@@ -214,11 +118,8 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     </div>
   );
 }
-type FieldsPrinterProps = {
-  fields: I_PISField[];
-};
 
-function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
+function FieldsPrinter(props: { fields: I_PISField[] }): JSX.Element {
   const { fields } = props;
   return (
     <div className="  columns-[7rem] md:columns-[10rem]">

@@ -1,7 +1,7 @@
-import React, { type MutableRefObject } from "react";
+import { type MutableRefObject } from "react";
 
 import DraggableGraph from "@/components/molecules/GraphMolecules/DraggableGraph";
-import { type AnchorElTooltipsRefHandle } from "@/components/transformers/PISTransformer";
+import { type AnchorElTooltipsRefHandle } from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
 import { useGraphOverlay } from "@/contexts/GraphOverlayContext";
 
 export default function GraphContainer() {
@@ -12,7 +12,7 @@ export default function GraphContainer() {
       {openGraphs.map((graph) => {
         return (
           <DraggableGraph
-            myRef={
+            graphRef={
               graph.ref as MutableRefObject<AnchorElTooltipsRefHandle | null>
             }
             closeGraph={closeGraph}
