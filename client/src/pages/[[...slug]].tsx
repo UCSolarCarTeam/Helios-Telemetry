@@ -5,13 +5,13 @@ import HeroContainer from "@/components/containers/HeroContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
 import TabsContainer from "@/components/containers/TabsContainer";
+import GraphContainer from "@/components/molecules/GraphMolecules/GraphContainer";
 import { useAppState } from "@/contexts/AppStateContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { currentAppState } = useAppState();
-  // 38, 55, 7
 
   return (
     <div className={currentAppState.darkMode ? "dark" : ""}>
@@ -36,6 +36,7 @@ export default function Home() {
           <div className="grid">
             <BottomInformationContainer />
           </div>
+          <GraphContainer />
         </div>
       </div>
     </div>

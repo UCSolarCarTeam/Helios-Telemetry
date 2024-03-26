@@ -1,11 +1,14 @@
+import React, { useRef } from "react";
+
+import AnchorElTooltips, {
+  type AnchorElTooltipsRefHandle,
+} from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
 
-type RangeCheckedFieldDataProps = {
+function RangeCheckedFieldData(props: {
   fieldData: I_PISFieldData;
-};
-
-function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
+}): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
   const inRange =
     // If value is of type string range is true
@@ -40,7 +43,6 @@ type FormatStringProps = {
 function FormatString(props: FormatStringProps): JSX.Element {
   const { fstring, data } = props;
   // %s •C (%s) - %s •C (%s)
-  // console.log("TEST", fstring.split("%s"));
 
   return (
     <span>
@@ -69,7 +71,6 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 
   const formatString = (string: string, params: I_PISFieldData[]) => {
     // %s •C (%s) - %s •C (%s)
-    console.log("TEST", string.split("%s"));
     return string
       .split("%s")
       .map((part, index) => {
@@ -96,12 +97,9 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
   );
 }
 
-type FieldPrinterProps = {
-  field: I_PISField;
-};
-
-function FieldPrinter(props: FieldPrinterProps): JSX.Element {
+function FieldPrinter(props: { field: I_PISField }): JSX.Element {
   const { field } = props;
+  const tooltipRef = useRef<AnchorElTooltipsRefHandle | null>(null);
   if (
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
@@ -113,17 +111,15 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   }
   return (
     <div className="mt-1 flex items-center justify-between text-xs">
-      {field.name}:
+      <AnchorElTooltips {...props} ref={tooltipRef}>
+        <p>{field.name}</p>
+      </AnchorElTooltips>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
   );
 }
 
-type FieldsPrinterProps = {
-  fields: I_PISField[];
-};
-
-function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
+function FieldsPrinter(props: { fields: I_PISField[] }): JSX.Element {
   const { fields } = props;
   return (
     <div className="  columns-[7rem] md:columns-[10rem]">
