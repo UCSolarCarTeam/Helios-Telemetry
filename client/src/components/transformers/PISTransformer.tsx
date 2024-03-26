@@ -19,6 +19,8 @@ function FieldUnitsHandler(
 
   let unitReturn: string | undefined;
   let valueReturn: string | number | boolean;
+  unitReturn = unit;
+  valueReturn = value;
 
   if (unit === UnitType.TEMP) {
     if (
@@ -60,8 +62,6 @@ function FieldUnitsHandler(
     unitReturn = "";
     valueReturn = value;
   }
-  unitReturn = unit;
-  valueReturn = value;
 
   return `${valueReturn} ${unitReturn}`;
 }
