@@ -14,7 +14,7 @@ const CarGraphicComponent = dynamic(
   },
 );
 
-function HeroContainer(props: any) {
+function HeroContainer() {
   return (
     <>
       <div className="grid size-full grid-cols-1 gap-4 md:grid-cols-6">

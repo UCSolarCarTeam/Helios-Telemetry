@@ -7,6 +7,7 @@ import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolec
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
 import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { IndicationStates } from "@/components/molecules/HeroMolecules/HeroTypes";
+import { usePacket } from "@/contexts/PacketContext";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as TWEEN from "@tweenjs/tween.js";
@@ -15,7 +16,8 @@ type IndicationTriggerList = {
   // TODO: Add indication triggers
 };
 
-function CarGraphicComponent(props: any) {
+function CarGraphicComponent() {
+  const { currentPacket } = usePacket();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
     leftMotor: IndicationStates.CLEAR,
@@ -74,7 +76,10 @@ function CarGraphicComponent(props: any) {
           warningMaterial={warningMaterial}
           indications={indications}
         />
-        <RoadComponent speed={7} size={15} />
+        <RoadComponent
+          speed={currentPacket.KeyMotor[0].VehicleVelocity * 0.5}
+          size={15}
+        />
         <ContactShadows
           position={[0, 0, 0]}
           opacity={0.75}
