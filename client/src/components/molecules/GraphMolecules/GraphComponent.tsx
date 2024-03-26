@@ -13,6 +13,7 @@ export default function GraphComponent({
     chart: {
       backgroundColor: "#D2D2D2",
       type: "spline",
+      height: 200,
     },
     xAxis: {
       title: { text: "Time" },
@@ -22,6 +23,7 @@ export default function GraphComponent({
     },
     series: [
       {
+        showInLegend: false,
         data: new Array(15).fill(0),
         name: undefined,
         color: "#9C0534",
@@ -87,7 +89,7 @@ export default function GraphComponent({
     updateSeries();
   }, [graphData]);
   return (
-    <div className=" w-96">
+    <div className=" w-80">
       <HighchartsReact
         ref={chartComponent}
         highcharts={Highcharts}
