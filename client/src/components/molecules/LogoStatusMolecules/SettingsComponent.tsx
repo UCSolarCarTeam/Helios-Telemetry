@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
-  AppearanceMode,
-  ConnectionMode,
-  UnitMode,
+  connectionTypes,
+  speedUnits,
   useAppState,
 } from "@/contexts/AppStateContext";
 import Modal from "@mui/material/Modal";
@@ -15,94 +14,40 @@ function SettingsComponent() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [appearanceMode, setAppearanceMode] = useState<AppearanceMode | null>(
-    null,
-  );
-  const [unitMode, setUnitMode] = useState<UnitMode | null>(null);
-  const [connectionMode, setConnectionMode] = useState<ConnectionMode | null>(
-    null,
-  );
 
-  const saveSettingsToLocalStorage = () => {
-    if (appearanceMode !== null) {
-      localStorage.setItem(
-        "settings",
-        JSON.stringify({
-          appearanceMode,
-          unitMode,
-          connectionMode,
-        }),
-      );
-    }
-  };
-
-  interface Settings {
-    appearanceMode: AppearanceMode;
-    unitMode: UnitMode;
-    connectionMode: ConnectionMode;
-  }
-
-  const fetchSettingsFromLocalStorage = () => {
-    const savedSettings = localStorage.getItem("settings");
-    if (savedSettings) {
-      const {
-        appearanceMode: savedAppearanceMode,
-        unitMode: savedUnitMode,
-        connectionMode: savedConnectionMode,
-      } = JSON.parse(savedSettings) as Settings;
-      setAppearanceMode(savedAppearanceMode);
-      setUnitMode(savedUnitMode);
-      setConnectionMode(savedConnectionMode);
-
-      checkDarkState(savedAppearanceMode);
-      //add more checks for connection and unit mode
-    } else {
-      setAppearanceMode(AppearanceMode.Light);
-      setUnitMode(UnitMode.Metric);
-      setConnectionMode(ConnectionMode.Network);
-    }
-  };
-
-  useEffect(() => {
-    fetchSettingsFromLocalStorage();
-  }, []);
-
-  useEffect(() => {
-    saveSettingsToLocalStorage();
-  }, [appearanceMode, unitMode, connectionMode]);
-
-  const checkDarkState = (mode: AppearanceMode) => {
-    //add more functions for connection and unit mode
-    setCurrentAppState({
-      ...currentAppState,
-      darkMode: mode === AppearanceMode.Dark,
-    });
-  };
-  const handleAppearanceChange = (
+  const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
-    newAppearance: AppearanceMode,
+    inputMode: (typeof currentAppState)["darkMode"],
   ) => {
-    if (newAppearance !== null && newAppearance !== appearanceMode) {
-      setAppearanceMode(newAppearance);
-      checkDarkState(newAppearance);
+    if (inputMode !== null && inputMode !== currentAppState.darkMode) {
+      setCurrentAppState({
+        ...currentAppState,
+        darkMode: inputMode,
+      });
     }
   };
 
   const handleUnitChange = (
     event: React.MouseEvent<HTMLElement>,
-    newUnit: UnitMode,
+    inputMode: (typeof currentAppState)["speedUnits"],
   ) => {
-    if (newUnit !== null && newUnit !== unitMode) {
-      setUnitMode(newUnit);
+    if (inputMode !== null && inputMode !== currentAppState.speedUnits) {
+      setCurrentAppState({
+        ...currentAppState,
+        speedUnits: inputMode,
+      });
     }
   };
 
   const handleConnectionChange = (
     event: React.MouseEvent<HTMLElement>,
-    newConnection: ConnectionMode,
+    inputMode: (typeof currentAppState)["connectionTypes"],
   ) => {
-    if (newConnection !== null && newConnection !== connectionMode) {
-      setConnectionMode(newConnection);
+    if (inputMode !== null && inputMode !== currentAppState.connectionTypes) {
+      setCurrentAppState({
+        ...currentAppState,
+        connectionTypes: inputMode,
+      });
     }
   };
 
@@ -132,17 +77,17 @@ function SettingsComponent() {
 
             <div className="col-span-1">
               <ToggleButtonGroup
-                value={appearanceMode}
+                value={currentAppState.darkMode}
                 exclusive
-                onChange={handleAppearanceChange}
+                onChange={handleDarkChange}
                 aria-label="Appearance"
                 className="w-full"
               >
-                <ToggleButton value={AppearanceMode.Light} className="w-1/2">
-                  {AppearanceMode.Light}
+                <ToggleButton value={false} className="w-1/2">
+                  Light
                 </ToggleButton>
-                <ToggleButton value={AppearanceMode.Dark} className="w-1/2">
-                  {AppearanceMode.Dark}
+                <ToggleButton value={true} className="w-1/2">
+                  Dark
                 </ToggleButton>
               </ToggleButtonGroup>
             </div>
@@ -154,17 +99,17 @@ function SettingsComponent() {
             </div>
             <div className="col-span-1">
               <ToggleButtonGroup
-                value={unitMode}
+                value={currentAppState.speedUnits}
                 exclusive
                 onChange={handleUnitChange}
                 aria-label="Units"
                 className="w-full"
               >
-                <ToggleButton value={UnitMode.Metric} className="w-1/2">
-                  {UnitMode.Metric}
+                <ToggleButton value={speedUnits[0]} className="w-1/2">
+                  Metric
                 </ToggleButton>
-                <ToggleButton value={UnitMode.Imperial} className="w-1/2">
-                  {UnitMode.Imperial}{" "}
+                <ToggleButton value={speedUnits[1]} className="w-1/2">
+                  Imperial
                 </ToggleButton>
               </ToggleButtonGroup>
             </div>
@@ -176,17 +121,17 @@ function SettingsComponent() {
             </div>
             <div className="col-span-1">
               <ToggleButtonGroup
-                value={connectionMode}
+                value={currentAppState.connectionTypes}
                 exclusive
                 onChange={handleConnectionChange}
                 aria-label="Connection"
                 className="w-full"
               >
-                <ToggleButton value={ConnectionMode.Network} className="w-1/2">
-                  {ConnectionMode.Network}
+                <ToggleButton value={connectionTypes[0]} className="w-1/2">
+                  Network
                 </ToggleButton>
-                <ToggleButton value={ConnectionMode.Radio} className="w-1/2">
-                  {ConnectionMode.Radio}{" "}
+                <ToggleButton value={connectionTypes[1]} className="w-1/2">
+                  Radio
                 </ToggleButton>
               </ToggleButtonGroup>
             </div>
