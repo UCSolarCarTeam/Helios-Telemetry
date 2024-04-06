@@ -12,18 +12,16 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
   ) => {
     if (inputMode !== null && inputMode !== currentAppState.darkMode) {
-      setCurrentAppState({
-        ...currentAppState,
+      setCurrentAppState((prev) => ({
+        ...prev,
         darkMode: inputMode,
-      });
+      }));
     }
   };
 
@@ -32,10 +30,10 @@ function SettingsComponent() {
     inputMode: (typeof currentAppState)["appUnits"],
   ) => {
     if (inputMode !== null && inputMode !== currentAppState.appUnits) {
-      setCurrentAppState({
-        ...currentAppState,
+      setCurrentAppState((prev) => ({
+        ...prev,
         appUnits: inputMode,
-      });
+      }));
     }
   };
 
@@ -44,24 +42,24 @@ function SettingsComponent() {
     inputMode: (typeof currentAppState)["connectionTypes"],
   ) => {
     if (inputMode !== null && inputMode !== currentAppState.connectionTypes) {
-      setCurrentAppState({
-        ...currentAppState,
+      setCurrentAppState((prev) => ({
+        ...prev,
         connectionTypes: inputMode,
-      });
+      }));
     }
   };
 
   return (
     <div className="grid">
       <h2
-        onClick={handleOpen}
+        onClick={() => setOpen(true)}
         className="text-text-gray dark:text-text-gray-dark cursor-pointer text-xl font-black"
       >
         ⛭
       </h2>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

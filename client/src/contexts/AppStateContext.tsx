@@ -1,5 +1,7 @@
 import {
+  type Dispatch,
   type ReactNode,
+  type SetStateAction,
   createContext,
   useContext,
   useEffect,
@@ -29,7 +31,7 @@ interface IAppState {
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
-  setCurrentAppState: (state: IAppState) => void;
+  setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
 }
 
@@ -53,18 +55,18 @@ export function AppStateContextProvider({ children }: Props) {
         loading: false,
       }));
     } else {
-      setCurrentAppState({
+      setCurrentAppState((prev) => ({
         ...currentAppState,
         loading: false,
-      });
+      }));
     }
   };
 
   const toggleDarkMode = () => {
-    setCurrentAppState({
+    setCurrentAppState((prev) => ({
       ...currentAppState,
       darkMode: !currentAppState.darkMode,
-    });
+    }));
   };
 
   const saveSettingsToLocalStorage = () => {
@@ -76,7 +78,7 @@ export function AppStateContextProvider({ children }: Props) {
   }, []);
 
   useEffect(() => {
-    if (currentAppState.loading === false) {
+    if (!currentAppState.loading) {
       saveSettingsToLocalStorage();
     }
   }, [currentAppState]);
