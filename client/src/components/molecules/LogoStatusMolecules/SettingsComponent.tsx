@@ -29,12 +29,12 @@ function SettingsComponent() {
 
   const handleUnitChange = (
     event: React.MouseEvent<HTMLElement>,
-    inputMode: (typeof currentAppState)["speedUnits"],
+    inputMode: (typeof currentAppState)["appUnits"],
   ) => {
-    if (inputMode !== null && inputMode !== currentAppState.speedUnits) {
+    if (inputMode !== null && inputMode !== currentAppState.appUnits) {
       setCurrentAppState({
         ...currentAppState,
-        speedUnits: inputMode,
+        appUnits: inputMode,
       });
     }
   };
@@ -99,7 +99,7 @@ function SettingsComponent() {
             </div>
             <div className="col-span-1">
               <ToggleButtonGroup
-                value={currentAppState.speedUnits}
+                value={currentAppState.appUnits}
                 exclusive
                 onChange={handleUnitChange}
                 aria-label="Units"

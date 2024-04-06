@@ -24,7 +24,7 @@ interface IAppState {
   loading: boolean;
   error: boolean;
   darkMode: boolean;
-  speedUnits: APPUNITS;
+  appUnits: APPUNITS;
   connectionTypes: CONNECTIONTYPES;
 }
 interface IAppStateReturn {
@@ -40,7 +40,7 @@ export function AppStateContextProvider({ children }: Props) {
     loading: true,
     error: false,
     darkMode: false,
-    speedUnits: APPUNITS.METRIC,
+    appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
   });
 
@@ -48,11 +48,15 @@ export function AppStateContextProvider({ children }: Props) {
     const savedSettings = localStorage.getItem("settings");
     if (savedSettings) {
       const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
-      setCurrentAppState((prevState) => ({
-        ...prevState,
+      setCurrentAppState((prev) => ({
         ...parsedSettings,
         loading: false,
       }));
+    } else {
+      setCurrentAppState({
+        ...currentAppState,
+        loading: false,
+      });
     }
   };
 
