@@ -17,7 +17,7 @@ function SettingsComponent() {
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
   ) => {
-    if (inputMode !== null && inputMode !== currentAppState.darkMode) {
+    if (inputMode !== null) {
       setCurrentAppState((prev) => ({
         ...prev,
         darkMode: inputMode,
@@ -29,7 +29,7 @@ function SettingsComponent() {
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["appUnits"],
   ) => {
-    if (inputMode !== null && inputMode !== currentAppState.appUnits) {
+    if (inputMode !== null) {
       setCurrentAppState((prev) => ({
         ...prev,
         appUnits: inputMode,
@@ -41,7 +41,7 @@ function SettingsComponent() {
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["connectionTypes"],
   ) => {
-    if (inputMode !== null && inputMode !== currentAppState.connectionTypes) {
+    if (inputMode !== null) {
       setCurrentAppState((prev) => ({
         ...prev,
         connectionTypes: inputMode,
