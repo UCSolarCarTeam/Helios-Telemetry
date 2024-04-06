@@ -1,24 +1,37 @@
-import { type ReactNode, createContext, useContext, useState } from "react";
+import {
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface Props {
   children: ReactNode | ReactNode[];
 }
 
-enum speedUnits {
-  "km/h",
-  "mph",
+export enum CONNECTIONTYPES {
+  NETWORK = "Network",
+  RADIO = "Radio",
+}
+
+export enum APPUNITS {
+  METRIC = "metric",
+  IMPERIAL = "imperial",
 }
 
 interface IAppState {
   loading: boolean;
   error: boolean;
   darkMode: boolean;
-  speedUnits: speedUnits;
+  appUnits: APPUNITS;
+  connectionTypes: CONNECTIONTYPES;
 }
-
 interface IAppStateReturn {
   currentAppState: IAppState;
-  setCurrentAppState: (state: IAppState) => void;
+  setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
 }
 
@@ -26,22 +39,57 @@ const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
-    loading: false,
+    loading: true,
     error: false,
     darkMode: false,
-    speedUnits: speedUnits["km/h"],
+    appUnits: APPUNITS.METRIC,
+    connectionTypes: CONNECTIONTYPES.NETWORK,
   });
 
+  const fetchSettingsFromLocalStorage = () => {
+    const savedSettings = localStorage.getItem("settings");
+    if (savedSettings) {
+      const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
+      setCurrentAppState((prev) => ({
+        ...parsedSettings,
+        loading: false,
+      }));
+    } else {
+      setCurrentAppState((prev) => ({
+        ...currentAppState,
+        loading: false,
+      }));
+    }
+  };
+
   const toggleDarkMode = () => {
-    setCurrentAppState({
+    setCurrentAppState((prev) => ({
       ...currentAppState,
       darkMode: !currentAppState.darkMode,
-    });
+    }));
   };
+
+  const saveSettingsToLocalStorage = () => {
+    localStorage.setItem("settings", JSON.stringify(currentAppState));
+  };
+
+  useEffect(() => {
+    fetchSettingsFromLocalStorage();
+  }, []);
+
+  useEffect(() => {
+    if (!currentAppState.loading) {
+      saveSettingsToLocalStorage();
+    }
+  }, [currentAppState]);
 
   return (
     <appStateContext.Provider
-      value={{ currentAppState, setCurrentAppState, toggleDarkMode }}
+      value={{
+        currentAppState,
+        setCurrentAppState,
+        toggleDarkMode,
+      }}
     >
       {children}
     </appStateContext.Provider>
