@@ -14,12 +14,9 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "client/src/*",
-        "server/src/*"
-      ]
+      "@/*": ["client/src/*", "server/src/*"]
     }
   },
   "include": ["client/src/**/*", "server/src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "amplify"]
 }

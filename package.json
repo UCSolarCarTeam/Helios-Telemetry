@@ -17,6 +17,7 @@
     "postpack": "pinst --enable"
   },
   "dependencies": {
+    "@aws-sdk/types": "^3.535.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@faker-js/faker": "^8.4.1",
@@ -46,6 +47,7 @@
     "react-icons": "^5.0.1",
     "react-indiana-drag-scroll": "^2.2.0",
     "react-map-gl": "^7.1.7",
+    "rimraf": "^5.0.5",
     "three": "^0.161.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
@@ -71,7 +73,7 @@
     "@typescript-eslint/parser": "^7.0.2",
     "autoprefixer": "^10.0.1",
     "aws-cdk": "^2.130.0",
-    "aws-cdk-lib": "^2.130.0",
+    "aws-cdk-lib": "^2.133.0",
     "chart.js": "^4.4.1",
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
