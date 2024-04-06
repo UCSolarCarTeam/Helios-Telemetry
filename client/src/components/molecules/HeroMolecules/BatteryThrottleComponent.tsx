@@ -2,15 +2,13 @@ import BatteryIconComponent from "@/components/atoms/BatteryIcon";
 import SpeedAtom from "@/components/atoms/SpeedAtom";
 import ThrottleIcon from "@/components/atoms/ThrottleIcon";
 
-function BatteryThrottleComponent(props: any) {
+function BatteryThrottleComponent() {
   return (
-    <>
-      <div className="grid w-full grid-cols-12 content-center justify-items-center">
-        <BatteryIconComponent />
-        <ThrottleIcon />
-        <SpeedAtom />
-      </div>
-    </>
+    <div className="grid w-full grid-cols-12 content-center justify-items-center">
+      <BatteryIconComponent />
+      <ThrottleIcon />
+      <SpeedAtom />
+    </div>
   );
 }
 

@@ -1,15 +1,19 @@
-import { useAppState } from "@/contexts/AppStateContext";
+import { useEffect, useState } from "react";
 
-function SpeedAtom(props: any) {
-  const {} = useAppState;
-  const speed = 53;
+import { useAppState } from "@/contexts/AppStateContext";
+import { usePacket } from "@/contexts/PacketContext";
+
+function SpeedAtom() {
+  const { currentPacket } = usePacket();
 
   return (
     <>
       <div className="col-span-2 grid h-10 w-full content-center justify-items-center">
         <div className="grid grid-cols-2">
           <div className="col-span-1 grid">
-            <h1 className="text-4xl">{speed}</h1>
+            <h1 className="text-4xl">
+              {currentPacket.KeyMotor[0].VehicleVelocity}
+            </h1>
           </div>
           <div className="col-span-1 grid">
             <h1 className="text-sm">km/h</h1>
