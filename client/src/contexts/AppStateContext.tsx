@@ -24,7 +24,7 @@ interface IAppState {
   loading: boolean;
   error: boolean;
   darkMode: boolean;
-  speedUnits: APPUNITS;
+  appUnits: APPUNITS;
   connectionTypes: CONNECTIONTYPES;
 }
 interface IAppStateReturn {
@@ -40,7 +40,7 @@ export function AppStateContextProvider({ children }: Props) {
     loading: true,
     error: false,
     darkMode: false,
-    speedUnits: APPUNITS.METRIC,
+    appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
   });
 
@@ -94,4 +94,4 @@ export function useAppState(): IAppStateReturn {
   return useContext(appStateContext);
 }
 
-export default speedUnits;
+export default APPUNITS;

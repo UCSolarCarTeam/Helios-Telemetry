@@ -1,5 +1,4 @@
-import { useAppState } from "@/contexts/AppStateContext";
-import speedUnits from "@/contexts/AppStateContext";
+import APPUNITS, { useAppState } from "@/contexts/AppStateContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import {
   type I_PISField,
@@ -25,37 +24,40 @@ function FieldUnitsHandler(
   if (unit === UnitType.TEMP) {
     if (
       typeof value === "number" &&
-      appState.currentAppState.speedUnits === speedUnits.mph
+      appState.currentAppState.appUnits === APPUNITS.IMPERIAL
     ) {
       unitReturn = "°F";
       valueReturn = (value * 9) / 5 + 32;
+    } else {
+      unitReturn = "°C";
+      valueReturn = value;
     }
-    unitReturn = "°C";
-    valueReturn = value;
   }
 
   if (unit === UnitType.SPEED) {
     if (
       typeof value === "number" &&
-      appState.currentAppState.speedUnits === speedUnits.mph
+      appState.currentAppState.appUnits === APPUNITS.IMPERIAL
     ) {
       unitReturn = "mph";
       valueReturn = value * 0.621371;
+    } else {
+      unitReturn = "km/h";
+      valueReturn = value;
     }
-    unitReturn = "km/h";
-    valueReturn = value;
   }
 
   if (unit === UnitType.DISTANCE) {
     if (
       typeof value === "number" &&
-      appState.currentAppState.speedUnits === speedUnits.mph
+      appState.currentAppState.appUnits === APPUNITS.IMPERIAL
     ) {
       unitReturn = "mi";
       valueReturn = value * 0.621371;
+    } else {
+      unitReturn = "km";
+      valueReturn = value;
     }
-    unitReturn = "km";
-    valueReturn = value;
   }
 
   if (unit === undefined || unit === UnitType.NONE) {
