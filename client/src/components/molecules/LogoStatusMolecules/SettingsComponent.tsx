@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import {
-  connectionTypes,
-  speedUnits,
+  APPUNITS,
+  CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
 import Modal from "@mui/material/Modal";
@@ -105,10 +105,10 @@ function SettingsComponent() {
                 aria-label="Units"
                 className="w-full"
               >
-                <ToggleButton value={speedUnits[0]} className="w-1/2">
+                <ToggleButton value={APPUNITS.METRIC} className="w-1/2">
                   Metric
                 </ToggleButton>
-                <ToggleButton value={speedUnits[1]} className="w-1/2">
+                <ToggleButton value={APPUNITS.IMPERIAL} className="w-1/2">
                   Imperial
                 </ToggleButton>
               </ToggleButtonGroup>
@@ -127,10 +127,10 @@ function SettingsComponent() {
                 aria-label="Connection"
                 className="w-full"
               >
-                <ToggleButton value={connectionTypes[0]} className="w-1/2">
+                <ToggleButton value={CONNECTIONTYPES.NETWORK} className="w-1/2">
                   Network
                 </ToggleButton>
-                <ToggleButton value={connectionTypes[1]} className="w-1/2">
+                <ToggleButton value={CONNECTIONTYPES.RADIO} className="w-1/2">
                   Radio
                 </ToggleButton>
               </ToggleButtonGroup>

@@ -10,22 +10,22 @@ interface Props {
   children: ReactNode | ReactNode[];
 }
 
-export enum connectionTypes {
-  "Network",
-  "Radio",
+export enum CONNECTIONTYPES {
+  NETWORK = "Network",
+  RADIO = "Radio",
 }
 
-export enum speedUnits {
-  "km/h",
-  "mph",
+export enum APPUNITS {
+  METRIC = "metric",
+  IMPERIAL = "imperial",
 }
 
 interface IAppState {
   loading: boolean;
   error: boolean;
   darkMode: boolean;
-  speedUnits: speedUnits;
-  connectionTypes: connectionTypes;
+  speedUnits: APPUNITS;
+  connectionTypes: CONNECTIONTYPES;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -40,29 +40,22 @@ export function AppStateContextProvider({ children }: Props) {
     loading: true,
     error: false,
     darkMode: false,
-    speedUnits: speedUnits["km/h"],
-    connectionTypes: connectionTypes["Network"],
+    speedUnits: APPUNITS.METRIC,
+    connectionTypes: CONNECTIONTYPES.NETWORK,
   });
 
   const fetchSettingsFromLocalStorage = () => {
     const savedSettings = localStorage.getItem("settings");
     if (savedSettings) {
-      const {
-        error: savedError,
-        darkMode: savedDarkMode,
-        speedUnits: savedSpeedUnits,
-        connectionTypes: savedConnectionTypes,
-      } = JSON.parse(savedSettings) as IAppState;
-      setCurrentAppState({
-        ...currentAppState,
+      const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
+      setCurrentAppState((prevState) => ({
+        ...prevState,
+        ...parsedSettings,
         loading: false,
-        error: savedError,
-        speedUnits: savedSpeedUnits,
-        darkMode: savedDarkMode,
-        connectionTypes: savedConnectionTypes,
-      });
+      }));
     }
   };
+
   const toggleDarkMode = () => {
     setCurrentAppState({
       ...currentAppState,
@@ -71,16 +64,7 @@ export function AppStateContextProvider({ children }: Props) {
   };
 
   const saveSettingsToLocalStorage = () => {
-    localStorage.setItem(
-      "settings",
-      JSON.stringify({
-        loading: currentAppState.loading,
-        error: currentAppState.error,
-        darkMode: currentAppState.darkMode,
-        speedUnits: currentAppState.speedUnits,
-        connectionTypes: currentAppState.connectionTypes,
-      }),
-    );
+    localStorage.setItem("settings", JSON.stringify(currentAppState));
   };
 
   useEffect(() => {
