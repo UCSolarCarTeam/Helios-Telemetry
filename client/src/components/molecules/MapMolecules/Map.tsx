@@ -36,6 +36,7 @@ function Map(props: IMapProps): JSX.Element {
       dragRotate={false}
       scrollZoom={false}
       keyboard={false}
+      zoom={13}
     >
       <Marker
         longitude={carLocation.lng}
