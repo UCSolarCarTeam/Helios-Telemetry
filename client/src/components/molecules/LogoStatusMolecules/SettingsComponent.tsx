@@ -12,18 +12,16 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
   ) => {
-    if (inputMode !== null && inputMode !== currentAppState.darkMode) {
-      setCurrentAppState({
-        ...currentAppState,
+    if (inputMode !== null) {
+      setCurrentAppState((prev) => ({
+        ...prev,
         darkMode: inputMode,
-      });
+      }));
     }
   };
 
@@ -31,11 +29,11 @@ function SettingsComponent() {
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["appUnits"],
   ) => {
-    if (inputMode !== null && inputMode !== currentAppState.appUnits) {
-      setCurrentAppState({
-        ...currentAppState,
+    if (inputMode !== null) {
+      setCurrentAppState((prev) => ({
+        ...prev,
         appUnits: inputMode,
-      });
+      }));
     }
   };
 
@@ -43,29 +41,29 @@ function SettingsComponent() {
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["connectionTypes"],
   ) => {
-    if (inputMode !== null && inputMode !== currentAppState.connectionTypes) {
-      setCurrentAppState({
-        ...currentAppState,
+    if (inputMode !== null) {
+      setCurrentAppState((prev) => ({
+        ...prev,
         connectionTypes: inputMode,
-      });
+      }));
     }
   };
 
   return (
     <div className="grid">
       <h2
-        onClick={handleOpen}
+        onClick={() => setOpen(true)}
         className="text-text-gray dark:text-text-gray-dark cursor-pointer text-xl font-black"
       >
         ⛭
       </h2>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform flex-col rounded-lg bg-white p-4 shadow-lg shadow-lg">
+        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col rounded-lg bg-white p-4 shadow-lg">
           <h5 className="text-text-gray dark:text-text-gray-dark mb-4 text-2xl">
             Settings
           </h5>
