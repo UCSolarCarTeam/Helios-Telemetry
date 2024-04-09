@@ -14,55 +14,54 @@ function FieldUnitsHandler(
   unit: UnitType | undefined,
   value: string | number | boolean,
 ) {
-  const appState = useAppState();
+  const { currentAppState } = useAppState();
 
   let unitReturn: string | undefined;
   let valueReturn: string | number | boolean;
   unitReturn = unit;
   valueReturn = value;
 
-  if (unit === UnitType.TEMP) {
-    if (
-      typeof value === "number" &&
-      appState.currentAppState.appUnits === APPUNITS.IMPERIAL
-    ) {
-      unitReturn = "°F";
-      valueReturn = (value * 9) / 5 + 32;
-    } else {
-      unitReturn = "°C";
+  switch (unit) {
+    case UnitType.TEMP:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "°F";
+        valueReturn = (value * 9) / 5 + 32;
+      } else {
+        unitReturn = "°C";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.SPEED:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mph";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km/h";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.DISTANCE:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mi";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.NONE:
+      unitReturn = "";
       valueReturn = value;
-    }
-  }
-
-  if (unit === UnitType.SPEED) {
-    if (
-      typeof value === "number" &&
-      appState.currentAppState.appUnits === APPUNITS.IMPERIAL
-    ) {
-      unitReturn = "mph";
-      valueReturn = value * 0.621371;
-    } else {
-      unitReturn = "km/h";
-      valueReturn = value;
-    }
-  }
-
-  if (unit === UnitType.DISTANCE) {
-    if (
-      typeof value === "number" &&
-      appState.currentAppState.appUnits === APPUNITS.IMPERIAL
-    ) {
-      unitReturn = "mi";
-      valueReturn = value * 0.621371;
-    } else {
-      unitReturn = "km";
-      valueReturn = value;
-    }
-  }
-
-  if (unit === undefined || unit === UnitType.NONE) {
-    unitReturn = "";
-    valueReturn = value;
+      break;
   }
 
   return `${valueReturn} ${unitReturn}`;
