@@ -2,6 +2,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
 import ReactMap, { Marker } from "react-map-gl";
 
+import SportsScoreIcon from "@mui/icons-material/SportsScore";
+
 type ILocation = {
   lat: number;
   lng: number;
@@ -46,6 +48,14 @@ function Map(props: IMapProps): JSX.Element {
           width={20}
           height={50}
         />
+      </Marker>
+      <Marker
+        longitude={carLocation.lng + 0.001}
+        latitude={carLocation.lat + 0.005}
+        anchor={"center"}
+        style={{ color: "white" }}
+      >
+        <SportsScoreIcon />
       </Marker>
     </ReactMap>
   );
