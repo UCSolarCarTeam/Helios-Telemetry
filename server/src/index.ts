@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 import http from "http";
 import "module-alias";
+import { Server } from "socket.io";
 
 import router from "@/routes/health.route";
 import {
@@ -20,7 +21,6 @@ app.use(express.json());
 app.use("/", router);
 
 const logger = createLightweightApplicationLogger("index.ts");
-
 axiosRetry(axios, {
   retries: 2,
   retryDelay: (retryCount) => {
@@ -33,6 +33,21 @@ axiosRetry(axios, {
   onRetry: (retryCount) => {
     logger.warn(`Retrying axios call. Retry count: `, retryCount);
   },
+});
+
+const httpServer = http.createServer(app);
+export const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  })
 });
 
 // eslint-disable-next-line @typescript-eslint/require-await
@@ -65,7 +80,7 @@ const terminusOption: TerminusOptions = {
   signals: ["SIGINT", "SIGTERM", "SIGUSR2"],
 };
 
-export const server = createTerminus(http.createServer(app), terminusOption);
+export const server = createTerminus(httpServer, terminusOption);
 
 process.on("SIGQUIT", gracefullyShutdown);
 

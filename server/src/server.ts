@@ -1,4 +1,4 @@
-import server from "@/index";
+import server, { io } from "@/index";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("server.ts");

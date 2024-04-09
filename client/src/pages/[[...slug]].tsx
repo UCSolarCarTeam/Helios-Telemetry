@@ -1,4 +1,6 @@
 import { Inter } from "next/font/google";
+import { useEffect, useState } from "react";
+import io from "socket.io-client";
 
 import BottomInformationContainer from "@/components/containers/BottomInformationContainer";
 import HeroContainer from "@/components/containers/HeroContainer";
@@ -12,6 +14,24 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const { currentAppState } = useAppState();
   // 38, 55, 7
+
+  const [isConnected, setIsConnected] = useState(false);
+  const [transport, setTransport] = useState("N/A");
+
+  useEffect(() => {
+    // Create a socket connection
+    const socketIO = io("http://localhost:3001");
+
+    // Listen for incoming messages
+    socketIO.on("connection", (socket) => {
+      socket.emit("test");
+    });
+
+    // Clean up the socket connection on unmount
+    return () => {
+      socketIO.disconnect();
+    };
+  }, []);
 
   return (
     <div className={currentAppState.darkMode ? "dark" : ""}>
