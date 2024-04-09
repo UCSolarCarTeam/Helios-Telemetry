@@ -8,29 +8,15 @@ import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
 import TabsContainer from "@/components/containers/TabsContainer";
 import { useAppState } from "@/contexts/AppStateContext";
+import { socketIO } from "@/socket";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { currentAppState } = useAppState();
-  // 38, 55, 7
-
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState("N/A");
 
   useEffect(() => {
-    // Create a socket connection
-    const socketIO = io("http://localhost:3001");
-
-    // Listen for incoming messages
-    socketIO.on("connection", (socket) => {
-      socket.emit("test");
-    });
-
-    // Clean up the socket connection on unmount
-    return () => {
-      socketIO.disconnect();
-    };
+    socketIO.emit("test");
   }, []);
 
   return (
