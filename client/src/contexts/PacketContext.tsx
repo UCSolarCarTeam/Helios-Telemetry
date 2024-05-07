@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import fakeData from "@/contexts/fakePacket.json";
+import useSocketIO from "@/hooks/useSocketIO";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { faker } from "@faker-js/faker";
 
@@ -26,14 +27,19 @@ const packetContext = createContext<IPackContextReturn>(
 export function PacketContextProvider({
   children,
 }: PacketContextProps): JSX.Element {
-  const [currentPacket, setCurrentPacket] = useState<ITelemetryData>(
+  const isFaking = true;
+  const [fakeCurrentPacket, setFakeCurrentPacket] = useState<ITelemetryData>(
     fakeData as ITelemetryData,
   );
+
+  const { data } = useSocketIO("packet");
+
+  const currentPacket = isFaking ? fakeCurrentPacket : data;
 
   // Generate random data for local dev mode
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPacket({
+      setFakeCurrentPacket({
         PacketTitle: faker.lorem.words(2),
         AuxBms: {
           AllowCharge: faker.datatype.boolean(),
@@ -315,7 +321,12 @@ export function PacketContextProvider({
   }, []);
 
   return (
-    <packetContext.Provider value={{ currentPacket, setCurrentPacket }}>
+    <packetContext.Provider
+      value={{
+        currentPacket: currentPacket,
+        setCurrentPacket: setFakeCurrentPacket,
+      }}
+    >
       {children}
     </packetContext.Provider>
   );
