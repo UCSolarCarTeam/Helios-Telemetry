@@ -1,4 +1,4 @@
-import APPUNITS, { useAppState } from "@/contexts/AppStateContext";
+import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import {
   type I_PISField,
@@ -58,7 +58,7 @@ function FieldUnitsHandler(
         valueReturn = value;
       }
       break;
-    case UnitType.NONE:
+    case undefined:
       unitReturn = "";
       valueReturn = value;
       break;
@@ -69,6 +69,7 @@ function FieldUnitsHandler(
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
+
   const inRange =
     // If value is of type string range is true
     typeof value === "string"
@@ -126,7 +127,7 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 
   const formatString = (string: string, params: I_PISFieldData[]) => {
     // %s •C (%s) - %s •C (%s)
-    console.log("TEST", string.split("%s"));
+    // console.log("TEST", string.split("%s"));
     return string
       .split("%s")
       .map((part, index) => {

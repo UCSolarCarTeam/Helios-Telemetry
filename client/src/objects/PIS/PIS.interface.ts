@@ -2,7 +2,6 @@ enum UnitType {
   TEMP = "temperature",
   SPEED = "speed",
   DISTANCE = "distance",
-  NONE = "none",
   VOLTAGE = "V",
   AMPERAGE = "A",
   AMPHOUR = "Ah",

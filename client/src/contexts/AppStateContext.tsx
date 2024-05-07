@@ -99,5 +99,3 @@ export function AppStateContextProvider({ children }: Props) {
 export function useAppState(): IAppStateReturn {
   return useContext(appStateContext);
 }
-
-export default APPUNITS;
