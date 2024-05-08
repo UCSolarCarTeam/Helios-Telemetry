@@ -24,3 +24,9 @@ code {
     transform: rotate(360deg) translateX(1.5in);
   }
 }
+
+@keyframes driveOffScreen {
+  to {
+    transform: translateY(-100vh);
+  }
+}

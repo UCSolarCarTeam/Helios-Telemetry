@@ -8,11 +8,10 @@ import "@/styles/globals.css";
 
 function LoadingSpinner() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-200">
-      <div
-        className="animate-circle"
-        style={{ width: "0.2in", height: "0.2in", position: "relative" }}
-      >
+    <div
+      className={"fixed inset-0 flex items-center justify-center bg-gray-200"}
+    >
+      <div style={{ width: "0.2in", height: "0.2in", position: "relative" }}>
         <div
           className="absolute left-1/2 top-1/2"
           style={{
@@ -27,7 +26,38 @@ function LoadingSpinner() {
             width={100}
             height={100}
             style={{
-              animation: "circle 2s linear infinite", // Apply circular from global.css
+              animation: "circle 2s linear infinite",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LoadingDriveOff() {
+  return (
+    <div
+      className={
+        "fixed inset-0 flex items-center justify-center bg-transparent"
+      }
+    >
+      <div style={{ width: "0.2in", height: "0.2in", position: "relative" }}>
+        <div
+          className="absolute left-1/2 top-1/2"
+          style={{
+            transform: "translate(-50%, -50%) rotate(90deg)",
+            width: "20px",
+            height: "20px",
+          }}
+        >
+          <Image
+            src="/assets/HeliosBirdseye.png"
+            alt="Loading..."
+            width={100}
+            height={100}
+            style={{
+              animation: "driveOffScreen 1s forwards",
             }}
           />
         </div>
@@ -38,19 +68,27 @@ function LoadingSpinner() {
 
 export default function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
+  const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const stopLoadingTimer = setTimeout(() => {
       setLoading(false);
-    }, 50000);
+      setExiting(true);
+      setTimeout(() => {
+        setExiting(false);
+      }, 1000);
+    }, 5000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(stopLoadingTimer);
+    };
   }, []);
 
   return (
     <AppStateContextProvider>
       <PacketContextProvider>
         {loading ? <LoadingSpinner /> : <Component {...pageProps} />}
+        {exiting ? <LoadingDriveOff /> : null}
       </PacketContextProvider>
     </AppStateContextProvider>
   );
