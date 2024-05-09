@@ -84,11 +84,15 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, []);
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <AppStateContextProvider>
       <PacketContextProvider>
-        {loading ? <LoadingSpinner /> : <Component {...pageProps} />}
-        {exiting ? <LoadingDriveOff /> : null}
+        {exiting && <LoadingDriveOff />}
+        <Component {...pageProps} />
       </PacketContextProvider>
     </AppStateContextProvider>
   );
