@@ -68,21 +68,24 @@ function LoadingDriveOff() {
 
 export default function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
-  const [exiting, setExiting] = useState(false);
+  const [driveOff, setDriveOff] = useState(false);
 
   useEffect(() => {
     const stopLoadingTimer = setTimeout(() => {
       setLoading(false);
-      setExiting(true);
-      setTimeout(() => {
-        setExiting(false);
-      }, 1000);
     }, 5000);
+
+    if (!loading) {
+      setDriveOff(true);
+      setTimeout(() => {
+        setDriveOff(false);
+      }, 1000);
+    }
 
     return () => {
       clearTimeout(stopLoadingTimer);
     };
-  }, []);
+  }, [loading]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -91,7 +94,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AppStateContextProvider>
       <PacketContextProvider>
-        {exiting && <LoadingDriveOff />}
+        {driveOff && <LoadingDriveOff />}
         <Component {...pageProps} />
       </PacketContextProvider>
     </AppStateContextProvider>
