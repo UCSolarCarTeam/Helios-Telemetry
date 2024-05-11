@@ -68,7 +68,7 @@ export function AppStateContextProvider({ children }: Props) {
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
   });
-  const [driveOff, setDriveOff] = useState(true);
+  const [animateLoading, setAnimateLoading] = useState(true);
 
   const fetchSettingsFromLocalStorage = () => {
     const savedSettings = localStorage.getItem("settings");
@@ -110,7 +110,7 @@ export function AppStateContextProvider({ children }: Props) {
   useEffect(() => {
     if (!currentAppState.loading) {
       setTimeout(() => {
-        setDriveOff(false);
+        setAnimateLoading(false);
       }, 10000);
     }
   }, [currentAppState.loading]);
@@ -123,7 +123,7 @@ export function AppStateContextProvider({ children }: Props) {
         toggleDarkMode,
       }}
     >
-      {driveOff && <Loading />}
+      {animateLoading && <Loading />}
       {children}
     </appStateContext.Provider>
   );
