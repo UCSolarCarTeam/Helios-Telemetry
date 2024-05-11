@@ -288,9 +288,12 @@ export const handleSocketConnection = (socket: Socket) => {
   logger.info("Client connected");
 
   const packetTimerID = setInterval(() => {
+    // TODO: Replace generateFakeTelemetryData() with the real data
     const newPacket = generateFakeTelemetryData();
+
+    // Compare the server logs with the live website data
     logger.info(
-      `Packet sent to client: ${JSON.stringify(newPacket.PacketTitle)}`,
+      `Battery Average Voltage: ${JSON.stringify(newPacket.Battery.AverageCellVoltage)}V`,
     );
     socket.emit("packet", newPacket);
   }, 2500);
