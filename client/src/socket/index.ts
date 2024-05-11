@@ -1,18 +1,22 @@
 import { type Socket, io } from "socket.io-client";
 
+import type ITelemetryData from "@/objects/telemetry-data.interface";
+
 interface ClientToServerEvents {
   test: () => void;
   "create-something": (value: string, callback: () => void) => void;
 }
 
 interface ServerToClientEvents {
-  noArg: () => void;
-  basicEmit: (a: number, b: string, c: Buffer) => void;
-  withAck: (d: string, callback: (e: number) => void) => void;
-  foo: (value: string) => void;
-  time: (value: string) => void;
+  packet: (value: ITelemetryData) => void;
 }
 
+// set undefined to ServerURL once deployed.
+const URL =
+  process.env.NODE_ENV === "production" ? "undefined" : "http://localhost:3001";
+
+// Defaults to using client fakerJS, change Data to REAL in site settings to connect to server
 export const socketIO: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  "http://localhost:3001",
+  URL,
+  { autoConnect: false },
 );

@@ -5,6 +5,7 @@ import {
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
+import { usePacket } from "@/contexts/PacketContext";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -12,7 +13,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-
+  const { isFaking, setIsFaking } = usePacket();
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
@@ -48,7 +49,12 @@ function SettingsComponent() {
       }));
     }
   };
-
+  const handleFakeDataChange = (
+    event: React.MouseEvent<HTMLElement>,
+    inputMode: boolean,
+  ) => {
+    setIsFaking(inputMode);
+  };
   return (
     <div className="grid">
       <h2
@@ -63,7 +69,7 @@ function SettingsComponent() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform flex-col rounded-lg bg-white p-4 shadow-lg shadow-lg">
+        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col rounded-lg bg-white p-4 shadow-lg">
           <h5 className="text-text-gray dark:text-text-gray-dark mb-4 text-2xl">
             Settings
           </h5>
@@ -130,6 +136,28 @@ function SettingsComponent() {
                 </ToggleButton>
                 <ToggleButton value={CONNECTIONTYPES.RADIO} className="w-1/2">
                   Radio
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </div>
+          </div>
+
+          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+            <div className="col-span-1">
+              <label className="mr-2">Data: </label>
+            </div>
+            <div className="col-span-1">
+              <ToggleButtonGroup
+                value={isFaking}
+                exclusive
+                onChange={handleFakeDataChange}
+                aria-label="Connection"
+                className="w-full"
+              >
+                <ToggleButton value={true} className="w-1/2">
+                  Fake
+                </ToggleButton>
+                <ToggleButton value={false} className="w-1/2">
+                  Real
                 </ToggleButton>
               </ToggleButtonGroup>
             </div>

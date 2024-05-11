@@ -7,8 +7,8 @@ import {
 } from "react";
 
 import fakeData from "@/contexts/fakePacket.json";
-import useSocketIO from "@/hooks/useSocketIO";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
+import { socketIO } from "@/socket";
 import { faker } from "@faker-js/faker";
 
 interface PacketContextProps {
@@ -18,6 +18,8 @@ interface PacketContextProps {
 interface IPackContextReturn {
   currentPacket: ITelemetryData;
   setCurrentPacket: (packet: ITelemetryData) => void;
+  isFaking: boolean;
+  setIsFaking: (isFaking: boolean) => void;
 }
 
 const packetContext = createContext<IPackContextReturn>(
@@ -27,13 +29,13 @@ const packetContext = createContext<IPackContextReturn>(
 export function PacketContextProvider({
   children,
 }: PacketContextProps): JSX.Element {
-  const IS_FAKING = true;
+  const [isFaking, setIsFaking] = useState<boolean>(
+    process.env.PRODUCTION === "true" ? false : true,
+  );
   const [fakeCurrentPacket, setFakeCurrentPacket] = useState<ITelemetryData>(
     fakeData as ITelemetryData,
   );
 
-  const { data } = useSocketIO("packet");
-  const currentPacket = IS_FAKING ? fakeCurrentPacket : data;
   function generateFakeTelemetryData(): ITelemetryData {
     return {
       PacketTitle: faker.lorem.words(2),
@@ -313,18 +315,32 @@ export function PacketContextProvider({
     };
   }
   // Generate random data for local dev mode
+  function onPacket(packet: ITelemetryData) {
+    setFakeCurrentPacket(packet);
+  }
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFakeCurrentPacket(generateFakeTelemetryData());
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
+    if (isFaking) {
+      const interval = setInterval(() => {
+        setFakeCurrentPacket(generateFakeTelemetryData());
+      }, 2500);
+      return () => clearInterval(interval);
+    } else {
+      socketIO.connect();
+      socketIO.on("packet", onPacket);
+      return () => {
+        socketIO.disconnect();
+        socketIO.off("packet", onPacket);
+      };
+    }
+  }, [isFaking]);
 
   return (
     <packetContext.Provider
       value={{
-        currentPacket: currentPacket,
+        currentPacket: fakeCurrentPacket,
         setCurrentPacket: setFakeCurrentPacket,
+        isFaking: isFaking,
+        setIsFaking: setIsFaking,
       }}
     >
       {children}
