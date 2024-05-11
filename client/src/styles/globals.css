@@ -27,12 +27,9 @@ code {
 
 @keyframes driveOffScreen {
   0% {
-    transform: rotate(0deg); /* Starting state, not rotated */
-  }
-  25% {
-    transform: rotate(90deg); /* Rotate to 90 degrees early in the animation */
+    transform: rotate(90deg);
   }
   100% {
-    transform: rotate(90deg) translateY(-100vh); /* Maintain rotation and translate */
+    transform: rotate(90deg) translateY(-100vh);
   }
 }

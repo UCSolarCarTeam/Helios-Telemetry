@@ -33,6 +33,17 @@ const config: Config = {
       borderColor: {
         helios: "#B94A6C",
       },
+      // TO DO: replace the usage of keyframes from global.css with the following tailwind keyframes
+      keyframes: {
+        circle: {
+          "0%": { transform: "rotate(0deg) translateX(1.5in)" },
+          "100%": { transform: "rotate(360deg) translateX(1.5in)" },
+        },
+        driveOffScreen: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(90deg) translateY(-100vh)" },
+        },
+      },
     },
   },
   plugins: [],

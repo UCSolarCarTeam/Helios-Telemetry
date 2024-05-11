@@ -40,7 +40,9 @@ const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 function LoadingSpinner() {
   return (
     <div
-      className={"fixed flex h-screen w-screen items-center justify-center "}
+      className={
+        "bg-light fixed z-50 flex h-screen w-screen items-center justify-center"
+      }
     >
       <div className="absolute left-1/2 top-1/2">
         <Image
@@ -48,7 +50,9 @@ function LoadingSpinner() {
           alt="Loading..."
           width={20}
           height={20}
-          className="animate-spin"
+          style={{
+            animation: "circle 2s linear infinite",
+          }}
         />
       </div>
     </div>
@@ -81,7 +85,6 @@ export function AppStateContextProvider({ children }: Props) {
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
   });
-  const [loading, setLoading] = useState(true);
   const [driveOff, setDriveOff] = useState(false);
 
   const fetchSettingsFromLocalStorage = () => {
@@ -122,23 +125,13 @@ export function AppStateContextProvider({ children }: Props) {
   }, [currentAppState]);
 
   useEffect(() => {
-    const stopLoadingTimer = setTimeout(() => {
-      setLoading(false);
-    }, 5000);
-    if (!loading) {
+    if (!currentAppState.loading) {
       setDriveOff(true);
       setTimeout(() => {
         setDriveOff(false);
-      }, 100000);
+      }, 10000);
     }
-    return () => {
-      clearTimeout(stopLoadingTimer);
-    };
-  }, [loading]);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  }, [currentAppState.loading]);
 
   return (
     <appStateContext.Provider
@@ -148,6 +141,7 @@ export function AppStateContextProvider({ children }: Props) {
         toggleDarkMode,
       }}
     >
+      {currentAppState.loading && <LoadingSpinner />}
       {driveOff && <LoadingDriveOff />}
       {children}
     </appStateContext.Provider>
