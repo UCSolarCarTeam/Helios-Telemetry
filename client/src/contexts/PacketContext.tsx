@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 
+import { useAppState } from "@/contexts/AppStateContext";
 import fakeData from "@/contexts/fakePacket.json";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { socketIO } from "@/socket";
@@ -18,8 +19,6 @@ interface PacketContextProps {
 interface IPackContextReturn {
   currentPacket: ITelemetryData;
   setCurrentPacket: (packet: ITelemetryData) => void;
-  isFaking: boolean;
-  setIsFaking: (isFaking: boolean) => void;
 }
 
 const packetContext = createContext<IPackContextReturn>(
@@ -29,9 +28,8 @@ const packetContext = createContext<IPackContextReturn>(
 export function PacketContextProvider({
   children,
 }: PacketContextProps): JSX.Element {
-  const [isFaking, setIsFaking] = useState<boolean>(
-    process.env.PRODUCTION === "true" ? false : true,
-  );
+  const { currentAppState } = useAppState();
+  const isFaking = currentAppState.demoMode;
   const [fakeCurrentPacket, setFakeCurrentPacket] = useState<ITelemetryData>(
     fakeData as ITelemetryData,
   );
@@ -339,8 +337,6 @@ export function PacketContextProvider({
       value={{
         currentPacket: fakeCurrentPacket,
         setCurrentPacket: setFakeCurrentPacket,
-        isFaking: isFaking,
-        setIsFaking: setIsFaking,
       }}
     >
       {children}

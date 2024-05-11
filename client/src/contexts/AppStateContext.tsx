@@ -28,6 +28,7 @@ interface IAppState {
   darkMode: boolean;
   appUnits: APPUNITS;
   connectionTypes: CONNECTIONTYPES;
+  demoMode: boolean;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -44,6 +45,7 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
+    demoMode: process.env.NODE_ENV === "development" ? true : false,
   });
 
   const fetchSettingsFromLocalStorage = () => {

@@ -5,7 +5,6 @@ import {
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
-import { usePacket } from "@/contexts/PacketContext";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -13,7 +12,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-  const { isFaking, setIsFaking } = usePacket();
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
@@ -53,7 +51,12 @@ function SettingsComponent() {
     event: React.MouseEvent<HTMLElement>,
     inputMode: boolean,
   ) => {
-    setIsFaking(inputMode);
+    if (inputMode !== null) {
+      setCurrentAppState((prev) => ({
+        ...prev,
+        demoMode: inputMode,
+      }));
+    }
   };
   return (
     <div className="grid">
@@ -147,17 +150,17 @@ function SettingsComponent() {
             </div>
             <div className="col-span-1">
               <ToggleButtonGroup
-                value={isFaking}
+                value={currentAppState.demoMode}
                 exclusive
                 onChange={handleFakeDataChange}
                 aria-label="Connection"
                 className="w-full"
               >
                 <ToggleButton value={true} className="w-1/2">
-                  Fake
+                  Demo
                 </ToggleButton>
                 <ToggleButton value={false} className="w-1/2">
-                  Real
+                  Live
                 </ToggleButton>
               </ToggleButtonGroup>
             </div>
