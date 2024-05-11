@@ -64,7 +64,7 @@ function FieldUnitsHandler(
       break;
   }
 
-  return `${valueReturn} ${unitReturn}`;
+  return `${typeof valueReturn === "number" ? valueReturn.toFixed(0) : valueReturn} ${unitReturn}`;
 }
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
