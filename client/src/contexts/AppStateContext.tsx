@@ -40,27 +40,16 @@ const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 function LoadingSpinner() {
   return (
     <div
-      className={"fixed inset-0 flex items-center justify-center bg-gray-200"}
+      className={"fixed flex h-screen w-screen items-center justify-center "}
     >
-      <div style={{ width: "0.2in", height: "0.2in", position: "relative" }}>
-        <div
-          className="absolute left-1/2 top-1/2"
-          style={{
-            transform: "translate(-50%, -50%)",
-            width: "20px",
-            height: "20px",
-          }}
-        >
-          <Image
-            src="/assets/HeliosBirdseye.png"
-            alt="Loading..."
-            width={100}
-            height={100}
-            style={{
-              animation: "circle 2s linear infinite",
-            }}
-          />
-        </div>
+      <div className="absolute left-1/2 top-1/2">
+        <Image
+          src="/assets/HeliosBirdseye.png"
+          alt="Loading..."
+          width={20}
+          height={20}
+          className="animate-spin"
+        />
       </div>
     </div>
   );
@@ -68,30 +57,17 @@ function LoadingSpinner() {
 
 function LoadingDriveOff() {
   return (
-    <div
-      className={
-        "fixed inset-0 flex items-center justify-center bg-transparent"
-      }
-    >
-      <div style={{ width: "0.2in", height: "0.2in", position: "relative" }}>
-        <div
-          className="absolute left-1/2 top-1/2"
+    <div className={"fixed flex h-screen w-screen items-center justify-center"}>
+      <div className="absolute left-1/2 top-1/2">
+        <Image
+          src="/assets/HeliosBirdseye.png"
+          alt="Loading..."
+          width={20}
+          height={20}
           style={{
-            transform: "translate(-50%, -50%) rotate(90deg)",
-            width: "20px",
-            height: "20px",
+            animation: "driveOffScreen 1s forwards",
           }}
-        >
-          <Image
-            src="/assets/HeliosBirdseye.png"
-            alt="Loading..."
-            width={100}
-            height={100}
-            style={{
-              animation: "driveOffScreen 1s forwards",
-            }}
-          />
-        </div>
+        />
       </div>
     </div>
   );
@@ -149,14 +125,12 @@ export function AppStateContextProvider({ children }: Props) {
     const stopLoadingTimer = setTimeout(() => {
       setLoading(false);
     }, 5000);
-
     if (!loading) {
       setDriveOff(true);
       setTimeout(() => {
         setDriveOff(false);
-      }, 1000);
+      }, 100000);
     }
-
     return () => {
       clearTimeout(stopLoadingTimer);
     };
