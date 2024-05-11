@@ -7,10 +7,12 @@ import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <AppStateContextProvider>
-      <PacketContextProvider>
-        <Component {...pageProps} />
-      </PacketContextProvider>
-    </AppStateContextProvider>
+    <>
+      <AppStateContextProvider>
+        <PacketContextProvider>
+          <Component {...pageProps} />
+        </PacketContextProvider>
+      </AppStateContextProvider>
+    </>
   );
 }

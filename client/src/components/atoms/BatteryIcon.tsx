@@ -10,7 +10,7 @@ function BatteryIconComponent() {
     <div className="col-span-3 grid w-full pr-2">
       <div className="flex w-full flex-nowrap">
         <div className="relative flex h-full min-h-full w-[98%] items-stretch justify-center self-center rounded-lg bg-[#BAB8B8]">
-          <div className="absolute z-50 flex min-h-full items-center justify-center text-center text-lg text-[#FFFFFF]">
+          <div className="absolute z-40 flex min-h-full items-center justify-center text-center text-lg text-[#FFFFFF]">
             {batteryLevel.toString()}%
           </div>
           <div className="w-full">
