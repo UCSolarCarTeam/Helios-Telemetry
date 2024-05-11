@@ -37,12 +37,11 @@ interface IAppStateReturn {
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
-function LoadingSpinner() {
+function Loading() {
+  const { currentAppState } = useContext(appStateContext);
   return (
     <div
-      className={
-        "bg-light fixed z-50 flex h-screen w-screen items-center justify-center"
-      }
+      className={`fixed z-50 flex h-screen w-screen items-center justify-center ${currentAppState.loading ? "bg-light" : ""}`}
     >
       <div className="absolute left-1/2 top-1/2">
         <Image
@@ -51,25 +50,9 @@ function LoadingSpinner() {
           width={20}
           height={20}
           style={{
-            animation: "circle 2s linear infinite",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function LoadingDriveOff() {
-  return (
-    <div className={"fixed flex h-screen w-screen items-center justify-center"}>
-      <div className="absolute left-1/2 top-1/2">
-        <Image
-          src="/assets/HeliosBirdseye.png"
-          alt="Loading..."
-          width={20}
-          height={20}
-          style={{
-            animation: "driveOffScreen 1s forwards",
+            animation: currentAppState.loading
+              ? "circle 2s linear infinite"
+              : "driveOffScreen 1s forwards",
           }}
         />
       </div>
@@ -85,7 +68,7 @@ export function AppStateContextProvider({ children }: Props) {
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
   });
-  const [driveOff, setDriveOff] = useState(false);
+  const [driveOff, setDriveOff] = useState(true);
 
   const fetchSettingsFromLocalStorage = () => {
     const savedSettings = localStorage.getItem("settings");
@@ -126,7 +109,6 @@ export function AppStateContextProvider({ children }: Props) {
 
   useEffect(() => {
     if (!currentAppState.loading) {
-      setDriveOff(true);
       setTimeout(() => {
         setDriveOff(false);
       }, 10000);
@@ -141,8 +123,7 @@ export function AppStateContextProvider({ children }: Props) {
         toggleDarkMode,
       }}
     >
-      {currentAppState.loading && <LoadingSpinner />}
-      {driveOff && <LoadingDriveOff />}
+      {driveOff && <Loading />}
       {children}
     </appStateContext.Provider>
   );
