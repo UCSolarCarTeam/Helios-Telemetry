@@ -11,7 +11,7 @@ interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
 }
 
-// set undefined to ServerURL once deployed.
+// TODO:set undefined to ServerURL once deployed.
 const URL =
   process.env.NODE_ENV === "production" ? "undefined" : "http://localhost:3001";
 
