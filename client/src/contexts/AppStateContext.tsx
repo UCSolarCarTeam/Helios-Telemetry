@@ -111,7 +111,7 @@ export function AppStateContextProvider({ children }: Props) {
     if (!currentAppState.loading) {
       setTimeout(() => {
         setAnimateLoading(false);
-      }, 10000);
+      }, 1000);
     }
   }, [currentAppState.loading]);
 
