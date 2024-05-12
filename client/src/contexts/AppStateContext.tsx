@@ -45,7 +45,7 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
-    demoMode: process.env.NODE_ENV === "development" ? true : false,
+    demoMode: process.env.NODE_ENV === "production" ? false : true,
   });
 
   const fetchSettingsFromLocalStorage = () => {
