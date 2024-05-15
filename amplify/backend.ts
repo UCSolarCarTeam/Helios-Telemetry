@@ -22,7 +22,8 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
   TelemetryBackendStack,
   "TelemetryBackendCodeBuildProject",
   {
-    buildSpec: codebuild.BuildSpec.fromSourceFilename("amplify/buildspec.yml"),
+    buildSpec: codebuild.BuildSpec.fromObjectToYaml({}),
+    //codebuild.BuildSpec.fromSourceFilename("amplify/buildspec.yml"),
     source: codebuild.Source.gitHub({
       owner: "UCSolarCarTeam",
       repo: "Helios-Telemetry",
@@ -33,6 +34,7 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
     environment: {
       buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
       privileged: true,
+      computeType: codebuild.ComputeType.X_LARGE,
       environmentVariables: {
         AWS_DEFAULT_REGION: {
           value: cdk.Stack.of(TelemetryBackendStack).region,

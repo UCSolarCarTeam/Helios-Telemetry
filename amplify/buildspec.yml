@@ -14,10 +14,10 @@ phases:
     commands:
       ### Building the image
       - echo Build started on `date`
-      - docker build .
+      - docker build -t $IMAGE_REPO_URI:$IMAGE_TAG .
       - echo Build completed on `date`
   post_build:
     commands:
       ### Publish the docker image to ECR
       - echo Pushing the Docker image...
-      - docker push 602361116849.dkr.ecr.ca-central-1.amazonaws.com/amplify-heliostelemetry-ideen-sandbox-b3c638db35-telemetrybackend00f6569c-1jtacvwuc0nq2-telemetrybackendimagerepository54de1605-xvsgq7iiqx7o:latest
+      - docker push $IMAGE_REPO_URI:$IMAGE_TAG
