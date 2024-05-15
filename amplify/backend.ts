@@ -18,24 +18,18 @@ const TelemetryBackendImageRepository = new ecr.Repository(
   "TelemetryBackendImageRepository",
 );
 
-const a = codebuild.Source.gitHub({
-  owner: "UCSolarCarTeam",
-  repo: "Helios-Telemetry",
-  branchOrRef: "main",
-  webhook: true,
-});
-
 const TelemetryBackendCodeBuildProject = new codebuild.Project(
   TelemetryBackendStack,
-  "TelemetryBackendCodeBuild",
+  "TelemetryBackendCodeBuildProject",
   {
-    buildSpec: codebuild.BuildSpec.fromSourceFilename("buildspec.yml"),
+    buildSpec: codebuild.BuildSpec.fromSourceFilename("amplify/buildspec.yml"),
     source: codebuild.Source.gitHub({
       owner: "UCSolarCarTeam",
       repo: "Helios-Telemetry",
       branchOrRef: "main",
       webhook: true,
     }),
+
     environment: {
       buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
       privileged: true,
@@ -59,6 +53,8 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
     },
   },
 );
+
+TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 
 const TelemetrySourceOutput = new codepipeline.Artifact(
   "TelemetrySourceOutput",
@@ -84,46 +80,70 @@ const TelemetryBuildAction = new codepipeline_actions.CodeBuildAction({
   outputs: [TelemetryBuildOutput],
 });
 
-const TelemetryDeployAction = new codepipeline_actions.EcsDeployAction({
-  actionName: "TelemetryDeployAction",
-  service: new ecs.Ec2Service(
-    TelemetryBackendStack,
-    "TelemetryBackendService",
-    {
-      cluster: new ecs.Cluster(
-        TelemetryBackendStack,
-        "TelemetryBackendCluster",
-      ),
-      taskDefinition: new ecs.Ec2TaskDefinition(
-        TelemetryBackendStack,
-        "TelemetryBackendTaskDefinition",
-      ),
-      desiredCount: 1,
-    },
-  ),
-  input: TelemetryBuildOutput,
+const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
+  TelemetryBackendStack,
+  "TelemetryECSTaskDefintion",
+);
+TelemetryECSTaskDefintion.addContainer("TheContainer", {
+  image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
+  memoryLimitMiB: 256,
 });
 
-const TelemetryBackendPipeline = new codepipeline.Pipeline(
+const TelemetryECSCluster = new ecs.Cluster(
   TelemetryBackendStack,
-  "TelemetryBackendPipeline",
-  {
-    restartExecutionOnUpdate: true,
-    stages: [
-      {
-        stageName: "Source",
-        actions: [TelemetrySourceAction],
-      },
-      {
-        stageName: "Build",
-        actions: [TelemetryBuildAction],
-      },
-      {
-        stageName: "Deploy",
-        actions: [TelemetryDeployAction],
-      },
-    ],
-  },
+  "TelemetryBackendCluster",
 );
 
-// const TelemetryBackendEC2 = new ec2.Instance(TelemetryBackendStack, "TelemetryBackendEC2", {instanceType: ec2.InstanceType.})
+TelemetryECSCluster.addCapacity("DefaultAutoScalingGroupCapacity", {
+  /**
+   * ******EXTREME CAUTION:*******
+   *
+   * ENSURE THE INSTANCE TYPE BELOW IS SET CAREFULLY.
+   * THE SPECIFIED RESOURCE WILL BE DEPLOYED AUTOMATICALLY AND CHARGED $$$ :(
+   */
+  instanceType: ec2.InstanceType.of(
+    ec2.InstanceClass.T2,
+    ec2.InstanceSize.MICRO,
+  ),
+  desiredCapacity: 1,
+  maxCapacity: 1,
+});
+
+// const TelemetryDeployAction = new codepipeline_actions.EcsDeployAction({
+//   actionName: "TelemetryDeployAction",
+//   service: new ecs.Ec2Service(
+//     TelemetryBackendStack,
+//     "TelemetryBackendService",
+//     {
+//       cluster: TelemetryECSCluster,
+//       taskDefinition: TelemetryECSTaskDefintion,
+//       desiredCount: 1,
+//       // assignPublicIp: true,
+//     },
+//   ),
+//   input: TelemetryBuildOutput,
+// });
+
+// const TelemetryBackendPipeline = new codepipeline.Pipeline(
+//   TelemetryBackendStack,
+//   "TelemetryBackendPipeline",
+//   {
+//     restartExecutionOnUpdate: true,
+//     stages: [
+//       {
+//         stageName: "Source",
+//         actions: [TelemetrySourceAction],
+//       },
+//       {
+//         stageName: "Build",
+//         actions: [TelemetryBuildAction],
+//       },
+//       {
+//         stageName: "Deploy",
+//         actions: [TelemetryDeployAction],
+//       },
+//     ],
+//   },
+// );
+
+// // const TelemetryBackendEC2 = new ec2.Instance(TelemetryBackendStack, "TelemetryBackendEC2", {instanceType: ec2.InstanceType.})
