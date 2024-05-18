@@ -4,7 +4,7 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("server.ts");
 const expressPort = process.env.SERVER_PORT;
-const mqttPort = process.env.MQTT_PORT || 1883;
+const mqttPort = process.env.MQTT_PORT;
 
 expressServer
   .listen(expressPort, () => {
