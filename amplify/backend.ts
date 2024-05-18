@@ -6,6 +6,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as imagebuilder from "aws-cdk-lib/aws-imagebuilder";
+import * as route53 from "aws-cdk-lib/aws-route53";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -29,12 +30,18 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
       repo: "Helios-Telemetry",
       branchOrRef: "main",
       webhook: true,
+      webhookFilters: [
+        codebuild.FilterGroup.inEventOf(
+          codebuild.EventAction.PULL_REQUEST_MERGED,
+          codebuild.EventAction.PUSH,
+        ).andBranchIs("main"),
+      ],
     }),
 
     environment: {
       buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
       privileged: true,
-      computeType: codebuild.ComputeType.X_LARGE,
+      computeType: codebuild.ComputeType.MEDIUM,
       environmentVariables: {
         AWS_DEFAULT_REGION: {
           value: cdk.Stack.of(TelemetryBackendStack).region,
@@ -58,29 +65,29 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 
-const TelemetrySourceOutput = new codepipeline.Artifact(
-  "TelemetrySourceOutput",
-);
+// const TelemetrySourceOutput = new codepipeline.Artifact(
+//   "TelemetrySourceOutput",
+// );
 
-const TelemetryBuildOutput = new codepipeline.Artifact("TelemetryBuildOutput");
+// const TelemetryBuildOutput = new codepipeline.Artifact("TelemetryBuildOutput");
 
-const TelemetrySourceAction = new codepipeline_actions.GitHubSourceAction({
-  actionName: "TelemetrySourceAction",
-  owner: "UCSolarCarTeam",
-  repo: "Helios-Telemetry",
-  branch: "main",
-  oauthToken: cdk.SecretValue.secretsManager("HeliosTelemetrySecret").toJSON()[
-    "HeliosTelemetryOAuth"
-  ],
-  output: TelemetrySourceOutput,
-});
+// const TelemetrySourceAction = new codepipeline_actions.GitHubSourceAction({
+//   actionName: "TelemetrySourceAction",
+//   owner: "UCSolarCarTeam",
+//   repo: "Helios-Telemetry",
+//   branch: "main",
+//   oauthToken: cdk.SecretValue.secretsManager("HeliosTelemetrySecret").toJSON()[
+//     "HeliosTelemetryOAuth"
+//   ],
+//   output: TelemetrySourceOutput,
+// });
 
-const TelemetryBuildAction = new codepipeline_actions.CodeBuildAction({
-  actionName: "TelemetryBuildAction",
-  project: TelemetryBackendCodeBuildProject,
-  input: TelemetrySourceOutput,
-  outputs: [TelemetryBuildOutput],
-});
+// const TelemetryBuildAction = new codepipeline_actions.CodeBuildAction({
+//   actionName: "TelemetryBuildAction",
+//   project: TelemetryBackendCodeBuildProject,
+//   input: TelemetrySourceOutput,
+//   outputs: [TelemetryBuildOutput],
+// });
 
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
@@ -91,61 +98,62 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
   memoryLimitMiB: 256,
 });
 
+const TelemetryBackendVPC = new ec2.Vpc(
+  TelemetryBackendStack,
+  "TelemetryBackendVPC",
+  {
+    maxAzs: 1,
+    natGateways: 0,
+  },
+);
+
 const TelemetryECSCluster = new ecs.Cluster(
   TelemetryBackendStack,
   "TelemetryBackendCluster",
+  {
+    vpc: TelemetryBackendVPC,
+    capacity: {
+      /**
+       * ******EXTREME CAUTION:*******
+       *
+       * ENSURE THE INSTANCE TYPE BELOW IS SET CAREFULLY.
+       * THE SPECIFIED RESOURCE WILL BE DEPLOYED AUTOMATICALLY AND CHARGED $$$ :(
+       */
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T2,
+        ec2.InstanceSize.MICRO,
+      ),
+
+      desiredCapacity: 1,
+      maxCapacity: 1,
+      minCapacity: 1,
+      allowAllOutbound: true,
+      associatePublicIpAddress: true,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PUBLIC,
+      },
+    },
+  },
 );
 
-TelemetryECSCluster.addCapacity("DefaultAutoScalingGroupCapacity", {
-  /**
-   * ******EXTREME CAUTION:*******
-   *
-   * ENSURE THE INSTANCE TYPE BELOW IS SET CAREFULLY.
-   * THE SPECIFIED RESOURCE WILL BE DEPLOYED AUTOMATICALLY AND CHARGED $$$ :(
-   */
-  instanceType: ec2.InstanceType.of(
-    ec2.InstanceClass.T2,
-    ec2.InstanceSize.MICRO,
-  ),
-  desiredCapacity: 1,
-  maxCapacity: 1,
-});
+// const SolarCarHostedZone = route53.HostedZone.fromLookup(
+//   TelemetryBackendStack,
+//   "TelemetryBackendHostedZone",
+//   {
+//     domainName: "calgarysolarcar.ca",
+//   },
+// )
 
-// const TelemetryDeployAction = new codepipeline_actions.EcsDeployAction({
-//   actionName: "TelemetryDeployAction",
-//   service: new ecs.Ec2Service(
-//     TelemetryBackendStack,
-//     "TelemetryBackendService",
-//     {
-//       cluster: TelemetryECSCluster,
-//       taskDefinition: TelemetryECSTaskDefintion,
-//       desiredCount: 1,
-//       // assignPublicIp: true,
-//     },
-//   ),
-//   input: TelemetryBuildOutput,
+// const elasticIp = new ec2.CfnEIP(TelemetryBackendStack, 'EIP', {
+//   domain: 'vpc',
+//   instanceId: instance.instanceId,
 // });
 
-// const TelemetryBackendPipeline = new codepipeline.Pipeline(
-//   TelemetryBackendStack,
-//   "TelemetryBackendPipeline",
-//   {
-//     restartExecutionOnUpdate: true,
-//     stages: [
-//       {
-//         stageName: "Source",
-//         actions: [TelemetrySourceAction],
-//       },
-//       {
-//         stageName: "Build",
-//         actions: [TelemetryBuildAction],
-//       },
-//       {
-//         stageName: "Deploy",
-//         actions: [TelemetryDeployAction],
-//       },
-//     ],
-//   },
-// );
+// new route53.ARecord(TelemetryBackendStack, "TelemetryBackendARecord", {
+//   zone: SolarCarHostedZone,
+//   deleteExisting: true,
+//   recordName: "aedes",
+//   target: route53.RecordTarget.fromIpAddresses("")
+// });
 
 // // const TelemetryBackendEC2 = new ec2.Instance(TelemetryBackendStack, "TelemetryBackendEC2", {instanceType: ec2.InstanceType.})
