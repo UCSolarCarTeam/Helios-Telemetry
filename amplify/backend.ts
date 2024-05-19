@@ -36,18 +36,11 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
           codebuild.EventAction.PUSH,
         ).andBranchIs("main"),
       ],
-      webhookFilters: [
-        codebuild.FilterGroup.inEventOf(
-          codebuild.EventAction.PULL_REQUEST_MERGED,
-          codebuild.EventAction.PUSH,
-        ).andBranchIs("main"),
-      ],
     }),
 
     environment: {
       buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
       privileged: true,
-      computeType: codebuild.ComputeType.MEDIUM,
       computeType: codebuild.ComputeType.MEDIUM,
       environmentVariables: {
         AWS_DEFAULT_REGION: {
