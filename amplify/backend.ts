@@ -7,7 +7,6 @@ import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as imagebuilder from "aws-cdk-lib/aws-imagebuilder";
 import * as route53 from "aws-cdk-lib/aws-route53";
-import * as route53 from "aws-cdk-lib/aws-route53";
 
 import { defineBackend } from "@aws-amplify/backend";
 
