@@ -145,14 +145,14 @@ const TelemetryECSService = new ecs.Ec2Service(
 // TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
-// const SolarCarHostedZone = route53.HostedZone.fromLookup(
-//   TelemetryBackendStack,
-//   "TelemetryBackendHostedZone",
-//   "TelemetryBackendHostedZone",
-//   {
-//     domainName: "calgarysolarcar.ca",
-//   },
-// )
+const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
+  TelemetryBackendStack,
+  "TelemetryBackendHostedZone",
+  {
+    zoneName: "calgarysolarcar.ca",
+    hostedZoneId: "Z00168143RCUWIOU5XRGV",
+  },
+);
 
 // const elasticIp = new ec2.CfnEIP(TelemetryBackendStack, 'EIP', {
 //   domain: 'vpc',
@@ -178,7 +178,9 @@ const TelemetryECSService = new ecs.Ec2Service(
 //   zone: SolarCarHostedZone,
 //   deleteExisting: true,
 //   recordName: "aedes",
-//   target: route53.RecordTarget.fromIpAddresses("")
+//   target: route53.RecordTarget.fromIpAddresses(
+//     TelemetryECSCluster.[0].ipv4CidrBlock,
+//   ),
 // });
 
 // // const TelemetryBackendEC2 = new ec2.Instance(TelemetryBackendStack, "TelemetryBackendEC2", {instanceType: ec2.InstanceType.})
