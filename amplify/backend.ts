@@ -185,7 +185,9 @@ const TelemetryECSService = new ecs.Ec2Service(
 //   zone: SolarCarHostedZone,
 //   deleteExisting: true,
 //   recordName: "aedes",
-//   target: route53.RecordTarget.fromIpAddresses("")
+//   target: route53.RecordTarget.fromIpAddresses(
+//     TelemetryECSCluster.[0].ipv4CidrBlock,
+//   ),
 // });
 
 // // const TelemetryBackendEC2 = new ec2.Instance(TelemetryBackendStack, "TelemetryBackendEC2", {instanceType: ec2.InstanceType.})
