@@ -38,7 +38,7 @@ function SettingsComponent() {
 
   const handleConnectionChange = (
     event: React.MouseEvent<HTMLElement>,
-    inputMode: (typeof currentAppState)["connectionTypes"],
+    inputMode: CONNECTIONTYPES,
   ) => {
     if (inputMode !== null) {
       setCurrentAppState((prev) => ({
@@ -47,17 +47,17 @@ function SettingsComponent() {
       }));
     }
   };
-  const handleFakeDataChange = (
-    event: React.MouseEvent<HTMLElement>,
-    inputMode: boolean,
-  ) => {
-    if (inputMode !== null) {
-      setCurrentAppState((prev) => ({
-        ...prev,
-        demoMode: inputMode,
-      }));
-    }
-  };
+  // const handleFakeDataChange = (
+  //   event: React.MouseEvent<HTMLElement>,
+  //   inputMode: boolean,
+  // ) => {
+  //   if (inputMode !== null) {
+  //     setCurrentAppState((prev) => ({
+  //       ...prev,
+  //       demoMode: inputMode,
+  //     }));
+  //   }
+  // };
   return (
     <div className="grid">
       <h2
@@ -134,34 +134,17 @@ function SettingsComponent() {
                 aria-label="Connection"
                 className="w-full"
               >
-                <ToggleButton value={CONNECTIONTYPES.NETWORK} className="w-1/2">
-                  Network
-                </ToggleButton>
-                <ToggleButton value={CONNECTIONTYPES.RADIO} className="w-1/2">
-                  Radio
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </div>
-          </div>
-
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
-            <div className="col-span-1">
-              <label className="mr-2">Data: </label>
-            </div>
-            <div className="col-span-1">
-              <ToggleButtonGroup
-                value={currentAppState.demoMode}
-                exclusive
-                onChange={handleFakeDataChange}
-                aria-label="Connection"
-                className="w-full"
-              >
-                <ToggleButton value={true} className="w-1/2">
-                  Demo
-                </ToggleButton>
-                <ToggleButton value={false} className="w-1/2">
-                  Live
-                </ToggleButton>
+                {(
+                  Object.keys(CONNECTIONTYPES) as Array<
+                    keyof typeof CONNECTIONTYPES
+                  >
+                ).map((key) => {
+                  return (
+                    <ToggleButton className="w-1/2" key={key} value={key}>
+                      {key}
+                    </ToggleButton>
+                  );
+                })}
               </ToggleButtonGroup>
             </div>
           </div>

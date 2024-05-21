@@ -13,6 +13,7 @@ interface Props {
 }
 
 export enum CONNECTIONTYPES {
+  DEMO = "Demo",
   NETWORK = "Network",
   RADIO = "Radio",
 }
@@ -28,7 +29,6 @@ interface IAppState {
   darkMode: boolean;
   appUnits: APPUNITS;
   connectionTypes: CONNECTIONTYPES;
-  demoMode: boolean;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -45,7 +45,6 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
-    demoMode: process.env.NODE_ENV === "production" ? false : true,
   });
 
   const fetchSettingsFromLocalStorage = () => {

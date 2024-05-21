@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
+import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import fakeData from "@/contexts/fakePacket.json";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { socketIO } from "@/socket";
@@ -29,8 +29,8 @@ export function PacketContextProvider({
   children,
 }: PacketContextProps): JSX.Element {
   const { currentAppState } = useAppState();
-  const isFaking = currentAppState.demoMode;
-  const [fakeCurrentPacket, setFakeCurrentPacket] = useState<ITelemetryData>(
+  const isFaking = currentAppState.connectionTypes === CONNECTIONTYPES.DEMO;
+  const [currentPacket, setCurrentPacket] = useState<ITelemetryData>(
     fakeData as ITelemetryData,
   );
 
@@ -314,12 +314,12 @@ export function PacketContextProvider({
   }
   // Generate random data for local dev mode
   function onPacket(packet: ITelemetryData) {
-    setFakeCurrentPacket(packet);
+    setCurrentPacket(packet);
   }
   useEffect(() => {
     if (isFaking) {
       const interval = setInterval(() => {
-        setFakeCurrentPacket(generateFakeTelemetryData());
+        setCurrentPacket(generateFakeTelemetryData());
       }, 2500);
       return () => clearInterval(interval);
     } else {
@@ -335,8 +335,8 @@ export function PacketContextProvider({
   return (
     <packetContext.Provider
       value={{
-        currentPacket: fakeCurrentPacket,
-        setCurrentPacket: setFakeCurrentPacket,
+        currentPacket: currentPacket,
+        setCurrentPacket: setCurrentPacket,
       }}
     >
       {children}
