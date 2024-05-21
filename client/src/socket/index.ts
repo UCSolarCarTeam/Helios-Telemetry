@@ -10,7 +10,9 @@ interface ServerToClientEvents {
 
 // TODO:set undefined to ServerURL once deployed.
 const URL =
-  process.env.NODE_ENV === "production" ? "undefined" : "http://localhost:3001";
+  process.env.NODE_ENV === "production"
+    ? "http://35.182.186.247:3001/health"
+    : "http://localhost:3001";
 
 // Defaults to using client fakerJS, change Data to REAL in site settings to connect to server
 export const socketIO: Socket<ServerToClientEvents, ClientToServerEvents> = io(

@@ -47,17 +47,6 @@ function SettingsComponent() {
       }));
     }
   };
-  // const handleFakeDataChange = (
-  //   event: React.MouseEvent<HTMLElement>,
-  //   inputMode: boolean,
-  // ) => {
-  //   if (inputMode !== null) {
-  //     setCurrentAppState((prev) => ({
-  //       ...prev,
-  //       demoMode: inputMode,
-  //     }));
-  //   }
-  // };
   return (
     <div className="grid">
       <h2
@@ -134,17 +123,15 @@ function SettingsComponent() {
                 aria-label="Connection"
                 className="w-full"
               >
-                {(
-                  Object.keys(CONNECTIONTYPES) as Array<
-                    keyof typeof CONNECTIONTYPES
-                  >
-                ).map((key) => {
-                  return (
-                    <ToggleButton className="w-1/2" key={key} value={key}>
-                      {key}
-                    </ToggleButton>
-                  );
-                })}
+                {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
+                  (key) => {
+                    return (
+                      <ToggleButton className="w-1/2" key={key} value={key}>
+                        {key}
+                      </ToggleButton>
+                    );
+                  },
+                )}
               </ToggleButtonGroup>
             </div>
           </div>

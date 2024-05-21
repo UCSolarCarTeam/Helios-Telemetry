@@ -13,9 +13,9 @@ interface Props {
 }
 
 export enum CONNECTIONTYPES {
-  DEMO = "Demo",
-  NETWORK = "Network",
-  RADIO = "Radio",
+  DEMO = "DEMO",
+  NETWORK = "NETWORK",
+  RADIO = "RADIO",
 }
 
 export enum APPUNITS {
