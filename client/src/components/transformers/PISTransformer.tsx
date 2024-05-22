@@ -1,15 +1,80 @@
+import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import React, { useRef } from "react";
 
 import AnchorElTooltips, {
   type AnchorElTooltipsRefHandle,
 } from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
 import type I_PIS from "@/objects/PIS/PIS.interface";
-import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
+import {
+  type I_PISField,
+  type I_PISFieldData,
+  UnitType,
+} from "@/objects/PIS/PIS.interface";
 
 function RangeCheckedFieldData(props: {
   fieldData: I_PISFieldData;
-}): JSX.Element {
+};
+
+function FieldUnitsHandler(
+  unit: UnitType | undefined,
+  value: string | number | boolean,
+) {
+  const { currentAppState } = useAppState();
+
+  let unitReturn: string | undefined;
+  let valueReturn: string | number | boolean;
+  unitReturn = unit;
+  valueReturn = value;
+
+  switch (unit) {
+    case UnitType.TEMP:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "°F";
+        valueReturn = (value * 9) / 5 + 32;
+      } else {
+        unitReturn = "°C";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.SPEED:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mph";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km/h";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.DISTANCE:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mi";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km";
+        valueReturn = value;
+      }
+      break;
+    case undefined:
+      unitReturn = "";
+      valueReturn = value;
+      break;
+  }
+
+  return `${typeof valueReturn === "number" ? valueReturn.toFixed(0) : valueReturn} ${unitReturn}`;
+}
+
+function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
+
   const inRange =
     // If value is of type string range is true
     typeof value === "string"
@@ -27,12 +92,7 @@ function RangeCheckedFieldData(props: {
   const color = inRange ? "text-green" : "text-red-500";
   const displayValue = typeof value === "boolean" ? (value ? "T" : "F") : value;
 
-  return (
-    <span className={color}>
-      {displayValue}
-      {unit}
-    </span>
-  );
+  return <span className={color}>{FieldUnitsHandler(unit, displayValue)}</span>;
 }
 
 type FormatStringProps = {
