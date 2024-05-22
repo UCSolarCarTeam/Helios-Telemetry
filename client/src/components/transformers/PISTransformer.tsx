@@ -1,9 +1,9 @@
-import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import React, { useRef } from "react";
 
 import AnchorElTooltips, {
   type AnchorElTooltipsRefHandle,
 } from "@/components/molecules/GraphMolecules/FieldGraphTooltip";
+import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import {
   type I_PISField,
@@ -11,10 +11,9 @@ import {
   UnitType,
 } from "@/objects/PIS/PIS.interface";
 
-function RangeCheckedFieldData(props: {
+type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
 };
-
 function FieldUnitsHandler(
   unit: UnitType | undefined,
   value: string | number | boolean,
