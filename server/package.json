@@ -7,6 +7,7 @@
     "build": "npm-run-all clean tsc",
     "dev:start": "npm-run-all build start",
     "dev": "nodemon --watch src -e ts,ejs --exec \"npm run dev:start\"",
-    "tsc": "tsc -p ./tsconfig.json"
+    "tsc": "tsc -p ./tsconfig.json",
+    "build:mqttClient": "npx tsc src/client1.ts"
   }
 }

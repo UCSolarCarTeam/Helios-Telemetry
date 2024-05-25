@@ -1,5 +1,5 @@
+import type { MqttClient } from "mqtt";
 import * as mqtt from "mqtt";
-import { MqttClient } from "mqtt";
 
 // Helper function to create a client and setup listeners
 function createClient(clientId: string): MqttClient {
@@ -22,9 +22,21 @@ function createClient(clientId: string): MqttClient {
   });
 
   client.on("message", (topic: string, message: Buffer) => {
-    console.log(
-      `${clientId} received message on ${topic}: ${message.toString()}`,
-    );
+    try {
+      const messageData = JSON.parse(message.toString());
+      if (messageData.clientId !== clientId) {
+        console.log(
+          `${messageData.clientId} sent message on ${topic}: ${messageData.content}`,
+        );
+        //actions clients should do after receiving message
+      }
+    } catch (error) {
+      console.error(
+        "Failed to parse message as JSON:",
+        message.toString(),
+        error,
+      );
+    }
   });
 
   client.on("error", (error: Error) => {

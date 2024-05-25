@@ -1,14 +1,14 @@
 import createClient from "./mqttClient";
 
 // Creating multiple clients
-const client1 = createClient("Client1");
+const client2 = createClient("Client2");
 
 const message = JSON.stringify({
-  clientId: "Client1",
-  content: "Hello from Client1",
+  clientId: "Client2",
+  content: "Hello Client1, this is Client2",
 });
 
 // Simulate responses from other clients
 setTimeout(() => {
-  client1.publish("chat/topic", message);
+  client2.publish("chat/topic", message);
 }, 5000);
