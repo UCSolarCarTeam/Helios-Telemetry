@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import express from "express";
 import http from "http";
 import "module-alias";
+import path from "path";
+import SQLite from "./controllers/SQLite";
 
 import router from "@/routes/health.route";
 import {
@@ -43,6 +45,13 @@ const onSignal = async () => {
   } catch (err) {
     logger.error("Error disconnecting the kafka consumer", err as Error);
   }
+};
+
+const testDB = async () => {
+  const testDBpath = path.join(__dirname, "..", "..", "test.db");
+  const db = new SQLite(testDBpath);
+  db.insertPacketData(, );
+  
 };
 
 // eslint-disable-next-line @typescript-eslint/require-await
