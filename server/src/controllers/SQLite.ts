@@ -13,6 +13,19 @@ class SQLite {
         console.log("Connected to the SQLite database.");
       }
     }) as sqlite3.Database;
+
+    this.db
+      .prepare(
+        "CREATE TABLE IF NOT EXISTS packetData (id INTEGER PRIMARY KEY, date TEXT, data TEXT)",
+      )
+      .run()
+      .finalize();
+    this.db
+      .prepare(
+        "CREATE TABLE IF NOT EXISTS lapData (id INTEGER PRIMARY KEY, date TEXT, data TEXT)",
+      )
+      .run()
+      .finalize();
   }
 
   //Helper function to run a query
@@ -43,7 +56,7 @@ class SQLite {
           const telemetryData: ITelemetryData[] = rows.map((row: any) => ({
             ...row,
             data: JSON.parse(row.data),
-          })) as ITelemetryData[];
+          }));
           resolve(telemetryData);
         }
       });
@@ -57,7 +70,8 @@ class SQLite {
     return this.runQuery(sql, [packet.TimeStamp, data]);
   }
 
-  public insertLapData(packet: ITelemetryData): Promise<{ id: number }> {
+  //TODO: change to lap data type.
+  public insertLapData(packet: any): Promise<{ id: number }> {
     const sql = "INSERT INTO lapData (date, data) VALUES (?, ?)";
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
     return this.runQuery(sql, [packet.TimeStamp, data]);
@@ -68,7 +82,8 @@ class SQLite {
     return this.getAllRows(sql);
   }
 
-  public getLapData(): Promise<ITelemetryData[]> {
+  //TODO: change to lap data type.
+  public getLapData(): Promise<any[]> {
     const sql = "SELECT * FROM lapData";
     return this.getAllRows(sql);
   }
@@ -78,7 +93,7 @@ class SQLite {
     return new Promise((resolve, reject) => {
       this.db.close((err) => {
         if (err) {
-          reject(new Error(`Error closing the database: ${err.message}`));
+          reject(new Error(`Error closing the database: ${err}`));
         } else {
           resolve();
         }
