@@ -3,12 +3,15 @@ import * as mqtt from "mqtt";
 
 // Helper function to create a client and setup listeners
 function createClient(clientId: string): MqttClient {
-  const client: MqttClient = mqtt.connect(
-    `mqtt://localhost:${process.env.MQTT_PORT || 1883}`,
-    {
-      clientId: clientId,
-    },
-  );
+  const options = {
+    url: `mqtt://localhost:${process.env.MQTT_PORT || 1883}`,
+    clientId: clientId,
+    username: "expectedUsername",
+    password: "expectedPassword",
+    clean: true,
+  };
+
+  const client = mqtt.connect(options);
 
   client.on("connect", () => {
     console.log(`${clientId} connected to MQTT broker`);
