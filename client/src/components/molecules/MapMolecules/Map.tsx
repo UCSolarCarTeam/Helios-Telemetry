@@ -12,10 +12,12 @@ type ILocation = {
 type IMapProps = {
   carLocation: ILocation;
   mapLocation: ILocation;
+  lapLocation: ILocation;
 };
 
 function Map(props: IMapProps): JSX.Element {
-  const { carLocation, mapLocation } = props;
+  const { carLocation, mapLocation, lapLocation } = props;
+
   if (!process.env.NEXT_PUBLIC_MAPSAPIKEY) return <></>;
   return (
     <ReactMap
@@ -51,10 +53,12 @@ function Map(props: IMapProps): JSX.Element {
         />
       </Marker>
       <Marker
-        longitude={carLocation.lng + 0.001}
-        latitude={carLocation.lat + 0.005}
+        longitude={lapLocation.lng}
+        latitude={lapLocation.lat}
         anchor={"center"}
         style={{ color: "white" }}
+        draggable={false}
+        pitchAlignment="auto"
       >
         <SportsScoreIcon />
       </Marker>

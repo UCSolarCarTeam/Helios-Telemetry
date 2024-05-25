@@ -8,6 +8,10 @@ function MapContainer(): JSX.Element {
     lat: 38.9277572,
     lng: -95.6777937,
   });
+  const [lapLocation, setLapLocation] = useState({
+    lat: carLocation.lat + 0.01,
+    lng: carLocation.lng,
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -19,7 +23,11 @@ function MapContainer(): JSX.Element {
   return (
     <div className="size-full">
       <div className="grid h-[90%]">
-        <Map carLocation={carLocation} mapLocation={carLocation} />
+        <Map
+          carLocation={carLocation}
+          mapLocation={carLocation}
+          lapLocation={lapLocation}
+        />
       </div>
       <div className="grid h-[10%]">
         <MapText />
