@@ -14,7 +14,7 @@ const fakeData = {
 function BottomInformationContainer(props: any) {
   return (
     <div className="align-middle">
-      <div className="flex h-full flex-row flex-wrap justify-center gap-4 pt-2 text-center text-base 2xl:text-xl">
+      <div className="flex h-full flex-row flex-wrap justify-between pt-4 text-center text-base 2xl:text-xl">
         <div>
           <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE </div>
           <div className="text-helios">{fakeData["Motor Temp"]}</div>
