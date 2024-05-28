@@ -19,8 +19,8 @@ class MqttError extends Error {
 }
 // Authentication function
 aedes.authenticate = function (client, username, password, callback) {
-  const validUsername = "expectedUsername"; // Replace with your valid username
-  const validPassword = "expectedPassword"; // Replace with your valid password
+  const validUsername = "urMom"; // Replace with your valid username
+  const validPassword = "hasAedes"; // Replace with your valid password
 
   if (username === validUsername && password.toString() === validPassword) {
     callback(null, true); // Authentication successful
