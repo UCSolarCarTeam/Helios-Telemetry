@@ -200,7 +200,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
   const { root, depth = 0 } = props;
   return (
     root && (
-      <div className="flex h-[350px] w-full flex-col gap-x-2 lg:flex-wrap">
+      <div className="flex size-full flex-col gap-x-2 lg:h-[500px] lg:flex-wrap xl:h-[365px]">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
