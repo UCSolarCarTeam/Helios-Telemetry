@@ -2,7 +2,7 @@ import server from "@/index";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("server.ts");
-const port = process.env.SERVER_PORT;
+const port = process.env.SERVER_PORT || 3001;
 
 server
   .listen(port, () => {

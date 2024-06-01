@@ -4,7 +4,6 @@ import type ITelemetryData from "@/client/objects/telemetry-data.interface";
 
 class SQLite {
   private db: sqlite3.Database;
-
   constructor(dbPath: string) {
     this.db = new sqlite3.Database(dbPath, (err: Error | null) => {
       if (err) {
@@ -12,7 +11,20 @@ class SQLite {
       } else {
         console.log("Connected to the SQLite database.");
       }
-    }) as sqlite3.Database;
+    });
+
+    this.db
+      .prepare(
+        "CREATE TABLE IF NOT EXISTS packetData (id INTEGER PRIMARY KEY, date TEXT, data TEXT)",
+      )
+      .run()
+      .finalize();
+    this.db
+      .prepare(
+        "CREATE TABLE IF NOT EXISTS lapData (id INTEGER PRIMARY KEY, date TEXT, data TEXT)",
+      )
+      .run()
+      .finalize();
   }
 
   //Helper function to run a query
@@ -40,10 +52,7 @@ class SQLite {
           reject(new Error(`Error retrieving data: ${err.message}`));
         } else {
           // Deserialize JSON strings to ITelemetryData objects
-          const telemetryData: ITelemetryData[] = rows.map((row: any) => ({
-            ...row,
-            data: JSON.parse(row.data),
-          })) as ITelemetryData[];
+          const telemetryData = rows.map((row) => JSON.parse(row.data));
           resolve(telemetryData);
         }
       });
@@ -56,7 +65,6 @@ class SQLite {
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
     return this.runQuery(sql, [packet.TimeStamp, data]);
   }
-
   public insertLapData(packet: ITelemetryData): Promise<{ id: number }> {
     const sql = "INSERT INTO lapData (date, data) VALUES (?, ?)";
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
@@ -67,7 +75,6 @@ class SQLite {
     const sql = "SELECT * FROM packetData";
     return this.getAllRows(sql);
   }
-
   public getLapData(): Promise<ITelemetryData[]> {
     const sql = "SELECT * FROM lapData";
     return this.getAllRows(sql);

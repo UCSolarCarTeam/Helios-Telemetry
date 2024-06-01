@@ -1,12 +1,14 @@
 {
-  "main": "dist/server.js",
   "license": "ISC",
   "scripts": {
     "clean": "rm -rf dist",
     "start": "node -r ts-node/register -r tsconfig-paths/register .",
     "build": "npm-run-all clean tsc",
     "dev:start": "npm-run-all build start",
-    "dev": "NODE_ENV=development nodemon --watch src -e ts,ejs --exec \"yarn dev:start\"",
+    "dev": "nodemon - exec 'ts-node' src/server.ts",
     "tsc": "tsc -p ./tsconfig.json"
+  },
+  "dependencies": {
+    "@types/sqlite3": "^3.1.11"
   }
 }
