@@ -190,7 +190,7 @@ function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   const { fields, depth = 0 } = props;
   return (
     <div
-      className={`block overflow-y-auto overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-y-auto lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `` : `max-h-[260px]`}`}
+      className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block  lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `max-h-[260px]` : `max-h-[260px]`}`}
     >
       {fields.map((field, index) => (
         <FieldPrinter field={field} key={index} />
