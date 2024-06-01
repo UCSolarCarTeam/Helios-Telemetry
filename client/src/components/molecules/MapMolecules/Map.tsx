@@ -18,10 +18,11 @@ type IMapProps = {
 };
 
 const fitToBounds = (
-  map: mapboxgl.Map,
+  map: mapboxgl.Map | null,
   carLocation: ILocation,
   lapLocation: ILocation,
 ) => {
+  if (!map) return;
   const bounds: LngLatBoundsLike = [
     [carLocation.lng, carLocation.lat],
     [lapLocation.lng, lapLocation.lat],
@@ -36,7 +37,27 @@ function Map(props: IMapProps): JSX.Element {
   const { carLocation, mapLocation, lapLocation } = props;
   const mapRef = useRef<mapboxgl.Map | null>(null);
   useEffect(() => {
-    if (mapRef.current) {
+    const isOutsideBounds = () => {
+      if (!mapRef.current) return false;
+
+      const { lng, lat } = mapRef.current.getBounds().getNorthEast();
+      const { lng: westLng, lat: southLat } = mapRef.current
+        .getBounds()
+        .getSouthWest();
+
+      return (
+        carLocation.lng < westLng ||
+        carLocation.lng > lng ||
+        carLocation.lat > lat ||
+        carLocation.lat < southLat ||
+        lapLocation.lng < westLng ||
+        lapLocation.lng > lng ||
+        lapLocation.lat > lat ||
+        lapLocation.lat < southLat
+      );
+    };
+
+    if (isOutsideBounds() && mapRef.current) {
       fitToBounds(mapRef.current, carLocation, lapLocation);
     }
   }, [carLocation, lapLocation]);
