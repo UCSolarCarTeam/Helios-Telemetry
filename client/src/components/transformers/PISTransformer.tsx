@@ -87,7 +87,11 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const color = inRange ? "text-green" : "text-red-500";
   const displayValue = typeof value === "boolean" ? (value ? "T" : "F") : value;
 
-  return <span className={color}>{FieldUnitsHandler(unit, displayValue)}</span>;
+  return (
+    <span className={`p-1` + " " + color}>
+      {FieldUnitsHandler(unit, displayValue)}
+    </span>
+  );
 }
 
 type FormatStringProps = {
