@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <div className={currentAppState.darkMode ? "dark" : ""}>
-      <div className="bg-light text-light dark:bg-dark dark:text-dark h-full w-screen overflow-x-hidden p-4">
+      <div className="bg-light text-light dark:bg-dark dark:text-dark h-full w-screen overflow-x-hidden p-4 lg:h-screen">
         <div className="flex h-full flex-col gap-y-2 ">
           <div className="flex h-full flex-wrap gap-2">
             <div className="mx-auto w-36">

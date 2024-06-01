@@ -184,7 +184,7 @@ type FieldsPrinterProps = {
 function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   const { fields } = props;
   return (
-    <div className="max-h-[260px] md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-y-auto lg:overflow-x-hidden">
+    <div className="block max-h-[260px] overflow-y-auto overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-y-auto lg:overflow-x-hidden">
       {fields.map((field, index) => (
         <FieldPrinter field={field} key={index} />
       ))}
