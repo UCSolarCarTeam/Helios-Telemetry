@@ -31,6 +31,7 @@ const fitToBounds = (
   map.fitBounds(bounds, {
     padding: { top: 35, bottom: 35, left: 35, right: 35 },
     linear: true,
+    maxZoom: 16,
   });
 };
 function Map(props: IMapProps): JSX.Element {
