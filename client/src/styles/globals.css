@@ -15,21 +15,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-@keyframes circle {
-  0% {
-    transform: rotate(0deg) translateX(1.5in);
-  }
-  100% {
-    transform: rotate(360deg) translateX(1.5in);
-  }
-}
-
-@keyframes driveOffScreen {
-  0% {
-    transform: rotate(90deg);
-  }
-  100% {
-    transform: rotate(90deg) translateY(-100vh);
-  }
-}

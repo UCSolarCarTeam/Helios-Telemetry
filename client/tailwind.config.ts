@@ -33,15 +33,28 @@ const config: Config = {
       borderColor: {
         helios: "#B94A6C",
       },
-      // TO DO: replace the usage of keyframes from global.css with the following tailwind keyframes
+      animation: {
+        driveOffScreen: "driveOffScreen 1s ease-in-out forwards",
+        driveInScreen: "driveInScreen 1s ease-in-out forwards",
+        circle: "circle 3s ease-in-out infinite",
+      },
       keyframes: {
         circle: {
           "0%": { transform: "rotate(0deg) translateX(1.5in)" },
+          // "0%": { transform: "rotate(180deg) translateX(1.5in)" },
+          // "25%": { transform: "rotate(270deg) translateX(1.5in)" },
+          // "50%": { transform: "rotate(270deg) translateX(1.5in)" },
+          // "75%": { transform: "rotate(270deg) translateX(1.5in)" },
           "100%": { transform: "rotate(360deg) translateX(1.5in)" },
         },
+
         driveOffScreen: {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(90deg) translateY(-100vh)" },
+          "0%": { transform: "translateX(0vh)" },
+          "100%": { transform: "translateX(100vh)" },
+        },
+        driveInScreen: {
+          "0%": { transform: "translateX(-100vh)" },
+          "100%": { transform: "translateX(0vh)" },
         },
       },
     },

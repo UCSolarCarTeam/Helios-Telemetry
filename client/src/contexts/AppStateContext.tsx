@@ -24,6 +24,7 @@ export enum APPUNITS {
 }
 
 interface IAppState {
+  displayLoading: boolean;
   loading: boolean;
   error: boolean;
   darkMode: boolean;
@@ -34,41 +35,20 @@ interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
+  confirmVisualLoadingFulfilledAndReady: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
-function Loading() {
-  const { currentAppState } = useContext(appStateContext);
-  return (
-    <div
-      className={`fixed z-50 flex h-screen w-screen items-center justify-center ${currentAppState.loading ? "bg-light" : ""}`}
-    >
-      <div className="absolute left-1/2 top-1/2">
-        <Image
-          src="/assets/HeliosBirdseye.png"
-          alt="Loading..."
-          width={20}
-          height={20}
-          style={{
-            animation: currentAppState.loading
-              ? "circle 2s linear infinite"
-              : "driveOffScreen 1s forwards",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
 
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
+    displayLoading: true,
     loading: true,
     error: false,
     darkMode: false,
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
   });
-  const [animateLoading, setAnimateLoading] = useState(true);
 
   const fetchSettingsFromLocalStorage = () => {
     const savedSettings = localStorage.getItem("settings");
@@ -77,10 +57,11 @@ export function AppStateContextProvider({ children }: Props) {
       setCurrentAppState((prev) => ({
         ...parsedSettings,
         loading: false,
+        displayLoading: true,
       }));
     } else {
       setCurrentAppState((prev) => ({
-        ...currentAppState,
+        ...prev,
         loading: false,
       }));
     }
@@ -88,7 +69,7 @@ export function AppStateContextProvider({ children }: Props) {
 
   const toggleDarkMode = () => {
     setCurrentAppState((prev) => ({
-      ...currentAppState,
+      ...prev,
       darkMode: !currentAppState.darkMode,
     }));
   };
@@ -107,13 +88,20 @@ export function AppStateContextProvider({ children }: Props) {
     }
   }, [currentAppState]);
 
-  useEffect(() => {
-    if (!currentAppState.loading) {
-      setTimeout(() => {
-        setAnimateLoading(false);
-      }, 1000);
-    }
-  }, [currentAppState.loading]);
+  const confirmVisualLoadingFulfilledAndReady = () => {
+    setCurrentAppState((prev) => ({
+      ...prev,
+      displayLoading: false,
+    }));
+  };
+
+  // useEffect(() => {
+  //   if (!currentAppState.loading) {
+  //     setTimeout(() => {
+  //       setAnimateLoading(false);
+  //     }, 1000);
+  //   }
+  // }, [currentAppState.loading]);
 
   return (
     <appStateContext.Provider
@@ -121,9 +109,9 @@ export function AppStateContextProvider({ children }: Props) {
         currentAppState,
         setCurrentAppState,
         toggleDarkMode,
+        confirmVisualLoadingFulfilledAndReady,
       }}
     >
-      {animateLoading && <Loading />}
       {children}
     </appStateContext.Provider>
   );
