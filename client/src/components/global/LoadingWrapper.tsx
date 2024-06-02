@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 
+import { Loading } from "@/components/global/Loading";
 import { useAppState } from "@/contexts/AppStateContext";
-
-import { Loading } from "./Loading";
 
 export function LoadingWrapper(props: { children: React.ReactNode }) {
   const { children } = props;

@@ -40,7 +40,7 @@ export function Loading() {
       setTimeout(() => {
         confirmVisualLoadingFulfilledAndReady();
         setCurrentLoadingStage(LOADINGSTAGES.READY);
-      }, 1000);
+      }, 800);
     }
   }, [currentLoadingState]);
 
@@ -76,13 +76,14 @@ export function Loading() {
         >
           <Image
             className=""
-            src="/assets/HeliosBirdseye.png"
+            src="/assets/Sun.png"
             alt="Loading..."
-            width={35}
-            height={35}
+            width={55}
+            height={55}
           />
         </div>
-        <h2 className="text-helios text-2xl">Connecting to Helios...</h2>
+        <div className="absolute bottom-1/4 z-40 h-1/6 w-1/2 bg-white" />
+        <h2 className="text-helios z-50 text-2xl">Connecting to Helios...</h2>
       </div>
     </div>
   );
