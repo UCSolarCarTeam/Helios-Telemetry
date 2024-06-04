@@ -7,6 +7,9 @@ function StatusComponent() {
   const carLatency = 23;
   const userLatency = 78;
 
+  const userConnection = true;
+  const carConnection = false;
+
   return (
     <div className="grid">
       <div>
@@ -17,7 +20,7 @@ function StatusComponent() {
           Oct. 15 2022, 4:18.16pm
         </h5>
       </div>
-      <div className="flex flex-row items-end justify-between pt-4">
+      <div className="flex flex-row items-end justify-start">
         {" "}
         <UserComputerIcon color={"#000000"} width="25px" height="25px" />
         <LatencyDotsIcon
@@ -25,6 +28,7 @@ function StatusComponent() {
           width="15px"
           height="20px"
           latency={userLatency}
+          isConnected={userConnection}
         />
         <AWSIcon color={"#000000"} width="25px" height="25px" />
         <LatencyDotsIcon
@@ -32,6 +36,7 @@ function StatusComponent() {
           width="15px"
           height="20px"
           latency={carLatency}
+          isConnected={carConnection}
         />
         <CarIcon color={"#000000"} width="25px" height="25px" />
       </div>

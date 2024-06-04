@@ -1,10 +1,12 @@
 import { type SvgProps } from "@/components/atoms/SVGProps";
 
 const LatencyDotsIcon = (props: SvgProps) => {
-  const { color, height, width, latency } = props;
+  const { color, height, width, latency, isConnected } = props;
   return (
     <div className="flex flex-col items-center">
-      <p className="text-xs">{latency}ms</p>
+      <p className={`text-xs ${isConnected ? `text-green` : `text-red-500`}`}>
+        {latency}ms
+      </p>
       <svg
         fill={color}
         width={width}

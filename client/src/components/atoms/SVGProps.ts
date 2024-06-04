@@ -3,4 +3,5 @@ export type SvgProps = {
   height: string;
   width: string;
   latency?: number;
+  isConnected?: boolean;
 };
