@@ -169,9 +169,26 @@ const TelemetryECSService = new ecs.Ec2Service(
 // TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
-//   TelemetryBackendStack,
-//   "TelemetryBackendHostedZone",
-//   {
+const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
+  TelemetryBackendStack,
+  "TelemetryBackendHostedZone",
+  {
+    zoneName: "calgarysolarcar.ca",
+    hostedZoneId: "Z00168143RCUWIOU5XRGV",
+  },
+);
+
+// const elasticIp = new ec2.CfnEIP(TelemetryBackendStack, 'EIP', {
+//   domain: 'vpc',
+//   instanceId: instance.instanceId,
+// });
+
+// new route53.ARecord(TelemetryBackendStack, "TelemetryBackendARecord", {
+//   zone: SolarCarHostedZone,
+//   deleteExisting: true,
+//   recordName: "aedes",
+//   target: route53.RecordTarget.fromIpAddresses("")
+// });
 //     domainName: "calgarysolarcar.ca",
 //   },
 // )

@@ -12,7 +12,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
@@ -39,7 +38,7 @@ function SettingsComponent() {
 
   const handleConnectionChange = (
     event: React.MouseEvent<HTMLElement>,
-    inputMode: (typeof currentAppState)["connectionTypes"],
+    inputMode: CONNECTIONTYPES,
   ) => {
     if (inputMode !== null) {
       setCurrentAppState((prev) => ({
@@ -48,7 +47,6 @@ function SettingsComponent() {
       }));
     }
   };
-
   return (
     <div className="grid">
       <h2
@@ -125,12 +123,15 @@ function SettingsComponent() {
                 aria-label="Connection"
                 className="w-full"
               >
-                <ToggleButton value={CONNECTIONTYPES.NETWORK} className="w-1/2">
-                  Network
-                </ToggleButton>
-                <ToggleButton value={CONNECTIONTYPES.RADIO} className="w-1/2">
-                  Radio
-                </ToggleButton>
+                {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
+                  (key) => {
+                    return (
+                      <ToggleButton className="w-1/2" key={key} value={key}>
+                        {key}
+                      </ToggleButton>
+                    );
+                  },
+                )}
               </ToggleButtonGroup>
             </div>
           </div>
