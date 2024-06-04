@@ -12,7 +12,7 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
       className={`dark:bg-dark fixed z-50 flex h-screen w-screen items-center justify-center bg-white`}
     >
       <div className="left-1/2 top-1/2 flex flex-col items-center justify-center">
-        <div className="flex h-96 w-96 items-center justify-center ">
+        <div className="flex size-96 items-center justify-center ">
           <Image
             priority
             quality={50}
