@@ -65,6 +65,30 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 
+// const TelemetrySourceOutput = new codepipeline.Artifact(
+//   "TelemetrySourceOutput",
+// );
+
+// const TelemetryBuildOutput = new codepipeline.Artifact("TelemetryBuildOutput");
+
+// const TelemetrySourceAction = new codepipeline_actions.GitHubSourceAction({
+//   actionName: "TelemetrySourceAction",
+//   owner: "UCSolarCarTeam",
+//   repo: "Helios-Telemetry",
+//   branch: "main",
+//   oauthToken: cdk.SecretValue.secretsManager("HeliosTelemetrySecret").toJSON()[
+//     "HeliosTelemetryOAuth"
+//   ],
+//   output: TelemetrySourceOutput,
+// });
+
+// const TelemetryBuildAction = new codepipeline_actions.CodeBuildAction({
+//   actionName: "TelemetryBuildAction",
+//   project: TelemetryBackendCodeBuildProject,
+//   input: TelemetrySourceOutput,
+//   outputs: [TelemetryBuildOutput],
+// });
+
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",

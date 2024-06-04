@@ -41,7 +41,7 @@ function NavBar(props: any): JSX.Element {
   };
 
   return (
-    <ScrollContainer className="">
+    <ScrollContainer className="w-full">
       <Tabs
         className="w-full"
         value={value}
