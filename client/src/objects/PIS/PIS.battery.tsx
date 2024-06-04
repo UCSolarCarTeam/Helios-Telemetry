@@ -1,6 +1,7 @@
 import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
+import { UnitType } from "@/objects/PIS/PIS.interface";
 
 const Battery = (): I_PIS => {
   const { currentPacket } = usePacket();
@@ -94,7 +95,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.FanVoltage,
-            unit: "V",
+            unit: UnitType.VOLTAGE,
             min: 0,
             max: 100,
           },
@@ -109,7 +110,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.RequestedFanSpeed,
-            unit: "V",
+            unit: UnitType.VOLTAGE,
             min: 0,
             max: 100,
           },
@@ -124,7 +125,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.LowTemperature,
-            unit: "°C",
+            unit: UnitType.TEMP,
             min: 10,
             max: 25,
             hover: "Low Cell Temperature",
@@ -135,7 +136,7 @@ const Battery = (): I_PIS => {
           },
           {
             value: currentPacket?.Battery?.HighTemperature,
-            unit: "°C",
+            unit: UnitType.TEMP,
             min: 50,
             max: 75,
             hover: "High Cell Temperature",
@@ -151,7 +152,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.AverageTemperature,
-            unit: "°C",
+            unit: UnitType.TEMP,
             min: 0,
             max: 100,
           },
@@ -162,7 +163,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.InternalTemperature,
-            unit: "°C",
+            unit: UnitType.TEMP,
             min: 0,
             max: 100,
           },
@@ -177,14 +178,14 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.LowCellVoltage,
-            unit: "V",
+            unit: UnitType.VOLTAGE,
             min: 0,
             max: 100,
           },
           { value: currentPacket?.Battery?.LowCellVoltageId },
           {
             value: currentPacket?.Battery?.HighCellVoltage,
-            unit: "V",
+            unit: UnitType.VOLTAGE,
             min: 0,
             max: 100,
           },
@@ -196,7 +197,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.AverageCellVoltage,
-            unit: "V",
+            unit: UnitType.VOLTAGE,
             min: 0,
             max: 100,
           },
@@ -216,7 +217,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.PackCurrent,
-            unit: "A",
+            unit: UnitType.AMPERAGE,
             min: 0,
             max: 100,
           },
@@ -227,7 +228,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.PackVoltage,
-            unit: "V",
+            unit: UnitType.VOLTAGE,
             min: 0,
             max: 100,
           },
@@ -238,7 +239,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery?.PackAmphours,
-            unit: "Ah",
+            unit: UnitType.AMPHOUR,
             min: 0,
             max: 100,
           },
@@ -271,7 +272,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.Battery["12vInputVoltage"],
-            unit: "V",
+            unit: UnitType.VOLTAGE,
             min: 0,
             max: 100,
           },
@@ -327,7 +328,7 @@ const Battery = (): I_PIS => {
         data: [
           {
             value: currentPacket?.AuxBms?.AuxVoltage,
-            unit: "mV",
+            unit: UnitType.MILLIVOLTS,
             min: 0,
             max: 100,
           },

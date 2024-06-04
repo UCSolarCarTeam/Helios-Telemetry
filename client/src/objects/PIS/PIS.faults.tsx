@@ -1,5 +1,6 @@
 import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
+import { UnitType } from "@/objects/PIS/PIS.interface";
 
 const Faults = (): I_PIS => {
   const { currentPacket } = usePacket();
