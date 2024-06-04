@@ -23,7 +23,7 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
               currentLoadingState === LOADINGSTAGES.DRIVE_IN &&
                 "animate-driveInScreen",
             )}
-            src="/assets/HeliosSideView.png"
+            src="/assets/HeliosBirdseye.png"
             alt="Loading..."
             width={300}
             height={300}
