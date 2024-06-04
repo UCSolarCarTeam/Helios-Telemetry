@@ -90,8 +90,11 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
 
   const color = inRange ? "text-green" : "text-red-500";
   const displayValue = typeof value === "boolean" ? (value ? "T" : "F") : value;
-
-  return <span className={color}>{FieldUnitsHandler(unit, displayValue)}</span>;
+  return (
+    <span className={`m-1` + " " + color}>
+      {FieldUnitsHandler(unit, displayValue)}
+    </span>
+  );
 }
 
 type FormatStringProps = {
@@ -178,10 +181,17 @@ function FieldPrinter(props: { field: I_PISField }): JSX.Element {
   );
 }
 
-function FieldsPrinter(props: { fields: I_PISField[] }): JSX.Element {
-  const { fields } = props;
+type FieldsPrinterProps = {
+  fields: I_PISField[];
+  depth?: number;
+};
+
+function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
+  const { fields, depth = 0 } = props;
   return (
-    <div className="  columns-[7rem] md:columns-[10rem]">
+    <div
+      className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block  lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `max-h-[260px]` : `max-h-[260px]`}`}
+    >
       {fields.map((field, index) => (
         <FieldPrinter field={field} key={index} />
       ))}
@@ -197,7 +207,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
   const { root, depth = 0 } = props;
   return (
     root && (
-      <div className="flex h-[350px] w-full flex-col gap-x-2 lg:flex-wrap">
+      <div className="flex size-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[330px]">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
@@ -212,7 +222,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
                 </p>
               </div>
               {Array.isArray(value) ? (
-                <FieldsPrinter fields={value} />
+                <FieldsPrinter fields={value} depth={depth + 1} />
               ) : (
                 <PISTransformer root={value} depth={depth + 1} />
               )}
