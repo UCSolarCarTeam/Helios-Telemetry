@@ -1,12 +1,75 @@
+import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
-import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
+import {
+  type I_PISField,
+  type I_PISFieldData,
+  UnitType,
+} from "@/objects/PIS/PIS.interface";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
 };
 
+function FieldUnitsHandler(
+  unit: UnitType | undefined,
+  value: string | number | boolean,
+) {
+  const { currentAppState } = useAppState();
+
+  let unitReturn: string | undefined;
+  let valueReturn: string | number | boolean;
+  unitReturn = unit;
+  valueReturn = value;
+
+  switch (unit) {
+    case UnitType.TEMP:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "°F";
+        valueReturn = (value * 9) / 5 + 32;
+      } else {
+        unitReturn = "°C";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.SPEED:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mph";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km/h";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.DISTANCE:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mi";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km";
+        valueReturn = value;
+      }
+      break;
+    case undefined:
+      unitReturn = "";
+      valueReturn = value;
+      break;
+  }
+
+  return `${typeof valueReturn === "number" ? valueReturn.toFixed(0) : valueReturn} ${unitReturn}`;
+}
+
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
+
   const inRange =
     // If value is of type string range is true
     typeof value === "string"
@@ -67,7 +130,7 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 
   const formatString = (string: string, params: I_PISFieldData[]) => {
     // %s •C (%s) - %s •C (%s)
-    console.log("TEST", string.split("%s"));
+    // console.log("TEST", string.split("%s"));
     return string
       .split("%s")
       .map((part, index) => {

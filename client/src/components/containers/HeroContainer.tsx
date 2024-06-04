@@ -1,9 +1,20 @@
+import dynamic from "next/dynamic";
+
 import BatteryThrottleComponent from "@/components/molecules/HeroMolecules/BatteryThrottleComponent";
-import CarGraphicComponent from "@/components/molecules/HeroMolecules/CarGraphicComponent";
 import FaultsComponent from "@/components/molecules/HeroMolecules/FaultsComponent";
 import GearParkBrakeComponent from "@/components/molecules/HeroMolecules/GearParkBrakeComponent";
 
-function HeroContainer(props: any) {
+const CarGraphicComponent = dynamic(
+  () =>
+    import("@/components/molecules/HeroMolecules/CarGraphicComponent").then(
+      (mod) => mod.default,
+    ),
+  {
+    ssr: false,
+  },
+);
+
+function HeroContainer() {
   return (
     <>
       <div className="grid size-full grid-cols-1 gap-4 md:grid-cols-6">

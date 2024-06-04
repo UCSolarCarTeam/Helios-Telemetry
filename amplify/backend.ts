@@ -1,3 +1,13 @@
+import * as cdk from "aws-cdk-lib";
+import * as codebuild from "aws-cdk-lib/aws-codebuild";
+import * as codepipeline from "aws-cdk-lib/aws-codepipeline";
+import * as codepipeline_actions from "aws-cdk-lib/aws-codepipeline-actions";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
+import * as ecr from "aws-cdk-lib/aws-ecr";
+import * as ecs from "aws-cdk-lib/aws-ecs";
+import * as imagebuilder from "aws-cdk-lib/aws-imagebuilder";
+import * as route53 from "aws-cdk-lib/aws-route53";
+
 import { defineBackend } from "@aws-amplify/backend";
 
 const backend = defineBackend({});
@@ -54,30 +64,6 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 );
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
-
-// const TelemetrySourceOutput = new codepipeline.Artifact(
-//   "TelemetrySourceOutput",
-// );
-
-// const TelemetryBuildOutput = new codepipeline.Artifact("TelemetryBuildOutput");
-
-// const TelemetrySourceAction = new codepipeline_actions.GitHubSourceAction({
-//   actionName: "TelemetrySourceAction",
-//   owner: "UCSolarCarTeam",
-//   repo: "Helios-Telemetry",
-//   branch: "main",
-//   oauthToken: cdk.SecretValue.secretsManager("HeliosTelemetrySecret").toJSON()[
-//     "HeliosTelemetryOAuth"
-//   ],
-//   output: TelemetrySourceOutput,
-// });
-
-// const TelemetryBuildAction = new codepipeline_actions.CodeBuildAction({
-//   actionName: "TelemetryBuildAction",
-//   project: TelemetryBackendCodeBuildProject,
-//   input: TelemetrySourceOutput,
-//   outputs: [TelemetryBuildOutput],
-// });
 
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,

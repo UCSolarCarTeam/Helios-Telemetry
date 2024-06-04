@@ -1,8 +1,19 @@
 import { useAppState } from "@/contexts/AppStateContext";
+import { APPUNITS } from "@/contexts/AppStateContext";
+import { usePacket } from "@/contexts/PacketContext";
 
-function SpeedAtom(props: any) {
-  const {} = useAppState;
-  const speed = 53;
+function SpeedAtom() {
+  const { currentPacket } = usePacket();
+  const { currentAppState } = useAppState();
+
+  let speedValue = 0;
+  let speedUnit = "km/h";
+  if (currentAppState.appUnits === APPUNITS.IMPERIAL) {
+    speedValue = currentPacket.KeyMotor[0].VehicleVelocity * 0.621371;
+    speedUnit = "mph";
+  } else {
+    speedValue = currentPacket.KeyMotor[0].VehicleVelocity;
+  }
 
   return (
     <>

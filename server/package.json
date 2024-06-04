@@ -1,7 +1,7 @@
 {
   "license": "ISC",
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "start": "node -r ts-node/register -r tsconfig-paths/register .",
     "build": "npm-run-all clean tsc",
     "dev:start": "npm-run-all build start",
