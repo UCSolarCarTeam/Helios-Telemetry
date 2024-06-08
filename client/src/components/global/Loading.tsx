@@ -3,7 +3,6 @@ import { use, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { LOADINGSTAGES } from "@/components/global/LoadingWrapper";
-import { useAppState } from "@/contexts/AppStateContext";
 
 export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
   const { currentLoadingState } = props;
@@ -17,6 +16,7 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
             priority
             quality={50}
             className={twMerge(
+              "z-40",
               currentLoadingState === LOADINGSTAGES.PENDING && "animate-bump",
               currentLoadingState === LOADINGSTAGES.READY &&
                 "animate-driveOffScreen",
@@ -31,21 +31,21 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
         </div>
         <div
           className={twMerge(
-            "animate-circle absolute flex h-96 w-96 items-center justify-center",
+            "animate-circle  absolute flex h-64 w-64 items-center justify-end",
             currentLoadingState === LOADINGSTAGES.PENDING
               ? "visible"
               : "invisible",
           )}
         >
           <Image
-            className=""
+            className="z"
             src="/assets/Sun.png"
             alt="Loading..."
-            width={55}
-            height={55}
+            width={65}
+            height={65}
           />
         </div>
-        <div className="dark:bg-dark absolute bottom-1/4 z-40 h-1/6 w-full bg-white" />
+        <div className="dark:bg-dark absolute bottom-0 z-30 h-1/2 w-full bg-white" />
         <h2
           className={twMerge(
             "z-50 text-2xl",

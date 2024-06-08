@@ -31,7 +31,7 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
     if (!currentAppState.loading) {
       setTimeout(() => {
         setCurrentLoadingStage(LOADINGSTAGES.READY);
-      }, 4000);
+      }, 40000);
     }
   }, [currentAppState.loading]);
 
