@@ -21,26 +21,29 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
 
   // Switch to pending After 1 second
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setCurrentLoadingStage(LOADINGSTAGES.PENDING);
     }, 1000);
+    return () => clearTimeout(timeout);
   }, []);
 
   // Switch to drive off after app state reports loading is complete and minimum animation time is fulfilled
   useEffect(() => {
     if (!currentAppState.loading) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setCurrentLoadingStage(LOADINGSTAGES.READY);
-      }, 40000);
+      }, 4000);
+      return () => clearTimeout(timeout);
     }
   }, [currentAppState.loading]);
 
   // Confirm with App State that loading animation is fulfilled after car drives off screen
   useEffect(() => {
     if (currentLoadingState === LOADINGSTAGES.READY) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         confirmVisualLoadingFulfilledAndReady();
       }, 800);
+      return () => clearTimeout(timeout);
     }
   }, [currentLoadingState]);
 
