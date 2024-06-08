@@ -2,14 +2,16 @@ import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
+import { usePacket } from "@/contexts/PacketContext";
+import { socketIO } from "@/socket";
 
 function StatusComponent() {
   const carLatency = 23;
   const userLatency = 78;
-
-  const userConnection = true;
+  const userConnection = socketIO.connected;
   const carConnection = false;
-
+  const { currentPacket } = usePacket();
+  const packetTime = new Date(currentPacket.TimeStamp).toLocaleString();
   return (
     <div className="grid">
       <div>
@@ -37,7 +39,7 @@ function StatusComponent() {
           PACKET TIMESTAMP
         </h5>
         <h5 className="text-text-gray dark:text-text-gray-dark decoration-primary pb-2 text-xs underline decoration-1 underline-offset-4">
-          Oct. 15 2022, 4:18.16pm
+          {packetTime}
         </h5>
       </div>
     </div>

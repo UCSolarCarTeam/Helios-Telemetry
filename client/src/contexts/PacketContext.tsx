@@ -309,7 +309,7 @@ export function PacketContextProvider({
           Temperature: faker.number.int({ min: 0, max: 100 }),
         },
       ],
-      TimeStamp: faker.number.int({ min: 0, max: 100 }),
+      TimeStamp: faker.date.soon().valueOf(),
     };
   }
   // Generate random data for local dev mode
