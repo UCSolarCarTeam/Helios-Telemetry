@@ -4,6 +4,7 @@ import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
+import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
 import { socketIO } from "@/socket";
 
@@ -24,6 +25,8 @@ function StatusComponent() {
   const userConnection = socketIO.connected;
   const carConnection = false;
   const { currentPacket } = usePacket();
+  const { currentAppState } = useAppState();
+  const colorTheme = currentAppState.darkMode ? "#FFFFFF" : "#000000";
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = socketIO.connected
     ? new Date(currentPacket.TimeStamp).toLocaleString()
@@ -33,23 +36,23 @@ function StatusComponent() {
       <div>
         <div className="flex flex-row items-end justify-start pb-1 pt-2">
           {" "}
-          <UserComputerIcon color={"#000000"} width="25px" height="25px" />
+          <UserComputerIcon color={colorTheme} width="25px" height="25px" />
           <LatencyDotsIcon
-            color={"#000000"}
+            color={colorTheme}
             width="15px"
             height="20px"
             latency={userLatency}
             isConnected={userConnection}
           />
-          <AWSIcon color={"#000000"} width="25px" height="25px" />
+          <AWSIcon color={colorTheme} width="25px" height="25px" />
           <LatencyDotsIcon
-            color={"#000000"}
+            color={colorTheme}
             width="15px"
             height="20px"
             latency={carLatency}
             isConnected={carConnection}
           />
-          <CarIcon color={"#000000"} width="25px" height="25px" />
+          <CarIcon color={colorTheme} width="25px" height="25px" />
         </div>
         <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-sm ">
           PACKET TIMESTAMP
