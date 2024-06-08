@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
@@ -6,12 +8,26 @@ import { usePacket } from "@/contexts/PacketContext";
 import { socketIO } from "@/socket";
 
 function StatusComponent() {
+  const [userLatency, setUserLatency] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      const start = Date.now();
+
+      socketIO.emit("ping", () => {
+        const duration = Date.now() - start;
+        setUserLatency(duration);
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
   const carLatency = 23;
-  const userLatency = 78;
   const userConnection = socketIO.connected;
   const carConnection = false;
   const { currentPacket } = usePacket();
-  const packetTime = new Date(currentPacket.TimeStamp).toLocaleString();
+  // Maybe server should have a reference to the last packet received from the vehicle.
+  const packetTime = socketIO.connected
+    ? new Date(currentPacket.TimeStamp).toLocaleString()
+    : "DISCONNECTED";
   return (
     <div className="grid">
       <div>

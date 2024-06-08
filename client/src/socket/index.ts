@@ -2,7 +2,10 @@ import { type Socket, io } from "socket.io-client";
 
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 
-interface ClientToServerEvents {}
+interface ClientToServerEvents {
+  ping: (cb: () => void) => void;
+  print: (value: string) => void;
+}
 
 interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;

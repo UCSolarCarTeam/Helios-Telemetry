@@ -302,4 +302,10 @@ export const handleSocketConnection = (socket: Socket) => {
     logger.info("Client disconnected");
     clearInterval(packetTimerID);
   });
+  socket.on("ping", (callback: () => void) => {
+    callback();
+  });
+  socket.on("print", (data: string) => {
+    logger.info(data);
+  });
 };
