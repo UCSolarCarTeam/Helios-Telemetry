@@ -4,22 +4,33 @@ import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
 
 function MapContainer(): JSX.Element {
-  const [carLocation, setCarLocation] = useState({
-    lat: 38.9277572,
-    lng: -95.6777937,
+  const [mapInputs, setMapInputs] = useState({
+    carLocation: { lat: 38.9277572, lng: -95.6777937 },
+    lapLocation: { lat: 38.9377572, lng: -95.677937 },
   });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCarLocation({ lat: carLocation.lat + 0.0001, lng: carLocation.lng });
+      setMapInputs((prevState) => ({
+        ...prevState,
+        carLocation: {
+          lat: prevState.carLocation.lat + 0.0001,
+          lng: prevState.carLocation.lng,
+        },
+      }));
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [carLocation]);
+  }, []);
 
   return (
     <div className="size-full">
       <div className="grid h-[90%]">
-        <Map carLocation={carLocation} mapLocation={carLocation} />
+        <Map
+          carLocation={mapInputs.carLocation}
+          mapLocation={mapInputs.carLocation}
+          lapLocation={mapInputs.lapLocation}
+        />
       </div>
       <div className="grid h-[10%]">
         <MapText />

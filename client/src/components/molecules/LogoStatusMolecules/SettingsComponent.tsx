@@ -12,7 +12,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
@@ -39,7 +38,7 @@ function SettingsComponent() {
 
   const handleConnectionChange = (
     event: React.MouseEvent<HTMLElement>,
-    inputMode: (typeof currentAppState)["connectionTypes"],
+    inputMode: CONNECTIONTYPES,
   ) => {
     if (inputMode !== null) {
       setCurrentAppState((prev) => ({
@@ -48,7 +47,6 @@ function SettingsComponent() {
       }));
     }
   };
-
   return (
     <div className="grid">
       <h2
@@ -63,7 +61,7 @@ function SettingsComponent() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform flex-col rounded-lg bg-white p-4 shadow-lg shadow-lg">
+        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col rounded-lg bg-white p-4 shadow-lg">
           <h5 className="text-text-gray dark:text-text-gray-dark mb-4 text-2xl">
             Settings
           </h5>
@@ -125,12 +123,15 @@ function SettingsComponent() {
                 aria-label="Connection"
                 className="w-full"
               >
-                <ToggleButton value={CONNECTIONTYPES.NETWORK} className="w-1/2">
-                  Network
-                </ToggleButton>
-                <ToggleButton value={CONNECTIONTYPES.RADIO} className="w-1/2">
-                  Radio
-                </ToggleButton>
+                {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
+                  (key) => {
+                    return (
+                      <ToggleButton className="w-1/2" key={key} value={key}>
+                        {key}
+                      </ToggleButton>
+                    );
+                  },
+                )}
               </ToggleButtonGroup>
             </div>
           </div>

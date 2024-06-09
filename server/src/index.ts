@@ -1,5 +1,6 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import http from "http";
@@ -17,10 +18,10 @@ dotenv.config();
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 app.use("/", router);
 
 const logger = createLightweightApplicationLogger("index.ts");
-
 axiosRetry(axios, {
   retries: 2,
   retryDelay: (retryCount) => {

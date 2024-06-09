@@ -1,10 +1,6 @@
-type ParkingBrakeIconProps = {
-  color: string;
-  height: string;
-  width: string;
-};
+import { type SvgProps } from "@/components/atoms/SVGProps";
 
-const ParkingBrakeIcon = (props: ParkingBrakeIconProps) => {
+const ParkingBrakeIcon = (props: SvgProps) => {
   const { color, height, width } = props;
   return (
     <svg

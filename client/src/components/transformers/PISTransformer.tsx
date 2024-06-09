@@ -1,12 +1,75 @@
+import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
-import type { I_PISField, I_PISFieldData } from "@/objects/PIS/PIS.interface";
+import {
+  type I_PISField,
+  type I_PISFieldData,
+  UnitType,
+} from "@/objects/PIS/PIS.interface";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
 };
 
+function FieldUnitsHandler(
+  unit: UnitType | undefined,
+  value: string | number | boolean,
+) {
+  const { currentAppState } = useAppState();
+
+  let unitReturn: string | undefined;
+  let valueReturn: string | number | boolean;
+  unitReturn = unit;
+  valueReturn = value;
+
+  switch (unit) {
+    case UnitType.TEMP:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "°F";
+        valueReturn = (value * 9) / 5 + 32;
+      } else {
+        unitReturn = "°C";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.SPEED:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mph";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km/h";
+        valueReturn = value;
+      }
+      break;
+    case UnitType.DISTANCE:
+      if (
+        typeof value === "number" &&
+        currentAppState.appUnits === APPUNITS.IMPERIAL
+      ) {
+        unitReturn = "mi";
+        valueReturn = value * 0.621371;
+      } else {
+        unitReturn = "km";
+        valueReturn = value;
+      }
+      break;
+    case undefined:
+      unitReturn = "";
+      valueReturn = value;
+      break;
+  }
+
+  return `${typeof valueReturn === "number" ? valueReturn.toFixed(0) : valueReturn} ${unitReturn}`;
+}
+
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { value, unit, min, max, expectedBool } = props.fieldData;
+
   const inRange =
     // If value is of type string range is true
     typeof value === "string"
@@ -23,11 +86,9 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
 
   const color = inRange ? "text-green" : "text-red-500";
   const displayValue = typeof value === "boolean" ? (value ? "T" : "F") : value;
-
   return (
-    <span className={color}>
-      {displayValue}
-      {unit}
+    <span className={`m-1` + " " + color}>
+      {FieldUnitsHandler(unit, displayValue)}
     </span>
   );
 }
@@ -69,7 +130,7 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 
   const formatString = (string: string, params: I_PISFieldData[]) => {
     // %s •C (%s) - %s •C (%s)
-    console.log("TEST", string.split("%s"));
+    // console.log("TEST", string.split("%s"));
     return string
       .split("%s")
       .map((part, index) => {
@@ -121,12 +182,15 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
 
 type FieldsPrinterProps = {
   fields: I_PISField[];
+  depth?: number;
 };
 
 function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
-  const { fields } = props;
+  const { fields, depth = 0 } = props;
   return (
-    <div className="  columns-[7rem] md:columns-[10rem]">
+    <div
+      className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block  lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `max-h-[260px]` : `max-h-[260px]`}`}
+    >
       {fields.map((field, index) => (
         <FieldPrinter field={field} key={index} />
       ))}
@@ -142,7 +206,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
   const { root, depth = 0 } = props;
   return (
     root && (
-      <div className="flex h-[350px] w-full flex-col gap-x-2 lg:flex-wrap">
+      <div className="flex size-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[330px]">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
@@ -157,7 +221,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
                 </p>
               </div>
               {Array.isArray(value) ? (
-                <FieldsPrinter fields={value} />
+                <FieldsPrinter fields={value} depth={depth + 1} />
               ) : (
                 <PISTransformer root={value} depth={depth + 1} />
               )}
