@@ -37,7 +37,7 @@ aedes.authenticate = function (
   }
 };
 
-aedes.on("publish", (packet, client: Client) => {
+aedes.on("publish", (packet, client) => {
   if (client) {
     logger.info(
       `Published message from client ${client.id}: ${packet.payload.toString()}`,
