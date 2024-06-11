@@ -1,27 +1,14 @@
-import { useEffect, useState } from "react";
-
 import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { useSocket } from "@/contexts/SocketContext";
 import { socketIO } from "@/socket";
 
 function StatusComponent() {
-  const [userLatency, setUserLatency] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => {
-      const start = Date.now();
-
-      socketIO.emit("ping", () => {
-        const duration = Date.now() - start;
-        setUserLatency(duration);
-      });
-    }, 1000);
-    return () => clearInterval(id);
-  }, []);
-  const carLatency = 23;
+  const { userLatency, carLatency } = useSocket();
   const userConnection = socketIO.connected;
   const carConnection = false;
   const { currentPacket } = usePacket();
@@ -35,7 +22,6 @@ function StatusComponent() {
     <div className="grid">
       <div>
         <div className="flex flex-row items-end justify-start pb-1 pt-2">
-          {" "}
           <UserComputerIcon color={colorTheme} width="25px" height="25px" />
           <LatencyDotsIcon
             color={colorTheme}
