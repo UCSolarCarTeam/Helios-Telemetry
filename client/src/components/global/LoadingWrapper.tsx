@@ -19,33 +19,41 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
     LOADINGSTAGES.DRIVE_IN,
   );
 
-  // Switch to pending After 1 second
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    let pendingTimeout: NodeJS.Timeout;
+    let readyTimeout: NodeJS.Timeout;
+    let confirmTimeout: NodeJS.Timeout;
+
+    // Switch to drive off after app state reports loading is complete and minimum animation time is fulfilled
+    const driveInTimeout = setTimeout(() => {
       setCurrentLoadingStage(LOADINGSTAGES.PENDING);
     }, 1000);
-    return () => clearTimeout(timeout);
-  }, []);
 
-  // Switch to drive off after app state reports loading is complete and minimum animation time is fulfilled
-  useEffect(() => {
+    // Confirm with App State that loading animation is fulfilled after car drives off screen
     if (!currentAppState.loading) {
-      const timeout = setTimeout(() => {
+      pendingTimeout = setTimeout(() => {
         setCurrentLoadingStage(LOADINGSTAGES.READY);
       }, 4000);
-      return () => clearTimeout(timeout);
     }
-  }, [currentAppState.loading]);
 
-  // Confirm with App State that loading animation is fulfilled after car drives off screen
-  useEffect(() => {
+    // Confirm with App State that loading animation is fulfilled after car drives off screen
     if (currentLoadingState === LOADINGSTAGES.READY) {
-      const timeout = setTimeout(() => {
+      confirmTimeout = setTimeout(() => {
         confirmVisualLoadingFulfilledAndReady();
       }, 800);
-      return () => clearTimeout(timeout);
     }
-  }, [currentLoadingState]);
+
+    return () => {
+      clearTimeout(driveInTimeout);
+      clearTimeout(pendingTimeout);
+      clearTimeout(readyTimeout);
+      clearTimeout(confirmTimeout);
+    };
+  }, [
+    currentAppState.loading,
+    currentLoadingState,
+    confirmVisualLoadingFulfilledAndReady,
+  ]);
 
   return (
     <div className={twMerge(currentAppState.darkMode ? "dark" : "")}>

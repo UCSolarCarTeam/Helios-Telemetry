@@ -1,11 +1,30 @@
 import Image from "next/image";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { LOADINGSTAGES } from "@/components/global/LoadingWrapper";
 
 export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
   const { currentLoadingState } = props;
+  const LoadingMessage = {
+    [LOADINGSTAGES.DRIVE_IN]: "Connecting to Helios...",
+    [LOADINGSTAGES.PENDING]: "Connecting to Helios...",
+    [LOADINGSTAGES.READY]: "Connected to Helios!",
+  };
+
+  const carAnimationClass = useMemo(() => {
+    switch (currentLoadingState) {
+      case LOADINGSTAGES.PENDING:
+        return "animate-bump";
+      case LOADINGSTAGES.READY:
+        return "animate-driveOffScreen";
+      case LOADINGSTAGES.DRIVE_IN:
+        return "animate-driveInScreen";
+      default:
+        return "";
+    }
+  }, [currentLoadingState]);
+
   return (
     <div
       className={`dark:bg-dark fixed z-50 flex h-screen w-screen items-center justify-center bg-white`}
@@ -15,14 +34,7 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
           <Image
             priority
             quality={50}
-            className={twMerge(
-              "z-40",
-              currentLoadingState === LOADINGSTAGES.PENDING && "animate-bump",
-              currentLoadingState === LOADINGSTAGES.READY &&
-                "animate-driveOffScreen",
-              currentLoadingState === LOADINGSTAGES.DRIVE_IN &&
-                "animate-driveInScreen",
-            )}
+            className={twMerge("z-40", carAnimationClass)}
             src="/assets/HeliosSideview.png"
             alt="Loading..."
             width={300}
@@ -53,13 +65,7 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
             currentLoadingState === LOADINGSTAGES.READY && "text-green",
           )}
         >
-          {
-            {
-              1: "Connecting to Helios...",
-              2: "Connecting to Helios...",
-              3: "Connected to Helios!",
-            }[currentLoadingState]
-          }
+          {LoadingMessage[currentLoadingState]}
         </h2>
       </div>
     </div>
