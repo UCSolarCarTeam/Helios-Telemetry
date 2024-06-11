@@ -1,12 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+import Aedes from "aedes";
+import { createServer } from "net";
+
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("aedes.ts");
-const Aedes = require("aedes");
-const { createServer } = require("net");
 
-const aedes = new Aedes();
+const aedes: Aedes = new Aedes();
+const aedesServer = createServer(aedes.handle);
+
 class MqttError extends Error {
   returnCode: number;
 
@@ -18,7 +21,11 @@ class MqttError extends Error {
   }
 }
 // Authentication function
-aedes.authenticate = function (client, username, password, callback) {
+aedes.authenticate = function (
+  username: string,
+  password: string,
+  callback: (error: Error | null, success: boolean) => void,
+) {
   const validUsername = "urMom"; // Replace with your valid username
   const validPassword = "hasAedes"; // Replace with your valid password
 
@@ -30,7 +37,7 @@ aedes.authenticate = function (client, username, password, callback) {
   }
 };
 
-aedes.on("publish", async (packet, client) => {
+aedes.on("publish", (packet, client: Client) => {
   if (client) {
     logger.info(
       `Published message from client ${client.id}: ${packet.payload.toString()}`,
@@ -38,6 +45,4 @@ aedes.on("publish", async (packet, client) => {
   }
 });
 
-const server = createServer(aedes.handle);
-
-export default server;
+export default aedesServer;
