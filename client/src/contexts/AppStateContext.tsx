@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   type Dispatch,
   type ReactNode,
@@ -24,6 +25,7 @@ export enum APPUNITS {
 }
 
 interface IAppState {
+  displayLoading: boolean;
   loading: boolean;
   error: boolean;
   darkMode: boolean;
@@ -34,12 +36,14 @@ interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
+  confirmVisualLoadingFulfilledAndReady: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
+    displayLoading: true,
     loading: true,
     error: false,
     darkMode: false,
@@ -54,10 +58,11 @@ export function AppStateContextProvider({ children }: Props) {
       setCurrentAppState((prev) => ({
         ...parsedSettings,
         loading: false,
+        displayLoading: true,
       }));
     } else {
       setCurrentAppState((prev) => ({
-        ...currentAppState,
+        ...prev,
         loading: false,
       }));
     }
@@ -65,7 +70,7 @@ export function AppStateContextProvider({ children }: Props) {
 
   const toggleDarkMode = () => {
     setCurrentAppState((prev) => ({
-      ...currentAppState,
+      ...prev,
       darkMode: !currentAppState.darkMode,
     }));
   };
@@ -84,12 +89,28 @@ export function AppStateContextProvider({ children }: Props) {
     }
   }, [currentAppState]);
 
+  const confirmVisualLoadingFulfilledAndReady = () => {
+    setCurrentAppState((prev) => ({
+      ...prev,
+      displayLoading: false,
+    }));
+  };
+
+  // useEffect(() => {
+  //   if (!currentAppState.loading) {
+  //     setTimeout(() => {
+  //       setAnimateLoading(false);
+  //     }, 1000);
+  //   }
+  // }, [currentAppState.loading]);
+
   return (
     <appStateContext.Provider
       value={{
         currentAppState,
         setCurrentAppState,
         toggleDarkMode,
+        confirmVisualLoadingFulfilledAndReady,
       }}
     >
       {children}
