@@ -49,11 +49,22 @@
   ],
   "bufferViews": [
     { "buffer": 0, "byteOffset": 0, "byteLength": 25272, "target": 34963 },
-    { "buffer": 0, "byteOffset": 25276, "byteLength": 404352, "byteStride": 32, "target": 34962 }
+    {
+      "buffer": 0,
+      "byteOffset": 25276,
+      "byteLength": 404352,
+      "byteStride": 32,
+      "target": 34962
+    }
   ],
   "cameras": [
     {
-      "perspective": { "aspectRatio": 1.5, "yfov": 0.6605931592458378, "zfar": 10000, "znear": 1 },
+      "perspective": {
+        "aspectRatio": 1.5,
+        "yfov": 0.6605931592458378,
+        "zfar": 10000,
+        "znear": 1
+      },
       "type": "perspective",
       "name": "cameraShape1"
     }
@@ -91,14 +102,17 @@
     {
       "camera": 0,
       "matrix": [
-        -0.7289686274214113, 0, -0.6845471059286886, 0, -0.4252049153435464, 0.7836934573258398,
-        0.45279724481533634, 0, 0.5364750881476519, 0.6211477802783104, -0.5712879439059578, 0,
-        400.113, 463.264, -431.078, 1
+        -0.7289686274214113, 0, -0.6845471059286886, 0, -0.4252049153435464,
+        0.7836934573258398, 0.45279724481533634, 0, 0.5364750881476519,
+        0.6211477802783104, -0.5712879439059578, 0, 400.113, 463.264, -431.078,
+        1
       ],
       "name": "camera1"
     }
   ],
-  "samplers": [{ "magFilter": 9729, "minFilter": 9987, "wrapS": 10497, "wrapT": 10497 }],
+  "samplers": [
+    { "magFilter": 9729, "minFilter": 9987, "wrapS": 10497, "wrapT": 10497 }
+  ],
   "scene": 0,
   "scenes": [{ "nodes": [0, 1] }],
   "textures": [{ "sampler": 0, "source": 0, "name": "file2" }]

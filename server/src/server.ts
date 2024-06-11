@@ -1,14 +1,15 @@
-import aedesServer from "@/aedes";
-import expressServer from "@/index";
+import { Server as SocketIOServer } from "socket.io";
+
+import { handleSocketConnection } from "@/controllers/socket.controller";
+import server from "@/index";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("server.ts");
-const expressPort = process.env.SERVER_PORT;
-const mqttPort = process.env.MQTT_PORT;
+const port = process.env.SERVER_PORT || 3001;
 
-expressServer
-  .listen(expressPort, () => {
-    logger.info(`Express Server is listening on port ${expressPort}`);
+export const httpServer = server
+  .listen(port, () => {
+    logger.info(`Server is listening on port ${port}`);
 
     logger.info(`Process ID: ${process.pid}`);
     logger.info(`Node Version: ${process.version}`);
@@ -19,11 +20,13 @@ expressServer
     logger.error(error.message);
     throw error;
   });
-aedesServer
-  .listen(mqttPort, function () {
-    logger.info(`Aedes Server is listening on port ${mqttPort}`);
-  })
-  .on("error", (error: Error) => {
-    logger.error(error.message);
-    throw error;
-  });
+
+const socketIO = new SocketIOServer(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+socketIO.on("connection", (socket) => {
+  handleSocketConnection(socket);
+});
