@@ -3,7 +3,7 @@ import { type Socket, io } from "socket.io-client";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 
 interface ClientToServerEvents {
-  ping: (cb: () => void) => void;
+  ping: (cb: (val: number) => void) => void;
   print: (value: string) => void;
 }
 

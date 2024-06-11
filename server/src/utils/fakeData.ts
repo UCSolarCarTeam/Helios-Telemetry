@@ -1,12 +1,7 @@
-import { type Socket } from "socket.io";
-
 import type ITelemetryData from "@/objects/telemetry-data.interface";
-import { createLightweightApplicationLogger } from "@/utils/logger";
 import { faker } from "@faker-js/faker";
 
-const logger = createLightweightApplicationLogger("socket.controller.ts");
-
-function generateFakeTelemetryData(): ITelemetryData {
+export function generateFakeTelemetryData(): ITelemetryData {
   return {
     PacketTitle: faker.lorem.words(2),
     AuxBms: {
@@ -284,28 +279,3 @@ function generateFakeTelemetryData(): ITelemetryData {
     TimeStamp: faker.date.soon().valueOf(),
   };
 }
-export const handleSocketConnection = (socket: Socket) => {
-  logger.info("Client connected");
-
-  const packetTimerID = setInterval(() => {
-    // TODO: Replace generateFakeTelemetryData() with the real data
-    const newPacket = generateFakeTelemetryData();
-
-    // Compare the server logs with the live website data
-    logger.info(
-      `Battery Average Voltage: ${JSON.stringify(newPacket.Battery.AverageCellVoltage)}V`,
-    );
-    socket.emit("packet", newPacket);
-  }, 2500);
-
-  socket.on("disconnect", () => {
-    logger.info("Client disconnected");
-    clearInterval(packetTimerID);
-  });
-  socket.on("ping", (callback: () => void) => {
-    callback();
-  });
-  socket.on("print", (data: string) => {
-    logger.info(data);
-  });
-};
