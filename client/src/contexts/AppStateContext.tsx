@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   type Dispatch,
   type ReactNode,
@@ -31,6 +30,9 @@ interface IAppState {
   darkMode: boolean;
   appUnits: APPUNITS;
   connectionTypes: CONNECTIONTYPES;
+  socketConnected: boolean;
+  userLatency: number;
+  carLatency: number;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -49,6 +51,9 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
+    socketConnected: false,
+    userLatency: 0,
+    carLatency: 0,
   });
 
   const fetchSettingsFromLocalStorage = () => {
@@ -56,9 +61,10 @@ export function AppStateContextProvider({ children }: Props) {
     if (savedSettings) {
       const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
       setCurrentAppState((prev) => ({
-        ...parsedSettings,
-        loading: false,
-        displayLoading: true,
+        ...prev,
+        darkMode: parsedSettings.darkMode,
+        appUnits: parsedSettings.appUnits,
+        connectionTypes: parsedSettings.connectionTypes,
       }));
     } else {
       setCurrentAppState((prev) => ({

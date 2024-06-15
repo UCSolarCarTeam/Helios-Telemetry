@@ -2,10 +2,13 @@ import { type Socket, io } from "socket.io-client";
 
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 
-interface ClientToServerEvents {}
+interface ClientToServerEvents {
+  ping: (cb: (val: number) => void) => void;
+}
 
 interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
+  carLatency: (value: number) => void;
 }
 
 // TODO:set undefined to ServerURL once deployed.

@@ -1,7 +1,5 @@
-import { Server as SocketIOServer } from "socket.io";
-
-import { handleSocketConnection } from "@/controllers/socket.controller";
 import server from "@/index";
+import main from "@/main";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("server.ts");
@@ -20,13 +18,4 @@ export const httpServer = server
     logger.error(error.message);
     throw error;
   });
-
-const socketIO = new SocketIOServer(httpServer, {
-  cors: {
-    origin: "*",
-  },
-});
-
-socketIO.on("connection", (socket) => {
-  handleSocketConnection(socket);
-});
+main();
