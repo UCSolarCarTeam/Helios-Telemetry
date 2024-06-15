@@ -12,8 +12,6 @@ type Options = {
 };
 
 const clientId = "server";
-const subscribeTopic = "carToServer";
-const publishTopic = "carToServer";
 
 const logger = createLightweightApplicationLogger("serverMqttClient.ts");
 
@@ -25,13 +23,18 @@ const options: Options = {
   clean: true,
 };
 
+const testTopic = "test topic";
+const testMessage = "test  message";
+
 const client: MqttClient = connect(options);
 
 client.on("connect", () => {
+  // connect to broker
   logger.info(`${clientId} connected to MQTT broker`);
-  client.subscribe(subscribeTopic, (error) => {
+  client.subscribe(testTopic, (error) => {
     if (!error) {
-      logger.info(`${clientId} subscribed to ${subscribeTopic}`);
+      logger.info(`${clientId} subscribed to ${testTopic}`);
+      client.publish(testTopic, testMessage); // publish message
     } else {
       console.error(`${clientId} subscription error:`, error);
     }
@@ -40,6 +43,7 @@ client.on("connect", () => {
 
 client.on("message", (topic, message) => {
   logger.info(
+    // see if message was recieved
     `${clientId} received message on ${topic}: ${message.toString()}`,
   );
 });
@@ -47,7 +51,3 @@ client.on("message", (topic, message) => {
 client.on("error", (error) => {
   console.error(`${clientId} MQTT Client Error:`, error);
 });
-
-setTimeout(() => {
-  client.publish(publishTopic, "hello");
-}, 5000);
