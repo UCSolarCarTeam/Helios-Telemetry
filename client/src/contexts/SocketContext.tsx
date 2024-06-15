@@ -1,19 +1,9 @@
-import {
-  type ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { type ReactNode, createContext, useContext, useEffect } from "react";
 
+import { useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/socket";
 
-interface ISocketContextReturn {
-  userLatency: number;
-  setUserLatency: React.Dispatch<React.SetStateAction<number>>;
-  carLatency: number;
-  setCarLatency: React.Dispatch<React.SetStateAction<number>>;
-}
+interface ISocketContextReturn {}
 const socketContext = createContext<ISocketContextReturn>(
   {} as ISocketContextReturn,
 );
@@ -22,10 +12,9 @@ export function SocketContextProvider({
 }: {
   children: ReactNode | ReactNode[];
 }): JSX.Element {
-  const [userLatency, setUserLatency] = useState(0);
-  const [carLatency, setCarLatency] = useState(0);
+  const { setCurrentAppState } = useAppState();
   function onCarLatency(latency: number) {
-    setCarLatency(latency);
+    setCurrentAppState((prev) => ({ ...prev, carLatency: latency }));
   }
   useEffect(() => {
     const id = setInterval(() => {
@@ -33,7 +22,7 @@ export function SocketContextProvider({
 
       socketIO.emit("ping", () => {
         const duration = Date.now() - start;
-        setUserLatency(duration);
+        setCurrentAppState((prev) => ({ ...prev, userLatency: duration }));
       });
     }, 1000);
     socketIO.on("carLatency", onCarLatency);
@@ -43,15 +32,7 @@ export function SocketContextProvider({
     };
   }, []);
 
-  const value = {
-    userLatency,
-    setUserLatency,
-    carLatency,
-    setCarLatency,
-  };
-  return (
-    <socketContext.Provider value={value}>{children}</socketContext.Provider>
-  );
+  return <socketContext.Provider value={{}}>{children}</socketContext.Provider>;
 }
 
 export function useSocket(): ISocketContextReturn {
