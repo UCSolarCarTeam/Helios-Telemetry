@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
 import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { IndicationStates } from "@/components/molecules/HeroMolecules/HeroTypes";
+import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
@@ -20,10 +20,10 @@ function CarGraphicComponent() {
   const { currentPacket } = usePacket();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
-    leftMotor: IndicationStates.CLEAR,
-    rightMotor: IndicationStates.CLEAR,
-    battery: IndicationStates.CLEAR,
-    solarPanel: IndicationStates.CLEAR,
+    leftMotor: ISeverity.CLEAR,
+    rightMotor: ISeverity.CLEAR,
+    battery: ISeverity.CLEAR,
+    solarPanel: ISeverity.CLEAR,
   });
 
   const errorMaterial = new THREE.MeshStandardMaterial({

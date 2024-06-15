@@ -1,12 +1,12 @@
-export enum IndicationStates {
-  RED,
-  ORANGE,
+export enum ISeverity {
+  ERROR,
+  WARNING,
   CLEAR,
 }
 
 export type IndicationLocations = {
-  leftMotor: IndicationStates;
-  rightMotor: IndicationStates;
-  battery: IndicationStates;
-  solarPanel: IndicationStates;
+  leftMotor: ISeverity;
+  rightMotor: ISeverity;
+  battery: ISeverity;
+  solarPanel: ISeverity;
 };
