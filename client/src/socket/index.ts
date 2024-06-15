@@ -4,7 +4,6 @@ import type ITelemetryData from "@/objects/telemetry-data.interface";
 
 interface ClientToServerEvents {
   ping: (cb: (val: number) => void) => void;
-  print: (value: string) => void;
 }
 
 interface ServerToClientEvents {

@@ -4,16 +4,14 @@ import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
-import { useSocket } from "@/contexts/SocketContext";
 import { socketIO } from "@/socket";
 
 function StatusComponent() {
-  const { userLatency, carLatency } = useSocket();
-  const userConnection = socketIO.connected;
-  // TODO: change carConnection from socketIO.connected to carConnection.connected
-  const carConnection = socketIO.connected;
-  const { currentPacket } = usePacket();
   const { currentAppState } = useAppState();
+  const { currentPacket } = usePacket();
+  const userConnection = currentAppState.socketConnected;
+  // TODO: change carConnection from socketIO.connected to carConnection.connected
+  const carConnection = currentAppState.socketConnected;
   const colorTheme = currentAppState.darkMode ? "#FFFFFF" : "#000000";
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = socketIO.connected
@@ -28,7 +26,7 @@ function StatusComponent() {
             color={colorTheme}
             width="15px"
             height="20px"
-            latency={userLatency}
+            latency={currentAppState.userLatency}
             isConnected={userConnection}
           />
           <AWSIcon color={colorTheme} width="25px" height="25px" />
@@ -36,7 +34,7 @@ function StatusComponent() {
             color={colorTheme}
             width="15px"
             height="20px"
-            latency={carLatency}
+            latency={currentAppState.carLatency}
             isConnected={carConnection}
           />
           <CarIcon color={colorTheme} width="25px" height="25px" />

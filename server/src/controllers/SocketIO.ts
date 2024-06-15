@@ -30,9 +30,6 @@ class SocketIO {
 export default SocketIO;
 
 function initializeSocketListeners(socket: Socket) {
-  socket.on("print", (data: string) => {
-    logger.info(data);
-  });
   socket.on("disconnect", () => {
     logger.info("Client disconnected");
   });
