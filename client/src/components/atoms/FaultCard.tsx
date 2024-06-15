@@ -1,15 +1,10 @@
 import { motion } from "framer-motion";
 import React from "react";
 
+import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-
-export enum ISeverity {
-  ERROR,
-  WARNING,
-  CLEAR,
-}
 
 type FaultCardProps = {
   severity: ISeverity;
