@@ -10,7 +10,8 @@ import { socketIO } from "@/socket";
 function StatusComponent() {
   const { userLatency, carLatency } = useSocket();
   const userConnection = socketIO.connected;
-  const carConnection = false;
+  // TODO: change carConnection from socketIO.connected to carConnection.connected
+  const carConnection = socketIO.connected;
   const { currentPacket } = usePacket();
   const { currentAppState } = useAppState();
   const colorTheme = currentAppState.darkMode ? "#FFFFFF" : "#000000";

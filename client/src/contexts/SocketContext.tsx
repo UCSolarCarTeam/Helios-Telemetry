@@ -23,7 +23,10 @@ export function SocketContextProvider({
   children: ReactNode | ReactNode[];
 }): JSX.Element {
   const [userLatency, setUserLatency] = useState(0);
-  const [carLatency, setCarLatency] = useState(23);
+  const [carLatency, setCarLatency] = useState(0);
+  function onCarLatency(latency: number) {
+    setCarLatency(latency);
+  }
   useEffect(() => {
     const id = setInterval(() => {
       const start = Date.now();
@@ -33,7 +36,11 @@ export function SocketContextProvider({
         setUserLatency(duration);
       });
     }, 1000);
-    return () => clearInterval(id);
+    socketIO.on("carLatency", onCarLatency);
+    return () => {
+      clearInterval(id);
+      socketIO.off("carLatency", onCarLatency);
+    };
   }, []);
 
   const value = {

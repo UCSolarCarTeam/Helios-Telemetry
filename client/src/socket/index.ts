@@ -9,6 +9,7 @@ interface ClientToServerEvents {
 
 interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
+  carLatency: (value: number) => void;
 }
 
 // TODO:set undefined to ServerURL once deployed.

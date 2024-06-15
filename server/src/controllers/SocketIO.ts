@@ -24,7 +24,7 @@ class SocketIO {
     this.io.emit("packet", packet);
   }
   public broadcastCarLatency(latency: number) {
-    this.io.emit("CarLatency", latency);
+    this.io.emit("carLatency", latency);
   }
 }
 export default SocketIO;
