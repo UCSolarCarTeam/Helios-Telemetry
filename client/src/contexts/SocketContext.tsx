@@ -28,10 +28,9 @@ export function SocketContextProvider({
     const id = setInterval(() => {
       const start = Date.now();
 
-      socketIO.emit("ping", (response: number) => {
+      socketIO.emit("ping", () => {
         const duration = Date.now() - start;
         setUserLatency(duration);
-        console.log(response);
       });
     }, 1000);
     return () => clearInterval(id);

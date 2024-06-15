@@ -1,6 +1,17 @@
-import SQLite from "@/controllers/SQLite";
+// import SQLite from "@/controllers/SQLite";
 import SocketIO from "@/controllers/SocketIO";
+import { logger } from "@/index";
+import { generateFakeTelemetryData } from "@/utils/fakeData";
 
-const socket = new SocketIO();
+export default function main() {
+  const socket = new SocketIO();
 
-const sql = new SQLite("./database.sql");
+  //   const sql = new SQLite("./database.sql");
+  const intervalID = setInterval(() => {
+    const packet = generateFakeTelemetryData();
+    logger.info(
+      `Battery Average Voltage: ${JSON.stringify(packet.Battery.AverageCellVoltage)}V`,
+    );
+    socket.sendPacket(packet);
+  }, 2500);
+}

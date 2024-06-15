@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/", router);
 
-const logger = createLightweightApplicationLogger("index.ts");
+export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
   retries: 2,
   retryDelay: (retryCount) => {

@@ -1,4 +1,5 @@
 import server from "@/index";
+import main from "@/main";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("server.ts");
@@ -17,3 +18,4 @@ export const httpServer = server
     logger.error(error.message);
     throw error;
   });
+main();
