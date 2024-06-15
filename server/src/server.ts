@@ -13,7 +13,7 @@ export const httpServer = server
 
     logger.info(`Process ID: ${process.pid}`);
     logger.info(`Node Version: ${process.version}`);
-    logger.info(`Server Port: ${expressPort}`);
+    logger.info(`Server Port: ${port}`);
     logger.info(`Debug Port: ${process.debugPort}`);
   })
   .on("error", (error: Error) => {
