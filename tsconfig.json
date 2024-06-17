@@ -17,6 +17,6 @@
       "@/*": ["client/src/*", "server/src/*"]
     }
   },
-  "include": ["client/src/**/*", "server/src/**/*"],
+  "include": ["client/src/**/*", "server/src/**/*", "aedes/aedes.ts"],
   "exclude": ["node_modules", "amplify"]
 }

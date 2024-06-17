@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { ISeverity } from "@/components//atoms/FaultCard";
 import FaultCard from "@/components/atoms/FaultCard";
+import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
 import {
   type IAuxBms,
   type IBatteryFault,
   type IMotorFault,
 } from "@/objects/telemetry-data.interface";
-import type ITelemetryData from "@/objects/telemetry-data.interface";
 
 type TestFaultType = {
   [key: string]: boolean;

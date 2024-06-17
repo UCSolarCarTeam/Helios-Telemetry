@@ -24,27 +24,36 @@ export enum APPUNITS {
 }
 
 interface IAppState {
+  displayLoading: boolean;
   loading: boolean;
   error: boolean;
   darkMode: boolean;
   appUnits: APPUNITS;
   connectionTypes: CONNECTIONTYPES;
+  socketConnected: boolean;
+  userLatency: number;
+  carLatency: number;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
+  confirmVisualLoadingFulfilledAndReady: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
+    displayLoading: true,
     loading: true,
     error: false,
     darkMode: false,
     appUnits: APPUNITS.METRIC,
     connectionTypes: CONNECTIONTYPES.NETWORK,
+    socketConnected: false,
+    userLatency: 0,
+    carLatency: 0,
   });
 
   const fetchSettingsFromLocalStorage = () => {
@@ -52,12 +61,14 @@ export function AppStateContextProvider({ children }: Props) {
     if (savedSettings) {
       const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
       setCurrentAppState((prev) => ({
-        ...parsedSettings,
-        loading: false,
+        ...prev,
+        darkMode: parsedSettings.darkMode,
+        appUnits: parsedSettings.appUnits,
+        connectionTypes: parsedSettings.connectionTypes,
       }));
     } else {
       setCurrentAppState((prev) => ({
-        ...currentAppState,
+        ...prev,
         loading: false,
       }));
     }
@@ -65,7 +76,7 @@ export function AppStateContextProvider({ children }: Props) {
 
   const toggleDarkMode = () => {
     setCurrentAppState((prev) => ({
-      ...currentAppState,
+      ...prev,
       darkMode: !currentAppState.darkMode,
     }));
   };
@@ -84,12 +95,28 @@ export function AppStateContextProvider({ children }: Props) {
     }
   }, [currentAppState]);
 
+  const confirmVisualLoadingFulfilledAndReady = () => {
+    setCurrentAppState((prev) => ({
+      ...prev,
+      displayLoading: false,
+    }));
+  };
+
+  // useEffect(() => {
+  //   if (!currentAppState.loading) {
+  //     setTimeout(() => {
+  //       setAnimateLoading(false);
+  //     }, 1000);
+  //   }
+  // }, [currentAppState.loading]);
+
   return (
     <appStateContext.Provider
       value={{
         currentAppState,
         setCurrentAppState,
         toggleDarkMode,
+        confirmVisualLoadingFulfilledAndReady,
       }}
     >
       {children}
