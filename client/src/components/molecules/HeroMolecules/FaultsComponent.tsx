@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import FaultCard from "@/components/atoms/FaultCard";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { usePacket } from "@/contexts/PacketContext";
 import Faults from "@/objects/PIS/PIS.faults";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import {
@@ -50,49 +49,42 @@ function FaultsComponent(props: any) {
         );
       } else {
         // If the value is not an object, it's a leaf node, so assign it to the flattened object
-        acc[prefixedKey as keyof typeof obj] = obj[key as keyof typeof obj];
+        acc[prefixedKey] = obj[key as keyof typeof obj];
       }
       return acc;
-    }, {}); // Add return type annotation
+    }, {} as TestFaultType); // Add return type annotation
   }
 
-  useEffect(() => {
-    const flattenedFaults = flattenNestedJson({
+  const flattenedFaults = useMemo(() => {
+    return flattenNestedJson({
       Battery: faults.BatteryFaults,
       MotorFaults: faults.MotorFaults,
       BMSFaults: faults.AuxBms,
       // TODO: we need to add auxBMS faults, we'll ask embedded to restructure the packet.
     });
-    Object.keys(flattenedFaults).map((fault) => {
-      typeof fault;
-      if (flattenedFaults[fault as keyof TestFaultType] === true) {
-        setCurrentFaultTimers((prev) => ({ ...prev, [fault]: 0 }));
+  }, [faults.BatteryFaults, faults.MotorFaults, faults.AuxBms]);
+
+  useEffect(() => {
+    const newFaultTimers: CurrentFaultsType = { ...currentFaultTimers };
+
+    Object.keys(flattenedFaults).forEach((fault) => {
+      if (flattenedFaults[fault as keyof TestFaultType]) {
+        newFaultTimers[fault] = 0;
       } else {
-        if (currentFaultTimers[fault as keyof TestFaultType] !== undefined) {
-          if (currentFaultTimers[fault as keyof TestFaultType] + 1 >= 10) {
-            setCurrentFaultTimers((prev) => {
-              const {
-                [fault as keyof TestFaultType]: _,
-                ...currentFaultTimers
-              } = prev;
-              return currentFaultTimers;
-            });
+        if (currentFaultTimers[fault] !== undefined) {
+          if (currentFaultTimers[fault] + 1 >= 10) {
+            delete newFaultTimers[fault];
           } else {
-            setCurrentFaultTimers((prev) => ({
-              ...prev,
-              [fault]: currentFaultTimers[fault as keyof TestFaultType] + 1,
-            }));
+            newFaultTimers[fault] = currentFaultTimers[fault] + 1;
           }
         }
       }
     });
-  }, [
-    currentFaultTimers,
-    faults.AuxBms,
-    faults.BatteryFaults,
-    faults.MotorFaults,
-    flattenNestedJson,
-  ]);
+
+    if (JSON.stringify(newFaultTimers) !== JSON.stringify(currentFaultTimers)) {
+      setCurrentFaultTimers(newFaultTimers);
+    }
+  }, [flattenedFaults]);
 
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
