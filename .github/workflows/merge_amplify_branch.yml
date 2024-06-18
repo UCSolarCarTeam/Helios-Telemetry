@@ -4,10 +4,6 @@ on:
     paths:
       - "amplify/**"
       - '.github/workflows/**'
-  pull_request:
-    paths:
-      - "amplify/**"
-      - '.github/workflows/**'
 
 jobs:
   merge-branch:
