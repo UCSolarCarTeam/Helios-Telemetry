@@ -28,44 +28,46 @@ const testMessage = "test  message";
 export class SolarMQTTClient {
   client: MqttClient;
   messageRecCb: (message: Buffer) => void;
+  latencyRecCb: (latency: number) => void;
 
-  constructor(messageRecCb: (message: Buffer) => void) {
+  constructor(
+    messageRecCb: (message: Buffer) => void,
+    latencyRecCb: (latency: number) => void,
+  ) {
     this.client = connect(options);
     this.messageRecCb = messageRecCb;
+    this.latencyRecCb = latencyRecCb;
+    this.initializeListeners(this.client);
+  }
 
-    this.client.on("connect", () => {
+  public calculatePing() {
+    this.client.publish("ping", "");
+  }
+  private initializeListeners(client: MqttClient) {
+    client.on("connect", () => {
       // connect to broker
       logger.info(`${clientId} connected to MQTT broker`);
-      this.client.subscribe(testTopic, (error) => {
+      client.subscribe(testTopic, (error) => {
         if (!error) {
           logger.info(`${clientId} subscribed to ${testTopic}`);
-          this.client.publish(testTopic, testMessage); // publish message
+          client.publish(testTopic, testMessage); // publish message
         } else {
           console.error(`${clientId} subscription error:`, error);
         }
       });
     });
-    this.client.on("message", (topic, message) => {
-      if (topic === "PONG") {
-        return;
-      } else {
+
+    client.on("message", (topic: string, message: Buffer) => {
+      if (topic !== "PONG") {
         this.messageRecCb(message);
+      } else if (topic === "PONG") {
+        const latency = Date.now() - parseInt(message.toString());
+        this.latencyRecCb(latency);
       }
     });
 
-    this.client.on("error", (error) => {
+    client.on("error", (error) => {
       logger.error(`${clientId} MQTT Client Error:`, error);
     });
-  }
-
-  public calculatePing() {
-    this.client.publish("ping", "");
-    const pingStart = Date.now();
-    this.client.on("message", (topic, message) => {
-      if (topic === "PONG") {
-        return Date.now() - pingStart;
-      }
-    });
-    return 0;
   }
 }

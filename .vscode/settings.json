@@ -1,6 +1,6 @@
 {
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "ms-vsliveshare.vsliveshare",
     "editor.formatOnSave": true
   },
   "[javascript]": {
