@@ -16,6 +16,6 @@ jobs:
       - uses: everlytic/branch-merge@1.1.2
         with:
           github_token: ${{ github.token }}
-          source_ref: ${{ github.ref }}
+          source_ref: 'main'
           target_branch: 'amplify_master'
           commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
