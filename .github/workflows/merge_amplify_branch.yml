@@ -1,3 +1,4 @@
+name: "Amplify Merge"
 on:
   push:
     paths:
@@ -18,4 +19,4 @@ jobs:
           github_token: ${{ github.token }}
           source_ref: 'main'
           target_branch: 'amplify_master'
-          commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
+          commit_message_template: '[Automated] Merged main to amplify_master because the amplify folder changed'
