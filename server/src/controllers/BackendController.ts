@@ -5,9 +5,6 @@ import { SolarMQTTClient } from "@/interfaces/SolarMQTTClient";
 
 import { LapController } from "./LapController";
 
-{
-}
-
 export class BackendController {
   private sqLite: SQLite;
   private socketIO: SocketIO;
