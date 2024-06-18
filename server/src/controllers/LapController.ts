@@ -1,12 +1,13 @@
 import { SocketIO } from "@/interfaces/SocketIO";
-import ITelemetryData from "@/objects/telemetry-data.interface";
+import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { getDistance } from "@/utils/calculationUtils";
 
 export class LapController {
   private lastLapPacket: ITelemetryData = {} as ITelemetryData;
   private socketIO: SocketIO;
+  private previouslyInFinishLineProximity: boolean = false;
 
-  constructor(socketIO: SocketIO) {
+  constructor(socketIO: typeof SocketIO) {
     this.socketIO = socketIO;
   }
 
@@ -36,17 +37,19 @@ export class LapController {
       lat: 51.1,
       long: 100.2,
     };
-
-    if (
+    const inProximity =
       getDistance(
         carLocation.lat,
         carLocation.long,
         finishlineLocation.lat,
         finishlineLocation.long,
-      ) <= 10
-    ) {
-      return true;
+      ) <= 0.01;
+    let lapHappened = false;
+    if (!this.previouslyInFinishLineProximity && inProximity) {
+      lapHappened = true;
     }
-    return false;
+
+    this.previouslyInFinishLineProximity = inProximity;
+    return lapHappened;
   }
 }
