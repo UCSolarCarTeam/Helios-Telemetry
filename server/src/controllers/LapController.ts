@@ -12,12 +12,11 @@ export class LapController {
   }
 
   public handlePacket(packet: ITelemetryData) {
-    const lapAchieved = this.checkLap(packet);
+    if (this.checkLap(packet)) {
+      // mark lap, calculate lap, and add to lap table in database
+      // send lap over socket
 
-    if (lapAchieved) {
-      //mark lap and add to lap table in database
-
-      //update last lap packet
+      // update last lap packet
       this.lastLapPacket = packet;
     }
   }
