@@ -43,15 +43,11 @@ const AnchorElTooltips = forwardRef<
     return field.data;
   }, [field.data]);
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        getData,
-      };
-    },
-    [getData],
-  );
+  useImperativeHandle(ref, () => {
+    return {
+      getData,
+    };
+  }, [getData]);
 
   return (
     <Tooltip
