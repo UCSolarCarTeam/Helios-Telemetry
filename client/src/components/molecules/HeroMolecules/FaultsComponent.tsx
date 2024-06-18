@@ -4,6 +4,7 @@ import FaultCard from "@/components/atoms/FaultCard";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
 import Faults from "@/objects/PIS/PIS.faults";
+import type I_PIS from "@/objects/PIS/PIS.interface";
 import {
   type IAuxBms,
   type IBatteryFault,
@@ -19,7 +20,6 @@ type CurrentFaultsType = {
 };
 
 function FaultsComponent(props: any) {
-  const { currentPacket } = usePacket();
   const faults = Faults();
   const [currentFaultTimers, setCurrentFaultTimers] =
     useState<CurrentFaultsType>({} as CurrentFaultsType);
@@ -27,13 +27,14 @@ function FaultsComponent(props: any) {
   function flattenNestedJson(
     obj:
       | {
-          BatteryFaults: IBatteryFault;
-          MotorFaults: IMotorFault[];
-          BMSFaults: IAuxBms;
+          Battery: I_PIS;
+          MotorFaults: I_PIS;
+          BMSFaults: I_PIS;
         }
       | IBatteryFault
       | IMotorFault[]
-      | IAuxBms,
+      | IAuxBms
+      | I_PIS,
     prefix = "",
   ): TestFaultType {
     return Object.keys(obj).reduce((acc, key) => {
@@ -57,9 +58,9 @@ function FaultsComponent(props: any) {
 
   useEffect(() => {
     const flattenedFaults = flattenNestedJson({
-      Battery: currentPacket.BatteryFaults,
-      MotorFaults: currentPacket.MotorFaults,
-      BMSFaults: currentPacket.AuxBms,
+      Battery: faults.BatteryFaults,
+      MotorFaults: faults.MotorFaults,
+      BMSFaults: faults.AuxBms,
       // TODO: we need to add auxBMS faults, we'll ask embedded to restructure the packet.
     });
     Object.keys(flattenedFaults).map((fault) => {
@@ -85,7 +86,13 @@ function FaultsComponent(props: any) {
         }
       }
     });
-  }, [currentPacket]);
+  }, [
+    currentFaultTimers,
+    faults.AuxBms,
+    faults.BatteryFaults,
+    faults.MotorFaults,
+    flattenNestedJson,
+  ]);
 
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
