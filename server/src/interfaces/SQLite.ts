@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 
 import type ITelemetryData from "@/client/objects/telemetry-data.interface";
 
-class SQLite {
+export class SQLite {
   private db: sqlite3.Database;
   constructor(dbPath: string) {
     this.db = new sqlite3.Database(dbPath, (err: Error | null) => {

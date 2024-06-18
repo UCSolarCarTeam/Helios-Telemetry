@@ -1,4 +1,4 @@
-import { SocketIO } from "@/interfaces/SocketIO";
+import { type SocketIO } from "@/interfaces/SocketIO";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { getDistance } from "@/utils/calculationUtils";
 
@@ -7,7 +7,7 @@ export class LapController {
   private socketIO: SocketIO;
   private previouslyInFinishLineProximity: boolean = false;
 
-  constructor(socketIO: typeof SocketIO) {
+  constructor(socketIO: SocketIO) {
     this.socketIO = socketIO;
   }
 

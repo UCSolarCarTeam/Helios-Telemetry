@@ -1,21 +1,19 @@
+import { LapController } from "@/controllers/LapController";
 import { logger } from "@/index";
 import { SQLite } from "@/interfaces/SQLite";
 import { SocketIO } from "@/interfaces/SocketIO";
 import { SolarMQTTClient } from "@/interfaces/SolarMQTTClient";
-
-import { LapController } from "./LapController";
 
 export class BackendController {
   private sqLite: SQLite;
   private socketIO: SocketIO;
   private lapController: LapController;
   private mqtt: SolarMQTTClient;
-  private lapController: LapController;
 
   constructor() {
-    this.sqlLite = new SQLite("./database.sql");
+    this.sqLite = new SQLite("./database.sql");
     this.socketIO = new SocketIO();
-    this.mqttClient = new SolarMQTTClient(
+    this.mqtt = new SolarMQTTClient(
       (msg) => this.handlePacketReceive,
       (msg) => this.handleCarLatency,
     );
@@ -30,15 +28,15 @@ export class BackendController {
     }, 5000);
   }
 
-  private handleCarLatency() {
+  private handleCarLatency(carLatency: number) {
     // Broadcast the car latency to the frontend
-    this.socket.broadcastCarLatency(carLatency);
+    this.socketIO.broadcastCarLatency(carLatency);
     logger.info("Car Latency: ", carLatency.toString());
   }
 
   private handlePacketReceive(message: Buffer) {
     // Insert the packet into the database
-    this.sqLite.insertPacket(message);
+    this.sqLite.insertPacketData(message);
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(JSON.parse(message.toString()));

@@ -5,7 +5,7 @@ import { logger } from "@/index";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { httpServer } from "@/server";
 
-class SocketIO {
+export class SocketIO {
   io: Server;
   constructor() {
     this.io = new Server(httpServer, {
