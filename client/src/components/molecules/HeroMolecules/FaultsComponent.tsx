@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import FaultCard from "@/components/atoms/FaultCard";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
+import Faults from "@/objects/PIS/PIS.faults";
 import {
   type IAuxBms,
   type IBatteryFault,
@@ -19,13 +20,14 @@ type CurrentFaultsType = {
 
 function FaultsComponent(props: any) {
   const { currentPacket } = usePacket();
+  const faults = Faults();
   const [currentFaultTimers, setCurrentFaultTimers] =
     useState<CurrentFaultsType>({} as CurrentFaultsType);
 
   function flattenNestedJson(
     obj:
       | {
-          Battery: IBatteryFault;
+          BatteryFaults: IBatteryFault;
           MotorFaults: IMotorFault[];
           BMSFaults: IAuxBms;
         }
@@ -50,7 +52,7 @@ function FaultsComponent(props: any) {
         acc[prefixedKey as keyof typeof obj] = obj[key as keyof typeof obj];
       }
       return acc;
-    }, {});
+    }, {}); // Add return type annotation
   }
 
   useEffect(() => {
@@ -60,7 +62,6 @@ function FaultsComponent(props: any) {
       BMSFaults: currentPacket.AuxBms,
       // TODO: we need to add auxBMS faults, we'll ask embedded to restructure the packet.
     });
-
     Object.keys(flattenedFaults).map((fault) => {
       typeof fault;
       if (flattenedFaults[fault as keyof TestFaultType] === true) {

@@ -1,3 +1,8 @@
+import type {
+  FaultLocations,
+  ISeverity,
+} from "@/components/molecules/HeroMolecules/HeroTypes";
+
 enum UnitType {
   TEMP = "temperature",
   SPEED = "speed",
@@ -18,6 +23,8 @@ type I_PISFieldData = {
   max?: number;
   expectedBool?: boolean;
   hover?: string;
+  severity: ISeverity;
+  indiciationLocation: FaultLocations;
 };
 
 type I_PISField = {

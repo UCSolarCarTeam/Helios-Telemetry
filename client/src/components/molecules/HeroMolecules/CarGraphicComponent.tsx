@@ -5,7 +5,10 @@ import * as THREE from "three";
 
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
-import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
+import type {
+  FaultLocations,
+  IndicationLocations,
+} from "@/components/molecules/HeroMolecules/HeroTypes";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
