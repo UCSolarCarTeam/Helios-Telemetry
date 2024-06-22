@@ -1,4 +1,5 @@
-import { type SocketIO } from "@/interfaces/SocketIO";
+import SQLite from "@/interfaces/SQLite";
+import { SocketIO } from "@/interfaces/SocketIO";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { getDistance } from "@/utils/calculationUtils";
 
@@ -6,13 +7,19 @@ export class LapController {
   private lastLapPacket: ITelemetryData = {} as ITelemetryData;
   private socketIO: SocketIO;
   private previouslyInFinishLineProximity: boolean = false;
+  private sqlLite: SQLite;
 
-  constructor(socketIO: SocketIO) {
+  constructor(socketIO: typeof SocketIO, sqlLite: SQLite) {
     this.socketIO = socketIO;
+    this.sqlLite = sqlLite;
   }
 
-  public handlePacket(packet: ITelemetryData) {
+  public async handlePacket(packet: ITelemetryData) {
     if (this.checkLap(packet)) {
+      let calculatedLap = packet.TimeStamp - this.lastLapPacket.TimeStamp;
+
+      await this.sqlLite.insertLapData(packet);
+
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 

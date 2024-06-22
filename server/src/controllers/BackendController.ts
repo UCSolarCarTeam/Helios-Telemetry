@@ -17,7 +17,7 @@ export class BackendController {
       (msg) => this.handlePacketReceive,
       (msg) => this.handleCarLatency,
     );
-    this.lapController = new LapController(this.socketIO);
+    this.lapController = new LapController(this.socketIO, this.sqlLite);
     this.establishCarPinging();
   }
 
@@ -36,7 +36,7 @@ export class BackendController {
 
   private handlePacketReceive(message: Buffer) {
     // Insert the packet into the database
-    this.sqLite.insertPacketData(message);
+    this.sqlLite.insertPacket(message);
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(JSON.parse(message.toString()));
