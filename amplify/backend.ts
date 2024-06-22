@@ -103,6 +103,11 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       hostPort: 3001,
       protocol: ecs.Protocol.TCP,
     },
+    {
+      containerPort: 1883,
+      hostPort: 1883,
+      protocol: ecs.Protocol.TCP,
+    },
   ],
 });
 
@@ -126,6 +131,13 @@ TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(3001),
   "Allow inbound traffic on port 3001",
+  true,
+);
+TelemetryBackendVPCSecurityGroup.addIngressRule(
+  ec2.Peer.anyIpv4(),
+  ec2.Port.tcp(1883),
+  "Allow inbound traffic on port 1883",
+  true,
 );
 
 const TelemetryECSCluster = new ecs.Cluster(
