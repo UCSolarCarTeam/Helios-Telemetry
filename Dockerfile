@@ -74,6 +74,7 @@ USER root
 WORKDIR /opt/solarcar-user
 ENV NODE_ENV production
 ENV SERVER_PORT 3001
+ENV MQTT_SERVER_PORT 1883
 
 COPY --from=buildstageBackend /opt/helios-backend/src/server ./server
 COPY --from=buildstageBackend /opt/helios-backend/src/node_modules ./node_modules
@@ -81,5 +82,6 @@ COPY --from=buildstageBackend /opt/helios-backend/src/package.json ./package.jso
 COPY --from=buildstageBackend /opt/helios-backend/src/tsconfig.json ./tsconfig.json
 
 EXPOSE ${SERVER_PORT}
+EXPOSE ${MQTT_SERVER_PORT}
 USER solarcar-user
 CMD ["npm", "run", "start:server"]
