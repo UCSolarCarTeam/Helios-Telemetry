@@ -9,6 +9,7 @@ export enum FaultLocations {
   RIGHTMOTOR,
   BATTERY,
   SOLARPANEL,
+  OTHER,
 }
 
 export type IndicationLocations = {
