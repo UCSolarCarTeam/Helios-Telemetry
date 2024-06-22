@@ -109,6 +109,7 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       protocol: ecs.Protocol.TCP,
     },
   ],
+  ma,
 });
 
 const TelemetryBackendVPC = new ec2.Vpc(
@@ -176,6 +177,8 @@ const TelemetryECSService = new ecs.Ec2Service(
     cluster: TelemetryECSCluster,
     taskDefinition: TelemetryECSTaskDefintion,
     desiredCount: 1,
+    maxHealthyPercent: 100,
+    minHealthyPercent: 0,
   },
 );
 // TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);
