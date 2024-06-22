@@ -109,7 +109,6 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       protocol: ecs.Protocol.TCP,
     },
   ],
-  ma,
 });
 
 const TelemetryBackendVPC = new ec2.Vpc(
