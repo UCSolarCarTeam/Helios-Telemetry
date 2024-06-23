@@ -96,7 +96,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 );
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
-  memoryLimitMiB: 256,
+  memoryLimitMiB: 1024,
   portMappings: [
     {
       containerPort: 3001,
