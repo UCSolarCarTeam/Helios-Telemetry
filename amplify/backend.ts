@@ -34,6 +34,7 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
         codebuild.FilterGroup.inEventOf(
           codebuild.EventAction.PULL_REQUEST_MERGED,
           codebuild.EventAction.PUSH,
+          codebuild.Event
         ).andBranchIs("main"),
       ],
     }),
@@ -96,7 +97,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 );
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
-  memoryLimitMiB: 1024,
+  memoryLimitMiB: 2048,
   portMappings: [
     {
       containerPort: 3001,
