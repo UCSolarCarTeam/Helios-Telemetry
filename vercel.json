@@ -1,7 +1,0 @@
-{
-  "buildCommand": "yarn build:client",
-  "devCommand": "yarn dev:client",
-  "framework": "nextjs",
-  "installCommand": "yarn",
-  "outputDirectory": "client/.next"
-}

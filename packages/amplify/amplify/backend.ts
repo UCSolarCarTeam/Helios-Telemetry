@@ -175,7 +175,7 @@ const TelemetryECSService = new ecs.Ec2Service(
   {
     cluster: TelemetryECSCluster,
     taskDefinition: TelemetryECSTaskDefintion,
-    desiredCount: 1,
+    desiredCount: 0,
     maxHealthyPercent: 100,
     minHealthyPercent: 0,
   },

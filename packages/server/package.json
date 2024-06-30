@@ -1,0 +1,29 @@
+{
+  "license": "ISC",
+  "scripts": {
+    "clean": "rimraf dist",
+    "start": "node -r ts-node/register -r tsconfig-paths/register dist/server/src/server.js",
+    "build": "npm run clean && npm run tsc",
+    "dev": "nodemon - exec 'ts-node' src/server.ts",
+    "tsc": "tsc -p ./tsconfig.json"
+  },
+  "dependencies": {
+    "@types/sqlite3": "^3.1.11",
+    "aedes": "^0.51.2",
+    "axios-retry": "^4.0.0",
+    "@aws-sdk/types": "^3.535.0",
+    "axios": "^1.6.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "sqlite": "^5.1.1",
+    "mqtt": "^5.7.0",
+    "@godaddy/terminus": "^4.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "@types/sqlite3": "^3.1.11",
+    "@aws-sdk/types": "^3.535.0",
+    "rimraf": "^5.0.5"
+  }
+}

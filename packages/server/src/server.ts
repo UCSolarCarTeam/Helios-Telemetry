@@ -1,8 +1,6 @@
+import aedesServer from "@/aedes";
 import server from "@/index";
 import { createLightweightApplicationLogger } from "@/utils/logger";
-
-import aedesServer from "./aedes";
-import main from "./main";
 
 const logger = createLightweightApplicationLogger("server.ts");
 const port = process.env.SERVER_PORT || 3001;
@@ -25,5 +23,3 @@ export const httpServer = server
 aedesServer.listen(aedesServerPort, () => {
   logger.info(`Aedes server started and listening on port ${aedesServerPort}`);
 });
-
-main();
