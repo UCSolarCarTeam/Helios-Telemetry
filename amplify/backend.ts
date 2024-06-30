@@ -34,7 +34,6 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
         codebuild.FilterGroup.inEventOf(
           codebuild.EventAction.PULL_REQUEST_MERGED,
           codebuild.EventAction.PUSH,
-          codebuild.Event
         ).andBranchIs("main"),
       ],
     }),
