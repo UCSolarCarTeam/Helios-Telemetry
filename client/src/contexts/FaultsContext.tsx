@@ -1,7 +1,5 @@
 import {
-  type Dispatch,
   type ReactNode,
-  type SetStateAction,
   createContext,
   useContext,
   useEffect,
@@ -9,6 +7,7 @@ import {
   useState,
 } from "react";
 
+// type TestType = I_PISFieldData & { faultTimer: number | undefined };
 import {
   FaultLocations,
   ISeverity,
@@ -83,7 +82,7 @@ export function FaultsContextProvider({ children }: Props) {
         acc[prefixedKey] = obj[key as keyof typeof obj];
       }
       return acc;
-    }, {} as TestFaultType); // Add return type annotation
+    }, {} as TestFaultType);
   }
 
   function mapFlattenedToJsonObjects(flattenedJson: TestFaultType): IFaults[] {
@@ -100,14 +99,13 @@ export function FaultsContextProvider({ children }: Props) {
         tempObject[propertyName] = value;
         entryCounter++;
 
-        // Every 4 entries or last entry, push the tempObject to resultArray and reset tempObject
         if (
           entryCounter === 4 ||
           index === Object.entries(flattenedJson).length - 1
         ) {
           resultArray.push(tempObject as IFaults);
-          tempObject = {}; // Reset for the next group
-          entryCounter = 0; // Reset counter
+          tempObject = {};
+          entryCounter = 0;
         }
       }
     });
@@ -130,29 +128,26 @@ export function FaultsContextProvider({ children }: Props) {
     const newGroupedFaults = groupedFaults.map((faultObj) => ({ ...faultObj }));
 
     if (Array.isArray(newGroupedFaults)) {
+      //   console.log(newGroupedFaults);
       newGroupedFaults.forEach((faultObj: IFaults) => {
         if (faultObj.value === true) {
-          if (faultObj.faultTimer === undefined) {
-            faultObj.faultTimer = 1; // the fault is new, so the timer should now be 1
+          if (faultObj.faultTimer !== undefined) {
+            faultObj.faultTimer += 1; // increment
           } else {
-            faultObj.faultTimer += 1; // increment the timer if the fault is still true
+            faultObj.faultTimer = 1; // fault is new so timer is 1
           }
         } else {
           faultObj.faultTimer = undefined; // the fault doesnt exist anymore if its false
         }
       });
-    } else {
-      console.error("newGroupedFaults is not an array", newGroupedFaults);
     }
 
-    // Update the state only if there were changes
     setCurrentFaults((prevFaults) => {
       if (JSON.stringify(prevFaults) !== JSON.stringify(newGroupedFaults)) {
         return newGroupedFaults;
       }
-      //   console.log(prevFaults);
       return prevFaults;
-    }); // Assuming setGroupedFaults is the state updater function
+    });
   }, [groupedFaults]);
 
   return (

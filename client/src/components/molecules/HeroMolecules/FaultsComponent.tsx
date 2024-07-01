@@ -10,13 +10,15 @@ function FaultsComponent() {
       {Array.isArray(currentFaults) && currentFaults.length > 0 ? (
         <>
           {currentFaults.map((faultObj: IFaults, index: number) => {
-            return (
-              <FaultCard
-                key={index}
-                severity={faultObj.severity}
-                faultName={faultObj.name}
-              />
-            );
+            if (faultObj.value === true) {
+              return (
+                <FaultCard
+                  key={index}
+                  severity={faultObj.severity}
+                  faultName={faultObj.name}
+                />
+              );
+            }
           })}
         </>
       ) : (
