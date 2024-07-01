@@ -1,6 +1,7 @@
 import sqlite3 from "sqlite3";
 
 import type ITelemetryData from "@/client/objects/telemetry-data.interface";
+import type ILapData from "@/client/objects/telemetry-data.interface";
 
 export class SQLite {
   private db: sqlite3.Database;
@@ -65,7 +66,7 @@ export class SQLite {
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
     return this.runQuery(sql, [packet.TimeStamp, data]);
   }
-  public insertLapData(packet: ITelemetryData): Promise<{ id: number }> {
+  public insertLapData(packet: ILapData): Promise<{ id: number }> {
     const sql = "INSERT INTO lapData (date, data) VALUES (?, ?)";
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
     return this.runQuery(sql, [packet.TimeStamp, data]);
