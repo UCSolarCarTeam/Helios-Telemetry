@@ -1,7 +1,9 @@
 import sqlite3 from "sqlite3";
 
-import type ITelemetryData from "@/client/objects/telemetry-data.interface";
-import type ILapData from "@/client/objects/telemetry-data.interface";
+import type {
+  ILapData,
+  ITelemetryData,
+} from "@/client/objects/telemetry-data.interface";
 
 export class SQLite {
   private db: sqlite3.Database;
@@ -76,7 +78,11 @@ export class SQLite {
     const sql = "SELECT * FROM packetData";
     return this.getAllRows(sql);
   }
-  public getLapData(): Promise<ITelemetryData[]> {
+  // public getLapData(): Promise<ITelemetryData[]> {
+  //   const sql = "SELECT * FROM lapData";
+  //   return this.getAllRows(sql);
+  // }
+  public async getLapData(): Promise<ITelemetryData[]> {
     const sql = "SELECT * FROM lapData";
     return this.getAllRows(sql);
   }

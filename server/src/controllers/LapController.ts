@@ -1,17 +1,19 @@
-import SQLite from "@/interfaces/SQLite";
-import { SocketIO } from "@/interfaces/SocketIO";
-import type ITelemetryData from "@/objects/telemetry-data.interface";
-import type ILapData from "@/objects/telemetry-data.interface";
+import type SQLite from "@/interfaces/SQLite";
+import type { SocketIO } from "@/interfaces/SocketIO";
+import type {
+  ILapData,
+  ITelemetryData,
+} from "@/objects/telemetry-data.interface";
 import { getDistance } from "@/utils/calculationUtils";
 
 export class LapController {
-  private lastLapPackets: ILapData[] = {} as ILapData[];
+  private lastLapPackets: ITelemetryData[] = {} as ITelemetryData[];
   private socketIO: SocketIO;
   private previouslyInFinishLineProximity: boolean = false;
   private sqlLite: SQLite;
   private lapNumber: number = 0;
 
-  constructor(socketIO: typeof SocketIO, sqlLite: SQLite) {
+  constructor(socketIO: SocketIO, sqlLite: SQLite) {
     this.socketIO = socketIO;
     this.sqlLite = sqlLite;
   }
@@ -22,29 +24,36 @@ export class LapController {
       // send lap over socket
 
       // update last lap packet
+      const amphoursValue = this.lastLapPackets[-1].Battery
+        .PackAmphours as number;
+      const averagePackCurrent = this.calculateAveragePackCurrent(
+        this.lastLapPackets,
+      );
 
-      const lapData = {
-        timestamp: packet.TimeStamp,
-        lapTime: this.calculateLapTime(this.lastLapPackets),
+      const lapData: ILapData = {
+        timeStamp: packet.TimeStamp,
         totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
         totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
-        netPowerOut: 0,
-        distance: this.calculateMotorDistance(this.lastLapPackets, 0), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
-        amphours: 0,
-        averagePackCurrent: this.calculateAveragePackCurrent(
-          this.lastLapPackets,
+        netPowerOut: this.netPower(this.lastLapPackets),
+        distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+        ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACKAMPHOURS
+        averagePackCurrent: averagePackCurrent,
+        batterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
+          amphoursValue,
+          averagePackCurrent,
         ),
-        batterySecondsRemaining: 0,
         averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
+        lapTime:
+          this.lastLapPackets[-1].TimeStamp - this.lastLapPackets[0].TimeStamp,
       };
 
-      await this.sqlLite.insertLapData(lapData as ILapData);
+      await this.sqlLite.insertLapData(lapData);
       this.lastLapPackets = [];
     }
     this.lastLapPackets.push(packet);
   }
 
-  public getLastPacket() {
+  public getLastPacket(): ITelemetryData[] {
     return this.lastLapPackets;
   }
 
@@ -91,8 +100,14 @@ export class LapController {
     }
 
     const sumAverageLapSpeed = lastLapPackets.reduce((sum, packet) => {
-      const vehicleVelocity = packet.KeyMotor[0]?.VehicleVelocity;
-      return vehicleVelocity !== undefined ? sum + vehicleVelocity : sum;
+      const vehicleVelocityMotor0 = packet.KeyMotor[0]?.VehicleVelocity;
+      const vehicleVelocityMotor1 = packet.KeyMotor[1]?.VehicleVelocity;
+
+      return vehicleVelocityMotor0 !== undefined
+        ? vehicleVelocityMotor1 !== undefined
+          ? sum + (vehicleVelocityMotor0 + vehicleVelocityMotor1) / 2
+          : sum
+        : sum;
     }, 0);
 
     return sumAverageLapSpeed / lastLapPackets.length;
@@ -126,10 +141,10 @@ export class LapController {
     return motorReset;
   };
 
-  public calculateMotorDistance = function (
+  public calculateMotorDistance = (
     packetArray: ITelemetryData[],
     odometerIndex: number,
-  ) {
+  ): number => {
     // The Motor's Odometer resets every time a motor trips or the car power cycles
     let totalDistanceTraveled = 0;
     let motorDistanceTraveledSession = 0;
@@ -158,6 +173,22 @@ export class LapController {
     return totalDistanceTraveled;
   };
 
+  public getDistanceTravelled(packetArray: ITelemetryData[]) {
+    if (packetArray.length === 0) {
+      return 0;
+    }
+    const motor0DistanceTravelledTotal = this.calculateMotorDistance(
+      packetArray,
+      0,
+    );
+    const motor1DistanceTravelledTotal = this.calculateMotorDistance(
+      packetArray,
+      1,
+    );
+
+    return (motor0DistanceTravelledTotal + motor1DistanceTravelledTotal) / 2;
+  }
+
   public getAveragePowerIn = function (packetArray: ITelemetryData[]) {
     // If no packets, then no power in
     if (packetArray.length === 0) {
@@ -169,7 +200,7 @@ export class LapController {
     const motorCount = 2;
 
     // Get the sum of the average array power of all MPPTs
-    let mpptPowerIn = packetArray
+    const mpptPowerIn = packetArray
       .map((packet) => {
         let arrayPower = 0;
         for (let mppt = 0; mppt < mpptCount; mppt++) {
@@ -184,14 +215,14 @@ export class LapController {
       .reduce((sum, curr) => sum + curr / packetArray.length, 0);
 
     // Get the sum of the regen of all motors
-    let regenPowerIn = packetArray
+    const regenPowerIn = packetArray
       .map((packet) => {
         let regen = 0;
         for (let motor = 0; motor < motorCount; motor++) {
           // let busCurrent = packet['motor' + motor + 'buscurrent'];
           // let busVoltage = packet['motor' + motor + 'busvoltage'];
-          let busCurrent = packet.KeyMotor[motor].BusCurrent;
-          let busVoltage = packet.KeyMotor[motor].BusVoltage;
+          const busCurrent = packet.KeyMotor[motor].BusCurrent;
+          const busVoltage = packet.KeyMotor[motor].BusVoltage;
 
           // Filter out any values with busCurrent >= 0
           if (busCurrent >= 0) {
@@ -207,7 +238,7 @@ export class LapController {
     return Math.abs(mpptPowerIn + regenPowerIn);
   };
 
-  public getAveragePowerOut = function (packetArray) {
+  public getAveragePowerOut = function (packetArray: ITelemetryData[]) {
     // If no packets, then no power out
     if (packetArray.length === 0) {
       return 0;
@@ -221,4 +252,33 @@ export class LapController {
       ) / packetArray.length,
     );
   };
+
+  public netPower(packetArray: ITelemetryData[]) {
+    return (
+      this.getAveragePowerIn(packetArray) - this.getAveragePowerOut(packetArray)
+    );
+  }
+
+  public getSecondsRemainingUntilChargedOrDepleted(
+    averagePackCurrent: number,
+    packAmpHours: number,
+  ): number {
+    if (averagePackCurrent === 0) {
+      return -1;
+    }
+    let amphoursLeft = 0;
+    if (averagePackCurrent >= 0) {
+      amphoursLeft = packAmpHours;
+    } else {
+      amphoursLeft = 165.6 - packAmpHours;
+    }
+    const hoursUntilChargedOrDepleted =
+      amphoursLeft / Math.abs(averagePackCurrent);
+    const secondsUntilChargedOrDepleted = hoursUntilChargedOrDepleted * 3600;
+    if (isNaN(secondsUntilChargedOrDepleted)) {
+      return -1;
+    } else {
+      return Math.round(secondsUntilChargedOrDepleted);
+    }
+  }
 }
