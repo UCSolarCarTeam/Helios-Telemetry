@@ -4,21 +4,18 @@ import { type IFaults, useFaults } from "@/contexts/FaultsContext";
 
 function FaultsComponent() {
   const { currentFaults } = useFaults();
-
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
       {Array.isArray(currentFaults) && currentFaults.length > 0 ? (
         <>
           {currentFaults.map((faultObj: IFaults, index: number) => {
-            if (faultObj.value === true) {
-              return (
-                <FaultCard
-                  key={index}
-                  severity={faultObj.severity}
-                  faultName={faultObj.name}
-                />
-              );
-            }
+            return (
+              <FaultCard
+                key={index}
+                severity={faultObj.severity}
+                faultName={faultObj.name}
+              />
+            );
           })}
         </>
       ) : (
