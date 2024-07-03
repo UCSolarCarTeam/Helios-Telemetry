@@ -18,3 +18,5 @@ export default function main() {
     socket.broadcastCarLatency(LATENCY());
   }, 2500);
 }
+
+main();

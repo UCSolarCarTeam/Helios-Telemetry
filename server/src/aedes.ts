@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import Aedes from "aedes";
+import Aedes, { AuthenticateError, Client } from "aedes";
 import { createServer } from "net";
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
@@ -20,20 +20,27 @@ class MqttError extends Error {
     Object.setPrototypeOf(this, MqttError.prototype);
   }
 }
+
 // Authentication function
 aedes.authenticate = function (
-  username: string,
-  password: string,
-  callback: (error: Error | null, success: boolean) => void,
+  client: Client,
+  username: string | undefined,
+  password: Buffer | undefined,
+  done: (error: AuthenticateError | null, success: boolean) => void,
 ) {
+  // TO DO: Convert to ENV VARS
   const validUsername = "urMom"; // Replace with your valid username
   const validPassword = "hasAedes"; // Replace with your valid password
-
+  if (!username || !password) {
+    const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
+    done(error, false); // Authentication failed
+    return;
+  }
   if (username === validUsername && password.toString() === validPassword) {
-    callback(null, true); // Authentication successful
+    done(null, true); // Authentication successful
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
-    callback(error, false); // Authentication failed
+    done(error, false); // Authentication failed
   }
 };
 

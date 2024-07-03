@@ -1,9 +1,12 @@
 import server from "@/index";
-import main from "@/main";
 import { createLightweightApplicationLogger } from "@/utils/logger";
+
+import aedesServer from "./aedes";
+import main from "./main";
 
 const logger = createLightweightApplicationLogger("server.ts");
 const port = process.env.SERVER_PORT || 3001;
+const aedesServerPort = process.env.MQTT_SERVER_PORT || 1883;
 
 export const httpServer = server
   .listen(port, () => {
@@ -18,4 +21,9 @@ export const httpServer = server
     logger.error(error.message);
     throw error;
   });
+
+aedesServer.listen(aedesServerPort, () => {
+  logger.info(`Aedes server started and listening on port ${aedesServerPort}`);
+});
+
 main();

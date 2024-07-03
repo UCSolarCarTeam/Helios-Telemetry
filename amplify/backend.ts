@@ -96,11 +96,16 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 );
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
-  memoryLimitMiB: 256,
+  memoryLimitMiB: 900,
   portMappings: [
     {
       containerPort: 3001,
       hostPort: 3001,
+      protocol: ecs.Protocol.TCP,
+    },
+    {
+      containerPort: 1883,
+      hostPort: 1883,
       protocol: ecs.Protocol.TCP,
     },
   ],
@@ -126,6 +131,13 @@ TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(3001),
   "Allow inbound traffic on port 3001",
+  true,
+);
+TelemetryBackendVPCSecurityGroup.addIngressRule(
+  ec2.Peer.anyIpv4(),
+  ec2.Port.tcp(1883),
+  "Allow inbound traffic on port 1883",
+  true,
 );
 
 const TelemetryECSCluster = new ecs.Cluster(
@@ -164,6 +176,8 @@ const TelemetryECSService = new ecs.Ec2Service(
     cluster: TelemetryECSCluster,
     taskDefinition: TelemetryECSTaskDefintion,
     desiredCount: 1,
+    maxHealthyPercent: 100,
+    minHealthyPercent: 0,
   },
 );
 // TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);

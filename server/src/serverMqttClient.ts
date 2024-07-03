@@ -16,7 +16,7 @@ const clientId = "server";
 const logger = createLightweightApplicationLogger("serverMqttClient.ts");
 
 const options: Options = {
-  url: `mqtt://localhost:${process.env.MQTT_PORT || 1883}`,
+  url: `mqtt://localhost:${process.env.MQTT_SERVER_PORT || 1883}`,
   clientId,
   username: "urMom",
   password: "hasAedes",
