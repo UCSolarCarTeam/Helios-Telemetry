@@ -7,7 +7,7 @@ import {
 } from "react";
 
 // type TestType = I_PISFieldData & { faultTimer: number | undefined };
-import {
+import type {
   FaultLocations,
   ISeverity,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
@@ -23,7 +23,7 @@ export interface IFaults {
   indicationLocation: FaultLocations;
   severity: ISeverity;
   name: string;
-  faultTimer: number | undefined;
+  faultTimer: number;
 }
 interface IFaultsReturn {
   currentFaults: IFaults[];
@@ -36,15 +36,7 @@ type TestFaultType = {
 const faultsContext = createContext<IFaultsReturn>({} as IFaultsReturn);
 
 export function FaultsContextProvider({ children }: Props) {
-  const [currentFaults, setCurrentFaults] = useState<IFaults[]>([
-    {
-      value: false,
-      indicationLocation: FaultLocations.OTHER,
-      severity: ISeverity.CLEAR,
-      name: "",
-      faultTimer: 0,
-    },
-  ]);
+  const [currentFaults, setCurrentFaults] = useState<IFaults[]>([]);
 
   const faults = Faults();
 
@@ -60,24 +52,23 @@ export function FaultsContextProvider({ children }: Props) {
               setCurrentFaults((prevFaults) => {
                 const newFaults = [...prevFaults];
 
-                const existingFault = newFaults.find(
-                  (fault) => fault.name === faultName, // find the fault
+                const faultIndex = newFaults.findIndex(
+                  (f) => f.name === faultName, // Find the fault index
                 );
 
-                if (existingFault) {
-                  if (existingFault.value === false) {
+                if (faultIndex !== -1) {
+                  const existingFault = newFaults[faultIndex];
+                  if (data.value === false) {
                     if (existingFault.faultTimer === 10) {
-                      newFaults.filter((fault) => fault.name !== faultName); // remove the fault
+                      newFaults.splice(faultIndex, 1); // remove the fault
                     } else {
-                      // if its in the array and timer is not 10, increment it
-                      existingFault.faultTimer = existingFault.faultTimer
-                        ? existingFault.faultTimer + 1
-                        : 1;
+                      existingFault.faultTimer += 1; // Or any other necessary update
+                      newFaults[faultIndex] = existingFault;
                     }
                   }
                 } else {
                   // if its true and its the first time seeing this fault, add it and start timer
-                  console.log(data);
+                  // console.log(data);
                   if (data.value === true) {
                     newFaults.push({
                       value: data.value,
