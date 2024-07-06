@@ -24,8 +24,8 @@ export class LapController {
       // send lap over socket
 
       // update last lap packet
-      const amphoursValue = this.lastLapPackets[-1].Battery
-        .PackAmphours as number;
+      const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
+        .Battery.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
         this.lastLapPackets,
       );
@@ -36,15 +36,14 @@ export class LapController {
         totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
         netPowerOut: this.netPower(this.lastLapPackets),
         distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
-        ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACKAMPHOURS
+        ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
         averagePackCurrent: averagePackCurrent,
         batterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
           amphoursValue,
           averagePackCurrent,
         ),
         averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
-        lapTime:
-          this.lastLapPackets[-1].TimeStamp - this.lastLapPackets[0].TimeStamp,
+        lapTime: this.calculateLapTime(this.lastLapPackets),
       };
 
       await this.sqlLite.insertLapData(lapData);
