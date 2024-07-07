@@ -1,10 +1,11 @@
+import { twMerge } from "tailwind-merge";
+
 import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
-import { useAppState } from "@/contexts/AppStateContext";
+import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
-import { socketIO } from "@/socket";
 
 function StatusComponent() {
   const { currentAppState } = useAppState();
@@ -14,7 +15,7 @@ function StatusComponent() {
   const carConnection = currentAppState.socketConnected;
   const colorTheme = currentAppState.darkMode ? "#FFFFFF" : "#000000";
   // Maybe server should have a reference to the last packet received from the vehicle.
-  const packetTime = socketIO.connected
+  const packetTime = currentAppState.socketConnected
     ? new Date(currentPacket.TimeStamp).toLocaleString()
     : "DISCONNECTED";
   return (
@@ -39,12 +40,30 @@ function StatusComponent() {
           />
           <CarIcon color={colorTheme} width="25px" height="25px" />
         </div>
-        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-sm">
-          PACKET TIMESTAMP
+        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs ">
+          Timestamp:
         </h5>
-        <h5 className="text-text-gray dark:text-text-gray-dark pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
+        <h5 className="text-text-gray dark:text-text-gray-dark text-nowrap pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
           {packetTime}
         </h5>
+        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs ">
+          Connection:
+        </h5>
+        <h5 className="text-text-gray dark:text-text-gray-dark text-nowrap pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
+          {currentAppState.connectionType.toUpperCase()}
+        </h5>
+        {currentAppState.connectionType === CONNECTIONTYPES.DEMO && (
+          <h5
+            className={twMerge(
+              "dark:text-text-gray-dark align-center items-center pb-1 text-lg font-bold text-helios",
+              new Date().getSeconds() % 2 === 0
+                ? "bg-black text-helios"
+                : "bg-helios text-black",
+            )}
+          >
+            SIMULATION
+          </h5>
+        )}
       </div>
     </div>
   );

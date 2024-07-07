@@ -20,6 +20,10 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
+    console.log(
+      "LoadingWrapper: currentAppState.loading",
+      currentAppState.loading,
+    );
     let pendingTimeout: NodeJS.Timeout;
     let readyTimeout: NodeJS.Timeout;
     let confirmTimeout: NodeJS.Timeout;
@@ -44,10 +48,11 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
     }
 
     return () => {
-      clearTimeout(driveInTimeout);
-      clearTimeout(pendingTimeout);
-      clearTimeout(readyTimeout);
-      clearTimeout(confirmTimeout);
+      // TODO: Adding these makes the timeouts clear before they run since the app state is constantly rerendered @brian-ngyn
+      // clearTimeout(driveInTimeout);
+      // clearTimeout(pendingTimeout);
+      // clearTimeout(readyTimeout);
+      // clearTimeout(confirmTimeout);
     };
   }, [
     currentAppState.loading,

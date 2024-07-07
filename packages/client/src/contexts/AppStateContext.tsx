@@ -29,8 +29,9 @@ interface IAppState {
   error: boolean;
   darkMode: boolean;
   appUnits: APPUNITS;
-  connectionTypes: CONNECTIONTYPES;
+  connectionType: CONNECTIONTYPES;
   socketConnected: boolean;
+  radioConnected: boolean;
   userLatency: number;
   carLatency: number;
 }
@@ -50,8 +51,9 @@ export function AppStateContextProvider({ children }: Props) {
     error: false,
     darkMode: false,
     appUnits: APPUNITS.METRIC,
-    connectionTypes: CONNECTIONTYPES.NETWORK,
+    connectionType: CONNECTIONTYPES.NETWORK,
     socketConnected: false,
+    radioConnected: false,
     userLatency: 0,
     carLatency: 0,
   });
@@ -64,12 +66,7 @@ export function AppStateContextProvider({ children }: Props) {
         ...prev,
         darkMode: parsedSettings.darkMode,
         appUnits: parsedSettings.appUnits,
-        connectionTypes: parsedSettings.connectionTypes,
-      }));
-    } else {
-      setCurrentAppState((prev) => ({
-        ...prev,
-        loading: false,
+        connectionType: parsedSettings.connectionType,
       }));
     }
   };
