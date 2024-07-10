@@ -2,8 +2,8 @@ import {
   type ReactNode,
   createContext,
   useContext,
-  useEffect,
-  useState,
+  useMemo,
+  useRef,
 } from "react";
 
 // type TestType = I_PISFieldData & { faultTimer: number | undefined };
@@ -26,74 +26,59 @@ export interface IFaults {
   faultTimer: number;
 }
 interface IFaultsReturn {
-  currentFaults: IFaults[];
+  currentFaults: Map<string, IFaults>;
 }
 
-type TestFaultType = {
-  [key: string]: boolean;
-};
-
 const faultsContext = createContext<IFaultsReturn>({} as IFaultsReturn);
-
+function incrementOrDropFaultTimer(faults: Map<string, IFaults>) {
+  faults.forEach((fault, index) => {
+    faults.set(index, { ...fault, faultTimer: fault.faultTimer + 1 });
+    if (fault.faultTimer >= 3) {
+      faults.delete(fault.name);
+    }
+  });
+}
 export function FaultsContextProvider({ children }: Props) {
-  const [currentFaults, setCurrentFaults] = useState<IFaults[]>([]);
-
   const faults = Faults();
-
-  useEffect(() => {
-    const processFaultSection = (section: I_PIS) => {
-      Object.keys(section).forEach((key) => {
-        const value = section[key];
-
-        if (Array.isArray(value)) {
-          value.map((fault) => {
-            const faultName = fault.name;
-            fault.data.map((data) => {
-              setCurrentFaults((prevFaults) => {
-                const newFaults = [...prevFaults];
-
-                const faultIndex = newFaults.findIndex(
-                  (f) => f.name === faultName, // Find the fault index
-                );
-
-                if (faultIndex !== -1) {
-                  const existingFault = newFaults[faultIndex];
-                  if (data.value === false) {
-                    if (existingFault.faultTimer === 10) {
-                      newFaults.splice(faultIndex, 1); // remove the fault
-                    } else {
-                      existingFault.faultTimer += 1; // Or any other necessary update
-                      newFaults[faultIndex] = existingFault;
-                    }
-                  }
-                } else {
-                  // if its true and its the first time seeing this fault, add it and start timer
-                  // console.log(data);
-                  if (data.value === true) {
-                    newFaults.push({
-                      value: data.value,
-                      indicationLocation: data.indiciationLocation,
-                      severity: data.severity,
-                      name: faultName,
-                      faultTimer: 1,
-                    });
-                  }
-                }
-
-                return newFaults;
-              });
+  const trueFaultsRef = useRef(new Map<string, IFaults>());
+  function processFaultSection(section: I_PIS) {
+    Object.keys(section).forEach((key) => {
+      const value = section[key];
+      if (Array.isArray(value)) {
+        value.forEach((fault) => {
+          if (fault.data[0].value === false) {
+            return;
+          }
+          const existingFault = trueFaultsRef.current.get(fault.name);
+          // reset fault timer
+          if (existingFault) {
+            trueFaultsRef.current.set(fault.name, {
+              ...existingFault,
+              faultTimer: 0,
             });
-          });
-        } else {
-          // Recursive call for nested objects
-          processFaultSection(value);
-        }
-      });
-    };
-
+            return;
+          }
+          // add to trueFaults
+          const newFault: IFaults = {
+            faultTimer: 0,
+            severity: fault.data[0].severity,
+            indicationLocation: fault.data[0].indiciationLocation,
+            value: !!fault.data[0].value,
+            name: fault.name,
+          };
+          trueFaultsRef.current.set(fault.name, newFault);
+        });
+      } else {
+        processFaultSection(value);
+      }
+    });
+  }
+  const currentFaults = useMemo(() => {
     processFaultSection(faults);
+    incrementOrDropFaultTimer(trueFaultsRef.current);
+    console.log(trueFaultsRef.current);
+    return trueFaultsRef.current;
   }, [faults]);
-
   return (
     <faultsContext.Provider
       value={{
