@@ -15,11 +15,11 @@ function ThrottleIcon() {
           style={{ width: `${100 - regenPos}%` }}
         />
         <span
-          className={`bg-green flex h-1 transition-all`}
+          className={`flex h-1 bg-green transition-all`}
           style={{ width: `${regenPos}%` }}
         />
         <span
-          className={`bg-helios flex h-1 transition-all`}
+          className={`flex h-1 bg-helios transition-all`}
           style={{ width: `${gasPos}%` }}
         />
         <span
@@ -28,7 +28,7 @@ function ThrottleIcon() {
         />
       </span>
       <span className="z-10 m-auto mt-[-9.5px] h-4 w-0.5 bg-[#505050]" />
-      <span className="z-0 m-auto mt-[-9.5px] h-[0.12rem] w-full bg-[#505050] " />
+      <span className="z-0 m-auto mt-[-9.5px] h-[0.12rem] w-full bg-[#505050]" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 {
   "name": "helios-telemetry-infrastructure",
-  "type": "module",
+  "private": true,
+  "version": "0.1.0",
   "dependencies": {
     "aws-amplify": "^6.0.17"
   },

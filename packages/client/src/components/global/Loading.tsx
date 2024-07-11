@@ -27,10 +27,10 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
 
   return (
     <div
-      className={`dark:bg-dark fixed z-50 flex h-screen w-screen items-center justify-center bg-white`}
+      className={`fixed z-50 flex h-screen w-screen items-center justify-center bg-white dark:bg-dark`}
     >
       <div className="left-1/2 top-1/2 flex flex-col items-center justify-center">
-        <div className="flex size-96 items-center justify-center ">
+        <div className="flex size-96 items-center justify-center">
           <Image
             priority
             quality={50}
@@ -43,7 +43,7 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
         </div>
         <div
           className={twMerge(
-            "animate-circle  absolute flex h-64 w-64 items-center justify-end",
+            "absolute flex h-64 w-64 animate-circle items-center justify-end",
             currentLoadingState === LOADINGSTAGES.PENDING
               ? "visible"
               : "invisible",
@@ -57,7 +57,7 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
             height={65}
           />
         </div>
-        <div className="dark:bg-dark absolute bottom-0 z-30 h-1/2 w-full bg-white" />
+        <div className="absolute bottom-0 z-30 h-1/2 w-full bg-white dark:bg-dark" />
         <h2
           className={twMerge(
             "z-50 text-2xl",

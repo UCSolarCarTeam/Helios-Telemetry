@@ -9,10 +9,11 @@ function SpeedAtom() {
   let speedValue = 0;
   let speedUnit = "km/h";
   if (currentAppState.appUnits === APPUNITS.IMPERIAL) {
-    speedValue = currentPacket.KeyMotor[0].VehicleVelocity * 0.621371;
+    speedValue =
+      (currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.621371;
     speedUnit = "mph";
   } else {
-    speedValue = currentPacket.KeyMotor[0].VehicleVelocity;
+    speedValue = currentPacket?.KeyMotor[0]?.VehicleVelocity as number;
   }
 
   return (

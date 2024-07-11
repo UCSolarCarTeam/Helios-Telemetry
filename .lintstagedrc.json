@@ -1,5 +1,0 @@
-{
-  "client/src/**/*.{js,jsx,ts,tsx}": [
-    "yarn --cwd client/src prettier --write ."
-  ]
-}

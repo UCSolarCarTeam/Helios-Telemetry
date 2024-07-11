@@ -5,7 +5,10 @@ import * as THREE from "three";
 
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
-import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
+import type {
+  FaultLocations,
+  IndicationLocations,
+} from "@/components/molecules/HeroMolecules/HeroTypes";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
@@ -77,7 +80,7 @@ function CarGraphicComponent() {
           indications={indications}
         />
         <RoadComponent
-          speed={currentPacket.KeyMotor[0].VehicleVelocity * 0.5}
+          speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
           size={15}
         />
         <ContactShadows
@@ -93,8 +96,7 @@ function CarGraphicComponent() {
 
       {/* This is a temporary button to show transperency functionality*/}
       <button
-        className="border-helios text-helios hover:bg-helios m-auto self-end 
-      rounded border-2 px-1 font-bold hover:text-white"
+        className="m-auto self-end rounded border-2 border-helios px-1 font-bold text-helios hover:bg-helios hover:text-white"
         onClick={() => changeClear(!isClear)}
       >
         View Inside

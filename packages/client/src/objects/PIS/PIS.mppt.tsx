@@ -11,7 +11,7 @@ const MPPT = (): I_PIS => {
           name: "Array Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[0].ArrayVoltage,
+              value: currentPacket?.MPPT[0]?.ArrayVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -23,7 +23,7 @@ const MPPT = (): I_PIS => {
           name: "Array Current",
           data: [
             {
-              value: currentPacket?.MPPT[0].ArrayCurrent,
+              value: currentPacket?.MPPT[0]?.ArrayCurrent,
               Unit: UnitType.AMPERAGE,
               min: 20,
               max: 100,
@@ -34,7 +34,7 @@ const MPPT = (): I_PIS => {
           name: "Battery Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[0].BatteryVoltage,
+              value: currentPacket?.MPPT[0]?.BatteryVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -45,7 +45,7 @@ const MPPT = (): I_PIS => {
           name: "Battery Current",
           data: [
             {
-              value: currentPacket?.MPPT[0].ArrayCurrent,
+              value: currentPacket?.MPPT[0]?.ArrayCurrent,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -56,7 +56,7 @@ const MPPT = (): I_PIS => {
           name: "Temperature",
           data: [
             {
-              value: currentPacket?.MPPT[0].Temperature,
+              value: currentPacket?.MPPT[0]?.Temperature,
               unit: UnitType.TEMP,
               min: 20,
               max: 100,
@@ -69,7 +69,7 @@ const MPPT = (): I_PIS => {
           name: "Array Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[1].ArrayVoltage,
+              value: currentPacket?.MPPT[1]?.ArrayVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -81,7 +81,7 @@ const MPPT = (): I_PIS => {
           name: "Array Current",
           data: [
             {
-              value: currentPacket?.MPPT[1].ArrayCurrent,
+              value: currentPacket?.MPPT[1]?.ArrayCurrent,
               unit: UnitType.AMPERAGE,
               min: 20,
               max: 100,
@@ -93,7 +93,7 @@ const MPPT = (): I_PIS => {
           name: "Battery Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[1].BatteryVoltage,
+              value: currentPacket?.MPPT[1]?.BatteryVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -104,7 +104,7 @@ const MPPT = (): I_PIS => {
           name: "Battery Current",
           data: [
             {
-              value: currentPacket?.MPPT[1].ArrayCurrent,
+              value: currentPacket?.MPPT[1]?.ArrayCurrent,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -115,7 +115,7 @@ const MPPT = (): I_PIS => {
           name: "Temperature",
           data: [
             {
-              value: currentPacket?.MPPT[1].Temperature,
+              value: currentPacket?.MPPT[1]?.Temperature,
               unit: UnitType.TEMP,
               min: 20,
               max: 100,
@@ -130,7 +130,7 @@ const MPPT = (): I_PIS => {
           name: "Array Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[2].ArrayVoltage,
+              value: currentPacket?.MPPT[2]?.ArrayVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -142,7 +142,7 @@ const MPPT = (): I_PIS => {
           name: "Array Current",
           data: [
             {
-              value: currentPacket?.MPPT[2].ArrayCurrent,
+              value: currentPacket?.MPPT[2]?.ArrayCurrent,
               Unit: UnitType.AMPERAGE,
               min: 20,
               max: 100,
@@ -153,7 +153,7 @@ const MPPT = (): I_PIS => {
           name: "Battery Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[2].BatteryVoltage,
+              value: currentPacket?.MPPT[2]?.BatteryVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -164,7 +164,7 @@ const MPPT = (): I_PIS => {
           name: "Temperature",
           data: [
             {
-              value: currentPacket?.MPPT[2].Temperature,
+              value: currentPacket?.MPPT[2]?.Temperature,
               unit: UnitType.TEMP,
               min: 20,
               max: 100,
@@ -177,7 +177,7 @@ const MPPT = (): I_PIS => {
           name: "Array Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[3].ArrayVoltage,
+              value: currentPacket?.MPPT[3]?.ArrayVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -189,7 +189,7 @@ const MPPT = (): I_PIS => {
           name: "Array Current",
           data: [
             {
-              value: currentPacket?.MPPT[3].ArrayCurrent,
+              value: currentPacket?.MPPT[3]?.ArrayCurrent,
               Unit: UnitType.AMPERAGE,
               min: 20,
               max: 100,
@@ -200,7 +200,7 @@ const MPPT = (): I_PIS => {
           name: "Battery Voltage",
           data: [
             {
-              value: currentPacket?.MPPT[3].BatteryVoltage,
+              value: currentPacket?.MPPT[3]?.BatteryVoltage,
               unit: UnitType.VOLTAGE,
               min: 20,
               max: 100,
@@ -211,7 +211,7 @@ const MPPT = (): I_PIS => {
           name: "Temperature",
           data: [
             {
-              value: currentPacket?.MPPT[3].Temperature,
+              value: currentPacket?.MPPT[3]?.Temperature,
               unit: UnitType.TEMP,
               min: 20,
               max: 100,

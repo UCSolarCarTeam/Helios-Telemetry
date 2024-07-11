@@ -16,7 +16,7 @@ export default function MpptComponent({
   const [U0C0, setU0C0] = useState(myString[0]);
 
   return (
-    <div className="flex justify-around text-xs ">
+    <div className="flex justify-around text-xs">
       <button id="ArrayVoltage" onClick={() => setU0C0(myString[0])}>
         {U0C0 === myString[0] ? (
           <button className="underline decoration-red-500">
@@ -25,9 +25,9 @@ export default function MpptComponent({
         ) : (
           <button className="hover:underline">Array Voltage</button>
         )}
-        <div className="flex justify-center text-[#9C0534]">
+        <div className="flex justify-center text-primary">
           <div>{channelData.arrayVoltage}</div>
-          <div className="bg-green dark:bg-green-dark ml-2 mt-1 size-2 rounded-full"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
       <button id="ArrayCurrent" onClick={() => setU0C0(myString[1])}>
@@ -38,9 +38,9 @@ export default function MpptComponent({
         ) : (
           <button className="hover:underline">Array Current</button>
         )}
-        <div className="flex justify-center text-[#9C0534]">
+        <div className="flex justify-center text-primary">
           <div>{channelData.arrayCurrent}</div>
-          <div className="bg-green dark:bg-green-dark ml-2 mt-1 size-2 rounded-full"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
       <button id="BatteryVoltage" onClick={() => setU0C0(myString[2])}>
@@ -51,9 +51,9 @@ export default function MpptComponent({
         ) : (
           <button className="hover:underline">Battery Voltage</button>
         )}
-        <div className="flex justify-center text-[#9C0534]">
+        <div className="flex justify-center text-primary">
           <div>{channelData.batteryVoltage}</div>
-          <div className="bg-green dark:bg-green-dark ml-2 mt-1 size-2 rounded-full"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
       <button id="Temperature" onClick={() => setU0C0(myString[3])}>
@@ -64,9 +64,9 @@ export default function MpptComponent({
         ) : (
           <button className="hover:underline">Array Current</button>
         )}
-        <div className="flex justify-center text-[#9C0534]">
+        <div className="flex justify-center text-primary">
           <div>{channelData.temperature}</div>
-          <div className="bg-green dark:bg-green-dark ml-2 mt-1 size-2 rounded-full"></div>
+          <div className="ml-2 mt-1 size-2 rounded-full bg-green dark:bg-green-dark"></div>
         </div>
       </button>
     </div>

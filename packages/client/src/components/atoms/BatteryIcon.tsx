@@ -15,7 +15,7 @@ function BatteryIconComponent() {
           </div>
           <div className="w-full">
             <div
-              className="z-40 flex rounded-lg bg-[#9C0534] transition-all"
+              className="z-40 flex rounded-lg bg-primary transition-all"
               style={{
                 height: "100%",
                 width: `${(batteryLevel * 100) / 98 <= 100 ? (batteryLevel * 100) / 98 : 100}%`,
@@ -24,7 +24,7 @@ function BatteryIconComponent() {
           </div>
         </div>
         <div
-          className={`flex h-1/4 w-[2%] self-center rounded-r-lg transition-all ${batteryLevel > 98 ? "bg-[#9C0534] " : "bg-[#BAB8B8]"}`}
+          className={`flex h-1/4 w-[2%] self-center rounded-r-lg transition-all ${batteryLevel > 98 ? "bg-primary" : "bg-[#BAB8B8]"}`}
         />
       </div>
     </div>

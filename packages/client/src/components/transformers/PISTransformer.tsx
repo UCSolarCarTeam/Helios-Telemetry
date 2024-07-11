@@ -111,7 +111,7 @@ function FormatString(props: FormatStringProps): JSX.Element {
         ) : (
           <span key={index}>
             {part}
-            <RangeCheckedFieldData fieldData={data[index]} />
+            <RangeCheckedFieldData fieldData={data[index] as I_PISFieldData} />
           </span>
         );
       })}
@@ -128,27 +128,30 @@ type FieldDataFormatterProps = {
 function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
   const { data, fstring } = props;
 
-  const formatString = (string: string, params: I_PISFieldData[]) => {
-    // %s •C (%s) - %s •C (%s)
-    // console.log("TEST", string.split("%s"));
-    return string
-      .split("%s")
-      .map((part, index) => {
-        typeof params[index] === "undefined" ? (
-          ""
-        ) : (
-          <>
-            <RangeCheckedFieldData fieldData={params[index]} />
-            {part}
-          </>
-        );
-      })
-      .join("");
-  };
+  // commenting out because its unused anyways
+  // const formatString = (string: string, params: I_PISFieldData[]) => {
+  //   // %s •C (%s) - %s •C (%s)
+  //   // console.log("TEST", string.split("%s"));
+  //   return string
+  //     .split("%s")
+  //     .map((part, index) => {
+  //       typeof params[index] === "undefined" ? (
+  //         ""
+  //       ) : (
+  //         <>
+  //           <RangeCheckedFieldData
+  //             fieldData={params[index]}
+  //           />
+  //           {part}
+  //         </>
+  //       );
+  //     })
+  //     .join("");
+  // };
 
   return fstring === undefined ? (
     <div>
-      <RangeCheckedFieldData fieldData={data[0]} />
+      <RangeCheckedFieldData fieldData={data[0] as I_PISFieldData} />
     </div>
   ) : (
     <div>
@@ -189,7 +192,7 @@ function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   const { fields, depth = 0 } = props;
   return (
     <div
-      className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block  lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `max-h-[260px]` : `max-h-[260px]`}`}
+      className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `max-h-[260px]` : `max-h-[260px]`}`}
     >
       {fields.map((field, index) => (
         <FieldPrinter field={field} key={index} />
@@ -210,10 +213,10 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
-            <div key={index} id={key} className={`flex flex-col `}>
-              <div className="border-helios flex w-full items-center justify-evenly border-b-2">
+            <div key={index} id={key} className={`flex flex-col`}>
+              <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
                 <p
-                  className={`text-helios pt-3 font-bold ${
+                  className={`pt-3 font-bold text-helios ${
                     depth >= 2 ? `text-xs` : depth === 1 ? "text-sm" : "text-lg"
                   }`}
                 >
@@ -223,7 +226,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
               {Array.isArray(value) ? (
                 <FieldsPrinter fields={value} depth={depth + 1} />
               ) : (
-                <PISTransformer root={value} depth={depth + 1} />
+                <PISTransformer root={value as I_PIS} depth={depth + 1} />
               )}
             </div>
           );

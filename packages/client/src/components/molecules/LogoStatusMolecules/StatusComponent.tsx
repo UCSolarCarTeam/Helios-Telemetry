@@ -39,10 +39,10 @@ function StatusComponent() {
           />
           <CarIcon color={colorTheme} width="25px" height="25px" />
         </div>
-        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-sm ">
+        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-sm">
           PACKET TIMESTAMP
         </h5>
-        <h5 className="text-text-gray dark:text-text-gray-dark decoration-primary pb-2 text-xs underline decoration-1 underline-offset-4">
+        <h5 className="text-text-gray dark:text-text-gray-dark pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
           {packetTime}
         </h5>
       </div>

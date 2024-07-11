@@ -1,10 +1,13 @@
-import type { LngLatBoundsLike } from "mapbox-gl";
+import type { LngLatBounds, LngLatBoundsLike } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import ReactMapGL, { Marker } from "react-map-gl";
+import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
 
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
+
+// @ts-expect-error:next-line
+type MapLibType = MapLib<mapboxgl.Map>;
 
 type ILocation = {
   lat: number;
@@ -38,13 +41,15 @@ function Map(props: IMapProps): JSX.Element {
   const { carLocation, mapLocation, lapLocation } = props;
   const mapRef = useRef<mapboxgl.Map | null>(null);
   useEffect(() => {
-    const isOutsideBounds = () => {
+    const isOutsideBounds = (): boolean => {
       if (!mapRef.current) return false;
 
-      const { lng, lat } = mapRef.current.getBounds().getNorthEast();
-      const { lng: westLng, lat: southLat } = mapRef.current
-        .getBounds()
-        .getSouthWest();
+      const { lng, lat } = (
+        mapRef.current.getBounds() as LngLatBounds
+      ).getNorthEast();
+      const { lng: westLng, lat: southLat } = (
+        mapRef.current.getBounds() as LngLatBounds
+      ).getSouthWest();
 
       return (
         carLocation.lng < westLng ||
@@ -67,7 +72,7 @@ function Map(props: IMapProps): JSX.Element {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <ReactMapGL
-        mapLib={import("mapbox-gl")}
+        mapLib={import("mapbox-gl") as Promise<MapLibType>}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
         initialViewState={{
           longitude: mapLocation.lng,
@@ -82,8 +87,8 @@ function Map(props: IMapProps): JSX.Element {
         dragRotate={false}
         scrollZoom={false}
         keyboard={false}
-        onLoad={(event) => {
-          mapRef.current = event.target;
+        onLoad={(e) => {
+          mapRef.current = e.target as mapboxgl.Map;
           fitToBounds(mapRef.current, carLocation, lapLocation);
         }}
       >

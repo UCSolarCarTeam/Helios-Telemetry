@@ -11,7 +11,7 @@ const Motor = (): I_PIS => {
         name: "Alive",
         data: [
           {
-            value: currentPacket?.KeyMotor[0].Alive,
+            value: currentPacket?.KeyMotor[0]?.Alive,
           },
         ],
       },
@@ -19,7 +19,7 @@ const Motor = (): I_PIS => {
         name: "Set Current",
         data: [
           {
-            value: currentPacket?.KeyMotor[0].SetCurrent,
+            value: currentPacket?.KeyMotor[0]?.SetCurrent,
             unit: "%",
           },
         ],
@@ -28,7 +28,7 @@ const Motor = (): I_PIS => {
         name: "Set Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[0].SetVelocity,
+            value: currentPacket?.KeyMotor[0]?.SetVelocity,
             unit: UnitType.RPM,
           },
         ],
@@ -37,7 +37,7 @@ const Motor = (): I_PIS => {
         name: "Bus Current",
         data: [
           {
-            value: currentPacket?.KeyMotor[0].BusCurrent,
+            value: currentPacket?.KeyMotor[0]?.BusCurrent,
             unit: UnitType.AMPERAGE,
           },
         ],
@@ -46,7 +46,7 @@ const Motor = (): I_PIS => {
         name: "Bus Voltage",
         data: [
           {
-            value: currentPacket?.KeyMotor[0].BusVoltage,
+            value: currentPacket?.KeyMotor[0]?.BusVoltage,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -55,7 +55,7 @@ const Motor = (): I_PIS => {
         name: "Vehicle Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[0].VehicleVelocity,
+            value: currentPacket?.KeyMotor[0]?.VehicleVelocity,
             unit: UnitType.SPEED,
           },
         ],
@@ -66,7 +66,7 @@ const Motor = (): I_PIS => {
         name: "Alive",
         data: [
           {
-            value: currentPacket?.KeyMotor[1].Alive,
+            value: currentPacket?.KeyMotor[1]?.Alive,
           },
         ],
       },
@@ -74,7 +74,7 @@ const Motor = (): I_PIS => {
         name: "Set Current",
         data: [
           {
-            value: currentPacket?.KeyMotor[1].SetCurrent,
+            value: currentPacket?.KeyMotor[1]?.SetCurrent,
             unit: "%",
           },
         ],
@@ -83,7 +83,7 @@ const Motor = (): I_PIS => {
         name: "Set Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[1].SetVelocity,
+            value: currentPacket?.KeyMotor[1]?.SetVelocity,
             unit: UnitType.RPM,
           },
         ],
@@ -92,7 +92,7 @@ const Motor = (): I_PIS => {
         name: "Bus Current",
         data: [
           {
-            value: currentPacket?.KeyMotor[1].BusCurrent,
+            value: currentPacket?.KeyMotor[1]?.BusCurrent,
             unit: UnitType.AMPERAGE,
           },
         ],
@@ -101,7 +101,7 @@ const Motor = (): I_PIS => {
         name: "Bus Voltage",
         data: [
           {
-            value: currentPacket?.KeyMotor[1].BusVoltage,
+            value: currentPacket?.KeyMotor[1]?.BusVoltage,
             unit: UnitType.AMPERAGE,
           },
         ],
@@ -110,7 +110,7 @@ const Motor = (): I_PIS => {
         name: "Vehicle Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[1].VehicleVelocity,
+            value: currentPacket?.KeyMotor[1]?.VehicleVelocity,
             unit: UnitType.SPEED,
           },
         ],
@@ -121,7 +121,7 @@ const Motor = (): I_PIS => {
         name: "Phase C Current",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].PhaseCCurrent,
+            value: currentPacket?.MotorDetails[0]?.PhaseCCurrent,
             unit: UnitType.AMPRMS,
           },
         ],
@@ -130,7 +130,7 @@ const Motor = (): I_PIS => {
         name: "Phase B Current",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].PhaseBCurrent,
+            value: currentPacket?.MotorDetails[0]?.PhaseBCurrent,
             unit: UnitType.AMPRMS,
           },
         ],
@@ -139,7 +139,7 @@ const Motor = (): I_PIS => {
         name: "Motor Voltage Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].MotorVoltageReal,
+            value: currentPacket?.MotorDetails[0]?.MotorVoltageReal,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -148,7 +148,7 @@ const Motor = (): I_PIS => {
         name: "Motor Voltage Imaginary",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].MotorVoltageImaginary,
+            value: currentPacket?.MotorDetails[0]?.MotorVoltageImaginary,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -157,7 +157,7 @@ const Motor = (): I_PIS => {
         name: "Motor Current Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].MotorCurrentReal,
+            value: currentPacket?.MotorDetails[0]?.MotorCurrentReal,
             unit: UnitType.AMPERAGE,
           },
         ],
@@ -166,7 +166,7 @@ const Motor = (): I_PIS => {
         name: "Motor Current Imaginary",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].MotorVoltageImaginary,
+            value: currentPacket?.MotorDetails[0]?.MotorVoltageImaginary,
             unit: UnitType.AMPERAGE,
           },
         ],
@@ -175,7 +175,7 @@ const Motor = (): I_PIS => {
         name: "Back EMF",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].BackEmf,
+            value: currentPacket?.MotorDetails[0]?.BackEmf,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -184,7 +184,7 @@ const Motor = (): I_PIS => {
         name: "Voltage Rail 15V",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].VoltageRail15VSupply,
+            value: currentPacket?.MotorDetails[0]?.VoltageRail15VSupply,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -193,7 +193,7 @@ const Motor = (): I_PIS => {
         name: "Voltage Rail 3V",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].VoltageRail3VSupply,
+            value: currentPacket?.MotorDetails[0]?.VoltageRail3VSupply,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -202,7 +202,7 @@ const Motor = (): I_PIS => {
         name: "Voltage Rail 1V",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].VoltageRail1VSupply,
+            value: currentPacket?.MotorDetails[0]?.VoltageRail1VSupply,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -211,7 +211,7 @@ const Motor = (): I_PIS => {
         name: "Heat Sink Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].HeatSinkTemp,
+            value: currentPacket?.MotorDetails[0]?.HeatSinkTemp,
             unit: UnitType.TEMP,
           },
         ],
@@ -220,7 +220,7 @@ const Motor = (): I_PIS => {
         name: "Motor Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].MotorTemp,
+            value: currentPacket?.MotorDetails[0]?.MotorTemp,
             unit: "°C",
           },
         ],
@@ -229,7 +229,7 @@ const Motor = (): I_PIS => {
         name: "DSP Board Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].DspBoardTemp,
+            value: currentPacket?.MotorDetails[0]?.DspBoardTemp,
             unit: "°C",
           },
         ],
@@ -238,7 +238,7 @@ const Motor = (): I_PIS => {
         name: "Dc Bus Amp Hours",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].DcBusAmpHours,
+            value: currentPacket?.MotorDetails[0]?.DcBusAmpHours,
             unit: "Ah",
           },
         ],
@@ -247,7 +247,7 @@ const Motor = (): I_PIS => {
         name: "Odometer",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].Odometer,
+            value: currentPacket?.MotorDetails[0]?.Odometer,
             unit: "m",
           },
         ],
@@ -256,7 +256,7 @@ const Motor = (): I_PIS => {
         name: "Slip Speed",
         data: [
           {
-            value: currentPacket?.MotorDetails[0].SlipSpeed,
+            value: currentPacket?.MotorDetails[0]?.SlipSpeed,
             unit: UnitType.HERTZ,
           },
         ],
@@ -267,7 +267,7 @@ const Motor = (): I_PIS => {
         name: "Phase C Current",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].PhaseCCurrent,
+            value: currentPacket?.MotorDetails[1]?.PhaseCCurrent,
             unit: UnitType.AMPRMS,
           },
         ],
@@ -276,7 +276,7 @@ const Motor = (): I_PIS => {
         name: "Phase B Current",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].PhaseBCurrent,
+            value: currentPacket?.MotorDetails[1]?.PhaseBCurrent,
             unit: UnitType.AMPRMS,
           },
         ],
@@ -285,7 +285,7 @@ const Motor = (): I_PIS => {
         name: "Motor Voltage Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].MotorVoltageReal,
+            value: currentPacket?.MotorDetails[1]?.MotorVoltageReal,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -294,7 +294,7 @@ const Motor = (): I_PIS => {
         name: "Motor Voltage Imaginary",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].MotorVoltageImaginary,
+            value: currentPacket?.MotorDetails[1]?.MotorVoltageImaginary,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -303,7 +303,7 @@ const Motor = (): I_PIS => {
         name: "Motor Current Real",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].MotorCurrentReal,
+            value: currentPacket?.MotorDetails[1]?.MotorCurrentReal,
             unit: UnitType.AMPERAGE,
           },
         ],
@@ -312,7 +312,7 @@ const Motor = (): I_PIS => {
         name: "Motor Current Imaginary",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].MotorVoltageImaginary,
+            value: currentPacket?.MotorDetails[1]?.MotorVoltageImaginary,
             unit: UnitType.AMPERAGE,
           },
         ],
@@ -321,7 +321,7 @@ const Motor = (): I_PIS => {
         name: "Back EMF",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].BackEmf,
+            value: currentPacket?.MotorDetails[1]?.BackEmf,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -330,7 +330,7 @@ const Motor = (): I_PIS => {
         name: "Voltage Rail 15V",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].VoltageRail15VSupply,
+            value: currentPacket?.MotorDetails[1]?.VoltageRail15VSupply,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -339,7 +339,7 @@ const Motor = (): I_PIS => {
         name: "Voltage Rail 3V",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].VoltageRail3VSupply,
+            value: currentPacket?.MotorDetails[1]?.VoltageRail3VSupply,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -348,7 +348,7 @@ const Motor = (): I_PIS => {
         name: "Voltage Rail 1V",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].VoltageRail1VSupply,
+            value: currentPacket?.MotorDetails[1]?.VoltageRail1VSupply,
             unit: UnitType.VOLTAGE,
           },
         ],
@@ -357,7 +357,7 @@ const Motor = (): I_PIS => {
         name: "Heat Sink Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].HeatSinkTemp,
+            value: currentPacket?.MotorDetails[1]?.HeatSinkTemp,
             unit: UnitType.TEMP,
           },
         ],
@@ -366,7 +366,7 @@ const Motor = (): I_PIS => {
         name: "Motor Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].MotorTemp,
+            value: currentPacket?.MotorDetails[1]?.MotorTemp,
             unit: UnitType.TEMP,
           },
         ],
@@ -375,7 +375,7 @@ const Motor = (): I_PIS => {
         name: "DSP Board Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].DspBoardTemp,
+            value: currentPacket?.MotorDetails[1]?.DspBoardTemp,
             unit: UnitType.TEMP,
           },
         ],
@@ -384,7 +384,7 @@ const Motor = (): I_PIS => {
         name: "Dc Bus Amp Hours",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].DcBusAmpHours,
+            value: currentPacket?.MotorDetails[1]?.DcBusAmpHours,
             unit: UnitType.AMPHOUR,
           },
         ],
@@ -393,7 +393,7 @@ const Motor = (): I_PIS => {
         name: "Odometer",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].Odometer,
+            value: currentPacket?.MotorDetails[1]?.Odometer,
             unit: UnitType.DISTANCE,
           },
         ],
@@ -402,7 +402,7 @@ const Motor = (): I_PIS => {
         name: "Slip Speed",
         data: [
           {
-            value: currentPacket?.MotorDetails[1].SlipSpeed,
+            value: currentPacket?.MotorDetails[1]?.SlipSpeed,
             unit: UnitType.HERTZ,
           },
         ],

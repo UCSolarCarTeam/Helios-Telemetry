@@ -9,8 +9,8 @@ const config = {
   semi: true,
   importOrder: [
     "^@(.*)$",
-    "^~/(?!components)(.*)$",
-    "^~/components(.*)$",
+    "^@/(?!components)(.*)$",
+    "^@/components(.*)$",
     "^[./]",
   ],
   importOrderSeparation: true,

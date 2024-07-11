@@ -43,7 +43,7 @@ const LatencyDotsIcon = (props: SvgProps) => {
             />
           </svg>
         ) : (
-          <div className=" m-auto ">
+          <div className="m-auto">
             <IoClose color={"#9C0534"} size={24} />
           </div>
         )}
