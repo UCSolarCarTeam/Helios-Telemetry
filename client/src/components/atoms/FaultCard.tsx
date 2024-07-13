@@ -14,6 +14,7 @@ type FaultCardProps = {
 
 function FaultCard(props: FaultCardProps) {
   const { severity, faultName } = props;
+
   return (
     <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 100, opacity: 0 }}>
       <div className="flex p-2">

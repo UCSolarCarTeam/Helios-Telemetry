@@ -41,7 +41,7 @@ function Map(props: IMapProps): JSX.Element {
     const isOutsideBounds = () => {
       if (!mapRef.current) return false;
 
-      const { lng, lat } = mapRef.current.getBounds().getNorthEast();
+      const { lng, lat } = mapRef?.current.getBounds().getNorthEast();
       const { lng: westLng, lat: southLat } = mapRef.current
         .getBounds()
         .getSouthWest();
