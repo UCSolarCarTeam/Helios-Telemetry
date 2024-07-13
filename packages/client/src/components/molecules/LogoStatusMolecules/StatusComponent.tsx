@@ -40,17 +40,17 @@ function StatusComponent() {
           />
           <CarIcon color={colorTheme} width="25px" height="25px" />
         </div>
-        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs ">
+        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs">
           Timestamp:
         </h5>
         <h5 className="text-text-gray dark:text-text-gray-dark text-nowrap pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
           {packetTime}
         </h5>
-        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs ">
+        <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs">
           Connection:
         </h5>
         <h5 className="text-text-gray dark:text-text-gray-dark text-nowrap pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
-          {currentAppState.connectionType.toUpperCase()}
+          {currentAppState.connectionType}
         </h5>
         {currentAppState.connectionType === CONNECTIONTYPES.DEMO && (
           <h5

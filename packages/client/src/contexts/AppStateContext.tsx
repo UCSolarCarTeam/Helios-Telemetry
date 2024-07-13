@@ -58,6 +58,48 @@ export function AppStateContextProvider({ children }: Props) {
     carLatency: 0,
   });
 
+  // Connection State Manager
+  useEffect(() => {
+    if (currentAppState.connectionType === CONNECTIONTYPES.DEMO) {
+      if (currentAppState.socketConnected) {
+        setCurrentAppState((prev) => ({
+          ...prev,
+          loading: false,
+          connectionType: CONNECTIONTYPES.NETWORK,
+        }));
+      }
+      if (currentAppState.radioConnected) {
+        setCurrentAppState((prev) => ({
+          ...prev,
+          loading: false,
+          connectionType: CONNECTIONTYPES.RADIO,
+        }));
+      }
+    }
+    if (currentAppState.connectionType === CONNECTIONTYPES.NETWORK) {
+      setCurrentAppState((prev) => ({
+        ...prev,
+        loading: !currentAppState.socketConnected,
+      }));
+    }
+    if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
+      setCurrentAppState((prev) => ({
+        ...prev,
+        loading: !currentAppState.radioConnected,
+      }));
+    }
+  }, [currentAppState.socketConnected, currentAppState.radioConnected]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCurrentAppState((prev) => ({
+        ...prev,
+        loading: false,
+        connectionType: CONNECTIONTYPES.DEMO,
+      }));
+    }, 5000);
+  }, []);
+
   const fetchSettingsFromLocalStorage = () => {
     const savedSettings = localStorage.getItem("settings");
     if (savedSettings) {

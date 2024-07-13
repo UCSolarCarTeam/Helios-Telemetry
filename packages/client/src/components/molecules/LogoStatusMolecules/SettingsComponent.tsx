@@ -160,7 +160,7 @@ function SettingsComponent() {
 
                     return (
                       <div
-                        className=" w-1/3 items-center justify-center"
+                        className="w-1/3 items-center justify-center"
                         key={key}
                       >
                         {disabledText ? (

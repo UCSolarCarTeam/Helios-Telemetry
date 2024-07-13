@@ -13,34 +13,46 @@ export enum LOADINGSTAGES {
 export function LoadingWrapper(props: { children: React.ReactNode }) {
   const { children } = props;
 
-  const { currentAppState, confirmVisualLoadingFulfilledAndReady } =
-    useAppState();
+  const {
+    currentAppState,
+    confirmVisualLoadingFulfilledAndReady,
+    setCurrentAppState,
+  } = useAppState();
   const [currentLoadingState, setCurrentLoadingStage] = useState<LOADINGSTAGES>(
     LOADINGSTAGES.DRIVE_IN,
   );
 
   useEffect(() => {
-    console.log(
-      "LoadingWrapper: currentAppState.loading",
-      currentAppState.loading,
-    );
+    console.log("currentAppState.loading", currentAppState);
     let pendingTimeout: NodeJS.Timeout;
     let readyTimeout: NodeJS.Timeout;
     let confirmTimeout: NodeJS.Timeout;
+
+    // If loading is true again after loading previously finished, restart loading by setting to drive in
+    if (
+      currentAppState.loading &&
+      currentLoadingState === LOADINGSTAGES.READY
+    ) {
+      setCurrentLoadingStage(LOADINGSTAGES.DRIVE_IN);
+      setCurrentAppState((prev) => ({
+        ...prev,
+        displayLoading: true,
+      }));
+    }
 
     // Switch to drive off after app state reports loading is complete and minimum animation time is fulfilled
     const driveInTimeout = setTimeout(() => {
       setCurrentLoadingStage(LOADINGSTAGES.PENDING);
     }, 1000);
 
-    // Confirm with App State that loading animation is fulfilled after car drives off screen
+    // Once site is ready, delay loader for 3 additional seconds and then transition to driving off screen
     if (!currentAppState.loading) {
       pendingTimeout = setTimeout(() => {
         setCurrentLoadingStage(LOADINGSTAGES.READY);
-      }, 4000);
+      }, 3000);
     }
 
-    // Confirm with App State that loading animation is fulfilled after car drives off screen
+    // Confirm with App State that car driving off screen animation is fulfilled before hiding loader
     if (currentLoadingState === LOADINGSTAGES.READY) {
       confirmTimeout = setTimeout(() => {
         confirmVisualLoadingFulfilledAndReady();

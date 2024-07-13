@@ -2,7 +2,28 @@ import { type ReactNode, createContext, useContext, useEffect } from "react";
 import { type Socket, io } from "socket.io-client";
 
 import { useAppState } from "@/contexts/AppStateContext";
-import { socketIO } from "@/socket";
+import type ITelemetryData from "@/objects/telemetry-data.interface";
+
+interface ClientToServerEvents {
+  ping: (cb: (val: number) => void) => void;
+}
+
+interface ServerToClientEvents {
+  packet: (value: ITelemetryData) => void;
+  carLatency: (value: number) => void;
+}
+
+// TODO:set undefined to ServerURL once deployed.
+const URL =
+  process.env.NODE_ENV === "production"
+    ? "aedes.calgarysolarcar.ca:3001"
+    : "http://localhost:3001";
+
+// Defaults to using client fakerJS, change Data to Network in site settings to connect to server
+export const socketIO: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  URL,
+  { autoConnect: false },
+);
 
 interface ISocketContextReturn {}
 const socketContext = createContext<ISocketContextReturn>(
@@ -38,7 +59,6 @@ export function SocketContextProvider({
       socketIO.disconnect();
       clearInterval(id);
       socketIO.off("carLatency", onCarLatency);
-      socketIO.off("packet", onPacket);
     };
   }, []);
 
@@ -47,7 +67,6 @@ export function SocketContextProvider({
     setCurrentAppState((prev) => ({
       ...prev,
       socketConnected: true,
-      loading: false,
     }));
   });
 
@@ -55,7 +74,6 @@ export function SocketContextProvider({
     setCurrentAppState((prev) => ({
       ...prev,
       socketConnected: false,
-      loading: true,
     }));
   });
 
