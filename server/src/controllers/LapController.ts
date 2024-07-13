@@ -98,16 +98,19 @@ export class LapController {
       return 0;
     }
 
-    const sumAverageLapSpeed = lastLapPackets.reduce((sum, packet) => {
-      const vehicleVelocityMotor0 = packet.KeyMotor[0]?.VehicleVelocity;
-      const vehicleVelocityMotor1 = packet.KeyMotor[1]?.VehicleVelocity;
+    const sumAverageLapSpeed = lastLapPackets.reduce(
+      (sum: number, packet: ITelemetryData) => {
+        const vehicleVelocityMotor0 = packet.KeyMotor[0]?.VehicleVelocity;
+        const vehicleVelocityMotor1 = packet.KeyMotor[1]?.VehicleVelocity;
 
-      return vehicleVelocityMotor0 !== undefined
-        ? vehicleVelocityMotor1 !== undefined
-          ? sum + (vehicleVelocityMotor0 + vehicleVelocityMotor1) / 2
-          : sum
-        : sum;
-    }, 0);
+        return vehicleVelocityMotor0 !== undefined
+          ? vehicleVelocityMotor1 !== undefined
+            ? sum + (vehicleVelocityMotor0 + vehicleVelocityMotor1) / 2
+            : sum
+          : sum;
+      },
+      0,
+    );
 
     return sumAverageLapSpeed / lastLapPackets.length;
   }
