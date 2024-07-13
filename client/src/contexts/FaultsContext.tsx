@@ -6,25 +6,16 @@ import {
   useRef,
 } from "react";
 
-// type TestType = I_PISFieldData & { faultTimer: number | undefined };
-import type {
-  FaultLocations,
-  ISeverity,
-} from "@/components/molecules/HeroMolecules/HeroTypes";
 import Faults from "@/objects/PIS/PIS.faults";
 import type I_PIS from "@/objects/PIS/PIS.interface";
+import { type I_PISFieldData } from "@/objects/PIS/PIS.interface";
 
 interface Props {
   children: ReactNode | ReactNode[];
 }
 
-export interface IFaults {
-  value: boolean;
-  indicationLocation: FaultLocations;
-  severity: ISeverity;
-  name: string;
-  faultTimer: number;
-}
+type IFaults = I_PISFieldData & { faultTimer: number; name: string };
+
 interface IFaultsReturn {
   currentFaults: Map<string, IFaults>;
 }
@@ -62,7 +53,7 @@ export function FaultsContextProvider({ children }: Props) {
           const newFault: IFaults = {
             faultTimer: 0,
             severity: fault.data[0].severity,
-            indicationLocation: fault.data[0].indiciationLocation,
+            indicationLocation: fault.data[0].indicationLocation,
             value: !!fault.data[0].value,
             name: fault.name,
           };
