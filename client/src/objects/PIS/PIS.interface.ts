@@ -24,7 +24,7 @@ type I_PISFieldData = {
   expectedBool?: boolean;
   hover?: string;
   severity: ISeverity;
-  indiciationLocation: FaultLocations;
+  indicationLocation: FaultLocations;
 };
 
 type I_PISField = {

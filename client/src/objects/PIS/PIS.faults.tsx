@@ -19,7 +19,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags
                   .InternalCommunicationFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -30,7 +30,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.InternalConversionFault,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -40,7 +40,7 @@ const Faults = (): I_PIS => {
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.WeakCellFault,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -51,7 +51,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.LowCellVoltageFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -61,7 +61,7 @@ const Faults = (): I_PIS => {
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.OpenWiringFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -71,7 +71,7 @@ const Faults = (): I_PIS => {
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.CurrentSensorFault,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -82,7 +82,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.PackVoltageSensorFault,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -92,7 +92,7 @@ const Faults = (): I_PIS => {
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.WeakPackFault,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -103,7 +103,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.VoltageRedundancyFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -113,7 +113,7 @@ const Faults = (): I_PIS => {
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.FanMonitorFault,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -123,7 +123,7 @@ const Faults = (): I_PIS => {
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.ThermistorFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -135,7 +135,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags
                   .CANBUSCommunicationsFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -146,7 +146,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.AlwaysOnSupplyFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -158,7 +158,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags
                   .HighVoltageIsolationFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -169,7 +169,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags["12vPowerSupplyFault"],
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -181,7 +181,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags
                   .ChargeLimitEnforcementFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -193,7 +193,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags
                   .DischargeLimitEnforcementFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -204,7 +204,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.ChargerSafetyRelayFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -215,7 +215,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.InternalMemoryFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -227,7 +227,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags
                   .InternalThermistorsFault,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -237,7 +237,7 @@ const Faults = (): I_PIS => {
             {
               value: currentPacket?.BatteryFaults.ErrorFlags.InternalLogicFault,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -250,7 +250,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.LimitFlags.DclReducedDueToLowSoc,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -262,7 +262,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToHighCellResistance,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -274,7 +274,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToTemperature,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -286,7 +286,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToLowCellVoltage,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -298,7 +298,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToLowPackVoltage,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -310,7 +310,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclandCclReducedDueToVoltageFailsafe,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -322,7 +322,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclandCclReducedDueToCommunicationFailsafe,
               severity: ISeverity.ERROR,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -333,7 +333,7 @@ const Faults = (): I_PIS => {
               value:
                 currentPacket?.BatteryFaults.LimitFlags.CclReducedDueToHighSoc,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -345,7 +345,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToHighCellResistance,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -357,7 +357,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToTemperature,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -369,7 +369,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToHighCellVoltage,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -381,7 +381,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToHighPackVoltage,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -393,7 +393,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToChargerLatch,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -405,7 +405,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToAlternateCurrentLimit,
               severity: ISeverity.WARNING,
-              indiciationLocation: FaultLocations.BATTERY,
+              indicationLocation: FaultLocations.BATTERY,
             },
           ],
         },
@@ -420,7 +420,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[0].ErrorFlags.MotorOverSpeed,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -431,7 +431,7 @@ const Faults = (): I_PIS => {
                 value:
                   currentPacket?.MotorFaults[0].ErrorFlags.SoftwareOverCurrent,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -442,7 +442,7 @@ const Faults = (): I_PIS => {
                 value:
                   currentPacket?.MotorFaults[0].ErrorFlags.DcBusOverVoltage,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -454,7 +454,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0].ErrorFlags
                     .BadMotorPositionHallSequence,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -466,7 +466,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0].ErrorFlags
                     .WatchdogCausedLastReset,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -476,7 +476,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[0].ErrorFlags.ConfigReadError,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -488,7 +488,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0].ErrorFlags
                     .Wail15VUnderVoltageLockOut,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -499,7 +499,7 @@ const Faults = (): I_PIS => {
                 value:
                   currentPacket?.MotorFaults[0].ErrorFlags.DesaturationFault,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -512,7 +512,7 @@ const Faults = (): I_PIS => {
                 value:
                   currentPacket?.MotorFaults[0].LimitFlags.OutputVoltagePwm,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -522,7 +522,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[0].LimitFlags.MotorCurrent,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -532,7 +532,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[0].LimitFlags.Velocity,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -542,7 +542,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[0].LimitFlags.BusCurrent,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -552,7 +552,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[0].LimitFlags.BusVoltageUpper,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -562,7 +562,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[0].LimitFlags.BusVoltageLower,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -574,7 +574,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0].LimitFlags
                     .IpmOrMotorTemperature,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.LEFTMOTOR,
+                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
           },
@@ -588,7 +588,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[1].ErrorFlags.MotorOverSpeed,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -600,7 +600,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1].ErrorFlags.SoftwareOverCurrent,
 
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -611,7 +611,7 @@ const Faults = (): I_PIS => {
                 value:
                   currentPacket?.MotorFaults[1].ErrorFlags.DcBusOverVoltage,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -623,7 +623,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1].ErrorFlags
                     .BadMotorPositionHallSequence,
                 severity: ISeverity.ERROR,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -635,7 +635,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1].ErrorFlags
                     .WatchdogCausedLastReset,
                 severity: ISeverity.ERROR,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -645,7 +645,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[1].ErrorFlags.ConfigReadError,
                 severity: ISeverity.ERROR,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -657,7 +657,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1].ErrorFlags
                     .Wail15VUnderVoltageLockOut,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -668,7 +668,7 @@ const Faults = (): I_PIS => {
                 value:
                   currentPacket?.MotorFaults[1].ErrorFlags.DesaturationFault,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -681,7 +681,7 @@ const Faults = (): I_PIS => {
                 value:
                   currentPacket?.MotorFaults[1].LimitFlags.OutputVoltagePwm,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -691,7 +691,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[1].LimitFlags.MotorCurrent,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -701,7 +701,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[1].LimitFlags.Velocity,
                 severity: ISeverity.ERROR,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -711,7 +711,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[1].LimitFlags.BusCurrent,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -721,7 +721,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[1].LimitFlags.BusVoltageUpper,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -731,7 +731,7 @@ const Faults = (): I_PIS => {
               {
                 value: currentPacket?.MotorFaults[1].LimitFlags.BusVoltageLower,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
@@ -743,7 +743,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1].LimitFlags
                     .IpmOrMotorTemperature,
                 severity: ISeverity.WARNING,
-                indiciationLocation: FaultLocations.RIGHTMOTOR,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
           },
