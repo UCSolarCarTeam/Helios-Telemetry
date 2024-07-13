@@ -2,7 +2,7 @@ import { type Socket } from "socket.io";
 import { Server } from "socket.io";
 
 import { logger } from "@/index";
-import type ITelemetryData from "@/objects/telemetry-data.interface";
+import type { ITelemetryData } from "@/objects/telemetry-data.interface";
 import { httpServer } from "@/server";
 
 export class SocketIO {
