@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 import type {
   ILapData,
   ITelemetryData,
-} from "@/client/objects/telemetry-data.interface";
+} from "@/objects/telemetry-data.interface";
 
 export class SQLite {
   private db: sqlite3.Database;
