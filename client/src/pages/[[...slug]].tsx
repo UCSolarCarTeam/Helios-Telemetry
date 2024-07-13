@@ -3,6 +3,7 @@ import HeroContainer from "@/components/containers/HeroContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
 import TabsContainer from "@/components/containers/TabsContainer";
+import GraphContainer from "@/components/molecules/GraphMolecules/GraphContainer";
 import { useAppState } from "@/contexts/AppStateContext";
 
 export default function Home() {
@@ -31,6 +32,7 @@ export default function Home() {
           <div className="grid">
             <BottomInformationContainer />
           </div>
+          <GraphContainer />
         </div>
       </div>
     </div>
