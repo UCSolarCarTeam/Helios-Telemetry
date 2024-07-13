@@ -65,6 +65,10 @@ export function AppStateContextProvider({ children }: Props) {
         darkMode: parsedSettings.darkMode,
         appUnits: parsedSettings.appUnits,
         connectionTypes: parsedSettings.connectionTypes,
+      }));
+    } else {
+      setCurrentAppState((prev) => ({
+        ...prev,
         loading: false,
       }));
     }

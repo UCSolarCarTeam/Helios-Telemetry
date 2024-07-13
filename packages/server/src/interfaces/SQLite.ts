@@ -1,8 +1,11 @@
 import sqlite3 from "sqlite3";
 
-import type ITelemetryData from "@/client/objects/telemetry-data.interface";
+import type {
+  ILapData,
+  ITelemetryData,
+} from "@/objects/telemetry-data.interface";
 
-class SQLite {
+export class SQLite {
   private db: sqlite3.Database;
   constructor(dbPath: string) {
     this.db = new sqlite3.Database(dbPath, (err: Error | null) => {
@@ -65,7 +68,7 @@ class SQLite {
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
     return this.runQuery(sql, [packet.TimeStamp, data]);
   }
-  public insertLapData(packet: ITelemetryData): Promise<{ id: number }> {
+  public insertLapData(packet: ILapData): Promise<{ id: number }> {
     const sql = "INSERT INTO lapData (date, data) VALUES (?, ?)";
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
     return this.runQuery(sql, [packet.TimeStamp, data]);
@@ -75,7 +78,11 @@ class SQLite {
     const sql = "SELECT * FROM packetData";
     return this.getAllRows(sql);
   }
-  public getLapData(): Promise<ITelemetryData[]> {
+  // public getLapData(): Promise<ITelemetryData[]> {
+  //   const sql = "SELECT * FROM lapData";
+  //   return this.getAllRows(sql);
+  // }
+  public async getLapData(): Promise<ITelemetryData[]> {
     const sql = "SELECT * FROM lapData";
     return this.getAllRows(sql);
   }

@@ -11153,7 +11153,7 @@ mqtt-packet@^9.0.0:
     debug "^4.3.4"
     process-nextick-args "^2.0.1"
 
-mqtt@^5.2.0, mqtt@^5.7.0:
+mqtt@^5.2.0, mqtt@^5.8.0:
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/mqtt/-/mqtt-5.8.0.tgz#e246b1d8d6f1faaa3b9bf709e88a1bc631f24c6a"
   integrity sha512-/+H04mv6goy6K5gHMNH3uS0icBzXapS+4uUf4yZyQWXi72APPZNb81bQhvkm99poEQettXVT8XETB0mPxl5Wjg==
