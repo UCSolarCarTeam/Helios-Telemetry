@@ -1,6 +1,7 @@
+import { createLightweightApplicationLogger } from "@/utils/logger";
+
 import server from "@/index";
 import main from "@/main";
-import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("server.ts");
 const port = process.env.SERVER_PORT || 3001;
@@ -17,5 +18,7 @@ export const httpServer = server
   .on("error", (error: Error) => {
     logger.error(error.message);
     throw error;
+  })
+  .on("listening", () => {
+    main(httpServer);
   });
-main();

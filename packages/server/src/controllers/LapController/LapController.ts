@@ -1,21 +1,21 @@
-import type SQLite from "@/interfaces/SQLite";
-import type { SocketIO } from "@/interfaces/SocketIO";
+import { type BackendController } from "@/controllers/BackendController/BackendController";
+import { type LapControllerType } from "@/controllers/LapController/LapController.types";
+
 import type {
   ILapData,
   ITelemetryData,
-} from "@/objects/telemetry-data.interface";
-import { getDistance } from "@/utils/calculationUtils";
+} from "@/interfaces/telemetry-data.interface";
 
-export class LapController {
-  private lastLapPackets: ITelemetryData[] = {} as ITelemetryData[];
-  private socketIO: SocketIO;
-  private previouslyInFinishLineProximity: boolean = false;
-  private sqlLite: SQLite;
-  private lapNumber: number = 0;
+import { getDistance } from "@/utils/lapCalculations";
 
-  constructor(socketIO: SocketIO, sqlLite: SQLite) {
-    this.socketIO = socketIO;
-    this.sqlLite = sqlLite;
+export class LapController implements LapControllerType {
+  public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
+  public previouslyInFinishLineProximity: boolean = false;
+  public lapNumber: number = 0;
+  backendController: BackendController;
+
+  constructor(backendController: BackendController) {
+    this.backendController = backendController;
   }
 
   public async handlePacket(packet: ITelemetryData) {
@@ -31,22 +31,22 @@ export class LapController {
       );
 
       const lapData: ILapData = {
-        timeStamp: packet.TimeStamp,
-        totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
-        totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
-        netPowerOut: this.netPower(this.lastLapPackets),
-        distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
         ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
         averagePackCurrent: averagePackCurrent,
+        averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
         batterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
           amphoursValue,
           averagePackCurrent,
         ),
-        averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
+        distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
         lapTime: this.calculateLapTime(this.lastLapPackets),
+        netPowerOut: this.netPower(this.lastLapPackets),
+        timeStamp: packet.TimeStamp,
+        totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
+        totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
 
-      await this.sqlLite.insertLapData(lapData);
+      await this.backendController.sqLite.insertLapData(lapData);
       this.lastLapPackets = [];
     }
     this.lastLapPackets.push(packet);
@@ -128,7 +128,7 @@ export class LapController {
     return sumAveragePack / lastLapPackets.length;
   }
 
-  public checkIfMotorReset = function (
+  public checkIfMotorReset(
     motorOdometer: number,
     motorDistanceTraveledSession: number,
   ): boolean {
@@ -141,12 +141,12 @@ export class LapController {
     }
 
     return motorReset;
-  };
+  }
 
-  public calculateMotorDistance = (
+  public calculateMotorDistance(
     packetArray: ITelemetryData[],
     odometerIndex: number,
-  ): number => {
+  ): number {
     // The Motor's Odometer resets every time a motor trips or the car power cycles
     let totalDistanceTraveled = 0;
     let motorDistanceTraveledSession = 0;
@@ -173,7 +173,7 @@ export class LapController {
     totalDistanceTraveled /= 1000;
 
     return totalDistanceTraveled;
-  };
+  }
 
   public getDistanceTravelled(packetArray: ITelemetryData[]) {
     if (packetArray.length === 0) {
@@ -191,7 +191,7 @@ export class LapController {
     return (motor0DistanceTravelledTotal + motor1DistanceTravelledTotal) / 2;
   }
 
-  public getAveragePowerIn = function (packetArray: ITelemetryData[]) {
+  public getAveragePowerIn(packetArray: ITelemetryData[]): number {
     // If no packets, then no power in
     if (packetArray.length === 0) {
       return 0;
@@ -238,9 +238,9 @@ export class LapController {
       .reduce((sum, curr) => sum + curr / packetArray.length, 0);
 
     return Math.abs(mpptPowerIn + regenPowerIn);
-  };
+  }
 
-  public getAveragePowerOut = function (packetArray: ITelemetryData[]) {
+  public getAveragePowerOut(packetArray: ITelemetryData[]): number {
     // If no packets, then no power out
     if (packetArray.length === 0) {
       return 0;
@@ -253,9 +253,9 @@ export class LapController {
         0,
       ) / packetArray.length,
     );
-  };
+  }
 
-  public netPower(packetArray: ITelemetryData[]) {
+  public netPower(packetArray: ITelemetryData[]): number {
     return (
       this.getAveragePowerIn(packetArray) - this.getAveragePowerOut(packetArray)
     );

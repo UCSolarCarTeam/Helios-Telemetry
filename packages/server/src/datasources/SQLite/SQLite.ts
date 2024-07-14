@@ -1,13 +1,19 @@
 import sqlite3 from "sqlite3";
 
+import { type BackendController } from "@/controllers/BackendController/BackendController";
+
+import { type SQLiteType } from "@/datasources/SQLite/SQLite.types";
+
 import type {
   ILapData,
   ITelemetryData,
-} from "@/objects/telemetry-data.interface";
+} from "@/interfaces/telemetry-data.interface";
 
-export class SQLite {
-  private db: sqlite3.Database;
-  constructor(dbPath: string) {
+export class SQLite implements SQLiteType {
+  public db: sqlite3.Database;
+  backendController: BackendController;
+  constructor(dbPath: string, backendController: BackendController) {
+    this.backendController = backendController;
     this.db = new sqlite3.Database(dbPath, (err: Error | null) => {
       if (err) {
         console.error("Error opening database:", err.message);
@@ -31,7 +37,7 @@ export class SQLite {
   }
 
   //Helper function to run a query
-  private runQuery(sql: string, params: any[]): Promise<{ id: number }> {
+  public runQuery(sql: string, params: any[]): Promise<{ id: number }> {
     return new Promise((resolve, reject) => {
       this.db.run(
         sql,
@@ -48,7 +54,7 @@ export class SQLite {
   }
 
   //Helper function to get all rows
-  private getAllRows(sql: string): Promise<ITelemetryData[]> {
+  public getAllRows(sql: string): Promise<ITelemetryData[]> {
     return new Promise<ITelemetryData[]>((resolve, reject) => {
       this.db.all(sql, (err: Error | null, rows: any[]) => {
         if (err) {
@@ -71,7 +77,7 @@ export class SQLite {
   public insertLapData(packet: ILapData): Promise<{ id: number }> {
     const sql = "INSERT INTO lapData (date, data) VALUES (?, ?)";
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
-    return this.runQuery(sql, [packet.TimeStamp, data]);
+    return this.runQuery(sql, [packet.timeStamp, data]);
   }
 
   public getPacketData(): Promise<ITelemetryData[]> {

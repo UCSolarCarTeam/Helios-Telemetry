@@ -1,4 +1,9 @@
+import type { IncomingMessage, Server, ServerResponse } from "http";
+
 import { BackendController } from "@/controllers/BackendController/BackendController";
-export default function main() {
-  const backendController = new BackendController();
+
+export default function main(
+  httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
+) {
+  new BackendController(httpsServer);
 }

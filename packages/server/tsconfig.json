@@ -23,7 +23,10 @@
     }
   },
   "include": [
-    "src/**/*"
+    ".eslint.config.mjs",
+    "src/**/*",
+    "**/*.cjs",
+    "**/*.mjs"
   ],
   "exclude": [
     "dist",

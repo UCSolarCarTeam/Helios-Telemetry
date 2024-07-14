@@ -10,9 +10,9 @@ export const getHealth = (request: Request, response: Response) => {
   );
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data = {
-    uptime: process.uptime() + " seconds",
-    message: "OK",
     date: new Date(),
+    message: "OK",
+    uptime: process.uptime() + " seconds",
   };
   logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
 

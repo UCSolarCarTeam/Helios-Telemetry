@@ -9,17 +9,9 @@ type logContent = {
 };
 
 configure({
-  levels: {
-    // Custom level for audit logs. A value of 20001 puts it above 'INFO' but below 'WARN'
-    // Reference: https://github.com/stritti/log4js/blob/master/log4js/src/main/js/level.js
-    AUDIT: { value: 20001, colour: "magenta" },
-  },
   appenders: {
     console: {
-      type: "stdout",
       layout: {
-        // Documentation: https://log4js-node.github.io/log4js-node/layouts.html
-        type: "pattern",
         pattern: "%[%d %p %c %x{context}%] %x{message}",
         tokens: {
           context: function (logEvent) {
@@ -52,7 +44,6 @@ configure({
                         stack: undefined,
                       });
                     }
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   } else if (data.length && data.length > 0) {
                     logContent.push(data as logContent);
                   }
@@ -64,23 +55,31 @@ configure({
                 return JSON.stringify(logContent);
               }
             }
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
             return logEvent.data;
           },
         },
+        // Documentation: https://log4js-node.github.io/log4js-node/layouts.html
+        type: "pattern",
       },
+      type: "stdout",
     },
     dateFile: {
-      type: "dateFile",
-      filename: `${environment.logDir}/${environment.logFile}`,
-      layout: { type: "basic" },
       compress: true,
       daysToKeep: 14,
+      filename: `${environment.logDir}/${environment.logFile}`,
       keepFileExt: true,
+      layout: { type: "basic" },
+      type: "dateFile",
     },
   },
   categories: {
     default: { appenders: ["console"], level: environment.logLevel },
+  },
+  levels: {
+    // Custom level for audit logs. A value of 20001 puts it above 'INFO' but below 'WARN'
+    // Reference: https://github.com/stritti/log4js/blob/master/log4js/src/main/js/level.js
+    AUDIT: { colour: "magenta", value: 20001 },
   },
 });
 
@@ -117,30 +116,30 @@ export const createApplicationLogger = (
   let context: LogContext | undefined = {};
 
   return {
-    getLogContext: () => {
-      return context;
-    },
-    setLogContext: (newLogContext: LogContext | undefined) => {
-      context = newLogContext;
-    },
-
-    trace: (message: string | Error, ...args: any[]) => {
-      logger.trace(context, message, args);
+    audit: (message: string, ...args: any[]) => {
+      logger.log("AUDIT", context, message, args);
     },
     debug: (message: string | Error, ...args: any[]) => {
       logger.debug(context, message, args);
     },
+
+    error: (message?: string, err?: Error, ...args: any[]) => {
+      logger.error(context, message, err, args);
+    },
+    getLogContext: () => {
+      return context;
+    },
     info: (message: string, ...args: any[]) => {
       logger.info(context, message, args);
     },
-    audit: (message: string, ...args: any[]) => {
-      logger.log("AUDIT", context, message, args);
+    setLogContext: (newLogContext: LogContext | undefined) => {
+      context = newLogContext;
+    },
+    trace: (message: string | Error, ...args: any[]) => {
+      logger.trace(context, message, args);
     },
     warn: (message: string, ...args: any[]) => {
       logger.warn(context, message, args);
-    },
-    error: (message?: string, err?: Error, ...args: any[]) => {
-      logger.error(context, message, err, args);
     },
   };
 };

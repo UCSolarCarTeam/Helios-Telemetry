@@ -1,18 +1,26 @@
 import { type MqttClient, connect } from "mqtt";
 
-import { ITelemetryData } from "@/objects/telemetry-data.interface";
+import { type BackendController } from "@/controllers/BackendController/BackendController";
 
 import {
-  MQTTOptions,
-  SolarMQTTClientType,
+  type MQTTOptions,
+  type SolarMQTTClientType,
   topics,
-} from "./SolarMQTTClient.types";
+} from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
+
+import { type ITelemetryData } from "@/interfaces/telemetry-data.interface";
+
+import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const { packetTopic, pingTopic } = topics;
+const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
+
 export class SolarMQTTClient implements SolarMQTTClientType {
   client: MqttClient;
-  constructor(options: MQTTOptions) {
+  backendController: BackendController;
+  constructor(options: MQTTOptions, backendController: BackendController) {
     this.client = connect(options.url);
+    this.backendController = backendController;
     this.initializeListeners(this.client);
   }
   public pingTimer(miliseconds: number) {
@@ -21,15 +29,15 @@ export class SolarMQTTClient implements SolarMQTTClientType {
       this.client.publish(pingTopic, myMessage);
     }, miliseconds);
   }
-  public calculateLatency(packet: ITelemetryData) {
+  public getLatencyCarToServer(packet: ITelemetryData) {
     const currentTime = Date.now();
-    const vehicleToClientLatency = currentTime - packet.TimeStamp;
-    console.log("Vehicle to Client Latency: ", vehicleToClientLatency, "ms");
+    return currentTime - packet.TimeStamp;
   }
   public initializeListeners(client: MqttClient) {
     client.on("connect", () => {
       client.subscribe(packetTopic, (error) => {
         if (!error) {
+          //
         } else {
           console.error("Subscription error: ", error);
         }
@@ -38,13 +46,17 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     });
     client.on("message", (topic, message) => {
       if (topic === pingTopic) {
-        console.log("Current Ping: ", message.toString());
+        logger.info("Current Ping: ", message.toString());
       } else if (topic === packetTopic) {
+        logger.info("Packet Received");
         const packet: ITelemetryData = JSON.parse(message.toString());
         // handle packet...
-        this.calculateLatency(packet);
+        this.backendController.socketIO.broadcastCarLatency(
+          this.getLatencyCarToServer(packet),
+        );
+        this.backendController.handlePacketReceive(packet);
       } else {
-        console.log("unknown topic: ", topic, "message: ", message.toString());
+        logger.info("unknown topic: ", topic, "message: ", message.toString());
       }
     });
   }

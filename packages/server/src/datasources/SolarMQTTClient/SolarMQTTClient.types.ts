@@ -1,7 +1,7 @@
-import { MqttClient } from "mqtt";
-import { IClientOptions } from "mqtt/*";
+import type { MqttClient } from "mqtt";
+import type { IClientOptions } from "mqtt/*";
 
-import { ITelemetryData } from "@/objects/telemetry-data.interface";
+import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
 
 export type MQTTOptions = IClientOptions & { url: string };
 export const options: MQTTOptions = {
@@ -14,6 +14,7 @@ export const topics = {
 
 export interface SolarMQTTClientType {
   client: MqttClient;
-  pingTimer(miliseconds: number): void;
-  calculateLatency(pakcet: ITelemetryData): void;
+  getLatencyCarToServer(packet: ITelemetryData): number;
   initializeListeners(client: MqttClient): void;
+  pingTimer(miliseconds: number): void;
+}
