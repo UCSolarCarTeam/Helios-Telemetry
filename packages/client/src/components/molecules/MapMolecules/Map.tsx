@@ -1,7 +1,7 @@
 import type { LngLatBounds, LngLatBoundsLike } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
 
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
@@ -37,9 +37,16 @@ const fitToBounds = (
     maxZoom: 16,
   });
 };
+
+// class MapBoxControls{
+//   onAdd(map){
+//     this.
+//   }
+// }
 function Map(props: IMapProps): JSX.Element {
   const { carLocation, mapLocation, lapLocation } = props;
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/standard");
   useEffect(() => {
     const isOutsideBounds = (): boolean => {
       if (!mapRef.current) return false;
@@ -69,46 +76,74 @@ function Map(props: IMapProps): JSX.Element {
   }, [carLocation, lapLocation]);
 
   if (!process.env.NEXT_PUBLIC_MAPSAPIKEY) return <></>;
+
+  const toggleMapStyle = () => {
+    setMapStyle((prevStyle) =>
+      prevStyle === "mapbox://styles/mapbox/dark-v11"
+        ? "mapbox://styles/mapbox/satellite-streets-v12"
+        : "mapbox://styles/mapbox/dark-v11",
+    );
+    console.log("MapStyle is now", mapStyle);
+  };
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <ReactMapGL
-        mapLib={import("mapbox-gl") as Promise<MapLibType>}
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
-        initialViewState={{
-          longitude: mapLocation.lng,
-          latitude: mapLocation.lat,
-          zoom: 14,
-        }}
-        style={{ width: "100%", height: "100%" }}
-        mapStyle="mapbox://styles/mapbox/dark-v11"
-        boxZoom={false}
-        doubleClickZoom={false}
-        dragPan={false}
-        dragRotate={false}
-        scrollZoom={false}
-        keyboard={false}
-        onLoad={(e) => {
-          mapRef.current = e.target as mapboxgl.Map;
-          fitToBounds(mapRef.current, carLocation, lapLocation);
-        }}
-      >
-        <Marker longitude={carLocation.lng} latitude={carLocation.lat}>
-          <Image
-            src="/assets/HeliosBirdseye.png"
-            alt="map-pin"
-            width={20}
-            height={50}
-          />
-        </Marker>
-        <Marker
-          longitude={lapLocation.lng}
-          latitude={lapLocation.lat}
-          style={{ color: "white" }}
+    <>
+      <div style={{ width: "100%", height: "100%" }}>
+        <button
+          onClick={() => {
+            toggleMapStyle();
+          }}
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            zIndex: 1,
+            padding: "10px",
+            background: "white",
+            border: "none",
+            cursor: "pointer",
+          }}
         >
-          <SportsScoreIcon />
-        </Marker>
-      </ReactMapGL>
-    </div>
+          Toggle Satellite
+        </button>
+        <ReactMapGL
+          mapLib={import("mapbox-gl") as Promise<MapLibType>}
+          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
+          initialViewState={{
+            longitude: mapLocation.lng,
+            latitude: mapLocation.lat,
+            zoom: 14,
+          }}
+          style={{ width: "100%", height: "100%" }}
+          mapStyle={mapStyle}
+          boxZoom={false}
+          doubleClickZoom={false}
+          dragPan={true}
+          dragRotate={true}
+          scrollZoom={true}
+          keyboard={false}
+          onLoad={(e) => {
+            mapRef.current = e.target as mapboxgl.Map;
+            fitToBounds(mapRef.current, carLocation, lapLocation);
+          }}
+        >
+          <Marker longitude={carLocation.lng} latitude={carLocation.lat}>
+            <Image
+              src="/assets/HeliosBirdseye.png"
+              alt="map-pin"
+              width={20}
+              height={50}
+            />
+          </Marker>
+          <Marker
+            longitude={lapLocation.lng}
+            latitude={lapLocation.lat}
+            style={{ color: "white" }}
+          >
+            <SportsScoreIcon />
+          </Marker>
+        </ReactMapGL>
+      </div>
+    </>
   );
 }
 
