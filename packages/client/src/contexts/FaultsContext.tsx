@@ -36,40 +36,42 @@ function incrementOrDropFaultTimer(faults: Map<string, IFaults>) {
 export function FaultsContextProvider({ children }: Props) {
   const faults = Faults();
   const trueFaultsRef = useRef(new Map<string, IFaults>());
-  function processFaultSection(section: I_PIS) {
-    Object.keys(section).forEach((key) => {
-      const value = section[key];
-      if (Array.isArray(value)) {
-        value.forEach((fault) => {
-          if (fault?.data[0]?.value === false) {
-            return;
-          }
-          const existingFault = trueFaultsRef.current.get(fault.name);
-          // reset fault timer
-          if (existingFault) {
-            trueFaultsRef.current.set(fault.name, {
-              ...existingFault,
-              faultTimer: 0,
-            });
-            return;
-          }
-          // add to trueFaults
-          const newFault: IFaults = {
-            faultTimer: 0,
-            severity: fault?.data[0]?.severity as ISeverity,
-            indicationLocation: fault?.data[0]
-              ?.indicationLocation as FaultLocations,
-            value: !!fault?.data[0]?.value,
-            name: fault.name,
-          };
-          trueFaultsRef.current.set(fault.name, newFault);
-        });
-      } else {
-        processFaultSection(value as I_PIS);
-      }
-    });
-  }
+
   const currentFaults = useMemo(() => {
+    function processFaultSection(section: I_PIS) {
+      Object.keys(section).forEach((key) => {
+        const value = section[key];
+        if (Array.isArray(value)) {
+          value.forEach((fault) => {
+            if (fault?.data[0]?.value === false) {
+              return;
+            }
+            const existingFault = trueFaultsRef.current.get(fault.name);
+            // reset fault timer
+            if (existingFault) {
+              trueFaultsRef.current.set(fault.name, {
+                ...existingFault,
+                faultTimer: 0,
+              });
+              return;
+            }
+            // add to trueFaults
+            const newFault: IFaults = {
+              faultTimer: 0,
+              severity: fault?.data[0]?.severity as ISeverity,
+              indicationLocation: fault?.data[0]
+                ?.indicationLocation as FaultLocations,
+              value: !!fault?.data[0]?.value,
+              name: fault.name,
+            };
+            trueFaultsRef.current.set(fault.name, newFault);
+          });
+        } else {
+          processFaultSection(value as I_PIS);
+        }
+      });
+    }
+
     processFaultSection(faults);
     incrementOrDropFaultTimer(trueFaultsRef.current);
     return trueFaultsRef.current;

@@ -7,7 +7,8 @@ function LogoComponent() {
         className="m-auto w-3/4"
         src="/assets/Logo.png"
         alt="Solar Car Logo"
-        width={200}
+        layout="cover"
+        width={100}
         height={100}
       />
     </div>
