@@ -36,7 +36,7 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
           codebuild.EventAction.PUSH
         )
           .andBranchIs("main")
-          .andFilePathIs("packages/server/**"),
+          .andFilePathIs("packages/server/*"),
       ],
     }),
 
