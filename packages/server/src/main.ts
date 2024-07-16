@@ -1,22 +1,9 @@
-// import SQLite from "@/controllers/SQLite";
-import SocketIO from "@/controllers/SocketIO";
-import { logger } from "@/index";
-import { generateFakeTelemetryData } from "@/utils/fakeData";
+import type { IncomingMessage, Server, ServerResponse } from "http";
 
-export default function main() {
-  const socket = new SocketIO();
+import { BackendController } from "@/controllers/BackendController/BackendController";
 
-  //   const sql = new SQLite("./database.sql");
-  const LATENCY = () => Math.random() * 100;
-
-  const intervalID = setInterval(() => {
-    const packet = generateFakeTelemetryData();
-    logger.info(
-      `Battery Average Voltage: ${JSON.stringify(packet.Battery.AverageCellVoltage)}V`,
-    );
-    socket.sendPacket(packet);
-    socket.broadcastCarLatency(LATENCY());
-  }, 2500);
+export default function main(
+  httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
+) {
+  new BackendController(httpsServer);
 }
-
-main();

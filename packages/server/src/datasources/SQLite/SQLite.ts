@@ -1,15 +1,26 @@
 import sqlite3 from "sqlite3";
 
-import type ITelemetryData from "@/client/objects/telemetry-data.interface";
+import { type BackendController } from "@/controllers/BackendController/BackendController";
 
-class SQLite {
-  private db: sqlite3.Database;
-  constructor(dbPath: string) {
+import { type SQLiteType } from "@/datasources/SQLite/SQLite.types";
+
+import type {
+  ILapData,
+  ITelemetryData,
+} from "@/interfaces/telemetry-data.interface";
+
+import { logger } from "@/index";
+
+export class SQLite implements SQLiteType {
+  public db: sqlite3.Database;
+  backendController: BackendController;
+  constructor(dbPath: string, backendController: BackendController) {
+    this.backendController = backendController;
     this.db = new sqlite3.Database(dbPath, (err: Error | null) => {
       if (err) {
-        console.error("Error opening database:", err.message);
+        console.error("Error opening database:", err);
       } else {
-        console.log("Connected to the SQLite database.");
+        logger.info("Connected to the SQLite database.");
       }
     });
 
@@ -28,7 +39,7 @@ class SQLite {
   }
 
   //Helper function to run a query
-  private runQuery(sql: string, params: any[]): Promise<{ id: number }> {
+  public runQuery(sql: string, params: any[]): Promise<{ id: number }> {
     return new Promise((resolve, reject) => {
       this.db.run(
         sql,
@@ -45,7 +56,7 @@ class SQLite {
   }
 
   //Helper function to get all rows
-  private getAllRows(sql: string): Promise<ITelemetryData[]> {
+  public getAllRows(sql: string): Promise<ITelemetryData[]> {
     return new Promise<ITelemetryData[]>((resolve, reject) => {
       this.db.all(sql, (err: Error | null, rows: any[]) => {
         if (err) {
@@ -65,17 +76,21 @@ class SQLite {
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
     return this.runQuery(sql, [packet.TimeStamp, data]);
   }
-  public insertLapData(packet: ITelemetryData): Promise<{ id: number }> {
+  public insertLapData(packet: ILapData): Promise<{ id: number }> {
     const sql = "INSERT INTO lapData (date, data) VALUES (?, ?)";
     const data = JSON.stringify(packet); // Serialize ITelemetryData to JSON
-    return this.runQuery(sql, [packet.TimeStamp, data]);
+    return this.runQuery(sql, [packet.timeStamp, data]);
   }
 
   public getPacketData(): Promise<ITelemetryData[]> {
     const sql = "SELECT * FROM packetData";
     return this.getAllRows(sql);
   }
-  public getLapData(): Promise<ITelemetryData[]> {
+  // public getLapData(): Promise<ITelemetryData[]> {
+  //   const sql = "SELECT * FROM lapData";
+  //   return this.getAllRows(sql);
+  // }
+  public async getLapData(): Promise<ITelemetryData[]> {
     const sql = "SELECT * FROM lapData";
     return this.getAllRows(sql);
   }

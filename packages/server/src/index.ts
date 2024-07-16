@@ -7,10 +7,12 @@ import http from "http";
 import "module-alias";
 
 import router from "@/routes/health.route";
+
 import {
   createLightweightApplicationLogger,
   shutdownLoggers,
 } from "@/utils/logger";
+
 import { type TerminusOptions, createTerminus } from "@godaddy/terminus";
 
 dotenv.config();
@@ -23,20 +25,19 @@ app.use("/", router);
 
 export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
-  retries: 2,
-  retryDelay: (retryCount) => {
-    return retryCount * 1000; // time interval between retries
+  onRetry: (retryCount) => {
+    logger.warn(`Retrying axios call. Retry count: `, retryCount);
   },
+  retries: 2,
   retryCondition(error) {
     return error.code === "ECONNABORTED";
   },
 
-  onRetry: (retryCount) => {
-    logger.warn(`Retrying axios call. Retry count: `, retryCount);
+  retryDelay: (retryCount) => {
+    return retryCount * 1000; // time interval between retries
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/require-await
 const onSignal = async () => {
   logger.info("🚀 Server is starting cleanup");
   try {
@@ -46,7 +47,6 @@ const onSignal = async () => {
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
 const onShutdown = async () => {
   logger.info("Cleanup finished, 🚀 server is shutting down");
 };
@@ -60,10 +60,10 @@ const gracefullyShutdown = (signal: string) => {
 };
 
 const terminusOption: TerminusOptions = {
-  onSignal,
   onShutdown,
-  timeout: 12 * 1000, // waits before closing the server
+  onSignal,
   signals: ["SIGINT", "SIGTERM", "SIGUSR2"],
+  timeout: 12 * 1000, // waits before closing the server
 };
 
 export const server = createTerminus(http.createServer(app), terminusOption);

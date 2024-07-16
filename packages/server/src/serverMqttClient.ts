@@ -4,11 +4,11 @@ import type { MqttClient } from "mqtt";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 type Options = {
-  url: string;
-  clientId: string;
-  username: string;
-  password: string;
   clean: boolean;
+  clientId: string;
+  password: string;
+  url: string;
+  username: string;
 };
 
 const clientId = "server";
@@ -16,11 +16,11 @@ const clientId = "server";
 const logger = createLightweightApplicationLogger("serverMqttClient.ts");
 
 const options: Options = {
-  url: `mqtt://localhost:${process.env.MQTT_SERVER_PORT || 1883}`,
-  clientId,
-  username: "urMom",
-  password: "hasAedes",
   clean: true,
+  clientId,
+  password: "hasAedes",
+  url: `mqtt://localhost:${process.env.MQTT_SERVER_PORT || 1883}`,
+  username: "urMom",
 };
 
 const testTopic = "test topic";

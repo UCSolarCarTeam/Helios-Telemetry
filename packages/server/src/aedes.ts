@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Aedes, { AuthenticateError, Client } from "aedes";
+import Aedes, { type AuthenticateError, type Client } from "aedes";
 import { createServer } from "net";
 
 import { createLightweightApplicationLogger } from "@/utils/logger";

@@ -1,6 +1,7 @@
 import { type ReactNode, createContext, useContext, useEffect } from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
+import type ITelemetryData from "@/objects/telemetry-data.interface";
 import { socketIO } from "@/socket";
 
 interface ISocketContextReturn {}
@@ -16,6 +17,9 @@ export function SocketContextProvider({
   function onCarLatency(latency: number) {
     setCurrentAppState((prev) => ({ ...prev, carLatency: latency }));
   }
+  function onPacket(packet: ITelemetryData) {
+    console.log(packet);
+  }
   useEffect(() => {
     const id = setInterval(() => {
       const start = Date.now();
@@ -26,9 +30,11 @@ export function SocketContextProvider({
       });
     }, 1000);
     socketIO.on("carLatency", onCarLatency);
+    socketIO.on("packet", onPacket);
     return () => {
       clearInterval(id);
       socketIO.off("carLatency", onCarLatency);
+      socketIO.off("packet", onPacket);
     };
   }, []);
 
