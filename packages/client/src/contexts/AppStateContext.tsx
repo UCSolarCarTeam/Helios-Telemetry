@@ -77,15 +77,15 @@ export function AppStateContextProvider({ children }: Props) {
     }));
   };
 
-  const saveSettingsToLocalStorage = () => {
-    localStorage.setItem("settings", JSON.stringify(currentAppState));
-  };
-
   useEffect(() => {
     fetchSettingsFromLocalStorage();
   }, []);
 
   useEffect(() => {
+    const saveSettingsToLocalStorage = () => {
+      localStorage.setItem("settings", JSON.stringify(currentAppState));
+    };
+
     if (!currentAppState.loading) {
       saveSettingsToLocalStorage();
     }

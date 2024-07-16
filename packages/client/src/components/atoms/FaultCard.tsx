@@ -20,7 +20,7 @@ function FaultCard(props: FaultCardProps) {
         <div
           className={`flex size-full items-center justify-start border p-2 ${
             severity === ISeverity.ERROR
-              ? "border-[#9C0534]"
+              ? "border-primary"
               : severity === ISeverity.WARNING
                 ? "border-[#F98D10]"
                 : severity === ISeverity.CLEAR

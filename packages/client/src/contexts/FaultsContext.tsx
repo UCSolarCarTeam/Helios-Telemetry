@@ -72,7 +72,6 @@ export function FaultsContextProvider({ children }: Props) {
   const currentFaults = useMemo(() => {
     processFaultSection(faults);
     incrementOrDropFaultTimer(trueFaultsRef.current);
-    console.log(trueFaultsRef.current);
     return trueFaultsRef.current;
   }, [faults]);
   return (

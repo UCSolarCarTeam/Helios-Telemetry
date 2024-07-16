@@ -6,12 +6,12 @@ import { type SolarCarRoutes, routes } from "@/objects/TabRoutes";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
-function NavBar(props: any): JSX.Element {
+function NavBar(): JSX.Element {
   const router = useRouter();
 
   const getCurrentPath = () => {
     let currIndex = "1";
-    routes.map((route: SolarCarRoutes, i: number) => {
+    routes.map((route: SolarCarRoutes) => {
       if (route.path === router.pathname) {
         currIndex = route.value.toString();
       }

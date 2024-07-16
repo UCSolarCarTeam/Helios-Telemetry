@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import ParkingBrakeIcon from "@/components/atoms/ParkingBreakIcon";
 import { usePacket } from "@/contexts/PacketContext";
 
