@@ -3,13 +3,19 @@ import { use, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { LOADINGSTAGES } from "@/components/global/LoadingWrapper";
+import { useAppState } from "@/contexts/AppStateContext";
 
 export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
+  const { currentAppState } = useAppState();
+
   const { currentLoadingState } = props;
   const LoadingMessage = {
-    [LOADINGSTAGES.DRIVE_IN]: "Connecting to Helios...",
+    [LOADINGSTAGES.DRIVE_IN]: `Connecting to Helios...`,
     [LOADINGSTAGES.PENDING]: "Connecting to Helios...",
-    [LOADINGSTAGES.READY]: "Connected to Helios!",
+    [LOADINGSTAGES.READY]:
+      currentAppState.socketConnected || currentAppState.radioConnected
+        ? "Connected to Helios!"
+        : "Can't connect to Helios, showing demo.",
   };
 
   const carAnimationClass = useMemo(() => {

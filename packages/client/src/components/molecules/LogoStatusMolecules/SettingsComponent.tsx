@@ -5,6 +5,7 @@ import {
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
+import SettingsIcon from "@mui/icons-material/Settings";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -43,7 +44,7 @@ function SettingsComponent() {
     if (inputMode !== null) {
       setCurrentAppState((prev) => ({
         ...prev,
-        connectionTypes: inputMode,
+        connectionType: inputMode,
       }));
     }
   };
@@ -51,9 +52,9 @@ function SettingsComponent() {
     <div className="grid">
       <h2
         onClick={() => setOpen(true)}
-        className="text-text-gray dark:text-text-gray-dark cursor-pointer text-xl font-black"
+        className="text-text-gray dark:text-text-gray-dark cursor-pointer text-sm font-black"
       >
-        ⛭
+        <SettingsIcon />
       </h2>
       <Modal
         open={open}
@@ -115,24 +116,68 @@ function SettingsComponent() {
             <div className="col-span-1">
               <label className="mr-2">Connection:</label>
             </div>
-            <div className="col-span-1">
-              <ToggleButtonGroup
-                value={currentAppState.connectionTypes}
-                exclusive
-                onChange={handleConnectionChange}
-                aria-label="Connection"
-                className="w-full"
-              >
+            <div>
+              <div className="col-span-1">
+                <ToggleButtonGroup
+                  value={currentAppState.connectionType}
+                  exclusive
+                  onChange={handleConnectionChange}
+                  aria-label="Connection"
+                  className="w-full"
+                >
+                  {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
+                    (key) => {
+                      const disabled =
+                        (key === CONNECTIONTYPES.NETWORK &&
+                          !currentAppState.socketConnected) ||
+                        (key === CONNECTIONTYPES.RADIO &&
+                          !currentAppState.radioConnected);
+
+                      return (
+                        <ToggleButton
+                          disabled={disabled}
+                          className="flex w-1/3 flex-col text-sm"
+                          key={key}
+                          value={key}
+                        >
+                          {key}
+                        </ToggleButton>
+                      );
+                    },
+                  )}
+                </ToggleButtonGroup>
+              </div>
+              <div className="justify-top col-span-1 flex items-start">
                 {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
                   (key) => {
+                    const disabledText =
+                      (key === CONNECTIONTYPES.NETWORK &&
+                        !currentAppState.socketConnected &&
+                        "Can not connect to AWS") ||
+                      (key === CONNECTIONTYPES.RADIO &&
+                        !currentAppState.radioConnected &&
+                        "Can not connect to USB Radio Board");
+
                     return (
-                      <ToggleButton className="w-1/2" key={key} value={key}>
-                        {key}
-                      </ToggleButton>
+                      <div
+                        className="w-1/3 items-center justify-center"
+                        key={key}
+                      >
+                        {disabledText ? (
+                          <div className="flex flex-col items-center">
+                            <span className="text-helios">Not Available</span>
+                            <span className="text-xs">({disabledText})</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center">
+                            <span className="text-green">Available</span>
+                          </div>
+                        )}
+                      </div>
                     );
                   },
                 )}
-              </ToggleButtonGroup>
+              </div>
             </div>
           </div>
         </div>
