@@ -9,6 +9,8 @@ import type {
   ITelemetryData,
 } from "@/interfaces/telemetry-data.interface";
 
+import { logger } from "@/index";
+
 export class SQLite implements SQLiteType {
   public db: sqlite3.Database;
   backendController: BackendController;
@@ -16,9 +18,9 @@ export class SQLite implements SQLiteType {
     this.backendController = backendController;
     this.db = new sqlite3.Database(dbPath, (err: Error | null) => {
       if (err) {
-        console.error("Error opening database:", err.message);
+        console.error("Error opening database:", err);
       } else {
-        console.log("Connected to the SQLite database.");
+        logger.info("Connected to the SQLite database.");
       }
     });
 

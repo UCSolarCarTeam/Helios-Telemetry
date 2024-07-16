@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.1.0",
   "dependencies": {
-    "aws-amplify": "^6.0.17"
+    "aws-amplify": "^6.0.17",
+    "aws-cdk-lib": "^2.149.0"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^0.12.1",

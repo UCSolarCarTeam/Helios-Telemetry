@@ -16,7 +16,7 @@ const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
-  "TelemetryBackendImageRepository",
+  "TelemetryBackendImageRepository"
 );
 
 const TelemetryBackendCodeBuildProject = new codebuild.Project(
@@ -33,10 +33,10 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
       webhookFilters: [
         codebuild.FilterGroup.inEventOf(
           codebuild.EventAction.PULL_REQUEST_MERGED,
-          codebuild.EventAction.PUSH,
+          codebuild.EventAction.PUSH
         )
           .andBranchIs("main")
-          .andFilePathIs("server/**"),
+          .andFilePathIs("packages/server/**"),
       ],
     }),
 
@@ -62,7 +62,7 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
         },
       },
     },
-  },
+  }
 );
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
@@ -94,7 +94,7 @@ TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
-  {},
+  {}
 );
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
@@ -119,7 +119,7 @@ const TelemetryBackendVPC = new ec2.Vpc(
   {
     maxAzs: 1,
     natGateways: 0,
-  },
+  }
 );
 
 const TelemetryBackendVPCSecurityGroup = new ec2.SecurityGroup(
@@ -127,19 +127,19 @@ const TelemetryBackendVPCSecurityGroup = new ec2.SecurityGroup(
   "TelemetryBackendSecurityGroup",
   {
     vpc: TelemetryBackendVPC,
-  },
+  }
 );
 TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(3001),
   "Allow inbound traffic on port 3001",
-  true,
+  true
 );
 TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(1883),
   "Allow inbound traffic on port 1883",
-  true,
+  true
 );
 
 const TelemetryECSCluster = new ecs.Cluster(
@@ -156,7 +156,7 @@ const TelemetryECSCluster = new ecs.Cluster(
        */
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.T2,
-        ec2.InstanceSize.MICRO,
+        ec2.InstanceSize.MICRO
       ),
 
       desiredCapacity: 1,
@@ -168,7 +168,7 @@ const TelemetryECSCluster = new ecs.Cluster(
         subnetType: ec2.SubnetType.PUBLIC,
       },
     },
-  },
+  }
 );
 
 const TelemetryECSService = new ecs.Ec2Service(
@@ -180,7 +180,7 @@ const TelemetryECSService = new ecs.Ec2Service(
     desiredCount: 0,
     maxHealthyPercent: 100,
     minHealthyPercent: 0,
-  },
+  }
 );
 // TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);
 
@@ -191,7 +191,7 @@ const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
   {
     zoneName: "calgarysolarcar.ca",
     hostedZoneId: "Z00168143RCUWIOU5XRGV",
-  },
+  }
 );
 
 // const elasticIp = new ec2.CfnEIP(TelemetryBackendStack, 'EIP', {

@@ -10,11 +10,11 @@ export const options: MQTTOptions = {
 export const topics = {
   packetTopic: "packet",
   pingTopic: "ping",
+  pongTopic: "pong",
 };
 
 export interface SolarMQTTClientType {
   client: MqttClient;
-  getLatencyCarToServer(packet: ITelemetryData): number;
   initializeListeners(client: MqttClient): void;
   pingTimer(miliseconds: number): void;
 }
