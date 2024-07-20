@@ -75,7 +75,9 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
   return (
     <div className={twMerge(currentAppState.darkMode ? "dark" : "")}>
       {currentAppState.displayLoading ? (
-        <Loading currentLoadingState={currentLoadingState} />
+        <Loading
+          currentLoadingState={confirmVisualLoadingFulfilledAndReady()}
+        />
       ) : (
         <>{children}</>
       )}{" "}

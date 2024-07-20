@@ -66,7 +66,7 @@ function CarGraphicComponent() {
 
   return (
     <>
-      <Canvas camera={{ position: [-7, 4, 7] }} shadows dpr={[1, 2]}>
+      <Canvas camera={{ position: [-5, 3, 5], zoom: 1.7 }} shadows dpr={[1, 2]}>
         <ambientLight intensity={0.2} />
         <directionalLight
           intensity={0.5}
