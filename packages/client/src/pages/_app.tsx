@@ -11,11 +11,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <AppStateContextProvider>
         <SocketContextProvider>
-          <PacketContextProvider>
-            <LoadingWrapper>
+          <LoadingWrapper>
+            <PacketContextProvider>
               <Component {...pageProps} />
-            </LoadingWrapper>
-          </PacketContextProvider>
+            </PacketContextProvider>
+          </LoadingWrapper>
         </SocketContextProvider>
       </AppStateContextProvider>
     </>
