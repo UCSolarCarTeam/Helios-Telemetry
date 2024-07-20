@@ -1,5 +1,5 @@
 {
-  "name": "helios-telemetry-infrastructure",
+  "name": "amplify",
   "private": true,
   "version": "0.1.0",
   "dependencies": {
