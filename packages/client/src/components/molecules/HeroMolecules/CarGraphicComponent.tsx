@@ -5,11 +5,12 @@ import * as THREE from "three";
 
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
 import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
-import type {
+import type { IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
+import {
   FaultLocations,
-  IndicationLocations,
+  ISeverity,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
+import { useFaults } from "@/contexts/FaultsContext";
 import { usePacket } from "@/contexts/PacketContext";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
@@ -19,15 +20,58 @@ type IndicationTriggerList = {
   // TODO: Add indication triggers
 };
 
+// If there are faults pass a variable like isClear
+// If there are no faults, pass a variable like !isClear
+
+// Mapping values to the components of the car
+// find the first instance of the fault location
+// if is there just return true for that location, and then make it glow
+
 function CarGraphicComponent() {
-  const { currentPacket } = usePacket();
-  const [isClear, changeClear] = useState(false);
+  const velocity = usePacket().currentPacket?.KeyMotor[0]
+    ?.VehicleVelocity as number;
+  const faults = useFaults();
   const [indications, setIndications] = useState<IndicationLocations>({
     leftMotor: ISeverity.CLEAR,
     rightMotor: ISeverity.CLEAR,
     battery: ISeverity.CLEAR,
     solarPanel: ISeverity.CLEAR,
   });
+
+  // const glowingFaults = {
+  //   leftMotor: {
+  //     error: ISeverity.CLEAR,
+
+  //   },
+  //   rightMotor: {
+  //     error: ISeverity.CLEAR,
+  //     warning: false,
+  //   },
+  //   battery: {
+  //     error: ISeverity.CLEAR,
+  //     warning: false,
+  //   },
+  //   solarPanel: {
+  //     error: ISeverity.CLEAR,
+  //     warning: false,
+  //   },
+  // };
+
+  // faults.currentFaults.forEach((fault) => {
+  //   if (fault.indicationLocation === FaultLocations.LEFTMOTOR) {
+  //     if (fault.severity === ISeverity.ERROR) {
+  //       glowingFaults.leftMotor.error = true;
+  //       glowingFaults.leftMotor.warning = ISeverity.ERROR;
+  //     }
+  //     glowingFaults.leftMotor = true;
+  //   } else if (fault.indicationLocation === FaultLocations.RIGHTMOTOR) {
+  //     glowingFaults.rightMotor = true;
+  //   } else if (fault.indicationLocation === FaultLocations.BATTERY) {
+  //     glowingFaults.battery = true;
+  //   } else if (fault.indicationLocation === FaultLocations.SOLARPANEL) {
+  //     glowingFaults.solarPanel = true;
+  //   }
+  // });
 
   const errorMaterial = new THREE.MeshStandardMaterial({
     color: 0xff0000,
@@ -74,15 +118,11 @@ function CarGraphicComponent() {
           castShadow
         />
         <CarModelComponent
-          isClear={isClear}
           errorMaterial={errorMaterial}
           warningMaterial={warningMaterial}
           indications={indications}
         />
-        <RoadComponent
-          speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
-          size={15}
-        />
+        <RoadComponent speed={velocity * 0.5} size={15} />
         <ContactShadows
           position={[0, 0, 0]}
           opacity={0.75}
@@ -95,12 +135,6 @@ function CarGraphicComponent() {
       </Canvas>
 
       {/* This is a temporary button to show transperency functionality*/}
-      <button
-        className="m-auto self-end rounded border-2 border-helios px-1 font-bold text-helios hover:bg-helios hover:text-white"
-        onClick={() => changeClear(!isClear)}
-      >
-        View Inside
-      </button>
     </>
   );
 }

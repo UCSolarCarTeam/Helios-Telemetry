@@ -6,79 +6,82 @@ import React from "react";
 import type * as THREE from "three";
 import { type GLTF } from "three-stdlib";
 
+import { type IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { useGLTF } from "@react-three/drei";
+
+// wheels, solar panels, big battery
 
 type GLTFResult = GLTF & {
   nodes: {
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid2_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid3_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid3_-_Part_clonedChild"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid4_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid4_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid4_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid5_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid5_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid6_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid7_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid8_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid8_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid9_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid9_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid10_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid11_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid12_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid13_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid14_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid14_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid14_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_4"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_5"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part_4"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part_4"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid18_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid18_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part_4"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid20_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid20_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid20_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_4"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_5"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_6"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid22_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid22_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid22_-_Part_3"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid23_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid24_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid24_-_Part_clonedChild"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid25_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid25_-_Part_2"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid26_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid27_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid28_-_Part"]: THREE.Mesh;
-    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid28_-_Part_clonedChild"]: THREE.Mesh;
-    ["EVO_QRT_(1)-1-surface1_-_Part"]: THREE.Mesh;
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid2_-_Part"]: THREE.Mesh; // Left window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid3_-_Part"]: THREE.Mesh; // Left windshield
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid3_-_Part_clonedChild"]: THREE.Mesh; // Left windshield2
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid4_-_Part"]: THREE.Mesh; // Left window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid4_-_Part_2"]: THREE.Mesh; // Left window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid4_-_Part_3"]: THREE.Mesh; // Left window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid5_-_Part"]: THREE.Mesh; // Left window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid5_-_Part_2"]: THREE.Mesh; // Left window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid6_-_Part"]: THREE.Mesh; // Left front wheel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid7_-_Part"]: THREE.Mesh; // Left back wheel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid8_-_Part"]: THREE.Mesh; // Left back piece
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid8_-_Part_2"]: THREE.Mesh; // Left back piece2
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid9_-_Part"]: THREE.Mesh; // Top of the car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid9_-_Part_2"]: THREE.Mesh; // Top solar panel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid10_-_Part"]: THREE.Mesh; // Top left solar panel frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid11_-_Part"]: THREE.Mesh; // Top left solar panel frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid12_-_Part"]: THREE.Mesh; // Top left solar panel frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid13_-_Part"]: THREE.Mesh; // Left door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid14_-_Part"]: THREE.Mesh; // Left door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid14_-_Part_2"]: THREE.Mesh; // Left door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid14_-_Part_3"]: THREE.Mesh; // Left door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part"]: THREE.Mesh; // Left door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_2"]: THREE.Mesh; // Left door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_3"]: THREE.Mesh; // Left front solar panel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_4"]: THREE.Mesh; // Weird led thing
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_5"]: THREE.Mesh; // Another weird led thing
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part"]: THREE.Mesh; // Left back frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part_2"]: THREE.Mesh; // Left back frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part_3"]: THREE.Mesh; // Left back frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part_4"]: THREE.Mesh; // Left back solar panel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part"]: THREE.Mesh; // Bottom frame of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part_2"]: THREE.Mesh; // Bottom frame of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part_3"]: THREE.Mesh; // Bottom frame of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid17_-_Part_4"]: THREE.Mesh; // Bottom frame of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid18_-_Part"]: THREE.Mesh; // Top of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid18_-_Part_2"]: THREE.Mesh; // Top solar panel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part"]: THREE.Mesh; // Right back of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part_2"]: THREE.Mesh; // Right back of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part_3"]: THREE.Mesh; // Right back of car
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part_4"]: THREE.Mesh; // Right back solar panel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid20_-_Part"]: THREE.Mesh; // right side window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid20_-_Part_2"]: THREE.Mesh; //right sdie window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid20_-_Part_3"]: THREE.Mesh; //right side window frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_2"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_3"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_4"]: THREE.Mesh; // Right front solar panel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_5"]: THREE.Mesh; //left yellow neon tube thing
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_6"]: THREE.Mesh; //right yellow neon tube thing
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid22_-_Part"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid22_-_Part_2"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid22_-_Part_3"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid23_-_Part"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid24_-_Part"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid24_-_Part_clonedChild"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid25_-_Part"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid25_-_Part_2"]: THREE.Mesh; // right door frame
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid26_-_Part"]: THREE.Mesh; //right front wheel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid27_-_Part"]: THREE.Mesh; //right back wheel
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid28_-_Part"]: THREE.Mesh; // Right window
+    ["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid28_-_Part_clonedChild"]: THREE.Mesh; //Right window 2
+    ["EVO_QRT_(1)-1-surface1_-_Part"]: THREE.Mesh; //another left seat
     ["EVO_QRT_(1)-1-surface1_-_Part_2"]: THREE.Mesh;
-    ["EVO_QRT_(1)-2-surface1_-_Part"]: THREE.Mesh;
+    ["EVO_QRT_(1)-2-surface1_-_Part"]: THREE.Mesh; //left seat
     ["EVO_QRT_(1)-2-surface1_-_Part_2"]: THREE.Mesh;
-    ["EVO_QRT_(1)-3-surface1_-_Part"]: THREE.Mesh;
+    ["EVO_QRT_(1)-3-surface1_-_Part"]: THREE.Mesh; //another right seat
     ["EVO_QRT_(1)-3-surface1_-_Part_2"]: THREE.Mesh;
-    ["EVO_QRT_(1)-4-surface1_-_Part"]: THREE.Mesh;
-    ["EVO_QRT_(1)-4-surface1_-_Part_2"]: THREE.Mesh;
+    ["EVO_QRT_(1)-4-surface1_-_Part"]: THREE.Mesh; //right seat
+    ["EVO_QRT_(1)-4-surface1_-_Part_2"]: THREE.Mesh; //some frame thing
   };
   materials: {
     ["white medium gloss plastic"]: THREE.MeshStandardMaterial;
@@ -96,7 +99,13 @@ type GLTFResult = GLTF & {
   // animations: GLTFAction[];
 };
 
-export function CarModelComponent(props: JSX.IntrinsicElements["group"]) {
+type CarModelComponentProps = {
+  errorMaterial: THREE.MeshStandardMaterial;
+  warningMaterial: THREE.MeshStandardMaterial;
+  indications: IndicationLocations;
+};
+
+export function CarModelComponent(props: CarModelComponentProps) {
   const { nodes, materials } = useGLTF("/models/Helios.glb") as GLTFResult;
   return (
     <group
