@@ -123,14 +123,18 @@ const TelemetryBackendVPC = new ec2.Vpc(
     natGateways: 0,
   }
 );
-
-const TelemetryBackendVPCSecurityGroup = new ec2.SecurityGroup(
+const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,
   "TelemetryBackendSecurityGroup",
-  {
-    vpc: TelemetryBackendVPC,
-  }
+  TelemetryBackendVPC.vpcDefaultSecurityGroup
 );
+// const TelemetryBackendVPCSecurityGroup = new ec2.SecurityGroup(
+//   TelemetryBackendStack,
+//   "TelemetryBackendSecurityGroup",
+//   {
+//     vpc: TelemetryBackendVPC,
+//   }
+// );
 TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(3001),
@@ -179,7 +183,7 @@ const TelemetryECSService = new ecs.Ec2Service(
   {
     cluster: TelemetryECSCluster,
     taskDefinition: TelemetryECSTaskDefintion,
-    desiredCount: 0,
+    desiredCount: 1,
     maxHealthyPercent: 100,
     minHealthyPercent: 0,
   }
