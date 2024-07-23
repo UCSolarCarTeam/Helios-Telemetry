@@ -113,7 +113,7 @@ export function CarModelComponent(props: CarModelComponentProps) {
       dispose={null}
       scale={3}
       rotation={[0, Math.PI, 0]}
-      position={[-1.5, 0, -2.5]}
+      position={[-2, 0, 6]}
     >
       <directionalLight
         name="Directional1"
