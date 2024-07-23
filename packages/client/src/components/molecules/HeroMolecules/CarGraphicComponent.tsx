@@ -31,6 +31,7 @@ function CarGraphicComponent() {
   const velocity = usePacket().currentPacket?.KeyMotor[0]
     ?.VehicleVelocity as number;
   const faults = useFaults();
+  const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
     leftMotor: ISeverity.CLEAR,
     rightMotor: ISeverity.CLEAR,
@@ -38,40 +39,41 @@ function CarGraphicComponent() {
     solarPanel: ISeverity.CLEAR,
   });
 
-  // const glowingFaults = {
-  //   leftMotor: {
-  //     error: ISeverity.CLEAR,
+  const glowingFaults = {
+    leftMotor: ISeverity.CLEAR,
+    rightMotor: ISeverity.CLEAR,
+    battery: ISeverity.CLEAR,
+    solarPanel: ISeverity.CLEAR,
+  };
 
-  //   },
-  //   rightMotor: {
-  //     error: ISeverity.CLEAR,
-  //     warning: false,
-  //   },
-  //   battery: {
-  //     error: ISeverity.CLEAR,
-  //     warning: false,
-  //   },
-  //   solarPanel: {
-  //     error: ISeverity.CLEAR,
-  //     warning: false,
-  //   },
-  // };
-
-  // faults.currentFaults.forEach((fault) => {
-  //   if (fault.indicationLocation === FaultLocations.LEFTMOTOR) {
-  //     if (fault.severity === ISeverity.ERROR) {
-  //       glowingFaults.leftMotor.error = true;
-  //       glowingFaults.leftMotor.warning = ISeverity.ERROR;
-  //     }
-  //     glowingFaults.leftMotor = true;
-  //   } else if (fault.indicationLocation === FaultLocations.RIGHTMOTOR) {
-  //     glowingFaults.rightMotor = true;
-  //   } else if (fault.indicationLocation === FaultLocations.BATTERY) {
-  //     glowingFaults.battery = true;
-  //   } else if (fault.indicationLocation === FaultLocations.SOLARPANEL) {
-  //     glowingFaults.solarPanel = true;
-  //   }
-  // });
+  faults.currentFaults.forEach((fault) => {
+    if (fault.indicationLocation === FaultLocations.LEFTMOTOR) {
+      if (fault.severity === ISeverity.ERROR) {
+        glowingFaults.leftMotor = ISeverity.ERROR;
+      } else {
+        glowingFaults.leftMotor = ISeverity.WARNING;
+      }
+    } else if (fault.indicationLocation === FaultLocations.RIGHTMOTOR) {
+      if (fault.severity === ISeverity.ERROR) {
+        glowingFaults.rightMotor = ISeverity.ERROR;
+      } else {
+        glowingFaults.rightMotor = ISeverity.WARNING;
+      }
+    } else if (fault.indicationLocation === FaultLocations.BATTERY) {
+      if (fault.severity === ISeverity.ERROR) {
+        glowingFaults.battery = ISeverity.ERROR;
+      } else {
+        glowingFaults.battery = ISeverity.WARNING;
+      }
+    } else if (fault.indicationLocation === FaultLocations.SOLARPANEL) {
+      if (fault.severity === ISeverity.ERROR) {
+        glowingFaults.solarPanel = ISeverity.ERROR;
+      } else {
+        glowingFaults.solarPanel = ISeverity.WARNING;
+      }
+    }
+  });
+  // setIndications(glowingFaults); causing error: "too many re-renders"
 
   const errorMaterial = new THREE.MeshStandardMaterial({
     color: 0xff0000,
@@ -110,7 +112,11 @@ function CarGraphicComponent() {
 
   return (
     <>
-      <Canvas camera={{ position: [-5, 3, 5], zoom: 1.7 }} shadows dpr={[1, 2]}>
+      <Canvas
+        camera={{ position: [-10, 6, 10], zoom: 1.8 }}
+        shadows
+        dpr={[1, 2]}
+      >
         <ambientLight intensity={0.2} />
         <directionalLight
           intensity={0.5}
@@ -118,6 +124,7 @@ function CarGraphicComponent() {
           castShadow
         />
         <CarModelComponent
+          isClear={isClear}
           errorMaterial={errorMaterial}
           warningMaterial={warningMaterial}
           indications={indications}

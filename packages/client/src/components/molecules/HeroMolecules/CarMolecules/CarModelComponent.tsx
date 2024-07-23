@@ -6,7 +6,10 @@ import React from "react";
 import type * as THREE from "three";
 import { type GLTF } from "three-stdlib";
 
-import { type IndicationLocations } from "@/components/molecules/HeroMolecules/HeroTypes";
+import {
+  ISeverity,
+  type IndicationLocations,
+} from "@/components/molecules/HeroMolecules/HeroTypes";
 import { useGLTF } from "@react-three/drei";
 
 // wheels, solar panels, big battery
@@ -103,10 +106,14 @@ type CarModelComponentProps = {
   errorMaterial: THREE.MeshStandardMaterial;
   warningMaterial: THREE.MeshStandardMaterial;
   indications: IndicationLocations;
+  isClear: boolean;
 };
 
 export function CarModelComponent(props: CarModelComponentProps) {
   const { nodes, materials } = useGLTF("/models/Helios.glb") as GLTFResult;
+
+  const clear = materials.polycarbonate;
+
   return (
     <group
       {...props}
@@ -202,7 +209,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid5_-_Part_2"].geometry
         }
-        material={materials["glossy rubber"]}
+        material={
+          props.indications.solarPanel === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.solarPanel === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["glossy rubber"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -210,7 +223,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid6_-_Part"].geometry
         }
-        material={materials["matte rubber"]}
+        material={
+          props.indications.leftMotor === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.leftMotor === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["glossy rubber"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -218,7 +237,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid7_-_Part"].geometry
         }
-        material={materials["matte rubber"]}
+        material={
+          props.indications.leftMotor === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.leftMotor === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["glossy rubber"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -250,7 +275,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid9_-_Part_2"].geometry
         }
-        material={materials["carbon fiber eproxy 2d"]}
+        material={
+          props.indications.solarPanel === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.solarPanel === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["carbon fiber eproxy 2d"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -330,7 +361,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid15_-_Part_3"].geometry
         }
-        material={materials["carbon fiber eproxy 2d"]}
+        material={
+          props.indications.solarPanel === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.solarPanel === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["carbon fiber eproxy 2d"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -378,7 +415,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid16_-_Part_4"].geometry
         }
-        material={materials["carbon fiber eproxy 2d"]}
+        material={
+          props.indications.solarPanel === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.solarPanel === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["carbon fiber eproxy 2d"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -426,7 +469,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid18_-_Part_2"].geometry
         }
-        material={materials["carbon fiber eproxy 2d"]}
+        material={
+          props.indications.solarPanel === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.solarPanel === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["carbon fiber eproxy 2d"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -458,7 +507,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid19_-_Part_4"].geometry
         }
-        material={materials["carbon fiber eproxy 2d"]}
+        material={
+          props.indications.solarPanel === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.solarPanel === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["carbon fiber eproxy 2d"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -514,7 +569,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid21_-_Part_4"].geometry
         }
-        material={materials["carbon fiber eproxy 2d"]}
+        material={
+          props.indications.solarPanel === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.solarPanel === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["carbon fiber eproxy 2d"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -604,7 +665,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid26_-_Part"].geometry
         }
-        material={materials["matte rubber"]}
+        material={
+          props.indications.rightMotor === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.rightMotor === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["glossy rubber"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
@@ -612,7 +679,13 @@ export function CarModelComponent(props: CarModelComponentProps) {
         geometry={
           nodes["Gen_6_Body_and_Chassis_A6_-_Mold-1-solid27_-_Part"].geometry
         }
-        material={materials["matte rubber"]}
+        material={
+          props.indications.rightMotor === ISeverity.ERROR
+            ? props.errorMaterial
+            : props.indications.rightMotor === ISeverity.WARNING
+              ? props.warningMaterial
+              : materials["glossy rubber"]
+        }
         rotation={[0, Math.PI, 0]}
       />
       <mesh
