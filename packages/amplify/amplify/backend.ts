@@ -24,7 +24,9 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
   "TelemetryBackendCodeBuildProject",
   {
     // buildSpec: codebuild.BuildSpec.fromObjectToYaml({}),
-    buildSpec: codebuild.BuildSpec.fromSourceFilename("amplify/buildspec.yml"),
+    buildSpec: codebuild.BuildSpec.fromSourceFilename(
+      "amplify/amplify/buildspec.yml"
+    ),
     source: codebuild.Source.gitHub({
       owner: "UCSolarCarTeam",
       repo: "Helios-Telemetry",
