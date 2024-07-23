@@ -189,7 +189,7 @@ const TelemetryECSService = new ecs.Ec2Service(
   }
 );
 
-TelemetryECSService.connections.addSecurityGroup(
+TelemetryECSService.cluster.connections.addSecurityGroup(
   TelemetryBackendVPCSecurityGroup
 );
 // TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);
