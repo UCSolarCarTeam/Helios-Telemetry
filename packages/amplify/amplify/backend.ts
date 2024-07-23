@@ -69,30 +69,6 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 
-// const TelemetrySourceOutput = new codepipeline.Artifact(
-//   "TelemetrySourceOutput",
-// );
-
-// const TelemetryBuildOutput = new codepipeline.Artifact("TelemetryBuildOutput");
-
-// const TelemetrySourceAction = new codepipeline_actions.GitHubSourceAction({
-//   actionName: "TelemetrySourceAction",
-//   owner: "UCSolarCarTeam",
-//   repo: "Helios-Telemetry",
-//   branch: "main",
-//   oauthToken: cdk.SecretValue.secretsManager("HeliosTelemetrySecret").toJSON()[
-//     "HeliosTelemetryOAuth"
-//   ],
-//   output: TelemetrySourceOutput,
-// });
-
-// const TelemetryBuildAction = new codepipeline_actions.CodeBuildAction({
-//   actionName: "TelemetryBuildAction",
-//   project: TelemetryBackendCodeBuildProject,
-//   input: TelemetrySourceOutput,
-//   outputs: [TelemetryBuildOutput],
-// });
-
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
@@ -128,13 +104,7 @@ const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   "TelemetryBackendSecurityGroup",
   TelemetryBackendVPC.vpcDefaultSecurityGroup
 );
-// const TelemetryBackendVPCSecurityGroup = new ec2.SecurityGroup(
-//   TelemetryBackendStack,
-//   "TelemetryBackendSecurityGroup",
-//   {
-//     vpc: TelemetryBackendVPC,
-//   }
-// );
+
 TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(3001),
@@ -189,9 +159,14 @@ const TelemetryECSService = new ecs.Ec2Service(
   }
 );
 
-TelemetryECSService.cluster.connections.allowFromAnyIpv4(ec2.Port.tcp(3001));
-TelemetryECSService.cluster.connections.allowFromAnyIpv4(ec2.Port.tcp(1883));
-// TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);
+TelemetryECSService.cluster.connections.allowFromAnyIpv4(
+  ec2.Port.tcp(3001),
+  "Backend - Allow inbound traffic on port 3001"
+);
+TelemetryECSService.cluster.connections.allowFromAnyIpv4(
+  ec2.Port.tcp(1883),
+  "Aedes - Allow inbound traffic on port 1883"
+);
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
 const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
@@ -202,6 +177,14 @@ const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
     hostedZoneId: "Z00168143RCUWIOU5XRGV",
   }
 );
+new route53.ARecord(TelemetryBackendStack, "AedesARecord", {
+  target: route53.RecordTarget.fromIpAddresses(
+    TelemetryECSCluster.vpc.publicSubnets[0].ipv4CidrBlock
+  ),
+  zone: SolarCarHostedZone,
+  deleteExisting: true,
+  recordName: "aedes",
+});
 
 // const elasticIp = new ec2.CfnEIP(TelemetryBackendStack, 'EIP', {
 //   domain: 'vpc',
