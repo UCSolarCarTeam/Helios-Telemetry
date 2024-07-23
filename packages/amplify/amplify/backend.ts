@@ -189,9 +189,8 @@ const TelemetryECSService = new ecs.Ec2Service(
   }
 );
 
-TelemetryECSService.cluster.connections.addSecurityGroup(
-  TelemetryBackendVPCSecurityGroup
-);
+TelemetryECSService.cluster.connections.allowFromAnyIpv4(ec2.Port.tcp(3001));
+TelemetryECSService.cluster.connections.allowFromAnyIpv4(ec2.Port.tcp(1883));
 // TelemetryECSTaskDefintion.grantRun(TelemetryECSCluster.gran);
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
