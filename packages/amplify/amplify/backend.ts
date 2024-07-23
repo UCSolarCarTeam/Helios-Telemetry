@@ -177,14 +177,14 @@ const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
     hostedZoneId: "Z00168143RCUWIOU5XRGV",
   }
 );
-new route53.ARecord(TelemetryBackendStack, "AedesARecord", {
-  target: route53.RecordTarget.fromIpAddresses(
-    TelemetryECSCluster.vpc.publicSubnets[0].ipv4CidrBlock
-  ),
-  zone: SolarCarHostedZone,
-  deleteExisting: true,
-  recordName: "aedes",
-});
+// new route53.ARecord(TelemetryBackendStack, "AedesARecord", {
+//   target: route53.RecordTarget.fromIpAddresses(
+//     TelemetryECSCluster.vpc.publicSubnets[0].ipv4CidrBlock
+//   ),
+//   zone: SolarCarHostedZone,
+//   deleteExisting: true,
+//   recordName: "aedes",
+// });
 
 // const elasticIp = new ec2.CfnEIP(TelemetryBackendStack, 'EIP', {
 //   domain: 'vpc',
