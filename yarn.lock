@@ -18074,6 +18074,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
+    esbuild: "npm:^0.23.0"
     husky: "npm:^8.0.3"
     lerna: "npm:^8.1.6"
     lint-staged: "npm:^13.2.2"
