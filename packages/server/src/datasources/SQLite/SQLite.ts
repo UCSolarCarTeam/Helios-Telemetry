@@ -9,7 +9,9 @@ import type {
   ITelemetryData,
 } from "@/interfaces/telemetry-data.interface";
 
-import { logger } from "@/index";
+import { createLightweightApplicationLogger } from "@/utils/logger";
+
+const logger = createLightweightApplicationLogger("SQLite.ts");
 
 export class SQLite implements SQLiteType {
   public db: sqlite3.Database;

@@ -26,15 +26,15 @@ aedes.authenticate = function (
   password: Buffer | undefined,
   done: (error: AuthenticateError | null, success: boolean) => void,
 ) {
-  // TO DO: Convert to ENV VARS
-  const validUsername = "urMom"; // Replace with your valid username
-  const validPassword = "hasAedes"; // Replace with your valid password
   if (!username || !password) {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
     return;
   }
-  if (username === validUsername && password.toString() === validPassword) {
+  if (
+    username === process.env.MQTT_USER &&
+    password.toString() === process.env.MQTT_PASS
+  ) {
     done(null, true); // Authentication successful
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode

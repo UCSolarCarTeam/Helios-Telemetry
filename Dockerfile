@@ -53,6 +53,8 @@ WORKDIR /opt/solarcar-user
 ENV NODE_ENV production
 ENV SERVER_PORT 3001
 ENV MQTT_SERVER_PORT 1883
+ENV MQTT_USER solar
+ENV MQTT_PASS car
 
 COPY --from=buildstageBackend /opt/helios-backend/src/ ./
 
