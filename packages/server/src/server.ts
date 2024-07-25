@@ -1,5 +1,6 @@
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
+import { startAedes } from "@/aedes";
 import server from "@/index";
 import main from "@/main";
 
@@ -14,7 +15,9 @@ export const httpServer = server
     logger.info(`Node Version: ${process.version}`);
     logger.info(`Server Port: ${port}`);
     logger.info(`Debug Port: ${process.debugPort}`);
+    startAedes();
   })
+
   .on("error", (error: Error) => {
     logger.error(error.message);
     throw error;
