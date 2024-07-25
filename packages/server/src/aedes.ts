@@ -4,9 +4,9 @@ import { createServer } from "net";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("aedes.ts");
+const port = process.env.MQTT_SERVER_PORT || 1883;
 
 const aedes: Aedes = new Aedes();
-const aedesServer = createServer(aedes.handle);
 
 class MqttError extends Error {
   returnCode: number;
@@ -42,12 +42,13 @@ aedes.authenticate = function (
   }
 };
 
-aedes.on("publish", (packet, client) => {
-  if (client) {
-    logger.info(
-      `Published message from client ${client.id}: ${packet.payload.toString()}`,
-    );
-  }
-});
-
-export default aedesServer;
+export const startAedes = () => {
+  return createServer(aedes.handle)
+    .listen(port, () => {
+      logger.info(`Aedes server started and listening on port ${port}`);
+    })
+    .on("error", (error: Error) => {
+      logger.error(error.message);
+      throw error;
+    });
+};
