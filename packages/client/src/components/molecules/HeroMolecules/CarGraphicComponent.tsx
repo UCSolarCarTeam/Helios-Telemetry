@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 // TO DO Remove that ^^
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as THREE from "three";
 
 import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
@@ -46,34 +46,44 @@ function CarGraphicComponent() {
     solarPanel: ISeverity.CLEAR,
   };
 
-  faults.currentFaults.forEach((fault) => {
-    if (fault.indicationLocation === FaultLocations.LEFTMOTOR) {
-      if (fault.severity === ISeverity.ERROR) {
-        glowingFaults.leftMotor = ISeverity.ERROR;
-      } else {
-        glowingFaults.leftMotor = ISeverity.WARNING;
+  useEffect(() => {
+    const glowingFaults = {
+      leftMotor: ISeverity.CLEAR,
+      rightMotor: ISeverity.CLEAR,
+      battery: ISeverity.CLEAR,
+      solarPanel: ISeverity.CLEAR,
+    };
+
+    faults.currentFaults.forEach((fault) => {
+      if (fault.indicationLocation === FaultLocations.LEFTMOTOR) {
+        if (fault.severity === ISeverity.ERROR) {
+          glowingFaults.leftMotor = ISeverity.ERROR;
+        } else {
+          glowingFaults.leftMotor = ISeverity.WARNING;
+        }
+      } else if (fault.indicationLocation === FaultLocations.RIGHTMOTOR) {
+        if (fault.severity === ISeverity.ERROR) {
+          glowingFaults.rightMotor = ISeverity.ERROR;
+        } else {
+          glowingFaults.rightMotor = ISeverity.WARNING;
+        }
+      } else if (fault.indicationLocation === FaultLocations.BATTERY) {
+        if (fault.severity === ISeverity.ERROR) {
+          glowingFaults.battery = ISeverity.ERROR;
+        } else {
+          glowingFaults.battery = ISeverity.WARNING;
+        }
+      } else if (fault.indicationLocation === FaultLocations.SOLARPANEL) {
+        if (fault.severity === ISeverity.ERROR) {
+          glowingFaults.solarPanel = ISeverity.ERROR;
+        } else {
+          glowingFaults.solarPanel = ISeverity.WARNING;
+        }
       }
-    } else if (fault.indicationLocation === FaultLocations.RIGHTMOTOR) {
-      if (fault.severity === ISeverity.ERROR) {
-        glowingFaults.rightMotor = ISeverity.ERROR;
-      } else {
-        glowingFaults.rightMotor = ISeverity.WARNING;
-      }
-    } else if (fault.indicationLocation === FaultLocations.BATTERY) {
-      if (fault.severity === ISeverity.ERROR) {
-        glowingFaults.battery = ISeverity.ERROR;
-      } else {
-        glowingFaults.battery = ISeverity.WARNING;
-      }
-    } else if (fault.indicationLocation === FaultLocations.SOLARPANEL) {
-      if (fault.severity === ISeverity.ERROR) {
-        glowingFaults.solarPanel = ISeverity.ERROR;
-      } else {
-        glowingFaults.solarPanel = ISeverity.WARNING;
-      }
-    }
-  });
-  // setIndications(glowingFaults); causing error: "too many re-renders"
+    });
+
+    setIndications(glowingFaults);
+  }, [faults.currentFaults]);
 
   const errorMaterial = new THREE.MeshStandardMaterial({
     color: 0xff0000,
