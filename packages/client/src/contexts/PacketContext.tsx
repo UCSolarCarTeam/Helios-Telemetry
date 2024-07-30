@@ -47,7 +47,7 @@ export function PacketContextProvider({
     } else if (currentAppState.connectionType === CONNECTIONTYPES.DEMO) {
       const interval = setInterval(() => {
         setCurrentPacket(generateFakeTelemetryData());
-      }, 500);
+      }, 1000);
       return () => clearInterval(interval);
     } else if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
       // Radio connection

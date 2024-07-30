@@ -10,13 +10,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <AppStateContextProvider>
-        <SocketContextProvider>
-          <LoadingWrapper>
-            <PacketContextProvider>
-              <Component {...pageProps} />
-            </PacketContextProvider>
-          </LoadingWrapper>
-        </SocketContextProvider>
+        <PacketContextProvider>
+          <Component {...pageProps} />
+        </PacketContextProvider>
       </AppStateContextProvider>
     </>
   );
