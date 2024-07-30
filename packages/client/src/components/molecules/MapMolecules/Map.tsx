@@ -42,7 +42,7 @@ function Map(props: IMapProps): JSX.Element {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   useEffect(() => {
     const isOutsideBounds = (): boolean => {
-      if (!mapRef.current) return false;
+      if (!mapRef || !mapRef.current) return false;
 
       const { lng, lat } = (
         mapRef.current.getBounds() as LngLatBounds
