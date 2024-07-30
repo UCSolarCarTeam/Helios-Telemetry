@@ -185,6 +185,7 @@ function Map(props: IMapProps): JSX.Element {
           keyboard={false}
           onLoad={(e) => {
             const mapInstance = e.target;
+            // @ts-expect-error:next-line
             fitToBounds(mapInstance, carLocation, lapLocation);
           }}
         >
