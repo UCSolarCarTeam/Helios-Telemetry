@@ -1,4 +1,8 @@
-import type { LngLatBounds, LngLatBoundsLike } from "mapbox-gl";
+import type {
+  LngLatBounds,
+  LngLatBoundsLike,
+  Map as MapboxMap,
+} from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -6,7 +10,6 @@ import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import {
-  faGlobe,
   faLayerGroup,
   faLocationArrow,
   faSatellite,
@@ -53,7 +56,7 @@ const lerp = (start: number, end: number, t: number) => {
 function Map(props: IMapProps): JSX.Element {
   const { currentAppState } = useAppState();
   const { carLocation, mapLocation, lapLocation } = props;
-  const mapRef = useRef<mapboxgl.Map | null>(null);
+  const mapRef = useRef<MapboxMap | null>(null);
   const [satelliteMode, setSatelliteMode] = useState(false);
   const [centered, setCentered] = useState(false);
   const buttonRef = useRef(null);
@@ -73,11 +76,13 @@ function Map(props: IMapProps): JSX.Element {
         coordinates !== undefined && i < coordinates.length;
         i++
       ) {
+        const coord = coordinates[i];
         if (
-          coordinates[i]?.lng < westLng ||
-          coordinates[i]?.lng > lng ||
-          coordinates[i]?.lat < southLat ||
-          coordinates[i]?.lat > lat
+          coord &&
+          (coord.lng < westLng ||
+            coord.lng > lng ||
+            coord.lat < southLat ||
+            coord.lat > lat)
         ) {
           return true;
         }
@@ -96,7 +101,7 @@ function Map(props: IMapProps): JSX.Element {
         easing: (t) => t, // Easing function for the animation
       });
     }
-  }, [carLocation, lapLocation, centered]);
+  }, [carLocation, lapLocation, centered, mapLocation]);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -124,27 +129,27 @@ function Map(props: IMapProps): JSX.Element {
         <div className="absolute z-10 flex flex-col space-x-14 space-y-0 p-2">
           <button
             ref={buttonRef}
-            className="absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border-none bg-black"
+            className={`absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border-none ${currentAppState.darkMode === true ? "bg-dark text-dark" : "bg-light text-light"}`}
             onClick={() => {
               toggleMapStyle();
             }}
           >
             <FontAwesomeIcon
               icon={satelliteMode === true ? faSatellite : faLayerGroup}
-              className="text-xl text-white"
+              className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"}`}
             />
           </button>
 
           <button
-            className="absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border-none bg-black"
+            className={`absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border-none ${currentAppState.darkMode === true ? "bg-dark text-dark" : "bg-light text-light"}`}
             onClick={() => {
               setCentered(!centered);
             }}
           >
             <FontAwesomeIcon
               icon={faLocationArrow}
+              className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"}`}
               style={{
-                color: "white",
                 fontSize: "0.3rem",
                 lineHeight: "0.3rem",
                 height: "1.5rem",
@@ -153,7 +158,11 @@ function Map(props: IMapProps): JSX.Element {
           </button>
         </div>
         <ReactMapGL
-          ref={mapRef}
+          ref={(instance) => {
+            if (instance) {
+              mapRef.current = instance.getMap();
+            }
+          }}
           mapLib={import("mapbox-gl") as Promise<MapLibType>}
           mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
           initialViewState={{
@@ -176,8 +185,8 @@ function Map(props: IMapProps): JSX.Element {
           scrollZoom={true}
           keyboard={false}
           onLoad={(e) => {
-            mapRef.current = e.target as mapboxgl.Map;
-            fitToBounds(mapRef.current, carLocation, lapLocation);
+            const mapInstance = e.target as mapboxgl.Map;
+            fitToBounds(mapInstance, carLocation, lapLocation);
           }}
         >
           <Marker
