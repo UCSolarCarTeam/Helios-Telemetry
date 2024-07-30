@@ -23,7 +23,7 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    console.log("currentAppState.loading", currentAppState);
+    // console.log("currentAppState.loading", currentAppState);
     let pendingTimeout: NodeJS.Timeout;
     let readyTimeout: NodeJS.Timeout;
     let confirmTimeout: NodeJS.Timeout;
