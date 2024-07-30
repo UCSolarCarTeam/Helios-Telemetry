@@ -6,15 +6,10 @@ import type {
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
 
 import { useAppState } from "@/contexts/AppStateContext";
-import {
-  faLayerGroup,
-  faLocationArrow,
-  faSatellite,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 
 // @ts-expect-error:next-line
@@ -134,10 +129,15 @@ function Map(props: IMapProps): JSX.Element {
               toggleMapStyle();
             }}
           >
-            <FontAwesomeIcon
-              icon={satelliteMode === true ? faSatellite : faLayerGroup}
-              className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"}`}
-            />
+            {satelliteMode === true ? (
+              <FaSatellite
+                className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"}`}
+              />
+            ) : (
+              <FaLayerGroup
+                className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"}`}
+              />
+            )}
           </button>
 
           <button
@@ -146,11 +146,10 @@ function Map(props: IMapProps): JSX.Element {
               setCentered(!centered);
             }}
           >
-            <FontAwesomeIcon
-              icon={faLocationArrow}
+            <FaLocationArrow
               className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"}`}
               style={{
-                fontSize: "0.3rem",
+                fontSize: "1.0rem",
                 lineHeight: "0.3rem",
                 height: "1.5rem",
               }}
@@ -185,7 +184,7 @@ function Map(props: IMapProps): JSX.Element {
           scrollZoom={true}
           keyboard={false}
           onLoad={(e) => {
-            const mapInstance = e.target as mapboxgl.Map;
+            const mapInstance = e.target;
             fitToBounds(mapInstance, carLocation, lapLocation);
           }}
         >
