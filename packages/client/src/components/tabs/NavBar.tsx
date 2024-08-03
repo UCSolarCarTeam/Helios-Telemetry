@@ -10,7 +10,7 @@ function NavBar(): JSX.Element {
 
   const getCurrentPath = () => {
     let currIndex = "1";
-    routes.map((route: SolarCarRoutes, i: number) => {
+    routes.map((route: SolarCarRoutes) => {
       if (route.path === router.pathname) {
         currIndex = route.value.toString();
       }

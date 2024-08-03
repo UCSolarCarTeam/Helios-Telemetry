@@ -1,7 +1,3 @@
-enum Motor {
-  RightMotor = 1,
-  LeftMotor = 0,
-}
 export default interface ITelemetryData {
   PacketTitle: string;
   TimeStamp: number;

@@ -11,7 +11,6 @@ interface roadComponentProps {
 }
 export function RoadComponent(props: roadComponentProps) {
   const geometry = new PlaneGeometry(0.5, props.size * 5);
-  const planeGeom = new PlaneGeometry(9, props.size * 7);
   return (
     <>
       <mesh

@@ -11,7 +11,7 @@ const fakeData = {
   "Bus Voltage": 55,
 };
 
-function BottomInformationContainer(props: any) {
+function BottomInformationContainer() {
   return (
     <div className="align-middle">
       <div className="flex h-full flex-row flex-wrap justify-evenly gap-4 pt-4 text-center text-base md:gap-2 2xl:text-xl">

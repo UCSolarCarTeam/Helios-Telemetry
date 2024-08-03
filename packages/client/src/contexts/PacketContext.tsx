@@ -38,6 +38,7 @@ export function PacketContextProvider({
   function onPacket(packet: ITelemetryData) {
     setCurrentPacket(packet);
   }
+
   useEffect(() => {
     if (currentAppState.connectionType === CONNECTIONTYPES.NETWORK) {
       socketIO.on("packet", onPacket);

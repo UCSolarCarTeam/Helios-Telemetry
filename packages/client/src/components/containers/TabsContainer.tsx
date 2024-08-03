@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import NavBar from "@/components/tabs/NavBar";
 import { type SolarCarRoutes, routes } from "@/objects/TabRoutes";
 
-function TabsContainer(props: any) {
+function TabsContainer() {
   const router = useRouter();
   const { slug } = router.query;
 

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { use, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { LOADINGSTAGES } from "@/components/global/LoadingWrapper";

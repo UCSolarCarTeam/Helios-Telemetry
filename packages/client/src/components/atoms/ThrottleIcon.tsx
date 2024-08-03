@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import { usePacket } from "@/contexts/PacketContext";
 
 function ThrottleIcon() {
