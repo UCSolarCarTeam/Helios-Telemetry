@@ -11,7 +11,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <AppStateContextProvider>
         <PacketContextProvider>
-          <Component {...pageProps} />
+          <LoadingWrapper>
+            <Component {...pageProps} />
+          </LoadingWrapper>
         </PacketContextProvider>
       </AppStateContextProvider>
     </>
