@@ -56,18 +56,23 @@ function SettingsComponent() {
       >
         <SettingsIcon />
       </h2>
+
       <Modal
         open={open}
         onClose={() => setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        className="flex flex-grow items-center justify-center"
       >
-        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col rounded-lg bg-white p-4 shadow-lg">
-          <h5 className="text-text-gray dark:text-text-gray-dark mb-4 text-2xl">
+        <div className="w-full max-w-[75%] bg-white p-4 rounded-lg shadow-lg border-none outline-none">
+          <h5 className="text-center font-semibold text-text-gray dark:text-text-gray-dark mb-5 text-3xl">
             Settings
           </h5>
 
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+          <div 
+            style={{gridTemplateColumns:"40% 60%"}}
+            className="mb-4 grid items-center justify-between"
+          >
             <div className="col-span-1">
               <label className="mr-2">Appearance:</label>
             </div>
@@ -90,7 +95,10 @@ function SettingsComponent() {
             </div>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+          <div
+            style={{gridTemplateColumns:"40% 60%"}}
+            className="mb-4 grid items-center justify-between"
+          >
             <div className="col-span-1">
               <label className="mr-2">Units:</label>
             </div>
@@ -112,10 +120,13 @@ function SettingsComponent() {
             </div>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+          <div
+            className="grid grid-rows-1"
+          >
             <div className="col-span-1">
               <label className="mr-2">Connection:</label>
             </div>
+
             <div>
               <div className="col-span-1">
                 <ToggleButtonGroup
@@ -147,6 +158,7 @@ function SettingsComponent() {
                   )}
                 </ToggleButtonGroup>
               </div>
+
               <div className="justify-top col-span-1 flex items-start">
                 {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
                   (key) => {
@@ -163,16 +175,16 @@ function SettingsComponent() {
                         className="w-1/3 items-center justify-center"
                         key={key}
                       >
-                        {disabledText ? (
-                          <div className="flex flex-col items-center">
-                            <span className="text-helios">Not Available</span>
-                            <span className="text-xs">({disabledText})</span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center">
-                            <span className="text-green">Available</span>
-                          </div>
-                        )}
+                        <div className="flex flex-col items-center my-1">
+                          {disabledText ? (
+                            <>
+                              <span className="text-sm text-helios">Not Available</span>
+                              <span className="text-xs text-center">({disabledText})</span>
+                            </>
+                          ) : (
+                            <span className="text-sm text-green">Available</span>
+                          )}
+                        </div>
                       </div>
                     );
                   },
