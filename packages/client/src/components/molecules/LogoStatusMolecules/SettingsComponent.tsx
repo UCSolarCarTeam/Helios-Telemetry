@@ -62,15 +62,15 @@ function SettingsComponent() {
         onClose={() => setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        className="flex flex-grow items-center justify-center"
+        className="flex grow items-center justify-center"
       >
-        <div className="w-full max-w-[75%] bg-white p-4 rounded-lg shadow-lg border-none outline-none">
-          <h5 className="text-center font-semibold text-text-gray dark:text-text-gray-dark mb-5 text-3xl">
+        <div className="w-full max-w-[75%] rounded-lg border-none bg-white p-4 shadow-lg outline-none">
+          <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
             Settings
           </h5>
 
-          <div 
-            style={{gridTemplateColumns:"40% 60%"}}
+          <div
+            style={{ gridTemplateColumns: "40% 60%" }}
             className="mb-4 grid items-center justify-between"
           >
             <div className="col-span-1">
@@ -96,7 +96,7 @@ function SettingsComponent() {
           </div>
 
           <div
-            style={{gridTemplateColumns:"40% 60%"}}
+            style={{ gridTemplateColumns: "40% 60%" }}
             className="mb-4 grid items-center justify-between"
           >
             <div className="col-span-1">
@@ -120,9 +120,7 @@ function SettingsComponent() {
             </div>
           </div>
 
-          <div
-            className="grid grid-rows-1"
-          >
+          <div className="grid grid-rows-1">
             <div className="col-span-1">
               <label className="mr-2">Connection:</label>
             </div>
@@ -175,14 +173,20 @@ function SettingsComponent() {
                         className="w-1/3 items-center justify-center"
                         key={key}
                       >
-                        <div className="flex flex-col items-center my-1">
+                        <div className="my-1 flex flex-col items-center">
                           {disabledText ? (
                             <>
-                              <span className="text-sm text-helios">Not Available</span>
-                              <span className="text-xs text-center">({disabledText})</span>
+                              <span className="text-sm text-helios">
+                                Not Available
+                              </span>
+                              <span className="text-center text-xs">
+                                ({disabledText})
+                              </span>
                             </>
                           ) : (
-                            <span className="text-sm text-green">Available</span>
+                            <span className="text-sm text-green">
+                              Available
+                            </span>
                           )}
                         </div>
                       </div>
