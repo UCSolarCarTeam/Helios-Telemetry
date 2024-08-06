@@ -5,7 +5,6 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 
 const Battery = (): I_PIS => {
   const { currentPacket } = usePacket();
-  console.log(currentPacket);
   const data = {
     BMSRelayStatusFlags: [
       {

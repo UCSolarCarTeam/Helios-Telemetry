@@ -7,7 +7,7 @@ import {
 } from "react";
 
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
-import { socketIO } from "@/contexts/SocketContext";
+import { socketIO } from "@/contexts/SocketIOConnection";
 import fakeData from "@/contexts/fakePacket.json";
 import { generateFakeTelemetryData } from "@/lib/utils";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
@@ -47,7 +47,7 @@ export function PacketContextProvider({
     } else if (currentAppState.connectionType === CONNECTIONTYPES.DEMO) {
       const interval = setInterval(() => {
         setCurrentPacket(generateFakeTelemetryData());
-      }, 1000);
+      }, 500);
       return () => clearInterval(interval);
     } else if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
       // Radio connection

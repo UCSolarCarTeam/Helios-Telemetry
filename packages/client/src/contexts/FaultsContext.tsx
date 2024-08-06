@@ -10,7 +10,6 @@ import {
   type FaultLocations,
   type ISeverity,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { usePacket } from "@/contexts/PacketContext";
 import Faults from "@/objects/PIS/PIS.faults";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISFieldData } from "@/objects/PIS/PIS.interface";
@@ -31,7 +30,7 @@ function incrementOrDropFaultTimer(faults: Map<string, IFaults>) {
   faults.forEach((fault, index) => {
     if (!fault.value) {
       faults.set(index, { ...fault, faultTimer: fault.faultTimer + 1 });
-      if (fault.faultTimer >= 20) {
+      if (fault.faultTimer >= 10) {
         faults.delete(fault.name);
       }
     }
@@ -82,14 +81,12 @@ export function FaultsContextProvider({ children }: Props) {
     });
   }
 
-  const { currentPacket } = usePacket();
-
   const currentFaults = useMemo(() => {
     processFaultSection(faults);
     incrementOrDropFaultTimer(trueFaultsRef.current);
     // console.log(Array.from(trueFaultsRef.current.entries()));
     return trueFaultsRef.current;
-  }, [currentPacket]);
+  }, [faults]);
 
   return (
     <faultsContext.Provider value={{ currentFaults }}>
