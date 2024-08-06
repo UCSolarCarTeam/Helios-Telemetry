@@ -44,40 +44,38 @@ export function FaultsContextProvider({ children }: Props) {
   function processFaultSection(section: I_PIS) {
     Object.keys(section).forEach((key) => {
       const value = section[key];
-      if (Array.isArray(value)) {
-        value.forEach((fault) => {
-          if (fault?.data[0]?.value === false) {
-            const existingFault = trueFaultsRef.current.get(fault.name);
-            if (existingFault) {
-              trueFaultsRef.current.set(fault.name, {
-                ...existingFault,
-                value: false,
-              });
-            }
-            return;
-          }
-          const existingFault = trueFaultsRef.current.get(fault.name);
-          if (existingFault) {
-            trueFaultsRef.current.set(fault.name, {
-              ...existingFault,
-              faultTimer: 0,
-              value: true,
-            });
-            return;
-          }
-          const newFault: IFaults = {
-            faultTimer: 0,
-            severity: fault?.data[0]?.severity as ISeverity,
-            indicationLocation: fault?.data[0]
-              ?.indicationLocation as FaultLocations,
-            value: !!fault?.data[0]?.value,
-            name: fault.name,
-          };
-          trueFaultsRef.current.set(fault.name, newFault);
-        });
-      } else {
+      if (!Array.isArray(value)) {
         processFaultSection(value as I_PIS);
+        return;
       }
+      value.forEach((fault) => {
+        const existingFault = trueFaultsRef.current.get(fault.name);
+        const faultDataExists = !!fault?.data[0]?.value;
+        const updatedFault = {
+          ...existingFault,
+          value: faultDataExists,
+        };
+        if (!faultDataExists) {
+          if (existingFault) {
+            trueFaultsRef.current.set(fault.name, updatedFault as IFaults);
+          }
+          return;
+        }
+        if (existingFault) {
+          updatedFault.faultTimer = 0;
+          trueFaultsRef.current.set(fault.name, updatedFault as IFaults);
+          return;
+        }
+        const newFault: IFaults = {
+          faultTimer: 0,
+          severity: fault?.data[0]?.severity as ISeverity,
+          indicationLocation: fault?.data[0]
+            ?.indicationLocation as FaultLocations,
+          value: !!fault?.data[0]?.value,
+          name: fault.name,
+        };
+        trueFaultsRef.current.set(fault.name, newFault);
+      });
     });
   }
 
