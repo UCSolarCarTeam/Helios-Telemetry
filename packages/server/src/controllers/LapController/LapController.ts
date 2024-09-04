@@ -12,6 +12,13 @@ export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
+  public finishLineLocation: {
+    lat: number;
+    long: number;
+  } = {
+    lat: 51,
+    long: 101,
+  };
   backendController: BackendController;
 
   constructor(backendController: BackendController) {
@@ -19,7 +26,7 @@ export class LapController implements LapControllerType {
   }
 
   public async handlePacket(packet: ITelemetryData) {
-    if (this.checkLap(packet)) {
+    if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
@@ -63,16 +70,12 @@ export class LapController implements LapControllerType {
       long: 101,
     };
 
-    const finishlineLocation = {
-      lat: 51.1,
-      long: 100.2,
-    };
     const inProximity =
       getDistance(
         carLocation.lat,
         carLocation.long,
-        finishlineLocation.lat,
-        finishlineLocation.long,
+        this.finishLineLocation.lat,
+        this.finishLineLocation.long,
       ) <= 0.01;
     let lapHappened = false;
     if (!this.previouslyInFinishLineProximity && inProximity) {
