@@ -39,7 +39,6 @@ interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
-  confirmVisualLoadingFulfilledAndReady: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
@@ -134,13 +133,6 @@ export function AppStateContextProvider({ children }: Props) {
     }
   }, [currentAppState]);
 
-  const confirmVisualLoadingFulfilledAndReady = () => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      displayLoading: false,
-    }));
-  };
-
   // useEffect(() => {
   //   if (!currentAppState.loading) {
   //     setTimeout(() => {
@@ -155,7 +147,6 @@ export function AppStateContextProvider({ children }: Props) {
         currentAppState,
         setCurrentAppState,
         toggleDarkMode,
-        confirmVisualLoadingFulfilledAndReady,
       }}
     >
       {children}

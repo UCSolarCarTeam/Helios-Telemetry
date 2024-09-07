@@ -20,7 +20,17 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   backendController: BackendController;
   pingLastSent: number;
   constructor(options: MQTTOptions, backendController: BackendController) {
-    this.client = connect(options.url);
+    this.client = connect(options.url, {
+      password: process.env.MQTT_PASS,
+      username: process.env.MQTT_USER,
+    });
+    this.client.on("connect", () => {
+      logger.info("Connected to MQTT Server");
+    });
+    this.client.on("error", (error) => {
+      logger.error("MQTT Error: ", error);
+    });
+
     this.backendController = backendController;
     this.initializeListeners();
   }

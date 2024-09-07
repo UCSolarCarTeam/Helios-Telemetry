@@ -4,6 +4,7 @@ import { useFaults } from "@/contexts/FaultsContext";
 
 function FaultsComponent() {
   const { currentFaults } = useFaults();
+
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
       {currentFaults instanceof Map && currentFaults.size > 0 ? (
