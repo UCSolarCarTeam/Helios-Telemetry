@@ -3,6 +3,7 @@ import {
   type ReactNode,
   type SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -39,7 +40,6 @@ interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
-  confirmVisualLoadingFulfilledAndReady: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
@@ -88,6 +88,7 @@ export function AppStateContextProvider({ children }: Props) {
         loading: !currentAppState.radioConnected,
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAppState.socketConnected, currentAppState.radioConnected]);
 
   useEffect(() => {
@@ -100,7 +101,7 @@ export function AppStateContextProvider({ children }: Props) {
     }, 5000);
   }, []);
 
-  const fetchSettingsFromLocalStorage = () => {
+  const fetchSettingsFromLocalStorage = useCallback(() => {
     const savedSettings = localStorage.getItem("settings");
     if (savedSettings) {
       const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
@@ -111,35 +112,28 @@ export function AppStateContextProvider({ children }: Props) {
         connectionType: parsedSettings.connectionType,
       }));
     }
-  };
+  }, []);
 
-  const toggleDarkMode = () => {
+  const toggleDarkMode = useCallback(() => {
     setCurrentAppState((prev) => ({
       ...prev,
       darkMode: !currentAppState.darkMode,
     }));
-  };
+  }, [currentAppState.darkMode]);
 
-  const saveSettingsToLocalStorage = () => {
+  const saveSettingsToLocalStorage = useCallback(() => {
     localStorage.setItem("settings", JSON.stringify(currentAppState));
-  };
+  }, [currentAppState]);
 
   useEffect(() => {
     fetchSettingsFromLocalStorage();
-  }, []);
+  }, [fetchSettingsFromLocalStorage]);
 
   useEffect(() => {
     if (!currentAppState.loading) {
       saveSettingsToLocalStorage();
     }
-  }, [currentAppState]);
-
-  const confirmVisualLoadingFulfilledAndReady = () => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      displayLoading: false,
-    }));
-  };
+  }, [currentAppState.loading, saveSettingsToLocalStorage]);
 
   // useEffect(() => {
   //   if (!currentAppState.loading) {
@@ -155,7 +149,6 @@ export function AppStateContextProvider({ children }: Props) {
         currentAppState,
         setCurrentAppState,
         toggleDarkMode,
-        confirmVisualLoadingFulfilledAndReady,
       }}
     >
       {children}

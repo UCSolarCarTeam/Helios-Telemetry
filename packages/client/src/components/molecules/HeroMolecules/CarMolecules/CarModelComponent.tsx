@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unknown-property */
+import { memo } from "react";
 import type * as THREE from "three";
 import { type GLTF } from "three-stdlib";
 
@@ -153,7 +154,7 @@ type CarModelComponentProps = {
   indications: IndicationLocations;
 };
 
-export function CarModelComponent(props: CarModelComponentProps) {
+const CarModelComponent = (props: CarModelComponentProps) => {
   const path = "/models/Helios.glb";
   const { nodes, materials } = useGLTF(path) as unknown as HeliosCar;
 
@@ -698,4 +699,6 @@ export function CarModelComponent(props: CarModelComponentProps) {
       />
     </group>
   );
-}
+};
+
+export default memo(CarModelComponent);

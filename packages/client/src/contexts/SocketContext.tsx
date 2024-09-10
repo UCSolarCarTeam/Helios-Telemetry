@@ -1,4 +1,11 @@
-import { type ReactNode, createContext, useContext, useEffect } from "react";
+import {
+  type PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { type Socket, io } from "socket.io-client";
 
 import { useAppState } from "@/contexts/AppStateContext";
@@ -31,27 +38,30 @@ const socketContext = createContext<ISocketContextReturn>(
 );
 export function SocketContextProvider({
   children,
-}: {
-  children: ReactNode | ReactNode[];
-}): JSX.Element {
+}: PropsWithChildren): JSX.Element {
   const { setCurrentAppState } = useAppState();
+  const start = useRef<number | null>(null);
 
-  const onCarLatency = (latency: number) => {
-    setCurrentAppState((prev) => ({ ...prev, carLatency: latency }));
-  };
+  const onCarLatency = useCallback(
+    (latency: number) => {
+      setCurrentAppState((prev) => ({ ...prev, carLatency: latency }));
+    },
+    [setCurrentAppState],
+  );
+
   useEffect(() => {
     // Connect to the socket
     socketIO.connect();
 
     // Ping the server every second to measure user latency
     const id = setInterval(() => {
-      const start = Date.now();
+      start.current = Date.now();
 
       socketIO.emit("ping", () => {
-        const duration = Date.now() - start;
+        const duration = Date.now() - (start.current as number);
         setCurrentAppState((prev) => ({ ...prev, userLatency: duration }));
       });
-    }, 1000);
+    }, 10000);
 
     // Register event listeners
     socketIO.on("carLatency", onCarLatency);
@@ -60,7 +70,7 @@ export function SocketContextProvider({
       clearInterval(id);
       socketIO.off("carLatency", onCarLatency);
     };
-  }, []);
+  }, [onCarLatency, setCurrentAppState]);
 
   // Socket connection status listeners
   socketIO.on("connect", () => {

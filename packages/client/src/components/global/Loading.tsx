@@ -1,11 +1,11 @@
 import Image from "next/image";
-import { use, useEffect, useMemo, useState } from "react";
+import { memo, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { LOADINGSTAGES } from "@/components/global/LoadingWrapper";
 import { useAppState } from "@/contexts/AppStateContext";
 
-export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
+const Loading = (props: { currentLoadingState: LOADINGSTAGES }) => {
   const { currentAppState } = useAppState();
 
   const { currentLoadingState } = props;
@@ -76,4 +76,6 @@ export function Loading(props: { currentLoadingState: LOADINGSTAGES }) {
       </div>
     </div>
   );
-}
+};
+
+export default memo(Loading);

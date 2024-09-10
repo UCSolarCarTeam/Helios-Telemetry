@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unknown-property */
 // TO DO Remove that ^^
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import * as THREE from "three";
 
-import { CarModelComponent } from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
-import { RoadComponent } from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
+import CarModelComponent from "@/components/molecules/HeroMolecules/CarMolecules/CarModelComponent";
+import RoadComponent from "@/components/molecules/HeroMolecules/CarMolecules/RoadComponent";
 import type {
   FaultLocations,
   IndicationLocations,
@@ -19,7 +19,11 @@ type IndicationTriggerList = {
   // TODO: Add indication triggers
 };
 
-function CarGraphicComponent() {
+const initialIntensity = 0.1;
+const targetIntensity = 0.8;
+const duration = 500;
+
+const CarGraphicComponent = () => {
   const { currentPacket } = usePacket();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
@@ -29,39 +33,50 @@ function CarGraphicComponent() {
     solarPanel: ISeverity.CLEAR,
   });
 
-  const errorMaterial = new THREE.MeshStandardMaterial({
-    color: 0xff0000,
-    transparent: true,
-    opacity: 0.8,
-  });
+  const errorMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: 0xff0000,
+        transparent: true,
+        opacity: 0.8,
+      }),
+    [],
+  );
 
-  const warningMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffa500,
-    transparent: true,
-    opacity: 0.8,
-  });
+  const warningMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: 0xffa500,
+        transparent: true,
+        opacity: 0.8,
+      }),
+    [],
+  );
 
-  const initialIntensity = 0.1;
-  const targetIntensity = 0.8;
-  const duration = 500;
+  const tween = useMemo(
+    () =>
+      new TWEEN.Tween({ intensity: initialIntensity })
+        .to({ intensity: targetIntensity }, duration)
+        .easing(TWEEN.Easing.Quadratic.InOut)
 
-  const tween = new TWEEN.Tween({ intensity: initialIntensity })
-    .to({ intensity: targetIntensity }, duration)
-    .easing(TWEEN.Easing.Quadratic.InOut)
-
-    .onUpdate(({ intensity }) => {
-      errorMaterial.opacity = intensity;
-      warningMaterial.opacity = intensity;
-    })
-    .yoyo(true)
-    .start()
-    .repeat(Infinity);
+        .onUpdate(({ intensity }) => {
+          errorMaterial.opacity = intensity;
+          warningMaterial.opacity = intensity;
+        })
+        .yoyo(true)
+        .start()
+        .repeat(Infinity),
+    [errorMaterial, warningMaterial],
+  );
 
   // Setup the animation loop.
-  function animate(time: number) {
-    tween.update(time);
-    requestAnimationFrame(animate);
-  }
+  const animate = useCallback(
+    (time: number) => {
+      tween.update(time);
+      requestAnimationFrame(animate);
+    },
+    [tween],
+  );
   animate(1);
 
   return (
@@ -103,6 +118,6 @@ function CarGraphicComponent() {
       </button>
     </>
   );
-}
+};
 
-export default CarGraphicComponent;
+export default memo(CarGraphicComponent);

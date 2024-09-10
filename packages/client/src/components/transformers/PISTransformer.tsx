@@ -1,10 +1,10 @@
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
-import type I_PIS from "@/objects/PIS/PIS.interface";
 import {
   type I_PISField,
   type I_PISFieldData,
   UnitType,
 } from "@/objects/PIS/PIS.interface";
+import type I_PIS from "@/objects/PIS/PIS.interface";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;

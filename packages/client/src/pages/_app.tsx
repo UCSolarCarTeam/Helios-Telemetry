@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 
-import { LoadingWrapper } from "@/components/global/LoadingWrapper";
+import LoadingWrapper from "@/components/global/LoadingWrapper";
 import { AppStateContextProvider } from "@/contexts/AppStateContext";
 import { PacketContextProvider } from "@/contexts/PacketContext";
 import { SocketContextProvider } from "@/contexts/SocketContext";
@@ -11,11 +11,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <AppStateContextProvider>
         <SocketContextProvider>
-          <LoadingWrapper>
-            <PacketContextProvider>
+          <PacketContextProvider>
+            <LoadingWrapper>
               <Component {...pageProps} />
-            </PacketContextProvider>
-          </LoadingWrapper>
+            </LoadingWrapper>
+          </PacketContextProvider>
         </SocketContextProvider>
       </AppStateContextProvider>
     </>
