@@ -1,10 +1,12 @@
 import PISTransformer from "@/components/transformers/PISTransformer";
-import mppt from "@/objects/PIS/PIS.mppt";
+import usePIS from "@/hooks/PIS/usePIS";
+import type I_PIS from "@/objects/PIS/PIS.interface";
 
 function MpptTab(): JSX.Element {
+  const { mppt } = usePIS();
   return (
     <div>
-      <PISTransformer root={mppt()} />
+      <PISTransformer root={mppt as I_PIS} />
     </div>
   );
 }

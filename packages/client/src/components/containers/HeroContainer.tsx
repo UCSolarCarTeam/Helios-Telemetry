@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { memo } from "react";
 
 import BatteryThrottleComponent from "@/components/molecules/HeroMolecules/BatteryThrottleComponent";
 import FaultsComponent from "@/components/molecules/HeroMolecules/FaultsComponent";
@@ -15,7 +16,7 @@ const CarGraphicComponent = dynamic(
   },
 );
 
-function HeroContainer() {
+const HeroContainer = () => {
   return (
     <>
       <FaultsContextProvider>
@@ -40,6 +41,6 @@ function HeroContainer() {
       </FaultsContextProvider>
     </>
   );
-}
+};
 
-export default HeroContainer;
+export default memo(HeroContainer);

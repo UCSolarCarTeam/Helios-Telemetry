@@ -1,10 +1,12 @@
 import PIStransformer from "@/components/transformers/PISTransformer";
-import Motor from "@/objects/PIS/PIS.motor";
+import usePIS from "@/hooks/PIS/usePIS";
+import type I_PIS from "@/objects/PIS/PIS.interface";
 
 function MotorTab(): JSX.Element {
+  const { motor } = usePIS();
   return (
     <div>
-      <PIStransformer root={Motor()} />
+      <PIStransformer root={motor as I_PIS} />
     </div>
   );
 }

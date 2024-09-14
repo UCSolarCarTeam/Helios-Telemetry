@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import * as THREE from "three";
 import { PlaneGeometry } from "three";
 
@@ -9,7 +9,7 @@ interface roadComponentProps {
   size: number;
   speed: number;
 }
-export function RoadComponent(props: roadComponentProps) {
+const RoadComponent = (props: roadComponentProps) => {
   const geometry = new PlaneGeometry(0.5, props.size * 5);
   const planeGeom = new PlaneGeometry(9, props.size * 7);
   return (
@@ -24,7 +24,7 @@ export function RoadComponent(props: roadComponentProps) {
       <RoadStripGroup {...props} />
     </>
   );
-}
+};
 
 interface roadStripComponentProps {
   size: number;
@@ -80,3 +80,5 @@ function RoadStripGroup(props: roadComponentProps) {
     </>
   );
 }
+
+export default memo(RoadComponent);

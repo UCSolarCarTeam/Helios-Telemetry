@@ -1,5 +1,5 @@
 import {
-  type ReactNode,
+  type PropsWithChildren,
   createContext,
   useContext,
   useEffect,
@@ -12,10 +12,6 @@ import fakeData from "@/contexts/fakePacket.json";
 import { generateFakeTelemetryData } from "@/lib/utils";
 import type ITelemetryData from "@/objects/telemetry-data.interface";
 
-interface PacketContextProps {
-  children: ReactNode | ReactNode[];
-}
-
 interface IPackContextReturn {
   currentPacket: ITelemetryData;
   setCurrentPacket: (packet: ITelemetryData) => void;
@@ -27,7 +23,7 @@ const packetContext = createContext<IPackContextReturn>(
 
 export function PacketContextProvider({
   children,
-}: PacketContextProps): JSX.Element {
+}: PropsWithChildren): JSX.Element {
   const { currentAppState } = useAppState();
 
   const [currentPacket, setCurrentPacket] = useState<ITelemetryData>(

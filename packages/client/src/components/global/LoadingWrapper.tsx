@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { type PropsWithChildren, memo, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { Loading } from "@/components/global/Loading";
+import Loading from "@/components/global/Loading";
 import { useAppState } from "@/contexts/AppStateContext";
 
 export enum LOADINGSTAGES {
@@ -10,20 +10,15 @@ export enum LOADINGSTAGES {
   READY = 3,
 }
 
-export function LoadingWrapper(props: { children: React.ReactNode }) {
-  const { children } = props;
-
-  const {
-    currentAppState,
-    confirmVisualLoadingFulfilledAndReady,
-    setCurrentAppState,
-  } = useAppState();
+const LoadingWrapper = ({ children }: PropsWithChildren) => {
+  const { currentAppState, setCurrentAppState } = useAppState();
   const [currentLoadingState, setCurrentLoadingStage] = useState<LOADINGSTAGES>(
     LOADINGSTAGES.DRIVE_IN,
   );
 
   useEffect(() => {
-    console.log("currentAppState.loading", currentAppState);
+    // console.log("currentAppState.loading", currentAppState);
+    let driveInTimeout: NodeJS.Timeout;
     let pendingTimeout: NodeJS.Timeout;
     let readyTimeout: NodeJS.Timeout;
     let confirmTimeout: NodeJS.Timeout;
@@ -41,9 +36,11 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
     }
 
     // Switch to drive off after app state reports loading is complete and minimum animation time is fulfilled
-    const driveInTimeout = setTimeout(() => {
-      setCurrentLoadingStage(LOADINGSTAGES.PENDING);
-    }, 1000);
+    if (currentLoadingState === LOADINGSTAGES.DRIVE_IN) {
+      driveInTimeout = setTimeout(() => {
+        setCurrentLoadingStage(LOADINGSTAGES.PENDING);
+      }, 1000);
+    }
 
     // Once site is ready, delay loader for 3 additional seconds and then transition to driving off screen
     if (!currentAppState.loading) {
@@ -55,22 +52,21 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
     // Confirm with App State that car driving off screen animation is fulfilled before hiding loader
     if (currentLoadingState === LOADINGSTAGES.READY) {
       confirmTimeout = setTimeout(() => {
-        confirmVisualLoadingFulfilledAndReady();
+        setCurrentAppState((prev) => ({
+          ...prev,
+          displayLoading: false,
+        }));
       }, 800);
     }
 
     return () => {
-      // TODO: Adding these makes the timeouts clear before they run since the app state is constantly rerendered @brian-ngyn
-      // clearTimeout(driveInTimeout);
-      // clearTimeout(pendingTimeout);
-      // clearTimeout(readyTimeout);
-      // clearTimeout(confirmTimeout);
+      clearTimeout(driveInTimeout);
+      clearTimeout(readyTimeout);
+      clearTimeout(pendingTimeout);
+      clearTimeout(confirmTimeout);
     };
-  }, [
-    currentAppState.loading,
-    currentLoadingState,
-    confirmVisualLoadingFulfilledAndReady,
-  ]);
+    // TODO: Adding these makes the timeouts clear before they run since the app state is constantly rerendered @brian-ngyn
+  }, [currentAppState.loading, currentLoadingState, setCurrentAppState]);
 
   return (
     <div className={twMerge(currentAppState.darkMode ? "dark" : "")}>
@@ -81,4 +77,6 @@ export function LoadingWrapper(props: { children: React.ReactNode }) {
       )}{" "}
     </div>
   );
-}
+};
+
+export default memo(LoadingWrapper);

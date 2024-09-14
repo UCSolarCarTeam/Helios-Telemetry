@@ -1,17 +1,13 @@
 import PISTransformer from "@/components/transformers/PISTransformer";
-import { usePacket } from "@/contexts/PacketContext";
-import Battery from "@/objects/PIS/PIS.battery";
+import usePIS from "@/hooks/PIS/usePIS";
+import type I_PIS from "@/objects/PIS/PIS.interface";
 
 function BatteryTab() {
-  const { currentPacket } = usePacket();
-
-  const fakeBatteryData = currentPacket.Battery;
-
-  const fakeAuxBMSData = currentPacket.AuxBms;
+  const { battery } = usePIS();
 
   return (
     <div>
-      <PISTransformer root={Battery()} />
+      <PISTransformer root={battery as I_PIS} />
     </div>
   );
 }
