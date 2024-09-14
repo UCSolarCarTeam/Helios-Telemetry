@@ -79,8 +79,8 @@ function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
       ? true
       : // If value is of type number range is true if min and max are undefined or value is between min and max
         valueType === "number"
-        ? (min === undefined || value >= min) &&
-          (max === undefined || value <= max)
+        ? (min === undefined || (typeof value === "number" && value >= min)) &&
+          (max === undefined || (typeof value === "number" && value <= max))
         : // If value is of type boolean range is true if expectedBool is undefined and value is false or value is equal to expectedBool
           valueType === "boolean"
           ? (expectedBool === undefined && value === false) ||
