@@ -1,6 +1,7 @@
 name: "Amplify Merge"
 on:
   push:
+    branch: ["main"]
     paths:
       - "packages/amplify/**"
       - '.github/workflows/**'
