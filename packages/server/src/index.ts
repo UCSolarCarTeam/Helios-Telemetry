@@ -40,6 +40,7 @@ axiosRetry(axios, {
 
 const onSignal = async () => {
   logger.info("🚀 Server is starting cleanup");
+
   try {
     logger.info("Kafka Consumer Disconnected");
   } catch (err) {
