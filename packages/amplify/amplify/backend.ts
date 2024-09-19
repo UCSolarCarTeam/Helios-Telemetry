@@ -1,12 +1,10 @@
 import * as cdk from "aws-cdk-lib";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
-import * as codepipeline from "aws-cdk-lib/aws-codepipeline";
-import * as codepipeline_actions from "aws-cdk-lib/aws-codepipeline-actions";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
-import * as imagebuilder from "aws-cdk-lib/aws-imagebuilder";
 import * as route53 from "aws-cdk-lib/aws-route53";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -16,7 +14,10 @@ const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
-  "TelemetryBackendImageRepository"
+  "TelemetryBackendImageRepository",
+  {
+    repositoryName: "telemetry-backend-repository",
+  }
 );
 
 const TelemetryBackendCodeBuildProject = new codebuild.Project(
@@ -41,7 +42,13 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
           .andFilePathIs("packages/server/*"),
       ],
     }),
-
+    role: new iam.Role(TelemetryBackendStack, "TelemetryBackendCodeBuildRole", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "SecretsManagerReadWrite")
+        ]
+    }),
     environment: {
       buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
       privileged: true,
