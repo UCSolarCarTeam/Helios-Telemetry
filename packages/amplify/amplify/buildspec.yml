@@ -2,9 +2,9 @@ version: 0.2
 
 env:
   secrets-manager:
-    PRIVATE_KEY: arn:aws:secretsmanager:ca-central-1:602361116849:secret:HeliosTelemetrySecret-V6ENIa:privateKey
-    CHAIN: arn:aws:secretsmanager:ca-central-1:602361116849:secret:HeliosTelemetrySecret-V6ENIa:chain
-    CERTIFICATE: arn:aws:secretsmanager:ca-central-1:602361116849:secret:HeliosTelemetrySecret-V6ENIa:certificate
+    PRIVATE_KEY: arn:aws:secretsmanager:ca-central-1:602361116849:secret:HeliosTelemetryBackend/PrivateKey-RHwgtw
+    CHAIN: arn:aws:secretsmanager:ca-central-1:602361116849:secret:HeliosTelemetryBackend/Chain-yGrrHY
+    CERTIFICATE: arn:aws:secretsmanager:ca-central-1:602361116849:secret:HeliosTelemetryBackend/Certificate-gaRInJ
 phases:
   install:
     commands:

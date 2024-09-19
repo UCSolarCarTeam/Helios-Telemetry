@@ -14,10 +14,7 @@ const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
-  "TelemetryBackendImageRepository",
-  {
-    repositoryName: "telemetry-backend-repository",
-  }
+  "TelemetryBackendImageRepository"
 );
 
 const TelemetryBackendCodeBuildProject = new codebuild.Project(
