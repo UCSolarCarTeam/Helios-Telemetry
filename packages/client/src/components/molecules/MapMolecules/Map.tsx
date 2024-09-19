@@ -198,7 +198,7 @@ function Map(props: IMapProps): JSX.Element {
           scrollZoom={true}
           keyboard={false}
           onLoad={(e) => {
-            const mapInstance = e.target;
+            const mapInstance = e.target as mapboxgl.Map;
             fitToBounds(mapInstance, carLocation, lapLocation);
           }}
         >

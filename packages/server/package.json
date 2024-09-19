@@ -6,7 +6,7 @@
     "clean": "rimraf dist",
     "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
     "build": "npm run clean && npm run tsc",
-    "dev": "nodemon - exec 'ts-node' src/server.ts",
+    "dev": "NODE_ENV=development nodemon - exec 'ts-node' src/server.ts",
     "tsc": "tsc -p ./tsconfig.json"
   },
   "dependencies": {
