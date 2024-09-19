@@ -199,7 +199,7 @@ function Map(props: IMapProps): JSX.Element {
           keyboard={false}
           onLoad={(e) => {
             const mapInstance = e.target;
-            fitToBounds(mapInstance, carLocation, lapLocation);
+            fitToBounds(mapInstance as mapboxgl.Map, carLocation, lapLocation);
           }}
         >
           <Marker
