@@ -33,7 +33,7 @@ interface IAppState {
   error: boolean;
   darkMode: boolean;
   appUnits: APPUNITS;
-  favourites: [];
+  favourites: string[];
   connectionType: CONNECTIONTYPES;
   socketConnected: boolean;
   radioConnected: boolean;
