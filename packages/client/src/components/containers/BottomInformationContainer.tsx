@@ -1,5 +1,5 @@
 import { useAppState } from "@/contexts/AppStateContext";
-import { usePIS } from "@/hooks/PIS/usePIS";
+import usePIS from "@/hooks/PIS/usePIS";
 
 const fakeData = {
   "Battery Current": 55,
@@ -14,18 +14,28 @@ const fakeData = {
   "Pack Voltage": 55,
 };
 
-function BottomInformationContainer() {
-  // const { battery, motor, MPPT, Faults } = usePIS();
+function BottomInformationContainer(props: any) {
+  const { battery, motor, MPPT, Faults } = usePIS();
   const { currentAppState } = useAppState();
   const favourites = currentAppState.favourites;
+
+  const findValue = (favourite: string) => {
+    //implement this lookup logic
+    return 0;
+  };
 
   return (
     <div className="align-middle">
       <div className="flex h-full flex-row flex-wrap justify-evenly gap-4 pt-4 text-center text-base md:gap-2 2xl:text-xl">
         {favourites.map((favourite: string, index: number) => (
-          <div key={index} className="min-w-32">
-            <div className="text-xs 2xl:text-sm"> {favourite} </div>
-            <div className="text-helios">{10}</div>
+          <div key={index} className="min-w-32 p-3">
+            <div className="text-xs 2xl:text-sm">{favourite.toUpperCase()}</div>
+            <div className="text-helios">
+              {
+                /*Search for the value associated with the favourite name string */
+                findValue(favourite)
+              }
+            </div>
           </div>
         ))}
         {/* <div className="min-w-32">
