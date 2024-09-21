@@ -88,6 +88,11 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       protocol: ecs.Protocol.TCP,
     },
     {
+      containerPort: 80,
+      hostPort: 80,
+      protocol: ecs.Protocol.TCP,
+    },
+    {
       containerPort: 1883,
       hostPort: 1883,
       protocol: ecs.Protocol.TCP,
@@ -113,6 +118,12 @@ TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(3001),
   "Backend - Allow inbound traffic on port 3001",
+  true
+);
+TelemetryBackendVPCSecurityGroup.addIngressRule(
+  ec2.Peer.anyIpv4(),
+  ec2.Port.tcp(80),
+  "Certbot - Allow inbound traffic on port 80",
   true
 );
 TelemetryBackendVPCSecurityGroup.addIngressRule(
@@ -166,6 +177,10 @@ const TelemetryECSService = new ecs.Ec2Service(
 TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   ec2.Port.tcp(3001),
   "Backend - Allow inbound traffic on port 3001"
+);
+TelemetryECSService.cluster.connections.allowFromAnyIpv4(
+  ec2.Port.tcp(80),
+  "Certbot - Allow inbound traffic on port 80"
 );
 TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   ec2.Port.tcp(1883),
