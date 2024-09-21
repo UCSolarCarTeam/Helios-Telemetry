@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+import { PausePresentationRounded } from "@mui/icons-material";
+
 interface Props {
   children: ReactNode | ReactNode[];
 }
@@ -30,6 +32,7 @@ interface IAppState {
   error: boolean;
   darkMode: boolean;
   appUnits: APPUNITS;
+  favourites: [];
   connectionType: CONNECTIONTYPES;
   socketConnected: boolean;
   radioConnected: boolean;
@@ -51,6 +54,7 @@ export function AppStateContextProvider({ children }: Props) {
     error: false,
     darkMode: false,
     appUnits: APPUNITS.METRIC,
+    favourites: [],
     connectionType: CONNECTIONTYPES.NETWORK,
     socketConnected: false,
     radioConnected: false,
@@ -110,6 +114,7 @@ export function AppStateContextProvider({ children }: Props) {
         darkMode: parsedSettings.darkMode,
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
+        favourites: parsedSettings.favourites,
       }));
     }
   }, []);
