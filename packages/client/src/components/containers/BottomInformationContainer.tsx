@@ -1,3 +1,6 @@
+import { useAppState } from "@/contexts/AppStateContext";
+import { usePIS } from "@/hooks/PIS/usePIS";
+
 const fakeData = {
   "Battery Current": 55,
   "Battery Power": 54.35,
@@ -12,14 +15,24 @@ const fakeData = {
 };
 
 function BottomInformationContainer() {
+  // const { battery, motor, MPPT, Faults } = usePIS();
+  const { currentAppState } = useAppState();
+  const favourites = currentAppState.favourites;
+
   return (
     <div className="align-middle">
       <div className="flex h-full flex-row flex-wrap justify-evenly gap-4 pt-4 text-center text-base md:gap-2 2xl:text-xl">
-        <div className="min-w-32">
+        {favourites.map((favourite: string, index: number) => (
+          <div key={index} className="min-w-32">
+            <div className="text-xs 2xl:text-sm"> {favourite} </div>
+            <div className="text-helios">{10}</div>
+          </div>
+        ))}
+        {/* <div className="min-w-32">
           <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE </div>
           <div className="text-helios">{fakeData["Motor Temp"]}</div>
-        </div>
-        <div className="min-w-32">
+        </div> */}
+        {/* <div className="min-w-32">
           <div className="text-xs 2xl:text-sm"> BATTERY POWER </div>
           <div className="text-helios">{fakeData["Battery Power"]}</div>
         </div>
@@ -54,7 +67,7 @@ function BottomInformationContainer() {
         <div className="min-w-32">
           <div className="text-xs 2xl:text-sm"> BUS VOLTAGE </div>
           <div className="text-helios">{fakeData["Bus Voltage"]}</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
