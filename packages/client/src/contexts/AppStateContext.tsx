@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 
+import { PausePresentationRounded } from "@mui/icons-material";
 import type { Coords } from "@shared/helios-types";
 
 interface Props {
@@ -32,6 +33,7 @@ interface IAppState {
   error: boolean;
   darkMode: boolean;
   appUnits: APPUNITS;
+  favourites: [];
   connectionType: CONNECTIONTYPES;
   socketConnected: boolean;
   radioConnected: boolean;
@@ -52,6 +54,7 @@ export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
     appUnits: APPUNITS.METRIC,
     carLatency: 0,
+    favourites: [],
     connectionType: CONNECTIONTYPES.NETWORK,
     darkMode: false,
     displayLoading: true,
@@ -117,6 +120,7 @@ export function AppStateContextProvider({ children }: Props) {
         connectionType: parsedSettings.connectionType,
         darkMode: parsedSettings.darkMode,
         lapCoords: parsedSettings.lapCoords,
+        favourites: parsedSettings.favourites,
       }));
     }
   }, []);

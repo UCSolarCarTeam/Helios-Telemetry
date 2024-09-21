@@ -1,3 +1,6 @@
+import { parse } from "path";
+import { useState } from "react";
+
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import {
   type I_PISField,
@@ -5,6 +8,7 @@ import {
   UnitType,
 } from "@/objects/PIS/PIS.interface";
 import type I_PIS from "@/objects/PIS/PIS.interface";
+import { fa } from "@faker-js/faker";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;
@@ -164,6 +168,8 @@ type FieldPrinterProps = {
 };
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
+  const [isHovered, setIsHovered] = useState(false);
+
   const { field } = props;
   if (
     field.fstring !== undefined &&
@@ -174,8 +180,46 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     );
     return <div>PIS ERROR: </div>;
   }
-  return (
-    <div className="mt-1 flex items-center justify-between text-xs">
+
+  const handleAddToFavourites = () => {
+    const storedFavourites = localStorage.getItem("favourites");
+    const parsedFavourites: I_PISField[] = storedFavourites
+      ? (JSON.parse(storedFavourites) as I_PISField[])
+      : [];
+
+    // Check if the parsedFavourites array is already full
+    if (parsedFavourites.length === 10) {
+      // can't add more than 10 favourites, so replace the first one
+      parsedFavourites.shift();
+      parsedFavourites.push(field);
+      return;
+    }
+
+    // Check if the field is already in the favourites
+    if (!parsedFavourites.some((fav) => fav.name === field.name)) {
+      parsedFavourites.push(field);
+      localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
+      return;
+    }
+  };
+
+  return isHovered ? (
+    <div
+      className="mt-1 flex items-center justify-between text-xs"
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <span
+        className="flex items-center text-xs hover:cursor-pointer hover:font-bold hover:text-helios"
+        onClick={handleAddToFavourites}
+      >
+        Add to Favourites
+      </span>
+    </div>
+  ) : (
+    <div
+      className="mt-1 flex items-center justify-between text-xs"
+      onMouseEnter={() => setIsHovered(true)}
+    >
       {field.name}:
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
