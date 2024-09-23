@@ -27,7 +27,7 @@ type IMapProps = {
 };
 
 const fitToBounds = (
-  map: mapboxgl.Map | null,
+  map: mapboxgl.Map,
   carLocation: ILocation,
   lapLocation: ILocation,
 ) => {
@@ -198,8 +198,8 @@ function Map(props: IMapProps): JSX.Element {
           scrollZoom={true}
           keyboard={false}
           onLoad={(e) => {
-            const mapInstance = e.target as mapboxgl.Map;
-            fitToBounds(mapInstance, carLocation, lapLocation);
+            const mapInstance = e.target;
+            fitToBounds(mapInstance as mapboxgl.Map, carLocation, lapLocation);
           }}
         >
           <Marker

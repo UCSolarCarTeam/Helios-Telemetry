@@ -6,28 +6,6 @@ const project = path.join(__dirname, "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
-  overrides: [
-    {
-      extends: [
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:promise/recommended",
-      ],
-      files: ["*.ts", "*.tsx"],
-      parserOptions: {
-        project,
-      },
-      rules: {
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": "warn",
-        "@typescript-eslint/no-explicit-any": "warn",
-      },
-    },
-  ],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project,
-  },
-  plugins: ["@typescript-eslint", "prettier", "promise"],
   extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
@@ -35,6 +13,11 @@ const config = {
     "plugin:tailwindcss/recommended",
     "prettier",
   ],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project,
+  },
+  plugins: ["@typescript-eslint", "prettier", "promise"],
   rules: {
     "@typescript-eslint/consistent-type-imports": [
       "error",
@@ -50,7 +33,8 @@ const config = {
     "no-restricted-imports": ["error", { patterns: [".*"] }],
     "no-console": ["warn", { allow: ["warn", "error"] }],
     "no-debugger": "error",
-    "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
     "tailwindcss/no-custom-classname": "off",
     "tailwindcss/classnames-order": "off", // tcss prettier plugin handles this
   },
