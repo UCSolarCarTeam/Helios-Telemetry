@@ -96,7 +96,8 @@ const CarGraphicComponent = () => {
         />
         <RoadComponent
           speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
-          size={15}
+          direction={currentPacket?.DriverControls}
+          size={20}
         />
         <ContactShadows
           position={[0, 0, 0]}

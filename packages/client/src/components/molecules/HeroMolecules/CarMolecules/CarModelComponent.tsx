@@ -157,6 +157,7 @@ type CarModelComponentProps = {
 const CarModelComponent = (props: CarModelComponentProps) => {
   const path = "/models/Helios.glb";
   const { nodes, materials } = useGLTF(path) as unknown as HeliosCar;
+  // console.log(props);
 
   const clear = materials["Shape.050"];
 
