@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useCallback, useState } from "react";
 
 import {
@@ -19,22 +20,19 @@ function SettingsComponent() {
     lat: "",
     password: "",
   });
-  const handleCoordsSubmit = async () => {
+  const handleCoordsSubmit = useCallback(async () => {
     console.log(coords);
-    const testRes = await fetch("http://localhost:3001/health", {
-      method: "GET",
-    });
-    console.log(await testRes.json());
-    const response = await fetch("http//:localhost:3001/setLapCoords", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ coords, message: "test" }),
-    });
-    const data = await response;
+    const testRes = await axios.get("http://localhost:3001/health");
+    console.log(testRes);
+    const data = await axios.post(
+      "http://localhost:3001/setLapCoords",
+      JSON.stringify({
+        coords,
+        message: "test",
+      }),
+    );
     console.log(data);
-  };
+  }, [coords]);
   const handleCoordsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setCoords((prev) => ({
