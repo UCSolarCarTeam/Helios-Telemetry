@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import {
   APPUNITS,
@@ -6,6 +6,7 @@ import {
   useAppState,
 } from "@/contexts/AppStateContext";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { Button, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -13,6 +14,34 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState({
+    long: "",
+    lat: "",
+    password: "",
+  });
+  const handleCoordsSubmit = async () => {
+    console.log(coords);
+    const testRes = await fetch("http://localhost:3001/health", {
+      method: "GET",
+    });
+    console.log(await testRes.json());
+    const response = await fetch("http//:localhost:3001/setLapCoords", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ coords, message: "test" }),
+    });
+    const data = await response;
+    console.log(data);
+  };
+  const handleCoordsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setCoords((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
     inputMode: (typeof currentAppState)["darkMode"],
@@ -178,6 +207,47 @@ function SettingsComponent() {
                   },
                 )}
               </div>
+            </div>
+          </div>
+
+          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+            <div className="col-span-1">
+              <label className="mr-2">Update Flag Coordinates:</label>
+            </div>
+            <div className="col-span-1">
+              <TextField
+                name="lat"
+                label="Latitude"
+                onChange={handleCoordsChange}
+                variant="filled"
+              />
+              <TextField
+                name="long"
+                onChange={handleCoordsChange}
+                label="Longitude"
+                variant="filled"
+              />
+              <TextField
+                name="password"
+                onChange={handleCoordsChange}
+                label="Password"
+                variant="filled"
+              />
+              <Button onClick={handleCoordsSubmit}>Submit</Button>
+              {/* <ToggleButtonGroup
+                value={currentAppState.appUnits}
+                exclusive
+                onChange={handleUnitChange}
+                aria-label="Units"
+                className="w-full"
+              >
+                <ToggleButton value={APPUNITS.METRIC} className="w-1/2">
+                  Metric
+                </ToggleButton>
+                <ToggleButton value={APPUNITS.IMPERIAL} className="w-1/2">
+                  Imperial
+                </ToggleButton>
+              </ToggleButtonGroup> */}
             </div>
           </div>
         </div>

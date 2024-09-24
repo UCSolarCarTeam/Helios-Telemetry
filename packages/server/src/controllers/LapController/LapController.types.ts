@@ -26,4 +26,5 @@ export interface LapControllerType {
   lastLapPackets: ITelemetryData[];
   netPower(packetArray: ITelemetryData[]): number;
   previouslyInFinishLineProximity: boolean;
+  setFinishLineLocation(longitude, latitude, password): void;
 }

@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
+import { useAppState } from "@/contexts/AppStateContext";
 
 function MapContainer(): JSX.Element {
+  const { currentAppState } = useAppState();
   const [mapInputs, setMapInputs] = useState({
-    carLocation: { lat: 38.9277572, lng: -95.6777937 },
-    lapLocation: { lat: 38.9377572, lng: -95.677937 },
+    carLocation: { lat: 38.9377572, lng: -95.6777937 },
+    lapLocation: {
+      lat: currentAppState.lapCoords.lat,
+      lng: currentAppState.lapCoords.long,
+    },
   });
-
   useEffect(() => {
     const interval = setInterval(() => {
       setMapInputs((prevState) => ({

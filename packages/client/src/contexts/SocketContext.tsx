@@ -17,6 +17,7 @@ interface ClientToServerEvents {
 
 interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
+  lapCoords: (coords: { lat: number; long: number }) => void;
   carLatency: (value: number) => void;
 }
 
@@ -49,6 +50,13 @@ export function SocketContextProvider({
     [setCurrentAppState],
   );
 
+  const onLapCoords = useCallback(
+    (coords: { lat: number; long: number }) => {
+      setCurrentAppState((prev) => ({ ...prev, lapCoords: coords }));
+    },
+    [setCurrentAppState],
+  );
+
   useEffect(() => {
     // Connect to the socket
     socketIO.connect();
@@ -65,6 +73,7 @@ export function SocketContextProvider({
 
     // Register event listeners
     socketIO.on("carLatency", onCarLatency);
+    socketIO.on("lapCoords", onLapCoords);
     return () => {
       socketIO.disconnect();
       clearInterval(id);

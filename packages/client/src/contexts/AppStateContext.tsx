@@ -35,6 +35,10 @@ interface IAppState {
   radioConnected: boolean;
   userLatency: number;
   carLatency: number;
+  lapCoords: {
+    lat: number;
+    long: number;
+  };
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -56,6 +60,7 @@ export function AppStateContextProvider({ children }: Props) {
     radioConnected: false,
     userLatency: 0,
     carLatency: 0,
+    lapCoords: { lat: 38.9377572, long: -95.677937 },
   });
 
   // Connection State Manager

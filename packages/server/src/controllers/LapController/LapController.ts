@@ -8,6 +8,11 @@ import type {
 
 import { getDistance } from "@/utils/lapCalculations";
 
+type Coordinate = {
+  latitude: number;
+  longitude: number;
+};
+
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
@@ -23,6 +28,107 @@ export class LapController implements LapControllerType {
 
   constructor(backendController: BackendController) {
     this.backendController = backendController;
+  }
+
+  public setFinishLineLocation(long: string, lat: string, password: string) {
+    if (password !== process.env.LAP_POSITION_PASSWORD) {
+      return;
+    }
+    // strip the latitude and longitude from the string
+    const { latitude, longitude } = LapController.convertToDecimalDegrees(
+      lat,
+      long,
+    );
+    this.finishLineLocation = {
+      lat: latitude,
+      long: longitude,
+    };
+  }
+
+  // Helper private to detect if input is in DMS (Degrees, Minutes, Seconds)
+  private static isDMS(input: string): boolean {
+    return /°|'|"/.test(input);
+  }
+
+  // Helper function to detect if input is in DMM (Degrees and Decimal Minutes)
+  private static isDMM(input: string): boolean {
+    return /^\d+\s\d+\.\d+/.test(input);
+  }
+
+  // Convert DMS format to Decimal Degrees
+  private static dmsToDecimal(input: string): number {
+    const regex = /(\d+)[°\s](\d+)['\s](\d+(\.\d+)?)["\s]?([NSEW])/;
+    const match = input.match(regex);
+
+    if (!match) {
+      throw new Error("Invalid DMS format");
+    }
+
+    const degrees = parseFloat(match[1]);
+    const minutes = parseFloat(match[2]);
+    const seconds = parseFloat(match[3]);
+    const direction = match[5];
+
+    let decimal = degrees + minutes / 60 + seconds / 3600;
+
+    if (direction === "S" || direction === "W") {
+      decimal *= -1;
+    }
+
+    return decimal;
+  }
+
+  // Convert DMM format to Decimal Degrees
+  private static dmmToDecimal(input: string): number {
+    const regex = /(\d+)\s(\d+\.\d+)\s?([NSEW])/;
+    const match = input.match(regex);
+
+    if (!match) {
+      throw new Error("Invalid DMM format");
+    }
+
+    const degrees = parseFloat(match[1]);
+    const minutes = parseFloat(match[2]);
+    const direction = match[3];
+
+    let decimal = degrees + minutes / 60;
+
+    if (direction === "S" || direction === "W") {
+      decimal *= -1;
+    }
+
+    return decimal;
+  }
+  // Main private that converts latitude and longitude to Decimal Degrees (DD)
+  private static convertToDecimalDegrees(
+    lat: string,
+    long: string,
+  ): Coordinate {
+    let latitude: number;
+    let longitude: number;
+
+    // Trim leading and trailing spaces from input
+    lat = lat.trim();
+    long = long.trim();
+
+    // Check if the format is DMS or DMM and convert accordingly
+    if (LapController.isDMS(lat)) {
+      latitude = LapController.dmsToDecimal(lat);
+    } else if (LapController.isDMM(lat)) {
+      latitude = LapController.dmmToDecimal(lat);
+    } else {
+      latitude = parseFloat(lat);
+    }
+
+    if (LapController.isDMS(long)) {
+      longitude = LapController.dmsToDecimal(long);
+    } else if (LapController.isDMM(long)) {
+      longitude = LapController.dmmToDecimal(long);
+    } else {
+      longitude = parseFloat(long);
+    }
+
+    return { latitude, longitude };
   }
 
   public async handlePacket(packet: ITelemetryData) {

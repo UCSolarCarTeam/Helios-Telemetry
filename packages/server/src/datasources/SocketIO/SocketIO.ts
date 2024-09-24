@@ -36,10 +36,23 @@ export class SocketIO implements SocketIOType {
   public broadcastCarLatency(latency: number) {
     this.io.emit("carLatency", latency);
   }
+  public broadcastLapCoords(coords: { lat: number; long: number }) {
+    this.io.emit("lapCoords", coords);
+  }
   public initializeSocketListeners(socket: Socket) {
     socket.on("ping", (callback: () => void) => {
       callback();
     });
+    socket.on(
+      "setLapCoords",
+      (longitude: string, latitude: string, password: string) => {
+        this.backendController.lapController.setFinishLineLocation(
+          longitude,
+          latitude,
+          password,
+        );
+      },
+    );
     socket.on("disconnect", () => {
       logger.info("Client disconnected");
     });
