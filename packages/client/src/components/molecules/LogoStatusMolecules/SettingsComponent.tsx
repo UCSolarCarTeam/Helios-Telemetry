@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useCallback, useState } from "react";
 
 import {
@@ -6,6 +5,7 @@ import {
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
+import { socketIO } from "@/contexts/SocketContext";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Button, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
@@ -14,25 +14,22 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
+  const socket = socketIO;
+
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState({
     long: "",
     lat: "",
     password: "",
   });
-  const handleCoordsSubmit = useCallback(async () => {
-    console.log(coords);
-    const testRes = await axios.get("http://localhost:3001/health");
-    console.log(testRes);
-    const data = await axios.post(
-      "http://localhost:3001/setLapCoords",
-      JSON.stringify({
-        coords,
-        message: "test",
-      }),
-    );
-    console.log(data);
-  }, [coords]);
+  const handleCoordsSubmit = useCallback(() => {
+    const newCoordInfo = {
+      lat: coords.lat,
+      long: coords.long,
+      password: coords.password,
+    };
+    socket.emit("setLapCoords", newCoordInfo);
+  }, [coords, socket]);
   const handleCoordsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setCoords((prev) => ({

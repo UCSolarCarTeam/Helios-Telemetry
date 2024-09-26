@@ -2,25 +2,23 @@ import { type BackendController } from "@/controllers/BackendController/BackendC
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
 import type {
+  CoordInfoUpdate,
+  Coords,
+} from "@/interfaces/setCoordinateData.interface";
+import type {
   ILapData,
   ITelemetryData,
 } from "@/interfaces/telemetry-data.interface";
 
 import { getDistance } from "@/utils/lapCalculations";
+import { createLightweightApplicationLogger } from "@/utils/logger";
 
-type Coordinate = {
-  latitude: number;
-  longitude: number;
-};
-
+const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
-  public finishLineLocation: {
-    lat: number;
-    long: number;
-  } = {
+  public finishLineLocation: Coords = {
     lat: 51,
     long: 101,
   };
@@ -30,19 +28,32 @@ export class LapController implements LapControllerType {
     this.backendController = backendController;
   }
 
-  public setFinishLineLocation(long: string, lat: string, password: string) {
+  public setFinishLineLocation(
+    newCoordInfo: CoordInfoUpdate,
+  ): Coords | { error: string } {
+    logger.info(JSON.stringify(newCoordInfo));
+    const { lat, long, password } = newCoordInfo;
     if (password !== process.env.LAP_POSITION_PASSWORD) {
-      return;
+      logger.error("Invalid Password");
+      logger.info("Password: ", password);
+      return { error: "Invalid Password" };
     }
     // strip the latitude and longitude from the string
-    const { latitude, longitude } = LapController.convertToDecimalDegrees(
-      lat,
-      long,
-    );
-    this.finishLineLocation = {
-      lat: latitude,
-      long: longitude,
-    };
+    if (
+      (LapController.isDMS(lat) || LapController.isDMM(lat)) &&
+      (LapController.isDMS(long) || LapController.isDMM(long))
+    ) {
+      const { lat: latitude, long: longitude } =
+        LapController.convertToDecimalDegrees(lat, long);
+      this.finishLineLocation = {
+        lat: latitude,
+        long: longitude,
+      };
+      logger.info("Finish Line Location Set: ", this.finishLineLocation);
+      return this.finishLineLocation;
+    }
+    logger.error("Invalid Coordinates");
+    return { error: "Invalid Coordinates" };
   }
 
   // Helper private to detect if input is in DMS (Degrees, Minutes, Seconds)
@@ -100,10 +111,7 @@ export class LapController implements LapControllerType {
     return decimal;
   }
   // Main private that converts latitude and longitude to Decimal Degrees (DD)
-  private static convertToDecimalDegrees(
-    lat: string,
-    long: string,
-  ): Coordinate {
+  private static convertToDecimalDegrees(lat: string, long: string): Coords {
     let latitude: number;
     let longitude: number;
 
@@ -128,7 +136,7 @@ export class LapController implements LapControllerType {
       longitude = parseFloat(long);
     }
 
-    return { latitude, longitude };
+    return { lat: latitude, long: longitude };
   }
 
   public async handlePacket(packet: ITelemetryData) {
