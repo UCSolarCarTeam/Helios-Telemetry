@@ -8,7 +8,6 @@ import https from "https";
 import "module-alias";
 
 import healthRouter from "@/routes/health.route";
-import lapRouter from "@/routes/setLapCoords.route";
 
 import {
   createLightweightApplicationLogger,
@@ -25,9 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use("/", healthRouter);
-app.use("/", lapRouter);
 
-export const logger = createLightweightApplicationLogger("index.ts");
+const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
   onRetry: (retryCount) => {
     logger.warn(`Retrying axios call. Retry count: `, retryCount);
