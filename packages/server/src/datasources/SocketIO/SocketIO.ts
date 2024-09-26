@@ -6,10 +6,15 @@ import { type BackendController } from "@/controllers/BackendController/BackendC
 
 import { type SocketIOType } from "@/datasources/SocketIO/SocketIO.types";
 
+import type {
+  CoordInfoUpdate,
+  Coords,
+} from "@/interfaces/setCoordinateData.interface";
 import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
 
-import { logger } from "@/index";
+import { createLightweightApplicationLogger } from "@/utils/logger";
 
+const logger = createLightweightApplicationLogger("SocketIO.ts");
 export class SocketIO implements SocketIOType {
   io: SocketIOServer;
   backendController: BackendController;
@@ -36,23 +41,29 @@ export class SocketIO implements SocketIOType {
   public broadcastCarLatency(latency: number) {
     this.io.emit("carLatency", latency);
   }
-  public broadcastLapCoords(coords: { lat: number; long: number }) {
-    this.io.emit("lapCoords", coords);
+  public broadcastLapCoords(response: Coords | { error: string }) {
+    this.io.emit("lapCoords", response);
   }
   public initializeSocketListeners(socket: Socket) {
     socket.on("ping", (callback: () => void) => {
       callback();
     });
-    socket.on(
-      "setLapCoords",
-      (longitude: string, latitude: string, password: string) => {
+    socket.on("setLapCoords", (newCoordInfo: CoordInfoUpdate) => {
+      const { lat, long, password } = newCoordInfo;
+      logger.info("Coords: ", lat, long, "password: ", password);
+      const res =
         this.backendController.lapController.setFinishLineLocation(
-          longitude,
-          latitude,
-          password,
+          newCoordInfo,
         );
-      },
-    );
+
+      if (!res) {
+        this.broadcastLapCoords({ error: "Password incorrect" });
+        logger.info("Password incorrect");
+        return;
+      }
+
+      this.broadcastLapCoords(res);
+    });
     socket.on("disconnect", () => {
       logger.info("Client disconnected");
     });

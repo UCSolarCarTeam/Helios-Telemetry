@@ -1,5 +1,6 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
+import type { CoordInfoUpdate } from "@/interfaces/setCoordinateData.interface";
 import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
 
 export interface LapControllerType {
@@ -26,5 +27,5 @@ export interface LapControllerType {
   lastLapPackets: ITelemetryData[];
   netPower(packetArray: ITelemetryData[]): number;
   previouslyInFinishLineProximity: boolean;
-  setFinishLineLocation(longitude, latitude, password): void;
+  setFinishLineLocation(coords: CoordInfoUpdate): void;
 }

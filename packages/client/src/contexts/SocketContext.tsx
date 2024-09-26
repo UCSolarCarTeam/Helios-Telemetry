@@ -13,15 +13,21 @@ import type ITelemetryData from "@/objects/telemetry-data.interface";
 
 interface ClientToServerEvents {
   ping: (cb: (val: number) => void) => void;
+  setLapCoords: (coords: {
+    lat: string;
+    long: string;
+    password: string;
+  }) => void;
 }
 
 interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
-  lapCoords: (coords: { lat: number; long: number }) => void;
+  lapCoords: (
+    coords: { lat: number; long: number } | { error: string },
+  ) => void;
   carLatency: (value: number) => void;
 }
 
-// TODO:set undefined to ServerURL once deployed.
 const URL =
   process.env.NODE_ENV === "production"
     ? "aedes.calgarysolarcar.ca:3001"
@@ -51,7 +57,13 @@ export function SocketContextProvider({
   );
 
   const onLapCoords = useCallback(
-    (coords: { lat: number; long: number }) => {
+    (coords: { lat: number; long: number } | { error: string }) => {
+      if ("error" in coords) {
+        console.error(coords.error);
+        return;
+      }
+      // TODO: Add coords to lapCoords
+      console.log(coords);
       setCurrentAppState((prev) => ({ ...prev, lapCoords: coords }));
     },
     [setCurrentAppState],
@@ -79,7 +91,7 @@ export function SocketContextProvider({
       clearInterval(id);
       socketIO.off("carLatency", onCarLatency);
     };
-  }, [onCarLatency, setCurrentAppState]);
+  }, [onCarLatency, onLapCoords, setCurrentAppState]);
 
   // Socket connection status listeners
   socketIO.on("connect", () => {

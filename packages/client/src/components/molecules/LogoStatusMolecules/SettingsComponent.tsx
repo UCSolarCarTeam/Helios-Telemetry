@@ -5,6 +5,7 @@ import {
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
+import { socketIO } from "@/contexts/SocketContext";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Button, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
@@ -13,28 +14,22 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
+  const socket = socketIO;
+
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState({
     long: "",
     lat: "",
     password: "",
   });
-  const handleCoordsSubmit = async () => {
-    console.log(coords);
-    const testRes = await fetch("http://localhost:3001/health", {
-      method: "GET",
-    });
-    console.log(await testRes.json());
-    const response = await fetch("http//:localhost:3001/setLapCoords", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ coords, message: "test" }),
-    });
-    const data = await response;
-    console.log(data);
-  };
+  const handleCoordsSubmit = useCallback(() => {
+    const newCoordInfo = {
+      lat: coords.lat,
+      long: coords.long,
+      password: coords.password,
+    };
+    socket.emit("setLapCoords", newCoordInfo);
+  }, [coords, socket]);
   const handleCoordsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setCoords((prev) => ({
@@ -234,20 +229,6 @@ function SettingsComponent() {
                 variant="filled"
               />
               <Button onClick={handleCoordsSubmit}>Submit</Button>
-              {/* <ToggleButtonGroup
-                value={currentAppState.appUnits}
-                exclusive
-                onChange={handleUnitChange}
-                aria-label="Units"
-                className="w-full"
-              >
-                <ToggleButton value={APPUNITS.METRIC} className="w-1/2">
-                  Metric
-                </ToggleButton>
-                <ToggleButton value={APPUNITS.IMPERIAL} className="w-1/2">
-                  Imperial
-                </ToggleButton>
-              </ToggleButtonGroup> */}
             </div>
           </div>
         </div>
