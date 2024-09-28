@@ -14,13 +14,13 @@ import acme from "acme-client";
 const route53 = new Route53Client({});
 const secretsManager = new SecretsManagerClient({});
 
+// @ts-ignore
 export const handler: EventBridgeHandler = async (event, context) => {
   /**
    * Example of acme.Client.auto()
    */
 
   // const fs = require('fs').promises;
-  const acme = require("./../");
 
   // @ts-ignore
   function log(m) {
@@ -139,56 +139,52 @@ export const handler: EventBridgeHandler = async (event, context) => {
     }
   }
 
-  /**
-   * Main
-   */
+  /* Init client */
+  const client = new acme.Client({
+    directoryUrl: acme.directory.letsencrypt.production,
+    accountKey: await acme.crypto.createPrivateKey(),
+  });
 
-  module.exports = async () => {
-    /* Init client */
-    const client = new acme.Client({
-      directoryUrl: acme.directory.letsencrypt.production,
-      accountKey: await acme.crypto.createPrivateKey(),
-    });
+  /* Create CSR */
+  const [key, csr] = await acme.crypto.createCsr({
+    altNames: ["aedes.calgarysolarcar.ca"],
+  });
 
-    /* Create CSR */
-    const [key, csr] = await acme.crypto.createCsr({
-      altNames: ["aedes.calgarysolarcar.ca"],
-    });
+  /* Certificate */
+  const cert = await client.auto({
+    csr,
+    email: "software@calgarysolarcar.ca",
+    termsOfServiceAgreed: true,
+    challengeCreateFn,
+    challengeRemoveFn,
+    challengePriority: ["dns-01", "http-01"],
+  });
 
-    /* Certificate */
-    const cert = await client.auto({
-      csr,
-      email: "software@calgarysolarcar.ca",
-      termsOfServiceAgreed: true,
-      challengeCreateFn,
-      challengeRemoveFn,
-      challengePriority: ["dns-01", "http-01"],
-    });
+  /* Done */
+  log(`CSR:\n${csr.toString()}`);
+  log(`Private key:\n${key.toString()}`);
+  log(`Certificate:\n${cert.toString()}`);
 
-    /* Done */
-    log(`CSR:\n${csr.toString()}`);
-    log(`Private key:\n${key.toString()}`);
-    log(`Certificate:\n${cert.toString()}`);
-
-    secretsManager.send(
+  return await Promise.all([
+    await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "",
+        SecretId: "HeliosTelemetryBackend/PrivateKey",
         SecretString: csr.toString(),
       })
-    );
-    secretsManager.send(
+    ),
+    await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "",
+        SecretId: "HeliosTelemetryBackend/Chain",
         SecretString: key.toString(),
       })
-    );
-    secretsManager.send(
+    ),
+    await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "",
+        SecretId: "HeliosTelemetryBackend/Certificate",
         SecretString: cert.toString(),
       })
-    );
-  };
+    ),
+  ]);
 
   // Request cert from LetsEncrypt
   // Update Route53 with DNS challenge

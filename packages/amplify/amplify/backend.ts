@@ -4,17 +4,15 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as route53 from "aws-cdk-lib/aws-route53";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as eventbridge from "aws-cdk-lib/aws-events";
 import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
 
 import { defineBackend } from "@aws-amplify/backend";
-import { RenewCertificate } from "./functions/RenewCertificate/resource.js";
 
-const backend = defineBackend({
-  RenewCertificate,
-});
+const backend = defineBackend({});
 
 const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
@@ -236,8 +234,22 @@ const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
   }
 );
 
-// Events
+// Renew Certificate Lambda
+const TelemetryBackendRenewCertificateLambda = new lambda.Function(
+  TelemetryBackendStack,
+  "RenewCertificateLambda",
+  {
+    runtime: lambda.Runtime.NODEJS_20_X,
+    handler: "handler.handler",
+    code: lambda.Code.fromAsset("amplify/functions/RenewCertificate/"),
+    environment: {
+      HOSTED_ZONE_ID: SolarCarHostedZone.hostedZoneId,
+      DNS_RECORD: "aedes.calgarysolarcar.ca",
+    },
+  }
+);
 
+// Events
 const TelemetryBackendTriggerCertRenewLambda = new eventbridge.Rule(
   TelemetryBackendStack,
   "BatchTestCheckEventRule",
@@ -245,23 +257,21 @@ const TelemetryBackendTriggerCertRenewLambda = new eventbridge.Rule(
 );
 
 TelemetryBackendTriggerCertRenewLambda.addTarget(
-  new eventbridgetargets.LambdaFunction(
-    backend.RenewCertificate.resources.lambda
-  )
+  new eventbridgetargets.LambdaFunction(TelemetryBackendRenewCertificateLambda)
 );
 
 // Allow Cert update lambda to update the hosted zone for SSL certificate renewal verification
-SolarCarHostedZone.grantDelegation(backend.RenewCertificate.resources.lambda);
+SolarCarHostedZone.grantDelegation(TelemetryBackendRenewCertificateLambda);
 
 // Allow Cert Update Lambda to write to the Secrets Manager Store
 TelemetryBackendSecretsManagerPrivKey.grantWrite(
-  backend.RenewCertificate.resources.lambda
+  TelemetryBackendRenewCertificateLambda
 );
 TelemetryBackendSecretsManagerChain.grantWrite(
-  backend.RenewCertificate.resources.lambda
+  TelemetryBackendRenewCertificateLambda
 );
 TelemetryBackendSecretsManagerCertificate.grantWrite(
-  backend.RenewCertificate.resources.lambda
+  TelemetryBackendRenewCertificateLambda
 );
 
 // Allow Cert Update Lambda to Restart the ECS Service
