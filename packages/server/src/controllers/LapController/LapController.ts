@@ -1,12 +1,9 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
-import type {
-  ILapData,
-  ITelemetryData,
-} from "@/interfaces/telemetry-data.interface";
-
 import { getDistance } from "@/utils/lapCalculations";
+
+import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];

@@ -3,8 +3,8 @@ import { memo, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { PlaneGeometry } from "three";
 
-import { type IDriverControls } from "@/objects/telemetry-data.interface";
 import { type Vector3, useFrame } from "@react-three/fiber";
+import { type IDriverControls } from "@shared/helios-types";
 
 interface roadComponentProps {
   size: number;

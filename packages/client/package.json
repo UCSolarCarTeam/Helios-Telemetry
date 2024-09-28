@@ -17,6 +17,7 @@
     "@react-three/drei": "^9.99.3",
     "@react-three/fiber": "^8.15.16",
     "@react-three/postprocessing": "^2.16.0",
+    "@shared/helios-types": "*",
     "@types/three": "^0.161.2",
     "framer-motion": "^11.0.6",
     "mapbox-gl": "^3.5.1",
@@ -32,7 +33,6 @@
     "three": "^0.161.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/eslint": "^8.56.10",
     "@types/google.maps": "^3.55.11",

@@ -4,12 +4,8 @@ import { type BackendController } from "@/controllers/BackendController/BackendC
 
 import { type SQLiteType } from "@/datasources/SQLite/SQLite.types";
 
-import type {
-  ILapData,
-  ITelemetryData,
-} from "@/interfaces/telemetry-data.interface";
-
 import { logger } from "@/index";
+import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
 export class SQLite implements SQLiteType {
   public db: sqlite3.Database;
