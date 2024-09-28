@@ -4,9 +4,15 @@ import {
   Route53Client,
 } from "@aws-sdk/client-route-53";
 
+import {
+  UpdateSecretCommand,
+  SecretsManagerClient,
+} from "@aws-sdk/client-secrets-manager";
+
 import acme from "acme-client";
 
 const route53 = new Route53Client({});
+const secretsManager = new SecretsManagerClient({});
 
 export const handler: EventBridgeHandler = async (event, context) => {
   /**
@@ -16,6 +22,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
   // const fs = require('fs').promises;
   const acme = require("./../");
 
+  // @ts-ignore
   function log(m) {
     process.stdout.write(`${m}\n`);
   }
@@ -107,9 +114,28 @@ export const handler: EventBridgeHandler = async (event, context) => {
 
       log(`Removing TXT record for ${authz.identifier.value}: ${dnsRecord}`);
 
-      /* Replace this */
-      log(`Would remove TXT record "${dnsRecord}" with value "${recordValue}"`);
-      // await dnsProvider.removeRecord(dnsRecord, 'TXT', recordValue);
+      await route53.send(
+        new ChangeResourceRecordSetsCommand({
+          HostedZoneId: "Z00168143RCUWIOU5XRGV",
+          ChangeBatch: {
+            Changes: [
+              {
+                Action: "DELETE",
+                ResourceRecordSet: {
+                  Name: dnsRecord,
+                  ResourceRecords: [
+                    {
+                      Value: recordValue,
+                    },
+                  ],
+                  TTL: 1800,
+                  Type: "TXT",
+                },
+              },
+            ],
+          },
+        })
+      );
     }
   }
 
@@ -143,6 +169,25 @@ export const handler: EventBridgeHandler = async (event, context) => {
     log(`CSR:\n${csr.toString()}`);
     log(`Private key:\n${key.toString()}`);
     log(`Certificate:\n${cert.toString()}`);
+
+    secretsManager.send(
+      new UpdateSecretCommand({
+        SecretId: "",
+        SecretString: csr.toString(),
+      })
+    );
+    secretsManager.send(
+      new UpdateSecretCommand({
+        SecretId: "",
+        SecretString: key.toString(),
+      })
+    );
+    secretsManager.send(
+      new UpdateSecretCommand({
+        SecretId: "",
+        SecretString: cert.toString(),
+      })
+    );
   };
 
   // Request cert from LetsEncrypt
