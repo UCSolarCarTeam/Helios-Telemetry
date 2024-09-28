@@ -10,7 +10,9 @@ import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
 import { type ITelemetryData } from "@/interfaces/telemetry-data.interface";
 
-import { logger } from "@/index";
+import { createLightweightApplicationLogger } from "@/utils/logger";
+
+const logger = createLightweightApplicationLogger("BackendController.ts");
 
 export class BackendController implements BackendControllerTypes {
   public sqLite: SQLite;

@@ -7,7 +7,7 @@ import http from "http";
 import https from "https";
 import "module-alias";
 
-import router from "@/routes/health.route";
+import healthRouter from "@/routes/health.route";
 
 import {
   createLightweightApplicationLogger,
@@ -23,9 +23,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-app.use("/", router);
+app.use("/", healthRouter);
 
-export const logger = createLightweightApplicationLogger("index.ts");
+const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
   onRetry: (retryCount) => {
     logger.warn(`Retrying axios call. Retry count: `, retryCount);
