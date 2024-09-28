@@ -9202,8 +9202,8 @@ __metadata:
   linkType: hard
 
 "aws-cdk@npm:^2.149.0":
-  version: 2.149.0
-  resolution: "aws-cdk@npm:2.149.0"
+  version: 2.160.0
+  resolution: "aws-cdk@npm:2.160.0"
   dependencies:
     fsevents: "npm:2.3.2"
   dependenciesMeta:
@@ -9211,7 +9211,7 @@ __metadata:
       optional: true
   bin:
     cdk: bin/cdk
-  checksum: 10c0/109721311a6a8b3fb2c84d118fb795e5de5af252ff90f6be4f3796cb3c64763023b44250217dc089b82ed9e897e071d51e48121ad891c2a152fa69de74a913d9
+  checksum: 10c0/5138e726dc37706396ab333242a61fc99b3609d5a066baae367d2494975f67752631286734096ee9232ee6303eba582f111864bc6cadb28e6d6f1dd46c9928b2
   languageName: node
   linkType: hard
 
@@ -9234,13 +9234,13 @@ __metadata:
   linkType: hard
 
 "axios@npm:^1.6.0, axios@npm:^1.7.2":
-  version: 1.7.2
-  resolution: "axios@npm:1.7.2"
+  version: 1.7.7
+  resolution: "axios@npm:1.7.7"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/cbd47ce380fe045313364e740bb03b936420b8b5558c7ea36a4563db1258c658f05e40feb5ddd41f6633fdd96d37ac2a76f884dad599c5b0224b4c451b3fa7ae
+  checksum: 10c0/4499efc89e86b0b49ffddc018798de05fab26e3bf57913818266be73279a6418c3ce8f9e934c7d2d707ab8c095e837fc6c90608fb7715b94d357720b5f568af7
   languageName: node
   linkType: hard
 
