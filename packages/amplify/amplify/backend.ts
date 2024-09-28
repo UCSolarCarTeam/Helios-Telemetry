@@ -253,7 +253,7 @@ const TelemetryBackendRenewCertificateLambda = new lambda.Function(
 const TelemetryBackendTriggerCertRenewLambda = new eventbridge.Rule(
   TelemetryBackendStack,
   "BatchTestCheckEventRule",
-  { schedule: eventbridge.Schedule.cron({ day: "1", hour: "8" }) }
+  { schedule: eventbridge.Schedule.cron({ day: "1", hour: "9" }) }
 );
 
 TelemetryBackendTriggerCertRenewLambda.addTarget(
