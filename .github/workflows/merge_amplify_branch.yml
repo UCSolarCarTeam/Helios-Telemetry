@@ -1,10 +1,10 @@
 name: "Amplify Merge"
 on:
   push:
-    branch: ["main"]
+    branches: ["main"]
     paths:
       - "packages/amplify/**"
-      - '.github/workflows/**'
+      - ".github/workflows/**"
 
 jobs:
   merge-branch:
@@ -14,6 +14,6 @@ jobs:
       - uses: everlytic/branch-merge@1.1.2
         with:
           github_token: ${{ github.token }}
-          source_ref: 'main'
-          target_branch: 'amplify_main'
-          commit_message_template: '[Automated] Merged main to amplify_main because the amplify folder changed'
+          source_ref: "main"
+          target_branch: "amplify_main"
+          commit_message_template: "[Automated] Merged main to amplify_main because the amplify folder changed"

@@ -14,7 +14,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 function SettingsComponent() {
   const { setCurrentAppState, currentAppState } = useAppState();
-  const socket = socketIO;
 
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState({
@@ -28,50 +27,59 @@ function SettingsComponent() {
       long: coords.long,
       password: coords.password,
     };
-    socket.emit("setLapCoords", newCoordInfo);
-  }, [coords, socket]);
-  const handleCoordsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setCoords((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  const handleDarkChange = (
-    event: React.MouseEvent<HTMLElement>,
-    inputMode: (typeof currentAppState)["darkMode"],
-  ) => {
-    if (inputMode !== null) {
-      setCurrentAppState((prev) => ({
+    socketIO.emit("setLapCoords", newCoordInfo);
+  }, [coords]);
+  const handleCoordsChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setCoords((prev) => ({
         ...prev,
-        darkMode: inputMode,
+        [name]: value,
       }));
-    }
-  };
+    },
+    [],
+  );
+  const handleDarkChange = useCallback(
+    (
+      event: React.MouseEvent<HTMLElement>,
+      inputMode: (typeof currentAppState)["darkMode"],
+    ) => {
+      if (inputMode !== null) {
+        setCurrentAppState((prev) => ({
+          ...prev,
+          darkMode: inputMode,
+        }));
+      }
+    },
+    [setCurrentAppState],
+  );
 
-  const handleUnitChange = (
-    event: React.MouseEvent<HTMLElement>,
-    inputMode: (typeof currentAppState)["appUnits"],
-  ) => {
-    if (inputMode !== null) {
-      setCurrentAppState((prev) => ({
-        ...prev,
-        appUnits: inputMode,
-      }));
-    }
-  };
+  const handleUnitChange = useCallback(
+    (
+      event: React.MouseEvent<HTMLElement>,
+      inputMode: (typeof currentAppState)["appUnits"],
+    ) => {
+      if (inputMode !== null) {
+        setCurrentAppState((prev) => ({
+          ...prev,
+          appUnits: inputMode,
+        }));
+      }
+    },
+    [setCurrentAppState],
+  );
 
-  const handleConnectionChange = (
-    event: React.MouseEvent<HTMLElement>,
-    inputMode: CONNECTIONTYPES,
-  ) => {
-    if (inputMode !== null) {
-      setCurrentAppState((prev) => ({
-        ...prev,
-        connectionType: inputMode,
-      }));
-    }
-  };
+  const handleConnectionChange = useCallback(
+    (event: React.MouseEvent<HTMLElement>, inputMode: CONNECTIONTYPES) => {
+      if (inputMode !== null) {
+        setCurrentAppState((prev) => ({
+          ...prev,
+          connectionType: inputMode,
+        }));
+      }
+    },
+    [setCurrentAppState],
+  );
   return (
     <div className="grid">
       <h2

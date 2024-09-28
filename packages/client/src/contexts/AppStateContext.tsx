@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+import type { Coords } from "@shared/helios-types";
+
 interface Props {
   children: ReactNode | ReactNode[];
 }
@@ -35,10 +37,7 @@ interface IAppState {
   radioConnected: boolean;
   userLatency: number;
   carLatency: number;
-  lapCoords: {
-    lat: number;
-    long: number;
-  };
+  lapCoords: Coords;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;

@@ -36,25 +36,18 @@ export class LapController implements LapControllerType {
       logger.info("Password: ", password);
       return { error: "Invalid Password" };
     }
-    // strip the latitude and longitude from the string
     try {
-      if (
-        (LapController.isDMS(lat) || LapController.isDMM(lat)) &&
-        (LapController.isDMS(long) || LapController.isDMM(long))
-      ) {
-        const newFinishLinelocation = LapController.convertToDecimalDegrees(
-          lat,
-          long,
-        );
-        this.finishLineLocation = newFinishLinelocation;
-        logger.info("Finish Line Location Set: ", this.finishLineLocation);
-        return this.finishLineLocation;
-      }
+      const newFinishLinelocation = LapController.convertToDecimalDegrees(
+        lat,
+        long,
+      );
+      this.finishLineLocation = newFinishLinelocation;
+      logger.info("Finish Line Location Set: ", this.finishLineLocation);
+      return this.finishLineLocation;
     } catch (e) {
       logger.error("Invalid Coordinates: " + (e as Error).message);
       return { error: "Invalid Coordinates: " + (e as Error).message };
     }
-    return { error: "Invalid Coordinates" };
   }
 
   // Helper private to detect if input is in DMS (Degrees, Minutes, Seconds)
@@ -115,18 +108,15 @@ export class LapController implements LapControllerType {
   private static convertToDecimalDegrees(lat: string, long: string): Coords {
     let latitude: number;
     let longitude: number;
-
-    // Trim leading and trailing spaces from input
     lat = lat.trim();
     long = long.trim();
 
-    // Check if the format is DMS or DMM and convert accordingly
     if (LapController.isDMS(lat)) {
       latitude = LapController.dmsToDecimal(lat);
     } else if (LapController.isDMM(lat)) {
       latitude = LapController.dmmToDecimal(lat);
     } else {
-      latitude = parseFloat(lat);
+      throw new Error("Invalid Coordinates: Lat must be in DMM or DMS format");
     }
 
     if (LapController.isDMS(long)) {
@@ -134,7 +124,7 @@ export class LapController implements LapControllerType {
     } else if (LapController.isDMM(long)) {
       longitude = LapController.dmmToDecimal(long);
     } else {
-      longitude = parseFloat(long);
+      throw new Error("Invalid Coordinates: Long must be in DMM or DMS format");
     }
 
     return { lat: latitude, long: longitude };
