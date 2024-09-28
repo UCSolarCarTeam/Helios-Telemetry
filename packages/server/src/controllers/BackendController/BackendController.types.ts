@@ -4,7 +4,7 @@ import type { SQLite } from "@/datasources/SQLite/SQLite";
 import type { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import type { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 
-import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
+import type { ITelemetryData } from "@shared/helios-types";
 
 export interface BackendControllerTypes {
   establishCarPinging(): void;

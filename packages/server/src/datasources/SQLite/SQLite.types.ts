@@ -1,9 +1,6 @@
 import type sqlite3 from "sqlite3";
 
-import {
-  type ILapData,
-  type ITelemetryData,
-} from "@/interfaces/telemetry-data.interface";
+import { type ILapData, type ITelemetryData } from "@shared/helios-types";
 
 export interface SQLiteType {
   close(): Promise<void>;

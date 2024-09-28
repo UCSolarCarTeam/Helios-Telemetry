@@ -1,6 +1,6 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
-import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
+import type { ITelemetryData } from "@shared/helios-types";
 
 export interface LapControllerType {
   backendController: BackendController;

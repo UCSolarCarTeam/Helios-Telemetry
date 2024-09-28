@@ -9,7 +9,7 @@ import {
 import { type Socket, io } from "socket.io-client";
 
 import { useAppState } from "@/contexts/AppStateContext";
-import type ITelemetryData from "@/objects/telemetry-data.interface";
+import type { ITelemetryData } from "@shared/helios-types";
 
 interface ClientToServerEvents {
   ping: (cb: (val: number) => void) => void;

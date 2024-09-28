@@ -6,9 +6,8 @@ import { type BackendController } from "@/controllers/BackendController/BackendC
 
 import { type SocketIOType } from "@/datasources/SocketIO/SocketIO.types";
 
-import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
-
 import { logger } from "@/index";
+import type { ITelemetryData } from "@shared/helios-types";
 
 export class SocketIO implements SocketIOType {
   io: SocketIOServer;
