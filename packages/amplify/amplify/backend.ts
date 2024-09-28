@@ -5,12 +5,34 @@ import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
+import * as eventbridge from "aws-cdk-lib/aws-events";
+import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
 
 import { defineBackend } from "@aws-amplify/backend";
+import { RenewCertificate } from "./functions/RenewCertificate/resource.js";
 
-const backend = defineBackend({});
+const backend = defineBackend({
+  RenewCertificate,
+});
 
 const TelemetryBackendStack = backend.createStack("TelemetryBackend");
+
+const TelemetryBackendSecretsManagerPrivKey = new secretsmanager.Secret(
+  TelemetryBackendStack,
+  "HeliosTelemetryBackend/PrivateKey",
+  { secretName: "HeliosTelemetryBackend/PrivateKey" }
+);
+const TelemetryBackendSecretsManagerChain = new secretsmanager.Secret(
+  TelemetryBackendStack,
+  "HeliosTelemetryBackend/Chain",
+  { secretName: "HeliosTelemetryBackend/Chain" }
+);
+const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
+  TelemetryBackendStack,
+  "HeliosTelemetryBackend/Certificate",
+  { secretName: "HeliosTelemetryBackend/Certificate" }
+);
 
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
@@ -42,9 +64,8 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
     role: new iam.Role(TelemetryBackendStack, "TelemetryBackendCodeBuildRole", {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
       managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "SecretsManagerReadWrite")
-        ]
+        iam.ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
+      ],
     }),
     environment: {
       buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
@@ -78,6 +99,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   "TelemetryECSTaskDefintion",
   {}
 );
+
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   memoryLimitMiB: 900,
@@ -98,7 +120,24 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       protocol: ecs.Protocol.TCP,
     },
   ],
+  environment: {
+    PRIVATE_KEY: TelemetryBackendSecretsManagerPrivKey.secretValue.toString(),
+    CHAIN: TelemetryBackendSecretsManagerChain.secretValue.toString(),
+    CERTIFICATE:
+      TelemetryBackendSecretsManagerCertificate.secretValue.toString(),
+  },
 });
+
+// Allow ECS Task to read the Secrets Manager Store
+TelemetryBackendSecretsManagerPrivKey.grantRead(
+  TelemetryECSTaskDefintion.taskRole
+);
+TelemetryBackendSecretsManagerChain.grantRead(
+  TelemetryECSTaskDefintion.taskRole
+);
+TelemetryBackendSecretsManagerCertificate.grantRead(
+  TelemetryECSTaskDefintion.taskRole
+);
 
 const TelemetryBackendVPC = new ec2.Vpc(
   TelemetryBackendStack,
@@ -196,6 +235,41 @@ const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
     hostedZoneId: "Z00168143RCUWIOU5XRGV",
   }
 );
+
+// Events
+
+const TelemetryBackendTriggerCertRenewLambda = new eventbridge.Rule(
+  TelemetryBackendStack,
+  "BatchTestCheckEventRule",
+  { schedule: eventbridge.Schedule.cron({ day: "1", hour: "8" }) }
+);
+
+TelemetryBackendTriggerCertRenewLambda.addTarget(
+  new eventbridgetargets.LambdaFunction(
+    backend.RenewCertificate.resources.lambda
+  )
+);
+
+// Allow Cert update lambda to update the hosted zone for SSL certificate renewal verification
+SolarCarHostedZone.grantDelegation(backend.RenewCertificate.resources.lambda);
+
+// Allow Cert Update Lambda to write to the Secrets Manager Store
+TelemetryBackendSecretsManagerPrivKey.grantWrite(
+  backend.RenewCertificate.resources.lambda
+);
+TelemetryBackendSecretsManagerChain.grantWrite(
+  backend.RenewCertificate.resources.lambda
+);
+TelemetryBackendSecretsManagerCertificate.grantWrite(
+  backend.RenewCertificate.resources.lambda
+);
+
+// Allow Cert Update Lambda to Restart the ECS Service
+// TelemetryECSService.taskDefinition.taskRole.grant(
+//   backend.RenewCertificate.resources.lambda,
+//   ["ecs:UpdateService"]
+// );
+
 // new route53.ARecord(TelemetryBackendStack, "AedesARecord", {
 //   target: route53.RecordTarget.fromIpAddresses(
 //     TelemetryECSCluster.vpc.publicSubnets[0].ipv4CidrBlock

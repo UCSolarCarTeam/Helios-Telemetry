@@ -5,7 +5,7 @@ import type { ITelemetryData } from "@shared/helios-types";
 
 export type MQTTOptions = IClientOptions & { url: string };
 export const options: MQTTOptions = {
-  url: `mqtt://test.mosquitto.org:1883`,
+  url: `mqtt://localhost:1883`,
 };
 export const topics = {
   packetTopic: "packet",
