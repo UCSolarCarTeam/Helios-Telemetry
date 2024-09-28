@@ -1,7 +1,6 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
-import type { CoordInfoUpdate } from "@/interfaces/setCoordinateData.interface";
-import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
+import type { CoordInfoUpdate, ITelemetryData } from "@shared/helios-types";
 
 export interface LapControllerType {
   backendController: BackendController;

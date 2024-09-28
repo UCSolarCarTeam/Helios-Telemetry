@@ -1,4 +1,4 @@
-import { type IKeyMotor } from "@/objects/telemetry-data.interface";
+import { type IKeyMotor } from "@shared/helios-types";
 
 export default function MotorKeyDetailsContainer({
   KeyMotorDetails,

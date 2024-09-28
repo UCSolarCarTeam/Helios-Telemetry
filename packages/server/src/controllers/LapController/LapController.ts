@@ -1,17 +1,15 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
+import { getDistance } from "@/utils/lapCalculations";
+import { createLightweightApplicationLogger } from "@/utils/logger";
+
 import type {
   CoordInfoUpdate,
   Coords,
-} from "@/interfaces/setCoordinateData.interface";
-import type {
   ILapData,
   ITelemetryData,
-} from "@/interfaces/telemetry-data.interface";
-
-import { getDistance } from "@/utils/lapCalculations";
-import { createLightweightApplicationLogger } from "@/utils/logger";
+} from "@shared/helios-types";
 
 const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
@@ -39,20 +37,23 @@ export class LapController implements LapControllerType {
       return { error: "Invalid Password" };
     }
     // strip the latitude and longitude from the string
-    if (
-      (LapController.isDMS(lat) || LapController.isDMM(lat)) &&
-      (LapController.isDMS(long) || LapController.isDMM(long))
-    ) {
-      const { lat: latitude, long: longitude } =
-        LapController.convertToDecimalDegrees(lat, long);
-      this.finishLineLocation = {
-        lat: latitude,
-        long: longitude,
-      };
-      logger.info("Finish Line Location Set: ", this.finishLineLocation);
-      return this.finishLineLocation;
+    try {
+      if (
+        (LapController.isDMS(lat) || LapController.isDMM(lat)) &&
+        (LapController.isDMS(long) || LapController.isDMM(long))
+      ) {
+        const newFinishLinelocation = LapController.convertToDecimalDegrees(
+          lat,
+          long,
+        );
+        this.finishLineLocation = newFinishLinelocation;
+        logger.info("Finish Line Location Set: ", this.finishLineLocation);
+        return this.finishLineLocation;
+      }
+    } catch (e) {
+      logger.error("Invalid Coordinates: " + (e as Error).message);
+      return { error: "Invalid Coordinates: " + (e as Error).message };
     }
-    logger.error("Invalid Coordinates");
     return { error: "Invalid Coordinates" };
   }
 

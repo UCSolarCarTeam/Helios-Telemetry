@@ -9,8 +9,8 @@ import {
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
 import fakeData from "@/contexts/fakePacket.json";
-import { generateFakeTelemetryData } from "@/lib/utils";
-import type ITelemetryData from "@/objects/telemetry-data.interface";
+import { generateFakeTelemetryData } from "@shared/helios-types";
+import type { ITelemetryData } from "@shared/helios-types";
 
 interface IPackContextReturn {
   currentPacket: ITelemetryData;

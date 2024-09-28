@@ -1,7 +1,14 @@
-enum Motor {
-  RightMotor = 1,
-  LeftMotor = 0,
+export interface Coords {
+  lat: number;
+  long: number;
 }
+
+export interface CoordInfoUpdate {
+  lat: string;
+  long: string;
+  password: string;
+}
+
 export interface ITelemetryData {
   AuxBms: IAuxBms;
   Battery: IBattery;
@@ -16,6 +23,7 @@ export interface ITelemetryData {
   PacketTitle: string;
   TimeStamp: number;
 }
+
 export interface ILapData {
   ampHours: number;
   averagePackCurrent: number;
@@ -29,44 +37,44 @@ export interface ILapData {
   totalPowerOut: number;
 }
 
-// export class LapData {
-//   constructor(
-//     timestamp: number,
-//     lapTime: number,
-//     totalPowerIn: number,
-//     totalPowerOut: number,
-//     netPowerOut: number,
-//     distance: number,
-//     amphours: number,
-//     averagePackCurrent: number,
-//     batterySecondsRemaining: number,
-//     averageSpeed: number,
-//   ) {
-//     this.timestamp = timestamp;
-//     this.lapTime = lapTime;
-//     this.totalPowerIn = totalPowerIn;
-//     this.totalPowerOut = totalPowerOut;
-//     this.netPowerOut = netPowerOut;
-//     this.distance = distance;
-//     this.amphours = amphours;
-//     this.averagePackCurrent = averagePackCurrent;
-//     this.batterySecondsRemaining = batterySecondsRemaining;
-//     this.averageSpeed = averageSpeed;
-//   }
+export class LapData {
+  constructor(
+    timestamp: number,
+    lapTime: number,
+    totalPowerIn: number,
+    totalPowerOut: number,
+    netPowerOut: number,
+    distance: number,
+    amphours: number,
+    averagePackCurrent: number,
+    batterySecondsRemaining: number,
+    averageSpeed: number
+  ) {
+    this.timestamp = timestamp;
+    this.lapTime = lapTime;
+    this.totalPowerIn = totalPowerIn;
+    this.totalPowerOut = totalPowerOut;
+    this.netPowerOut = netPowerOut;
+    this.distance = distance;
+    this.amphours = amphours;
+    this.averagePackCurrent = averagePackCurrent;
+    this.batterySecondsRemaining = batterySecondsRemaining;
+    this.averageSpeed = averageSpeed;
+  }
 
-//   lapNumber = -1;
-//   timestamp = -1;
-//   lapTime = -1;
-//   totalPowerIn = -1;
-//   totalPowerOut = -1;
-//   netPowerOut = -1;
-//   distance = -1;
-//   amphours = -1;
-//   averagePackCurrent = -1;
-//   batterySecondsRemaining = -1;
-//   lapsRemaining = -1;
-//   averageSpeed = -1;
-// }
+  lapNumber = -1;
+  timestamp = -1;
+  lapTime = -1;
+  totalPowerIn = -1;
+  totalPowerOut = -1;
+  netPowerOut = -1;
+  distance = -1;
+  amphours = -1;
+  averagePackCurrent = -1;
+  batterySecondsRemaining = -1;
+  lapsRemaining = -1;
+  averageSpeed = -1;
+}
 
 export interface IAuxBms {
   AllowCharge: boolean;

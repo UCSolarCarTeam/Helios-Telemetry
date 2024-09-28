@@ -8,9 +8,9 @@ import {
   topics,
 } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
-import { type ITelemetryData } from "@/interfaces/telemetry-data.interface";
-
 import { createLightweightApplicationLogger } from "@/utils/logger";
+
+import { type ITelemetryData } from "@shared/helios-types";
 
 const { packetTopic, pingTopic, pongTopic } = topics;
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");

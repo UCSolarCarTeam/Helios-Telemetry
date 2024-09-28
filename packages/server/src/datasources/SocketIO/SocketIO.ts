@@ -6,13 +6,13 @@ import { type BackendController } from "@/controllers/BackendController/BackendC
 
 import { type SocketIOType } from "@/datasources/SocketIO/SocketIO.types";
 
+import { createLightweightApplicationLogger } from "@/utils/logger";
+
 import type {
   CoordInfoUpdate,
   Coords,
-} from "@/interfaces/setCoordinateData.interface";
-import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
-
-import { createLightweightApplicationLogger } from "@/utils/logger";
+  ITelemetryData,
+} from "@shared/helios-types";
 
 const logger = createLightweightApplicationLogger("SocketIO.ts");
 export class SocketIO implements SocketIOType {
