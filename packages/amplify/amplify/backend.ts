@@ -4,11 +4,12 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as route53 from "aws-cdk-lib/aws-route53";
-import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as eventbridge from "aws-cdk-lib/aws-events";
 import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
+import * as url from "node:url";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -235,16 +236,19 @@ const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
 );
 
 // Renew Certificate Lambda
-const TelemetryBackendRenewCertificateLambda = new lambda.Function(
+const TelemetryBackendRenewCertificateLambda = new lambda.NodejsFunction(
   TelemetryBackendStack,
   "RenewCertificateLambda",
   {
-    runtime: lambda.Runtime.NODEJS_20_X,
-    handler: "handler.handler",
-    code: lambda.Code.fromAsset("amplify/functions/RenewCertificate/"),
+    entry: url.fileURLToPath(
+      new URL("./functions/RenewCertificate/handler.ts", import.meta.url)
+    ),
     environment: {
       HOSTED_ZONE_ID: SolarCarHostedZone.hostedZoneId,
       DNS_RECORD: "aedes.calgarysolarcar.ca",
+      SECRET_PRIVKEY_NAME: TelemetryBackendSecretsManagerPrivKey.secretName,
+      SECRET_CHAIN_NAME: TelemetryBackendSecretsManagerChain.secretName,
+      SECRET_CERT_NAME: TelemetryBackendSecretsManagerCertificate.secretName,
     },
   }
 );

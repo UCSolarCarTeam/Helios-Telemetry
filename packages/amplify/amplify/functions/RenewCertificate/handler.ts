@@ -147,7 +147,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
 
   /* Create CSR */
   const [key, csr] = await acme.crypto.createCsr({
-    altNames: ["aedes.calgarysolarcar.ca"],
+    altNames: [process.env.DNS_RECORD as string],
   });
 
   /* Certificate */
@@ -168,19 +168,19 @@ export const handler: EventBridgeHandler = async (event, context) => {
   return await Promise.all([
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackendSSL/PrivateKey",
+        SecretId: process.env.SECRET_CHAIN_NAME,
         SecretString: csr.toString(),
       })
     ),
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackendSSL/Chain",
+        SecretId: process.env.SECRET_PRIVKEY_NAME,
         SecretString: key.toString(),
       })
     ),
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackendSSL/Certificate",
+        SecretId: process.env.SECRET_CERT_NAME,
         SecretString: cert.toString(),
       })
     ),
