@@ -168,19 +168,19 @@ export const handler: EventBridgeHandler = async (event, context) => {
   return await Promise.all([
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackend/PrivateKey",
+        SecretId: "HeliosTelemetryBackendSSL/PrivateKey",
         SecretString: csr.toString(),
       })
     ),
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackend/Chain",
+        SecretId: "HeliosTelemetryBackendSSL/Chain",
         SecretString: key.toString(),
       })
     ),
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackend/Certificate",
+        SecretId: "HeliosTelemetryBackendSSL/Certificate",
         SecretString: cert.toString(),
       })
     ),

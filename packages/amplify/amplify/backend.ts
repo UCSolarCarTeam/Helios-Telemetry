@@ -18,18 +18,18 @@ const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
 const TelemetryBackendSecretsManagerPrivKey = new secretsmanager.Secret(
   TelemetryBackendStack,
-  "HeliosTelemetryBackend/PrivateKey",
-  { secretName: "HeliosTelemetryBackend/PrivateKey" }
+  "HeliosTelemetryBackendSSL/PrivateKey",
+  { secretName: "HeliosTelemetryBackendSSL/PrivateKey" }
 );
 const TelemetryBackendSecretsManagerChain = new secretsmanager.Secret(
   TelemetryBackendStack,
-  "HeliosTelemetryBackend/Chain",
-  { secretName: "HeliosTelemetryBackend/Chain" }
+  "HeliosTelemetryBackendSSL/Chain",
+  { secretName: "HeliosTelemetryBackendSSL/Chain" }
 );
 const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   TelemetryBackendStack,
-  "HeliosTelemetryBackend/Certificate",
-  { secretName: "HeliosTelemetryBackend/Certificate" }
+  "HeliosTelemetryBackendSSL/Certificate",
+  { secretName: "HeliosTelemetryBackendSSL/Certificate" }
 );
 
 const TelemetryBackendImageRepository = new ecr.Repository(
