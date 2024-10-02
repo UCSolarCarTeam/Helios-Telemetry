@@ -38,9 +38,9 @@ const fitToBounds = (
   ];
 
   map.fitBounds(bounds, {
-    padding: { top: 35, bottom: 35, left: 35, right: 35 },
     linear: true,
     maxZoom: 16,
+    padding: { bottom: 35, left: 35, right: 35, top: 35 },
   });
 };
 // linear interpolation for the animation for the car to catch up
@@ -54,12 +54,12 @@ const lerp = (
 
 function Map(props: IMapProps): JSX.Element {
   const { currentAppState } = useAppState();
-  const { carLocation, mapLocation, lapLocation } = props;
+  const { carLocation, lapLocation, mapLocation } = props;
   const mapRef = useRef<MapboxMap | null>(null);
   const [mapStates, setMapStates] = useState({
-    satelliteMode: false,
     centered: false,
     currentCarLocation: carLocation,
+    satelliteMode: false,
   });
   const buttonRef = useRef(null);
 
@@ -67,10 +67,10 @@ function Map(props: IMapProps): JSX.Element {
     const isOutsideBounds = (coordinates: ILocation[]): boolean => {
       if (!mapRef.current) return false;
       const bounds = mapRef.current?.getBounds() as LngLatBounds | undefined;
-      const { lng, lat } = bounds?.getNorthEast() || { lng: 0, lat: 0 };
-      const { lng: westLng, lat: southLat } = bounds?.getSouthWest() || {
-        lng: 0,
+      const { lat, lng } = bounds?.getNorthEast() || { lat: 0, lng: 0 };
+      const { lat: southLat, lng: westLng } = bounds?.getSouthWest() || {
         lat: 0,
+        lng: 0,
       };
       if (coordinates === undefined) return false;
       for (let i = 0; i < coordinates.length; i++) {
@@ -93,10 +93,10 @@ function Map(props: IMapProps): JSX.Element {
     } else if (mapStates.centered && mapRef.current) {
       mapRef.current.flyTo({
         center: [carLocation.lng, carLocation.lat],
-        zoom: 16,
-        speed: 1.5, // Adjust the speed of the animation
         curve: 1, // Adjust the curve of the animation
         easing: (t) => t, // Easing function for the animation
+        speed: 1.5, // Adjust the speed of the animation
+        zoom: 16,
       });
     }
   }, [carLocation, lapLocation, mapStates.centered, mapLocation]);
@@ -142,11 +142,11 @@ function Map(props: IMapProps): JSX.Element {
       <div className="relative size-full">
         <div className="absolute z-10 flex flex-col space-x-14 space-y-0 p-2">
           <button
-            ref={buttonRef}
             className={`absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border-none ${currentAppState.darkMode === true ? "bg-dark text-dark" : "bg-light text-light"}`}
             onClick={() => {
               toggleMapStyle();
             }}
+            ref={buttonRef}
           >
             {mapStates.satelliteMode === true ? (
               <FaSatellite
@@ -171,19 +171,17 @@ function Map(props: IMapProps): JSX.Element {
           </button>
         </div>
         <ReactMapGL
-          ref={(instance) => {
-            if (instance) {
-              mapRef.current = instance.getMap();
-            }
-          }}
-          mapLib={import("mapbox-gl") as Promise<MapLibType>}
-          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
+          boxZoom={false}
+          doubleClickZoom={false}
+          dragPan={true}
+          dragRotate={true}
           initialViewState={{
-            longitude: mapLocation.lng,
             latitude: mapLocation.lat,
+            longitude: mapLocation.lng,
             zoom: 14,
           }}
-          style={{ width: "100%", height: "100%" }}
+          keyboard={false}
+          mapLib={import("mapbox-gl") as Promise<MapLibType>}
           mapStyle={
             mapStates.satelliteMode
               ? "mapbox://styles/mapbox/satellite-streets-v12"
@@ -191,31 +189,33 @@ function Map(props: IMapProps): JSX.Element {
                 ? "mapbox://styles/mapbox/dark-v11"
                 : "mapbox://styles/mapbox/light-v11"
           }
-          boxZoom={false}
-          doubleClickZoom={false}
-          dragPan={true}
-          dragRotate={true}
-          scrollZoom={true}
-          keyboard={false}
+          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
           onLoad={(e) => {
             const mapInstance = e.target;
             fitToBounds(mapInstance as mapboxgl.Map, carLocation, lapLocation);
           }}
+          ref={(instance) => {
+            if (instance) {
+              mapRef.current = instance.getMap();
+            }
+          }}
+          scrollZoom={true}
+          style={{ height: "100%", width: "100%" }}
         >
           <Marker
-            longitude={mapStates.currentCarLocation.lng}
             latitude={mapStates.currentCarLocation.lat}
+            longitude={mapStates.currentCarLocation.lng}
           >
             <Image
-              src="/assets/HeliosBirdseye.png"
               alt="map-pin"
-              width={20}
               height={50}
+              src="/assets/HeliosBirdseye.png"
+              width={20}
             />
           </Marker>
           <Marker
-            longitude={lapLocation.lng}
             latitude={lapLocation.lat}
+            longitude={lapLocation.lng}
             style={{
               color:
                 mapStates.satelliteMode === true

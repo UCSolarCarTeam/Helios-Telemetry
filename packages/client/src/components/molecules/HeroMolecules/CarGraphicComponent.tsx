@@ -27,9 +27,9 @@ const CarGraphicComponent = () => {
   const { currentPacket } = usePacket();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
+    battery: ISeverity.CLEAR,
     leftMotor: ISeverity.CLEAR,
     rightMotor: ISeverity.CLEAR,
-    battery: ISeverity.CLEAR,
     solarPanel: ISeverity.CLEAR,
   });
 
@@ -37,8 +37,8 @@ const CarGraphicComponent = () => {
     () =>
       new THREE.MeshStandardMaterial({
         color: 0xff0000,
-        transparent: true,
         opacity: 0.8,
+        transparent: true,
       }),
     [],
   );
@@ -47,8 +47,8 @@ const CarGraphicComponent = () => {
     () =>
       new THREE.MeshStandardMaterial({
         color: 0xffa500,
-        transparent: true,
         opacity: 0.8,
+        transparent: true,
       }),
     [],
   );
@@ -81,30 +81,30 @@ const CarGraphicComponent = () => {
 
   return (
     <>
-      <Canvas camera={{ position: [-7, 4, 7] }} shadows dpr={[1, 2]}>
+      <Canvas camera={{ position: [-7, 4, 7] }} dpr={[1, 2]} shadows>
         <ambientLight intensity={0.2} />
         <directionalLight
+          castShadow
           intensity={0.5}
           shadow-mapSize={[512, 512]}
-          castShadow
         />
         <CarModelComponent
-          isClear={isClear}
           errorMaterial={errorMaterial}
-          warningMaterial={warningMaterial}
           indications={indications}
+          isClear={isClear}
+          warningMaterial={warningMaterial}
         />
         <RoadComponent
-          speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
           direction={currentPacket?.DriverControls}
           size={20}
+          speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
         />
         <ContactShadows
-          position={[0, 0, 0]}
-          opacity={0.75}
-          scale={20}
           blur={2.5}
           far={4}
+          opacity={0.75}
+          position={[0, 0, 0]}
+          scale={20}
         />
         <OrbitControls maxDistance={20} minDistance={10} />
         {/* <Stats/> */}

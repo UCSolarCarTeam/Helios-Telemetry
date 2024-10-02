@@ -1,14 +1,14 @@
 const fakeData = {
-  "Motor Temp": 55,
+  "Battery Current": 55,
   "Battery Power": 54.35,
+  "Bus Voltage": 55,
+  MPPT: 55,
   Motor: 55,
+  "Motor Temp": 55,
   "Motor Temp1": 55,
   "Motor Temp2": 55,
   "Motor Temp3": 55,
   "Pack Voltage": 55,
-  MPPT: 55,
-  "Battery Current": 55,
-  "Bus Voltage": 55,
 };
 
 function BottomInformationContainer() {

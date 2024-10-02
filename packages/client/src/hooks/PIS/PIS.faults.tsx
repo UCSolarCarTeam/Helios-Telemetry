@@ -11,402 +11,402 @@ const Faults = (): I_PIS => {
     BatteryFaults: {
       ErrorFlags: [
         {
-          name: "Internal Communication Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags
                   .InternalCommunicationFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Internal Communication Fault",
         },
         {
-          name: "Internal Conversion Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.InternalConversionFault,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Internal Conversion Fault",
         },
         {
-          name: "Weak Cell Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value: currentPacket?.BatteryFaults.ErrorFlags.WeakCellFault,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Weak Cell Fault",
         },
         {
-          name: "Low Cell Voltage Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.LowCellVoltageFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Low Cell Voltage Fault",
         },
         {
-          name: "Open Wiring Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value: currentPacket?.BatteryFaults.ErrorFlags.OpenWiringFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Open Wiring Fault",
         },
         {
-          name: "Current Sensor Fault",
           data: [
             {
-              value: currentPacket?.BatteryFaults.ErrorFlags.CurrentSensorFault,
+              indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
+              value: currentPacket?.BatteryFaults.ErrorFlags.CurrentSensorFault,
             },
           ],
+          name: "Current Sensor Fault",
         },
         {
-          name: "Pack Voltage Sensor Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.PackVoltageSensorFault,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Pack Voltage Sensor Fault",
         },
         {
-          name: "Weak Pack Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value: currentPacket?.BatteryFaults.ErrorFlags.WeakPackFault,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Weak Pack Fault",
         },
         {
-          name: "Voltage Redundancy Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.VoltageRedundancyFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Voltage Redundancy Fault",
         },
         {
-          name: "Fan Monitor Fault",
           data: [
             {
-              value: currentPacket?.BatteryFaults.ErrorFlags.FanMonitorFault,
+              indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
+              value: currentPacket?.BatteryFaults.ErrorFlags.FanMonitorFault,
             },
           ],
+          name: "Fan Monitor Fault",
         },
         {
-          name: "Thermistor Fault",
           data: [
             {
-              value: currentPacket?.BatteryFaults.ErrorFlags.ThermistorFault,
+              indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
+              value: currentPacket?.BatteryFaults.ErrorFlags.ThermistorFault,
             },
           ],
+          name: "Thermistor Fault",
         },
         {
-          name: "CANBUS Communications Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags
                   .CANBUSCommunicationsFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "CANBUS Communications Fault",
         },
         {
-          name: "Always On Supply Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.AlwaysOnSupplyFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Always On Supply Fault",
         },
         {
-          name: "High Voltage Isolation Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags
                   .HighVoltageIsolationFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "High Voltage Isolation Fault",
         },
         {
-          name: "12V Power Supply Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags["12vPowerSupplyFault"],
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "12V Power Supply Fault",
         },
         {
-          name: "Charge Limit Enforcement Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags
                   .ChargeLimitEnforcementFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Charge Limit Enforcement Fault",
         },
         {
-          name: "Discharge Limit Enforcement Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags
                   .DischargeLimitEnforcementFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Discharge Limit Enforcement Fault",
         },
         {
-          name: "Charger Safety Relay Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.ChargerSafetyRelayFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Charger Safety Relay Fault",
         },
         {
-          name: "Internal Memory Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags.InternalMemoryFault,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Internal Memory Fault",
         },
         {
-          name: "Internal Thermistors Fault",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.ErrorFlags
                   .InternalThermistorsFault,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Internal Thermistors Fault",
         },
         {
-          name: "Internal Logic Fault",
           data: [
             {
-              value: currentPacket?.BatteryFaults.ErrorFlags.InternalLogicFault,
-              severity: ISeverity.ERROR,
               indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.ErrorFlags.InternalLogicFault,
             },
           ],
+          name: "Internal Logic Fault",
         },
       ],
       LimitFlags: [
         {
-          name: "Dcl Reduced Due To Low Soc",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.LimitFlags.DclReducedDueToLowSoc,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Dcl Reduced Due To Low Soc",
         },
         {
-          name: "Dcl Reduced Due to HighCell Resistance",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToHighCellResistance,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Dcl Reduced Due to HighCell Resistance",
         },
         {
-          name: "Dcl Reduced Due to Temperature",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToTemperature,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Dcl Reduced Due to Temperature",
         },
         {
-          name: "Dcl Reduced Due to Low Cell Voltage",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToLowCellVoltage,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Dcl Reduced Due to Low Cell Voltage",
         },
         {
-          name: "Dcl Reduced Due to Low Pack Voltage",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclReducedDueToLowPackVoltage,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Dcl Reduced Due to Low Pack Voltage",
         },
         {
-          name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclandCclReducedDueToVoltageFailsafe,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
         },
         {
-          name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .DclandCclReducedDueToCommunicationFailsafe,
-              severity: ISeverity.ERROR,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
         },
         {
-          name: "Ccl Reduced Due to High Soc",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags.CclReducedDueToHighSoc,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Ccl Reduced Due to High Soc",
         },
         {
-          name: "Ccl Reduced to High Cell Resistance",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToHighCellResistance,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Ccl Reduced to High Cell Resistance",
         },
         {
-          name: "Ccl Reduced Due to Temperature",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToTemperature,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Ccl Reduced Due to Temperature",
         },
         {
-          name: "Ccl Reduced Due to High Cell Voltage",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToHighCellVoltage,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Ccl Reduced Due to High Cell Voltage",
         },
         {
-          name: "Ccl Reduced Due to High Pack Voltage",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToHighPackVoltage,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Ccl Reduced Due to High Pack Voltage",
         },
         {
-          name: "Ccl Reduced Due to Charger Latch",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToChargerLatch,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Ccl Reduced Due to Charger Latch",
         },
         {
-          name: "Ccl Reduced Due to Alternate Current Limit",
           data: [
             {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
               value:
                 currentPacket?.BatteryFaults.LimitFlags
                   .CclReducedDueToAlternateCurrentLimit,
-              severity: ISeverity.WARNING,
-              indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          name: "Ccl Reduced Due to Alternate Current Limit",
         },
       ],
     },
@@ -414,343 +414,343 @@ const Faults = (): I_PIS => {
       MotorLeft: {
         ErrorFlags: [
           {
-            name: "Motor Over Speed",
             data: [
               {
-                value: currentPacket?.MotorFaults[0]?.ErrorFlags.MotorOverSpeed,
-                severity: ISeverity.WARNING,
                 indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value: currentPacket?.MotorFaults[0]?.ErrorFlags.MotorOverSpeed,
               },
             ],
+            name: "Motor Over Speed",
           },
           {
-            name: "Software Over Current",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.ErrorFlags.SoftwareOverCurrent,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Software Over Current",
           },
           {
-            name: "Dc Bus Over Voltage",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.ErrorFlags.DcBusOverVoltage,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Dc Bus Over Voltage",
           },
           {
-            name: "Bad Motor Position Hall Sequence",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.ErrorFlags
                     .BadMotorPositionHallSequence,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Bad Motor Position Hall Sequence",
           },
           {
-            name: "Watch Dog Caused Last Reset",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.ErrorFlags
                     .WatchdogCausedLastReset,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Watch Dog Caused Last Reset",
           },
           {
-            name: "Config Read Error",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.ErrorFlags.ConfigReadError,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Config Read Error",
           },
           {
-            name: "Wail 15V Under Voltage Lock Out",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.ErrorFlags
                     .Wail15VUnderVoltageLockOut,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Wail 15V Under Voltage Lock Out",
           },
           {
-            name: "Desaturation Fault",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.ErrorFlags.DesaturationFault,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Desaturation Fault",
           },
         ],
         LimitFlags: [
           {
-            name: "Output Voltage Pwm",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.LimitFlags.OutputVoltagePwm,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Output Voltage Pwm",
           },
           {
-            name: "Motor Current",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value: currentPacket?.MotorFaults[0]?.LimitFlags.MotorCurrent,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Motor Current",
           },
           {
-            name: "Velocity",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value: currentPacket?.MotorFaults[0]?.LimitFlags.Velocity,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Velocity",
           },
           {
-            name: "Bus Current",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value: currentPacket?.MotorFaults[0]?.LimitFlags.BusCurrent,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Bus Current",
           },
           {
-            name: "Bus Voltage Upper",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.LimitFlags.BusVoltageUpper,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Bus Voltage Upper",
           },
           {
-            name: "Bus Voltage Lower",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.LimitFlags.BusVoltageLower,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Bus Voltage Lower",
           },
           {
-            name: "Ipm or Motor Temperature",
             data: [
               {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[0]?.LimitFlags
                     .IpmOrMotorTemperature,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            name: "Ipm or Motor Temperature",
           },
         ],
       },
       MotorRight: {
         ErrorFlags: [
           {
-            name: "Motor Over Speed",
             data: [
               {
-                value: currentPacket?.MotorFaults[1]?.ErrorFlags.MotorOverSpeed,
-                severity: ISeverity.WARNING,
                 indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
+                value: currentPacket?.MotorFaults[1]?.ErrorFlags.MotorOverSpeed,
               },
             ],
+            name: "Motor Over Speed",
           },
           {
-            name: "Software Over Current",
             data: [
               {
-                value:
-                  currentPacket?.MotorFaults[1]?.ErrorFlags.SoftwareOverCurrent,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
 
                 severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
+                value:
+                  currentPacket?.MotorFaults[1]?.ErrorFlags.SoftwareOverCurrent,
               },
             ],
+            name: "Software Over Current",
           },
           {
-            name: "Dc Bus Over Voltage",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[1]?.ErrorFlags.DcBusOverVoltage,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Dc Bus Over Voltage",
           },
           {
-            name: "Bad Motor Position Hall Sequence",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorFaults[1]?.ErrorFlags
                     .BadMotorPositionHallSequence,
-                severity: ISeverity.ERROR,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Bad Motor Position Hall Sequence",
           },
           {
-            name: "Watch Dog Caused Last Reset",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorFaults[1]?.ErrorFlags
                     .WatchdogCausedLastReset,
-                severity: ISeverity.ERROR,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Watch Dog Caused Last Reset",
           },
           {
-            name: "Config Read Error",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorFaults[1]?.ErrorFlags.ConfigReadError,
-                severity: ISeverity.ERROR,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Config Read Error",
           },
           {
-            name: "Wail 15V Under Voltage Lock Out",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[1]?.ErrorFlags
                     .Wail15VUnderVoltageLockOut,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Wail 15V Under Voltage Lock Out",
           },
           {
-            name: "Desaturation Fault",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[1]?.ErrorFlags.DesaturationFault,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Desaturation Fault",
           },
         ],
         LimitFlags: [
           {
-            name: "Output Voltage Pwm",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[1]?.LimitFlags.OutputVoltagePwm,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Output Voltage Pwm",
           },
           {
-            name: "Motor Current",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value: currentPacket?.MotorFaults[1]?.LimitFlags.MotorCurrent,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Motor Current",
           },
           {
-            name: "Velocity",
             data: [
               {
-                value: currentPacket?.MotorFaults[1]?.LimitFlags.Velocity,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.ERROR,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
+                value: currentPacket?.MotorFaults[1]?.LimitFlags.Velocity,
               },
             ],
+            name: "Velocity",
           },
           {
-            name: "Bus Current",
             data: [
               {
-                value: currentPacket?.MotorFaults[1]?.LimitFlags.BusCurrent,
+                indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
+                value: currentPacket?.MotorFaults[1]?.LimitFlags.BusCurrent,
               },
             ],
+            name: "Bus Current",
           },
           {
-            name: "Bus Voltage Upper",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[1]?.LimitFlags.BusVoltageUpper,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Bus Voltage Upper",
           },
           {
-            name: "Bus Voltage Lower",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[1]?.LimitFlags.BusVoltageLower,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Bus Voltage Lower",
           },
           {
-            name: "Ipm or Motor Temperature",
             data: [
               {
+                indicationLocation: FaultLocations.RIGHTMOTOR,
+                severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorFaults[1]?.LimitFlags
                     .IpmOrMotorTemperature,
-                severity: ISeverity.WARNING,
-                indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            name: "Ipm or Motor Temperature",
           },
         ],
       },

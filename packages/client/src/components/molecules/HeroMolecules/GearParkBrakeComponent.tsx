@@ -22,8 +22,8 @@ function GearParkBrakeComponent() {
           <div className="row-start-4 row-end-4">
             <ParkingBrakeIcon
               color={brake ? "#B94A6C" : "#000000"}
-              width="30px"
               height="30px"
+              width="30px"
             />
           </div>
         </div>

@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { type SvgProps } from "@/components/atoms/SVGProps";
 
 const LatencyDotsIcon = (props: SvgProps) => {
-  const { color, height, width, latency, isConnected } = props;
+  const { color, height, isConnected, latency, width } = props;
   return (
     <div className="flex flex-col items-center">
       <p
@@ -18,13 +18,13 @@ const LatencyDotsIcon = (props: SvgProps) => {
       <div className="flex size-6 items-center justify-center">
         {isConnected ? (
           <svg
-            fill={color}
-            width={width}
-            height={height}
-            viewBox="0 0 32 32"
             enableBackground="new 0 0 32 32"
+            fill={color}
+            height={height}
             id="Glyph"
             version="1.1"
+            viewBox="0 0 32 32"
+            width={width}
             xmlSpace="preserve"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"

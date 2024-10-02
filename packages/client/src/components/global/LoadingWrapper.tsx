@@ -17,7 +17,6 @@ const LoadingWrapper = ({ children }: PropsWithChildren) => {
   );
 
   useEffect(() => {
-    // console.log("currentAppState.loading", currentAppState);
     let driveInTimeout: NodeJS.Timeout;
     let pendingTimeout: NodeJS.Timeout;
     let readyTimeout: NodeJS.Timeout;

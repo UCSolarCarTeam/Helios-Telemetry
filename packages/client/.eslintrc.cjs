@@ -8,6 +8,8 @@ const config = {
   root: true,
   rules: {
     "prettier/prettier": ["error", prettierConfig],
+    "react/jsx-sort-props": "error",
+    "react/sort-comp": 0,
   },
 };
 
