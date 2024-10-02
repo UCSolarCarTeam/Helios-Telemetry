@@ -11,7 +11,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 function SettingsComponent() {
-  const { setCurrentAppState, currentAppState } = useAppState();
+  const { currentAppState, setCurrentAppState } = useAppState();
   const [open, setOpen] = useState(false);
   const handleDarkChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -51,16 +51,16 @@ function SettingsComponent() {
   return (
     <div className="grid">
       <h2
-        onClick={() => setOpen(true)}
         className="text-text-gray dark:text-text-gray-dark cursor-pointer text-sm font-black"
+        onClick={() => setOpen(true)}
       >
         <SettingsIcon />
       </h2>
       <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        aria-labelledby="modal-modal-title"
+        onClose={() => setOpen(false)}
+        open={open}
       >
         <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col rounded-lg bg-white p-4 shadow-lg">
           <h5 className="text-text-gray dark:text-text-gray-dark mb-4 text-2xl">
@@ -74,16 +74,16 @@ function SettingsComponent() {
 
             <div className="col-span-1">
               <ToggleButtonGroup
-                value={currentAppState.darkMode}
-                exclusive
-                onChange={handleDarkChange}
                 aria-label="Appearance"
                 className="w-full"
+                exclusive
+                onChange={handleDarkChange}
+                value={currentAppState.darkMode}
               >
-                <ToggleButton value={false} className="w-1/2">
+                <ToggleButton className="w-1/2" value={false}>
                   Light
                 </ToggleButton>
-                <ToggleButton value={true} className="w-1/2">
+                <ToggleButton className="w-1/2" value={true}>
                   Dark
                 </ToggleButton>
               </ToggleButtonGroup>
@@ -96,16 +96,16 @@ function SettingsComponent() {
             </div>
             <div className="col-span-1">
               <ToggleButtonGroup
-                value={currentAppState.appUnits}
-                exclusive
-                onChange={handleUnitChange}
                 aria-label="Units"
                 className="w-full"
+                exclusive
+                onChange={handleUnitChange}
+                value={currentAppState.appUnits}
               >
-                <ToggleButton value={APPUNITS.METRIC} className="w-1/2">
+                <ToggleButton className="w-1/2" value={APPUNITS.METRIC}>
                   Metric
                 </ToggleButton>
-                <ToggleButton value={APPUNITS.IMPERIAL} className="w-1/2">
+                <ToggleButton className="w-1/2" value={APPUNITS.IMPERIAL}>
                   Imperial
                 </ToggleButton>
               </ToggleButtonGroup>
@@ -119,11 +119,11 @@ function SettingsComponent() {
             <div>
               <div className="col-span-1">
                 <ToggleButtonGroup
-                  value={currentAppState.connectionType}
-                  exclusive
-                  onChange={handleConnectionChange}
                   aria-label="Connection"
                   className="w-full"
+                  exclusive
+                  onChange={handleConnectionChange}
+                  value={currentAppState.connectionType}
                 >
                   {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
                     (key) => {
@@ -135,8 +135,8 @@ function SettingsComponent() {
 
                       return (
                         <ToggleButton
-                          disabled={disabled}
                           className="flex w-1/3 flex-col text-sm"
+                          disabled={disabled}
                           key={key}
                           value={key}
                         >

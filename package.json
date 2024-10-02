@@ -3,7 +3,7 @@
   "private": true,
   "license": "ISC",
   "scripts": {
-    "prepare": "husky install",
+    "postinstall": "husky install",
     "start": "lerna run start --stream",
     "build": "lerna run build",
     "dev": "lerna run dev --stream",
@@ -17,10 +17,26 @@
     "lintf": "lerna run lintf",
     "test": "lerna run test"
   },
+  "dependencies": {
+    "esbuild": "^0.23.0"
+  },
   "devDependencies": {
+    "@types/eslint": "^9.6.0",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "eslint": "8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-turbo": "latest",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-promise": "^7.1.0",
+    "eslint-plugin-sort-destructure-keys": "^2.0.0",
+    "eslint-plugin-sort-keys": "^2.3.5",
     "husky": "^8.0.3",
     "lerna": "^8.1.6",
     "lint-staged": "^13.2.2",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "typescript": "^5.5.4"
   },
   "workspaces": [
@@ -36,8 +52,5 @@
       "pre-commit": "lint-staged"
     }
   },
-  "packageManager": "yarn@4.5.0",
-  "dependencies": {
-    "esbuild": "^0.23.0"
-  }
+  "packageManager": "yarn@4.5.0"
 }

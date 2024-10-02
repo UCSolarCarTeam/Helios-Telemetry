@@ -1,6 +1,5 @@
-// /** @type {import("prettier").Config} */
+/** @type {import("prettier").Config} */
 const config = {
-  endOfLine: "auto",
   importOrder: [
     "^([^@./].*)$",
     "^@/controllers(.*)$",

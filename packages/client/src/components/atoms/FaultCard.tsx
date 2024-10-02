@@ -13,9 +13,9 @@ type FaultCardProps = {
 };
 
 function FaultCard(props: FaultCardProps) {
-  const { severity, faultName } = props;
+  const { faultName, severity } = props;
   return (
-    <motion.div animate={{ y: 0, opacity: 1 }} initial={{ y: 100, opacity: 0 }}>
+    <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 100 }}>
       <div className="flex p-2">
         <div
           className={`flex size-full items-center justify-start border p-2 ${

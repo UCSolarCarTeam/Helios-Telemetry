@@ -6,13 +6,13 @@ const ParkingBrakeIcon = (props: SvgProps) => {
     <svg
       fill={color}
       height={height}
-      width={width}
-      version="1.1"
       id="Capa_1"
+      version="1.1"
+      viewBox="0 0 234.409 234.409"
+      width={width}
+      xmlSpace="preserve"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      viewBox="0 0 234.409 234.409"
-      xmlSpace="preserve"
     >
       <g>
         <path

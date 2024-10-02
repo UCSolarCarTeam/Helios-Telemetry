@@ -13,15 +13,15 @@ function FaultsComponent() {
             if (!faultObj) return null;
             return (
               <FaultCard
+                faultName={faultObj.name}
                 key={key}
                 severity={faultObj.severity}
-                faultName={faultObj.name}
               />
             );
           })}
         </>
       ) : (
-        <FaultCard severity={ISeverity.CLEAR} faultName={"No Faults"} />
+        <FaultCard faultName={"No Faults"} severity={ISeverity.CLEAR} />
       )}
     </div>
   );
