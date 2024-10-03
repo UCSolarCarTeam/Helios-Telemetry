@@ -14,7 +14,8 @@ import acme from "acme-client";
 const route53 = new Route53Client({});
 const secretsManager = new SecretsManagerClient({});
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 export const handler: EventBridgeHandler = async (event, context) => {
   /**
    * Example of acme.Client.auto()
@@ -22,7 +23,8 @@ export const handler: EventBridgeHandler = async (event, context) => {
 
   // const fs = require('fs').promises;
 
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   function log(m) {
     process.stdout.write(`${m}\n`);
   }
@@ -35,7 +37,8 @@ export const handler: EventBridgeHandler = async (event, context) => {
    * @param {string} keyAuthorization Authorization key
    * @returns {Promise}
    */
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   async function challengeCreateFn(authz, challenge, keyAuthorization) {
     log("Triggered challengeCreateFn()");
 
@@ -45,7 +48,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
       const fileContents = keyAuthorization;
 
       log(
-        `Creating challenge response for ${authz.identifier.value} at path: ${filePath}`
+        `Creating challenge response for ${authz.identifier.value} at path: ${filePath}`,
       );
 
       /* Replace this */
@@ -60,7 +63,6 @@ export const handler: EventBridgeHandler = async (event, context) => {
 
       await route53.send(
         new ChangeResourceRecordSetsCommand({
-          HostedZoneId: "Z00168143RCUWIOU5XRGV",
           ChangeBatch: {
             Changes: [
               {
@@ -78,7 +80,8 @@ export const handler: EventBridgeHandler = async (event, context) => {
               },
             ],
           },
-        })
+          HostedZoneId: "Z00168143RCUWIOU5XRGV",
+        }),
       );
     }
   }
@@ -92,7 +95,8 @@ export const handler: EventBridgeHandler = async (event, context) => {
    * @returns {Promise}
    */
 
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   async function challengeRemoveFn(authz, challenge, keyAuthorization) {
     log("Triggered challengeRemoveFn()");
 
@@ -101,7 +105,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
       const filePath = `/var/www/html/.well-known/acme-challenge/${challenge.token}`;
 
       log(
-        `Removing challenge response for ${authz.identifier.value} at path: ${filePath}`
+        `Removing challenge response for ${authz.identifier.value} at path: ${filePath}`,
       );
 
       /* Replace this */
@@ -116,7 +120,6 @@ export const handler: EventBridgeHandler = async (event, context) => {
 
       await route53.send(
         new ChangeResourceRecordSetsCommand({
-          HostedZoneId: "Z00168143RCUWIOU5XRGV",
           ChangeBatch: {
             Changes: [
               {
@@ -134,30 +137,31 @@ export const handler: EventBridgeHandler = async (event, context) => {
               },
             ],
           },
-        })
+          HostedZoneId: "Z00168143RCUWIOU5XRGV",
+        }),
       );
     }
   }
 
   /* Init client */
   const client = new acme.Client({
-    directoryUrl: acme.directory.letsencrypt.production,
     accountKey: await acme.crypto.createPrivateKey(),
+    directoryUrl: acme.directory.letsencrypt.production,
   });
 
   /* Create CSR */
   const [key, csr] = await acme.crypto.createCsr({
-    altNames: ["aedes.calgarysolarcar.ca"],
+    altNames: [process.env.DNS_RECORD as string],
   });
 
   /* Certificate */
   const cert = await client.auto({
+    challengeCreateFn,
+    challengePriority: ["dns-01", "http-01"],
+    challengeRemoveFn,
     csr,
     email: "software@calgarysolarcar.ca",
     termsOfServiceAgreed: true,
-    challengeCreateFn,
-    challengeRemoveFn,
-    challengePriority: ["dns-01", "http-01"],
   });
 
   /* Done */
@@ -168,21 +172,21 @@ export const handler: EventBridgeHandler = async (event, context) => {
   return await Promise.all([
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackend/PrivateKey",
+        SecretId: process.env.SECRET_CHAIN_NAME,
         SecretString: csr.toString(),
-      })
+      }),
     ),
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackend/Chain",
+        SecretId: process.env.SECRET_PRIVKEY_NAME,
         SecretString: key.toString(),
-      })
+      }),
     ),
     await secretsManager.send(
       new UpdateSecretCommand({
-        SecretId: "HeliosTelemetryBackend/Certificate",
+        SecretId: process.env.SECRET_CERT_NAME,
         SecretString: cert.toString(),
-      })
+      }),
     ),
   ]);
 

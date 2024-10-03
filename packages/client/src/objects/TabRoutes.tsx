@@ -14,10 +14,10 @@ export interface SolarCarRoutes {
 }
 
 export const routes: SolarCarRoutes[] = [
-  { path: "/battery", id: "Battery", element: <BatteryTab />, value: "1" },
-  { path: "/faults", id: "Faults", element: <FaultsTab />, value: "2" },
-  { path: "/motor", id: "Motor", element: <MotorTab />, value: "3" },
-  { path: "/mppt", id: "MPPT", element: <MpptTab />, value: "4" },
-  { path: "/playback", id: "Playback", element: <PlaybackTab />, value: "5" },
-  { path: "/race", id: "Race", element: <RaceTab />, value: "6" },
+  { element: <BatteryTab />, id: "Battery", path: "/battery", value: "1" },
+  { element: <FaultsTab />, id: "Faults", path: "/faults", value: "2" },
+  { element: <MotorTab />, id: "Motor", path: "/motor", value: "3" },
+  { element: <MpptTab />, id: "MPPT", path: "/mppt", value: "4" },
+  { element: <PlaybackTab />, id: "Playback", path: "/playback", value: "5" },
+  { element: <RaceTab />, id: "Race", path: "/race", value: "6" },
 ];

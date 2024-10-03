@@ -1,13 +1,14 @@
 name: add reviewers
 on:
   pull_request:
-    types: [opened, ready_for_review]
+    types: [opened, ready_for_review, reopened]
 jobs:
-  setAssignee:
-    # if: ${{ github.actor != 'dependabot[bot]' }}
+  auto-request-review:
+    name: Auto Request Review
     runs-on: ubuntu-latest
     steps:
-      - uses: hkusu/review-assign-action@v1.3.1
+      - name: Request review based on files changes and/or groups the author belongs to
+        uses: necojackarc/auto-request-review@v0.13.0
         with:
-          assignees: ${{ github.actor }}
-          reviewers: ideen1, IshaHaider, brian-ngyn, haley-lynn, jjason-nn, JenniferJa, justin-phxm, CalebBourb, alexwhelan12, maaryaahmed
+          token: ${{ secrets.PAT_REPO_ACCESS }}
+          config: .github/reviewers.yml

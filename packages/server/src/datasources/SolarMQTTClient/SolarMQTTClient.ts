@@ -23,6 +23,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     this.client = connect(options.url);
     this.backendController = backendController;
     this.initializeListeners();
+    this.pingLastSent = Date.now();
   }
   public pingTimer(miliseconds: number) {
     const myMessage = "t";

@@ -22,23 +22,23 @@ function StatusComponent() {
     <div className="grid">
       <div>
         <div className="flex flex-row items-end justify-start pb-1 pt-2">
-          <UserComputerIcon color={colorTheme} width="25px" height="25px" />
+          <UserComputerIcon color={colorTheme} height="25px" width="25px" />
           <LatencyDotsIcon
             color={colorTheme}
-            width="15px"
             height="20px"
-            latency={currentAppState.userLatency}
             isConnected={userConnection}
+            latency={currentAppState.userLatency}
+            width="15px"
           />
-          <AWSIcon color={colorTheme} width="25px" height="25px" />
+          <AWSIcon color={colorTheme} height="25px" width="25px" />
           <LatencyDotsIcon
             color={colorTheme}
-            width="15px"
             height="20px"
-            latency={currentAppState.carLatency}
             isConnected={carConnection}
+            latency={currentAppState.carLatency}
+            width="15px"
           />
-          <CarIcon color={colorTheme} width="25px" height="25px" />
+          <CarIcon color={colorTheme} height="25px" width="25px" />
         </div>
         <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs">
           Timestamp:

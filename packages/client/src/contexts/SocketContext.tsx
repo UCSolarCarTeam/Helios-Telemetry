@@ -57,11 +57,11 @@ export function SocketContextProvider({
   const onLapCoords = useCallback(
     (coords: Coords | { error: string }) => {
       if ("error" in coords) {
-        console.error(coords.error);
+        // console.error(coords.error);
         return;
       }
       // TODO: Add coords to lapCoords
-      console.log(coords);
+      // console.log(coords);
       setCurrentAppState((prev) => ({ ...prev, lapCoords: coords }));
     },
     [setCurrentAppState],

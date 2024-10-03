@@ -4,11 +4,12 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as route53 from "aws-cdk-lib/aws-route53";
-import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as eventbridge from "aws-cdk-lib/aws-events";
 import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
+import * as url from "node:url";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -18,23 +19,23 @@ const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
 const TelemetryBackendSecretsManagerPrivKey = new secretsmanager.Secret(
   TelemetryBackendStack,
-  "HeliosTelemetryBackend/PrivateKey",
-  { secretName: "HeliosTelemetryBackend/PrivateKey" }
+  "HeliosTelemetryBackendSSL/PrivateKey",
+  { secretName: "HeliosTelemetryBackendSSL/PrivateKey" },
 );
 const TelemetryBackendSecretsManagerChain = new secretsmanager.Secret(
   TelemetryBackendStack,
-  "HeliosTelemetryBackend/Chain",
-  { secretName: "HeliosTelemetryBackend/Chain" }
+  "HeliosTelemetryBackendSSL/Chain",
+  { secretName: "HeliosTelemetryBackendSSL/Chain" },
 );
 const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   TelemetryBackendStack,
-  "HeliosTelemetryBackend/Certificate",
-  { secretName: "HeliosTelemetryBackend/Certificate" }
+  "HeliosTelemetryBackendSSL/Certificate",
+  { secretName: "HeliosTelemetryBackendSSL/Certificate" },
 );
 
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
-  "TelemetryBackendImageRepository"
+  "TelemetryBackendImageRepository",
 );
 
 const TelemetryBackendCodeBuildProject = new codebuild.Project(
@@ -43,38 +44,17 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
   {
     // buildSpec: codebuild.BuildSpec.fromObjectToYaml({}),
     buildSpec: codebuild.BuildSpec.fromSourceFilename(
-      "packages/amplify/amplify/buildspec.yml"
+      "packages/amplify/amplify/buildspec.yml",
     ),
-    source: codebuild.Source.gitHub({
-      owner: "UCSolarCarTeam",
-      repo: "Helios-Telemetry",
-      branchOrRef: "main",
-      webhook: true,
-      webhookFilters: [
-        codebuild.FilterGroup.inEventOf(
-          codebuild.EventAction.PULL_REQUEST_MERGED,
-          codebuild.EventAction.PUSH
-        )
-          .andBranchIs("main")
-          .andFilePathIs("packages/server/*"),
-      ],
-    }),
-    role: new iam.Role(TelemetryBackendStack, "TelemetryBackendCodeBuildRole", {
-      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
-      ],
-    }),
     environment: {
       buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
-      privileged: true,
       computeType: codebuild.ComputeType.MEDIUM,
       environmentVariables: {
-        AWS_DEFAULT_REGION: {
-          value: cdk.Stack.of(TelemetryBackendStack).region,
-        },
         AWS_ACCOUNT_ID: {
           value: cdk.Stack.of(TelemetryBackendStack).account,
+        },
+        AWS_DEFAULT_REGION: {
+          value: cdk.Stack.of(TelemetryBackendStack).region,
         },
         IMAGE_REPO_NAME: {
           value: TelemetryBackendImageRepository.repositoryName,
@@ -86,8 +66,29 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
           value: "latest",
         },
       },
+      privileged: true,
     },
-  }
+    role: new iam.Role(TelemetryBackendStack, "TelemetryBackendCodeBuildRole", {
+      assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
+      ],
+    }),
+    source: codebuild.Source.gitHub({
+      branchOrRef: "main",
+      owner: "UCSolarCarTeam",
+      repo: "Helios-Telemetry",
+      webhook: true,
+      webhookFilters: [
+        codebuild.FilterGroup.inEventOf(
+          codebuild.EventAction.PULL_REQUEST_MERGED,
+          codebuild.EventAction.PUSH,
+        )
+          .andBranchIs("main")
+          .andFilePathIs("packages/server/*"),
+      ],
+    }),
+  },
 );
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
@@ -95,10 +96,16 @@ TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
-  {}
+  {},
 );
 
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
+  environment: {
+    CERTIFICATE:
+      TelemetryBackendSecretsManagerCertificate.secretValue.toString(),
+    CHAIN: TelemetryBackendSecretsManagerChain.secretValue.toString(),
+    PRIVATE_KEY: TelemetryBackendSecretsManagerPrivKey.secretValue.toString(),
+  },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   memoryLimitMiB: 900,
   portMappings: [
@@ -118,23 +125,17 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       protocol: ecs.Protocol.TCP,
     },
   ],
-  environment: {
-    PRIVATE_KEY: TelemetryBackendSecretsManagerPrivKey.secretValue.toString(),
-    CHAIN: TelemetryBackendSecretsManagerChain.secretValue.toString(),
-    CERTIFICATE:
-      TelemetryBackendSecretsManagerCertificate.secretValue.toString(),
-  },
 });
 
 // Allow ECS Task to read the Secrets Manager Store
 TelemetryBackendSecretsManagerPrivKey.grantRead(
-  TelemetryECSTaskDefintion.taskRole
+  TelemetryECSTaskDefintion.taskRole,
 );
 TelemetryBackendSecretsManagerChain.grantRead(
-  TelemetryECSTaskDefintion.taskRole
+  TelemetryECSTaskDefintion.taskRole,
 );
 TelemetryBackendSecretsManagerCertificate.grantRead(
-  TelemetryECSTaskDefintion.taskRole
+  TelemetryECSTaskDefintion.taskRole,
 );
 
 const TelemetryBackendVPC = new ec2.Vpc(
@@ -143,39 +144,42 @@ const TelemetryBackendVPC = new ec2.Vpc(
   {
     maxAzs: 1,
     natGateways: 0,
-  }
+  },
 );
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,
   "TelemetryBackendSecurityGroup",
-  TelemetryBackendVPC.vpcDefaultSecurityGroup
+  TelemetryBackendVPC.vpcDefaultSecurityGroup,
 );
 
 TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(3001),
   "Backend - Allow inbound traffic on port 3001",
-  true
+  true,
 );
 TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(80),
   "Certbot - Allow inbound traffic on port 80",
-  true
+  true,
 );
 TelemetryBackendVPCSecurityGroup.addIngressRule(
   ec2.Peer.anyIpv4(),
   ec2.Port.tcp(1883),
   "Aedes - Allow inbound traffic on port 1883",
-  true
+  true,
 );
 
 const TelemetryECSCluster = new ecs.Cluster(
   TelemetryBackendStack,
   "TelemetryBackendCluster",
   {
-    vpc: TelemetryBackendVPC,
     capacity: {
+      allowAllOutbound: true,
+
+      associatePublicIpAddress: true,
+      desiredCapacity: 1,
       /**
        * ******EXTREME CAUTION:*******
        *
@@ -184,19 +188,16 @@ const TelemetryECSCluster = new ecs.Cluster(
        */
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.T2,
-        ec2.InstanceSize.MICRO
+        ec2.InstanceSize.MICRO,
       ),
-
-      desiredCapacity: 1,
       maxCapacity: 1,
       minCapacity: 1,
-      allowAllOutbound: true,
-      associatePublicIpAddress: true,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC,
       },
     },
-  }
+    vpc: TelemetryBackendVPC,
+  },
 );
 
 const TelemetryECSService = new ecs.Ec2Service(
@@ -204,24 +205,24 @@ const TelemetryECSService = new ecs.Ec2Service(
   "TelemetryECSService",
   {
     cluster: TelemetryECSCluster,
-    taskDefinition: TelemetryECSTaskDefintion,
     desiredCount: 1,
     maxHealthyPercent: 100,
     minHealthyPercent: 0,
-  }
+    taskDefinition: TelemetryECSTaskDefintion,
+  },
 );
 
 TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   ec2.Port.tcp(3001),
-  "Backend - Allow inbound traffic on port 3001"
+  "Backend - Allow inbound traffic on port 3001",
 );
 TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   ec2.Port.tcp(80),
-  "Certbot - Allow inbound traffic on port 80"
+  "Certbot - Allow inbound traffic on port 80",
 );
 TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   ec2.Port.tcp(1883),
-  "Aedes - Allow inbound traffic on port 1883"
+  "Aedes - Allow inbound traffic on port 1883",
 );
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
@@ -229,35 +230,38 @@ const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
   TelemetryBackendStack,
   "TelemetryBackendHostedZone",
   {
-    zoneName: "calgarysolarcar.ca",
     hostedZoneId: "Z00168143RCUWIOU5XRGV",
-  }
+    zoneName: "calgarysolarcar.ca",
+  },
 );
 
 // Renew Certificate Lambda
-const TelemetryBackendRenewCertificateLambda = new lambda.Function(
+const TelemetryBackendRenewCertificateLambda = new lambda.NodejsFunction(
   TelemetryBackendStack,
   "RenewCertificateLambda",
   {
-    runtime: lambda.Runtime.NODEJS_20_X,
-    handler: "handler.handler",
-    code: lambda.Code.fromAsset("amplify/functions/RenewCertificate/"),
+    entry: url.fileURLToPath(
+      new URL("./functions/RenewCertificate/handler.ts", import.meta.url),
+    ),
     environment: {
-      HOSTED_ZONE_ID: SolarCarHostedZone.hostedZoneId,
       DNS_RECORD: "aedes.calgarysolarcar.ca",
+      HOSTED_ZONE_ID: SolarCarHostedZone.hostedZoneId,
+      SECRET_CERT_NAME: TelemetryBackendSecretsManagerCertificate.secretName,
+      SECRET_CHAIN_NAME: TelemetryBackendSecretsManagerChain.secretName,
+      SECRET_PRIVKEY_NAME: TelemetryBackendSecretsManagerPrivKey.secretName,
     },
-  }
+  },
 );
 
 // Events
 const TelemetryBackendTriggerCertRenewLambda = new eventbridge.Rule(
   TelemetryBackendStack,
   "BatchTestCheckEventRule",
-  { schedule: eventbridge.Schedule.cron({ day: "1", hour: "8" }) }
+  { schedule: eventbridge.Schedule.cron({ day: "1", hour: "9" }) },
 );
 
 TelemetryBackendTriggerCertRenewLambda.addTarget(
-  new eventbridgetargets.LambdaFunction(TelemetryBackendRenewCertificateLambda)
+  new eventbridgetargets.LambdaFunction(TelemetryBackendRenewCertificateLambda),
 );
 
 // Allow Cert update lambda to update the hosted zone for SSL certificate renewal verification
@@ -265,13 +269,13 @@ SolarCarHostedZone.grantDelegation(TelemetryBackendRenewCertificateLambda);
 
 // Allow Cert Update Lambda to write to the Secrets Manager Store
 TelemetryBackendSecretsManagerPrivKey.grantWrite(
-  TelemetryBackendRenewCertificateLambda
+  TelemetryBackendRenewCertificateLambda,
 );
 TelemetryBackendSecretsManagerChain.grantWrite(
-  TelemetryBackendRenewCertificateLambda
+  TelemetryBackendRenewCertificateLambda,
 );
 TelemetryBackendSecretsManagerCertificate.grantWrite(
-  TelemetryBackendRenewCertificateLambda
+  TelemetryBackendRenewCertificateLambda,
 );
 
 // Allow Cert Update Lambda to Restart the ECS Service

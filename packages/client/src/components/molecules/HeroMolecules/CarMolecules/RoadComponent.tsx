@@ -69,9 +69,9 @@ function RoadStripComponent(props: roadStripComponentProps) {
 
   return (
     <mesh
-      ref={mesh}
       geometry={geometry}
       position={props.position}
+      ref={mesh}
       rotation={[Math.PI / 2, 0, 0]}
     >
       <meshBasicMaterial color="white" side={THREE.DoubleSide} />
@@ -87,14 +87,13 @@ function RoadStripGroup(props: roadComponentProps) {
     roadStrips.push(back + i * 5);
   }
 
-  console.log(roadStrips);
   return (
     <>
       {roadStrips.map((z, i) => (
         <RoadStripComponent
+          direction={props.direction}
           key={i}
           position={[-5.5, -0.1, z]}
-          direction={props.direction}
           size={props.size}
           speed={props.speed}
         />

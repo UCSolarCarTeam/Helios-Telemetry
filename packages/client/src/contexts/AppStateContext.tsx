@@ -49,17 +49,17 @@ const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
-    displayLoading: true,
-    loading: true,
-    error: false,
-    darkMode: false,
     appUnits: APPUNITS.METRIC,
-    connectionType: CONNECTIONTYPES.NETWORK,
-    socketConnected: false,
-    radioConnected: false,
-    userLatency: 0,
     carLatency: 0,
+    connectionType: CONNECTIONTYPES.NETWORK,
+    darkMode: false,
+    displayLoading: true,
+    error: false,
     lapCoords: { lat: 38.9377572, long: -95.677937 },
+    loading: true,
+    radioConnected: false,
+    socketConnected: false,
+    userLatency: 0,
   });
 
   // Connection State Manager
@@ -68,15 +68,15 @@ export function AppStateContextProvider({ children }: Props) {
       if (currentAppState.socketConnected) {
         setCurrentAppState((prev) => ({
           ...prev,
-          loading: false,
           connectionType: CONNECTIONTYPES.NETWORK,
+          loading: false,
         }));
       }
       if (currentAppState.radioConnected) {
         setCurrentAppState((prev) => ({
           ...prev,
-          loading: false,
           connectionType: CONNECTIONTYPES.RADIO,
+          loading: false,
         }));
       }
     }
@@ -99,8 +99,8 @@ export function AppStateContextProvider({ children }: Props) {
     setTimeout(() => {
       setCurrentAppState((prev) => ({
         ...prev,
-        loading: false,
         connectionType: CONNECTIONTYPES.DEMO,
+        loading: false,
       }));
     }, 5000);
   }, []);
@@ -111,9 +111,9 @@ export function AppStateContextProvider({ children }: Props) {
       const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
       setCurrentAppState((prev) => ({
         ...prev,
-        darkMode: parsedSettings.darkMode,
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
+        darkMode: parsedSettings.darkMode,
       }));
     }
   }, []);

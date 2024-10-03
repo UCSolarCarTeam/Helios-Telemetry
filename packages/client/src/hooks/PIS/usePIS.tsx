@@ -7,9 +7,9 @@ import type I_PIS from "@/objects/PIS/PIS.interface";
 const usePIS = (): I_PIS => {
   return {
     battery: Battery(),
+    faults: Faults(),
     motor: Motor(),
     mppt: MPPT(),
-    faults: Faults(),
   };
 };
 

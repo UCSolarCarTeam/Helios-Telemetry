@@ -69,9 +69,9 @@ export class LapController implements LapControllerType {
       throw new Error("Invalid DMS format");
     }
 
-    const degrees = parseFloat(match[1]);
-    const minutes = parseFloat(match[2]);
-    const seconds = parseFloat(match[3]);
+    const degrees = parseFloat(match[1] ?? "0");
+    const minutes = parseFloat(match[2] ?? "0");
+    const seconds = parseFloat(match[3] ?? "0");
     const direction = match[5];
 
     let decimal = degrees + minutes / 60 + seconds / 3600;
@@ -92,8 +92,8 @@ export class LapController implements LapControllerType {
       throw new Error("Invalid DMM format");
     }
 
-    const degrees = parseFloat(match[1]);
-    const minutes = parseFloat(match[2]);
+    const degrees = parseFloat(match[1] ?? "0");
+    const minutes = parseFloat(match[2] ?? "0");
     const direction = match[3];
 
     let decimal = degrees + minutes / 60;
@@ -137,7 +137,7 @@ export class LapController implements LapControllerType {
 
       // update last lap packet
       const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
-        .Battery.PackAmphours as number;
+        ?.Battery.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
         this.lastLapPackets,
       );
@@ -196,8 +196,8 @@ export class LapController implements LapControllerType {
       return 0;
     }
     return (
-      lastLapPackets[lastLapPackets.length - 1].TimeStamp -
-      lastLapPackets[0].TimeStamp
+      (lastLapPackets[lastLapPackets.length - 1]?.TimeStamp as number) -
+      (lastLapPackets[0]?.TimeStamp as number)
     );
   }
 
@@ -263,20 +263,20 @@ export class LapController implements LapControllerType {
       // Check if the motor had reset, keep a tally of the distance travelled
       if (
         this.checkIfMotorReset(
-          packetArray[i].MotorDetails[odometerIndex].Odometer,
+          packetArray[i]?.MotorDetails[odometerIndex]?.Odometer as number,
           motorDistanceTraveledSession,
         )
       ) {
         totalDistanceTraveled += motorDistanceTraveledSession;
       }
 
-      motorDistanceTraveledSession =
-        packetArray[i].MotorDetails[odometerIndex].Odometer;
+      motorDistanceTraveledSession = packetArray[i]?.MotorDetails[odometerIndex]
+        ?.Odometer as number;
     }
     totalDistanceTraveled += motorDistanceTraveledSession;
     // Remove the initial distance
-    totalDistanceTraveled -=
-      packetArray[0].MotorDetails[odometerIndex].Odometer;
+    totalDistanceTraveled -= packetArray[0]?.MotorDetails[odometerIndex]
+      ?.Odometer as number;
     // Convert to kilometers (odometer reports as meters)
     totalDistanceTraveled /= 1000;
 
@@ -318,7 +318,8 @@ export class LapController implements LapControllerType {
           // arrayPower += packet['mppt' + mppt + 'arrayvoltage'] *
           //               packet['mppt' + mppt + 'arraycurrent'];
           arrayPower +=
-            packet.MPPT[mppt].ArrayVoltage * packet.MPPT[mppt].ArrayCurrent;
+            (packet.MPPT[mppt]?.ArrayVoltage as number) *
+            (packet.MPPT[mppt]?.ArrayCurrent as number);
         }
         return arrayPower;
       })
@@ -331,15 +332,15 @@ export class LapController implements LapControllerType {
         for (let motor = 0; motor < motorCount; motor++) {
           // let busCurrent = packet['motor' + motor + 'buscurrent'];
           // let busVoltage = packet['motor' + motor + 'busvoltage'];
-          const busCurrent = packet.KeyMotor[motor].BusCurrent;
-          const busVoltage = packet.KeyMotor[motor].BusVoltage;
+          const busCurrent = packet.KeyMotor[motor]?.BusCurrent;
+          const busVoltage = packet.KeyMotor[motor]?.BusVoltage;
 
           // Filter out any values with busCurrent >= 0
-          if (busCurrent >= 0) {
+          if (busCurrent && busCurrent >= 0) {
             continue;
           }
 
-          regen += busCurrent * busVoltage;
+          regen += (busCurrent as number) * (busVoltage as number);
         }
         return regen;
       })
