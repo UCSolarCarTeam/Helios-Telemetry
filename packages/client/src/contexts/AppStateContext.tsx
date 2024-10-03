@@ -114,6 +114,7 @@ export function AppStateContextProvider({ children }: Props) {
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
         darkMode: parsedSettings.darkMode,
+        lapCoords: parsedSettings.lapCoords,
       }));
     }
   }, []);

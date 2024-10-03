@@ -11,7 +11,10 @@ function MapContainer(): JSX.Element {
     carLocation: Coords;
     lapLocation: Coords;
   }>({
-    carLocation: { lat: 38.9377572, long: -95.6777937 },
+    carLocation: {
+      lat: currentAppState.lapCoords.lat,
+      long: currentAppState.lapCoords.long,
+    },
     lapLocation: {
       lat: currentAppState.lapCoords.lat,
       long: currentAppState.lapCoords.long,
@@ -30,6 +33,16 @@ function MapContainer(): JSX.Element {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    setMapInputs((prevMapInputs) => ({
+      ...prevMapInputs,
+      lapLocation: {
+        lat: currentAppState.lapCoords.lat,
+        long: currentAppState.lapCoords.long,
+      },
+    }));
+  }, [currentAppState.lapCoords]);
 
   return (
     <div className="size-full">
