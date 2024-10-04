@@ -10,7 +10,7 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import type {
   CoordInfoUpdate,
-  Coords,
+  CoordUpdateResponse,
   ITelemetryData,
 } from "@shared/helios-types";
 
@@ -32,6 +32,8 @@ export class SocketIO implements SocketIOType {
     this.io.on("connection", (socket: Socket) => {
       logger.info("Client connected");
       this.initializeSocketListeners(socket);
+      const lapCoords = this.backendController.lapController.finishLineLocation;
+      this.broadcastLapCoords(lapCoords);
     });
   }
 
@@ -41,7 +43,7 @@ export class SocketIO implements SocketIOType {
   public broadcastCarLatency(latency: number) {
     this.io.emit("carLatency", latency);
   }
-  public broadcastLapCoords(response: Coords | { error: string }) {
+  public broadcastLapCoords(response: CoordUpdateResponse) {
     this.io.emit("lapCoords", response);
   }
   public initializeSocketListeners(socket: Socket) {

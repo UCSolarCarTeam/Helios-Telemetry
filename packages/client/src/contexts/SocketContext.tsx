@@ -11,6 +11,7 @@ import { type Socket, io } from "socket.io-client";
 import { useAppState } from "@/contexts/AppStateContext";
 import type {
   CoordInfoUpdate,
+  CoordUpdateResponse,
   Coords,
   ITelemetryData,
 } from "@shared/helios-types";
@@ -22,7 +23,7 @@ interface ClientToServerEvents {
 
 interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
-  lapCoords: (coords: Coords | { error: string }) => void;
+  lapCoords: (coords: CoordUpdateResponse) => void;
   carLatency: (value: number) => void;
 }
 
@@ -55,14 +56,11 @@ export function SocketContextProvider({
   );
 
   const onLapCoords = useCallback(
-    (coords: Coords | { error: string }) => {
+    (coords: CoordUpdateResponse) => {
       if ("error" in coords) {
-        // console.error(coords.error);
         return;
       }
-      // TODO: Add coords to lapCoords
-      // console.log(coords);
-      setCurrentAppState((prev) => ({ ...prev, lapCoords: coords }));
+      setCurrentAppState((prev) => ({ ...prev, lapCoords: coords as Coords }));
     },
     [setCurrentAppState],
   );
@@ -88,6 +86,7 @@ export function SocketContextProvider({
       socketIO.disconnect();
       clearInterval(id);
       socketIO.off("carLatency", onCarLatency);
+      socketIO.off("lapCoords", onLapCoords);
     };
   }, [onCarLatency, onLapCoords, setCurrentAppState]);
 

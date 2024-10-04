@@ -1,3 +1,10 @@
+export type CoordUpdateResponse =
+  | Coords
+  | {
+      error?: string;
+      invalidFields?: Array<keyof CoordInfoUpdate>;
+    };
+
 export interface Coords {
   lat: number;
   long: number;
@@ -48,7 +55,7 @@ export class LapData {
     amphours: number,
     averagePackCurrent: number,
     batterySecondsRemaining: number,
-    averageSpeed: number
+    averageSpeed: number,
   ) {
     this.timestamp = timestamp;
     this.lapTime = lapTime;

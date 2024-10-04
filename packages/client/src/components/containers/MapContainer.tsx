@@ -9,13 +9,8 @@ function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
   const [mapInputs, setMapInputs] = useState<{
     carLocation: Coords;
-    lapLocation: Coords;
   }>({
     carLocation: {
-      lat: currentAppState.lapCoords.lat,
-      long: currentAppState.lapCoords.long,
-    },
-    lapLocation: {
       lat: currentAppState.lapCoords.lat,
       long: currentAppState.lapCoords.long,
     },
@@ -34,22 +29,12 @@ function MapContainer(): JSX.Element {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    setMapInputs((prevMapInputs) => ({
-      ...prevMapInputs,
-      lapLocation: {
-        lat: currentAppState.lapCoords.lat,
-        long: currentAppState.lapCoords.long,
-      },
-    }));
-  }, [currentAppState.lapCoords]);
-
   return (
     <div className="size-full">
       <div className="grid h-[90%]">
         <Map
           carLocation={mapInputs.carLocation}
-          lapLocation={mapInputs.lapLocation}
+          lapLocation={currentAppState.lapCoords}
           mapLocation={mapInputs.carLocation}
         />
       </div>

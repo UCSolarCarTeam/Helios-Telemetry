@@ -11,15 +11,33 @@ import { Button, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { CoordInfoUpdate } from "@shared/helios-types";
 
+const coordsFieldText: CoordInfoUpdate = {
+  lat: "Latitude",
+  long: "Longitude",
+  password: "Password",
+};
 function SettingsComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState({
-    lat: "",
-    long: "",
+  const [coords, setCoords] = useState<CoordInfoUpdate>({
+    lat: currentAppState.lapCoords.lat.toString(),
+    long: currentAppState.lapCoords.long.toString(),
     password: "",
   });
+  const [errors, setErrors] = useState<Set<keyof CoordInfoUpdate>>(new Set());
+  socketIO.on("lapCoords", (coords) => {
+    if ("invalidFields" in coords && coords.invalidFields) {
+      const errorSet: Set<keyof CoordInfoUpdate> = new Set(
+        coords.invalidFields,
+      );
+      setErrors(errorSet);
+    } else {
+      setErrors(new Set());
+    }
+  });
+
   const handleCoordsSubmit = useCallback(() => {
     const newCoordInfo = {
       lat: coords.lat,
@@ -33,7 +51,7 @@ function SettingsComponent() {
       const { name, value } = event.target;
       setCoords((prev) => ({
         ...prev,
-        [name]: value,
+        [name]: value ? value : prev[name as keyof CoordInfoUpdate],
       }));
     },
     [],
@@ -216,27 +234,27 @@ function SettingsComponent() {
             <div className="col-span-1">
               <label className="mr-2">Update Flag Coordinates:</label>
             </div>
-            <div className="col-span-1">
-              <TextField
-                label="Latitude"
-                name="lat"
-                onChange={handleCoordsChange}
-                variant="filled"
-              />
-              <TextField
-                label="Longitude"
-                name="long"
-                onChange={handleCoordsChange}
-                variant="filled"
-              />
-              <TextField
-                label="Password"
-                name="password"
-                onChange={handleCoordsChange}
-                variant="filled"
-              />
-              <Button onClick={handleCoordsSubmit}>Submit</Button>
-            </div>
+            <form
+              className="col-span-1 flex flex-col"
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
+              {Object.keys(coordsFieldText).map((key) => (
+                <TextField
+                  error={errors.has(key as keyof CoordInfoUpdate)}
+                  key={key}
+                  label={coordsFieldText[key as keyof CoordInfoUpdate]}
+                  name={key}
+                  onChange={handleCoordsChange}
+                  type={key === "password" ? "password" : undefined}
+                  variant="filled"
+                />
+              ))}
+              <Button onClick={handleCoordsSubmit} type="submit">
+                Submit
+              </Button>
+            </form>
           </div>
         </div>
       </Modal>

@@ -6,6 +6,7 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import type {
   CoordInfoUpdate,
+  CoordUpdateResponse,
   Coords,
   ILapData,
   ITelemetryData,
@@ -28,13 +29,12 @@ export class LapController implements LapControllerType {
 
   public setFinishLineLocation(
     newCoordInfo: CoordInfoUpdate,
-  ): Coords | { error: string } {
+  ): CoordUpdateResponse {
     logger.info(JSON.stringify(newCoordInfo));
     const { lat, long, password } = newCoordInfo;
     if (password !== process.env.LAP_POSITION_PASSWORD) {
-      logger.error("Invalid Password");
-      logger.info("Password: ", password);
-      return { error: "Invalid Password" };
+      logger.error("Invalid Password: " + password);
+      return { error: "Invalid Password", invalidFields: ["password"] };
     }
     try {
       const newFinishLinelocation = LapController.convertToDecimalDegrees(
@@ -45,11 +45,33 @@ export class LapController implements LapControllerType {
       logger.info("Finish Line Location Set: ", this.finishLineLocation);
       return this.finishLineLocation;
     } catch (e) {
-      logger.error("Invalid Coordinates: " + (e as Error).message);
-      return { error: "Invalid Coordinates: " + (e as Error).message };
+      logger.error(
+        "Error: " + (e as Error).message + " must be in DD, DMM, or DMS format",
+      );
+      return {
+        error:
+          "Invalid Coordinates: " +
+          (e as Error).message +
+          " must be in DD, DMM, or DMS format",
+        invalidFields: [(e as Error).message as keyof CoordInfoUpdate],
+      };
     }
   }
+  private static isDDLong(long: string) {
+    const longitude = parseFloat(long);
+    if (longitude > 180 || longitude < -180) {
+      return false;
+    }
 
+    return longitude;
+  }
+  private static isDDLat(lat: string) {
+    const latitude = parseFloat(lat);
+    if (latitude > 90 || latitude < -90) {
+      return false;
+    }
+    return latitude;
+  }
   // Helper private to detect if input is in DMS (Degrees, Minutes, Seconds)
   private static isDMS(input: string): boolean {
     return /°|'|"/.test(input);
@@ -111,20 +133,23 @@ export class LapController implements LapControllerType {
     lat = lat.trim();
     long = long.trim();
 
-    if (LapController.isDMS(lat)) {
-      latitude = LapController.dmsToDecimal(lat);
-    } else if (LapController.isDMM(lat)) {
-      latitude = LapController.dmmToDecimal(lat);
-    } else {
-      throw new Error("Invalid Coordinates: Lat must be in DMM or DMS format");
-    }
-
-    if (LapController.isDMS(long)) {
+    if (LapController.isDDLong(long)) {
+      longitude = parseFloat(long);
+    } else if (LapController.isDMS(long)) {
       longitude = LapController.dmsToDecimal(long);
     } else if (LapController.isDMM(long)) {
       longitude = LapController.dmmToDecimal(long);
     } else {
-      throw new Error("Invalid Coordinates: Long must be in DMM or DMS format");
+      throw new Error("long");
+    }
+    if (LapController.isDDLat(lat)) {
+      latitude = parseFloat(lat);
+    } else if (LapController.isDMS(lat)) {
+      latitude = LapController.dmsToDecimal(lat);
+    } else if (LapController.isDMM(lat)) {
+      latitude = LapController.dmmToDecimal(lat);
+    } else {
+      throw new Error("lat");
     }
 
     return { lat: latitude, long: longitude };
