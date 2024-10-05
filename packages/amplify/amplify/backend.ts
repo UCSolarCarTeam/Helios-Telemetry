@@ -119,11 +119,14 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       protocol: ecs.Protocol.TCP,
     },
   ],
-  environment: {
-    CERTIFICATE:
-      TelemetryBackendSecretsManagerCertificate.secretValue.toString(),
-    CHAIN: TelemetryBackendSecretsManagerChain.secretValue.toString(),
-    PRIVATE_KEY: TelemetryBackendSecretsManagerPrivKey.secretValue.toString(),
+  secrets: {
+    CERTIFICATE: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerCertificate,
+    ),
+    CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
+    PRIVATE_KEY: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerPrivKey,
+    ),
   },
 });
 
