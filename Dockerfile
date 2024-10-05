@@ -10,15 +10,6 @@ WORKDIR /opt/helios-backend/src
 ENV NODE_VERSION node@20.11.1
 ENV NPM_VERSION npm@10.2.4
 
-# Install certbot tools
-RUN microdnf install yum -y
-# RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-# RUN yum install epel-release
-RUN dnf install -y python3.8 augeas-libs
-RUN python3.8 -m venv /opt/certbot/
-RUN /opt/certbot/bin/pip install --upgrade pip
-RUN /opt/certbot/bin/pip install certbot
-RUN ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
 # Add custom user id
 RUN microdnf install util-linux
