@@ -2,21 +2,161 @@ import { type BackendController } from "@/controllers/BackendController/BackendC
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
 import { getDistance } from "@/utils/lapCalculations";
+import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import type { ILapData, ITelemetryData } from "@shared/helios-types";
+import type {
+  CoordInfoUpdate,
+  CoordUpdateResponse,
+  Coords,
+  ILapData,
+  ITelemetryData,
+} from "@shared/helios-types";
 
+const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
+  public finishLineLocation: Coords = {
+    lat: 51,
+    long: 101,
+  };
   backendController: BackendController;
 
   constructor(backendController: BackendController) {
     this.backendController = backendController;
   }
 
+  public setFinishLineLocation(
+    newCoordInfo: CoordInfoUpdate,
+  ): CoordUpdateResponse {
+    logger.info(JSON.stringify(newCoordInfo));
+    const { lat, long, password } = newCoordInfo;
+    if (password !== process.env.LAP_POSITION_PASSWORD) {
+      logger.error("Invalid Password: " + password);
+      return { error: "Invalid Password", invalidFields: ["password"] };
+    }
+    try {
+      const newFinishLinelocation = LapController.convertToDecimalDegrees(
+        lat,
+        long,
+      );
+      this.finishLineLocation = newFinishLinelocation;
+      logger.info("Finish Line Location Set: ", this.finishLineLocation);
+      return this.finishLineLocation;
+    } catch (e) {
+      logger.error(
+        "Error: " + (e as Error).message + " must be in DD, DMM, or DMS format",
+      );
+      return {
+        error:
+          "Invalid Coordinates: " +
+          (e as Error).message +
+          " must be in DD, DMM, or DMS format",
+        invalidFields: [(e as Error).message as keyof CoordInfoUpdate],
+      };
+    }
+  }
+  private static isDDLong(long: string) {
+    const longitude = parseFloat(long);
+    if (longitude > 180 || longitude < -180) {
+      return false;
+    }
+
+    return longitude;
+  }
+  private static isDDLat(lat: string) {
+    const latitude = parseFloat(lat);
+    if (latitude > 90 || latitude < -90) {
+      return false;
+    }
+    return latitude;
+  }
+  // Helper private to detect if input is in DMS (Degrees, Minutes, Seconds)
+  private static isDMS(input: string): boolean {
+    return /°|'|"/.test(input);
+  }
+
+  // Helper function to detect if input is in DMM (Degrees and Decimal Minutes)
+  private static isDMM(input: string): boolean {
+    return /^\d+\s\d+\.\d+/.test(input);
+  }
+
+  // Convert DMS format to Decimal Degrees
+  private static dmsToDecimal(input: string): number {
+    const regex = /(\d+)[°\s](\d+)['\s](\d+(\.\d+)?)["\s]?([NSEW])/;
+    const match = input.match(regex);
+
+    if (!match) {
+      throw new Error("Invalid DMS format");
+    }
+
+    const degrees = parseFloat(match[1] ?? "0");
+    const minutes = parseFloat(match[2] ?? "0");
+    const seconds = parseFloat(match[3] ?? "0");
+    const direction = match[5];
+
+    let decimal = degrees + minutes / 60 + seconds / 3600;
+
+    if (direction === "S" || direction === "W") {
+      decimal *= -1;
+    }
+
+    return decimal;
+  }
+
+  // Convert DMM format to Decimal Degrees
+  private static dmmToDecimal(input: string): number {
+    const regex = /(\d+)\s(\d+\.\d+)\s?([NSEW])/;
+    const match = input.match(regex);
+
+    if (!match) {
+      throw new Error("Invalid DMM format");
+    }
+
+    const degrees = parseFloat(match[1] ?? "0");
+    const minutes = parseFloat(match[2] ?? "0");
+    const direction = match[3];
+
+    let decimal = degrees + minutes / 60;
+
+    if (direction === "S" || direction === "W") {
+      decimal *= -1;
+    }
+
+    return decimal;
+  }
+  // Main private that converts latitude and longitude to Decimal Degrees (DD)
+  private static convertToDecimalDegrees(lat: string, long: string): Coords {
+    let latitude: number;
+    let longitude: number;
+    lat = lat.trim();
+    long = long.trim();
+
+    if (LapController.isDDLong(long)) {
+      longitude = parseFloat(long);
+    } else if (LapController.isDMS(long)) {
+      longitude = LapController.dmsToDecimal(long);
+    } else if (LapController.isDMM(long)) {
+      longitude = LapController.dmmToDecimal(long);
+    } else {
+      throw new Error("long");
+    }
+    if (LapController.isDDLat(lat)) {
+      latitude = parseFloat(lat);
+    } else if (LapController.isDMS(lat)) {
+      latitude = LapController.dmsToDecimal(lat);
+    } else if (LapController.isDMM(lat)) {
+      latitude = LapController.dmmToDecimal(lat);
+    } else {
+      throw new Error("lat");
+    }
+
+    return { lat: latitude, long: longitude };
+  }
+
   public async handlePacket(packet: ITelemetryData) {
-    if (this.checkLap(packet)) {
+    if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
@@ -60,16 +200,12 @@ export class LapController implements LapControllerType {
       long: 101,
     };
 
-    const finishlineLocation = {
-      lat: 51.1,
-      long: 100.2,
-    };
     const inProximity =
       getDistance(
         carLocation.lat,
         carLocation.long,
-        finishlineLocation.lat,
-        finishlineLocation.long,
+        this.finishLineLocation.lat,
+        this.finishLineLocation.long,
       ) <= 0.01;
     let lapHappened = false;
     if (!this.previouslyInFinishLineProximity && inProximity) {

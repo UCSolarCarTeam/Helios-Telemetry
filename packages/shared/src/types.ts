@@ -1,3 +1,25 @@
+export type CoordUpdateResponse =
+  | Coords
+  | {
+      error?: string;
+      invalidFields?: Array<keyof CoordInfoUpdate>;
+    };
+
+export interface Coords {
+  lat: number;
+  long: number;
+}
+
+export interface CoordInfoUpdate {
+  lat: string;
+  long: string;
+  password: string;
+}
+
+enum Motor {
+  RightMotor = 1,
+  LeftMotor = 0,
+}
 export interface ITelemetryData {
   AuxBms: IAuxBms;
   Battery: IBattery;
