@@ -71,7 +71,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
                   Name: dnsRecord,
                   ResourceRecords: [
                     {
-                      Value: recordValue,
+                      Value: `"${recordValue}"`,
                     },
                   ],
                   TTL: 1800,
@@ -128,7 +128,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
                   Name: dnsRecord,
                   ResourceRecords: [
                     {
-                      Value: recordValue,
+                      Value: `"${recordValue}"`,
                     },
                   ],
                   TTL: 1800,

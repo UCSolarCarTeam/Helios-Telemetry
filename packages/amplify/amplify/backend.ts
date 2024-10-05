@@ -100,12 +100,6 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 );
 
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
-  environment: {
-    CERTIFICATE:
-      TelemetryBackendSecretsManagerCertificate.secretValue.toString(),
-    CHAIN: TelemetryBackendSecretsManagerChain.secretValue.toString(),
-    PRIVATE_KEY: TelemetryBackendSecretsManagerPrivKey.secretValue.toString(),
-  },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   memoryLimitMiB: 900,
   portMappings: [
@@ -125,6 +119,12 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       protocol: ecs.Protocol.TCP,
     },
   ],
+  environment: {
+    CERTIFICATE:
+      TelemetryBackendSecretsManagerCertificate.secretValue.toString(),
+    CHAIN: TelemetryBackendSecretsManagerChain.secretValue.toString(),
+    PRIVATE_KEY: TelemetryBackendSecretsManagerPrivKey.secretValue.toString(),
+  },
 });
 
 // Allow ECS Task to read the Secrets Manager Store
@@ -265,7 +265,15 @@ TelemetryBackendTriggerCertRenewLambda.addTarget(
 );
 
 // Allow Cert update lambda to update the hosted zone for SSL certificate renewal verification
+TelemetryBackendRenewCertificateLambda.addToRolePolicy(
+  new iam.PolicyStatement({
+    actions: ["route53:ChangeResourceRecordSets"],
+    resources: [SolarCarHostedZone.hostedZoneArn],
+  }),
+);
+
 SolarCarHostedZone.grantDelegation(TelemetryBackendRenewCertificateLambda);
+// Allow lambda to edit Route 53 records
 
 // Allow Cert Update Lambda to write to the Secrets Manager Store
 TelemetryBackendSecretsManagerPrivKey.grantWrite(
