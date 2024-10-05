@@ -14,23 +14,30 @@ import * as url from "node:url";
 import { defineBackend } from "@aws-amplify/backend";
 
 const backend = defineBackend({});
+console.log(process.env);
 
 const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
 const TelemetryBackendSecretsManagerPrivKey = new secretsmanager.Secret(
   TelemetryBackendStack,
   "HeliosTelemetryBackendSSL/PrivateKey",
-  { secretName: "HeliosTelemetryBackendSSL/PrivateKey" },
+  {
+    secretName:
+      "HeliosTelemetryBackendSSL/PrivateKey" + backend.stack.stackName,
+  },
 );
 const TelemetryBackendSecretsManagerChain = new secretsmanager.Secret(
   TelemetryBackendStack,
   "HeliosTelemetryBackendSSL/Chain",
-  { secretName: "HeliosTelemetryBackendSSL/Chain" },
+  { secretName: "HeliosTelemetryBackendSSL/Chain" + backend.stack.stackName },
 );
 const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   TelemetryBackendStack,
   "HeliosTelemetryBackendSSL/Certificate",
-  { secretName: "HeliosTelemetryBackendSSL/Certificate" },
+  {
+    secretName:
+      "HeliosTelemetryBackendSSL/Certificate" + backend.stack.stackName,
+  },
 );
 
 const TelemetryBackendImageRepository = new ecr.Repository(
