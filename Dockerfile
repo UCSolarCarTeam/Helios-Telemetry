@@ -81,4 +81,4 @@ EXPOSE ${SERVER_PORT}
 EXPOSE ${MQTT_SERVER_PORT}
 USER solarcar-user
 WORKDIR packages/server
-CMD ["./docker_entry.sh"]
+CMD ["npm", "run", "start"]
