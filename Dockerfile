@@ -10,7 +10,6 @@ WORKDIR /opt/helios-backend/src
 ENV NODE_VERSION node@20.11.1
 ENV NPM_VERSION npm@10.2.4
 
-
 # Add custom user id
 RUN microdnf install util-linux
 RUN groupadd --gid 1001 solarcar-user \
@@ -54,10 +53,6 @@ WORKDIR /opt/solarcar-user
 ENV NODE_ENV production
 ENV SERVER_PORT 3001
 ENV MQTT_SERVER_PORT 1883
-ENV CERTBOT 80
-
-ENV DOMAIN aedes.calgarysolarcar.ca
-ENV EMAIL software@calgarysolarcar.ca
 
 # ARG PRIVATE_KEY
 # ARG CHAIN
