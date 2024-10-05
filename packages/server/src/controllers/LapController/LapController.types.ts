@@ -1,6 +1,6 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
-import type { ITelemetryData } from "@shared/helios-types";
+import type { CoordInfoUpdate, ITelemetryData } from "@shared/helios-types";
 
 export interface LapControllerType {
   backendController: BackendController;
@@ -26,4 +26,5 @@ export interface LapControllerType {
   lastLapPackets: ITelemetryData[];
   netPower(packetArray: ITelemetryData[]): number;
   previouslyInFinishLineProximity: boolean;
+  setFinishLineLocation(coords: CoordInfoUpdate): void;
 }
