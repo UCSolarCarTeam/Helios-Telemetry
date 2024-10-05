@@ -164,16 +164,15 @@ export const handler: EventBridgeHandler = async (event, context) => {
     termsOfServiceAgreed: true,
   });
 
+  const splitPemChain = acme.crypto.splitPemChain(cert.toString());
+
   /* Done */
-  log(`CSR:\n${csr.toString()}`);
-  log(`Private key:\n${key.toString()}`);
-  log(`Certificate:\n${cert.toString()}`);
 
   return await Promise.all([
     await secretsManager.send(
       new UpdateSecretCommand({
         SecretId: process.env.SECRET_CHAIN_NAME,
-        SecretString: csr.toString(),
+        SecretString: splitPemChain[1],
       }),
     ),
     await secretsManager.send(
@@ -185,7 +184,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
     await secretsManager.send(
       new UpdateSecretCommand({
         SecretId: process.env.SECRET_CERT_NAME,
-        SecretString: cert.toString(),
+        SecretString: splitPemChain[0],
       }),
     ),
   ]);

@@ -1,35 +1,21 @@
 {
-  "extends": "../../tsconfig.json",
   "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ]
+    "require": ["tsconfig-paths/register"]
   },
   "compilerOptions": {
     "module": "CommonJS",
+    "esModuleInterop": true,
     "target": "ES2020",
     "noImplicitAny": false,
+    "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@/client/*": [
-        "../client/src/*"
-      ]
+      "@/*": ["src/*"],
+      "@/client/*": ["../client/src/*"]
     }
   },
-  "include": [
-    ".eslint.config.mjs",
-    "src/**/*",
-    "**/*.cjs",
-    "**/*.mjs",
-    ".eslintrc.cjs"
-  ],
-  "exclude": [
-    "dist",
-    "../client"
-  ]
+  "include": [".eslint.config.mjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
+  "exclude": ["dist", "../client"]
 }
