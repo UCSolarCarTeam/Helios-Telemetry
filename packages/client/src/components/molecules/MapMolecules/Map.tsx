@@ -55,7 +55,7 @@ function Map(props: IMapProps): JSX.Element {
   const [mapStates, setMapStates] = useState({
     centered: false,
     currentCarLocation: carLocation,
-    satelliteMode: false,
+    satelliteMode: true,
   });
   const buttonRef = useRef(null);
 
