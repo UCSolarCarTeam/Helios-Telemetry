@@ -260,6 +260,7 @@ const TelemetryBackendRenewCertificateLambda = new lambda.NodejsFunction(
       SECRET_CHAIN_NAME: TelemetryBackendSecretsManagerChain.secretName,
       SECRET_PRIVKEY_NAME: TelemetryBackendSecretsManagerPrivKey.secretName,
     },
+    timeout: cdk.Duration.minutes(1),
   },
 );
 
