@@ -54,12 +54,12 @@ export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
     appUnits: APPUNITS.METRIC,
     carLatency: 0,
-    favourites: [],
     connectionType: CONNECTIONTYPES.NETWORK,
     darkMode: false,
     displayLoading: true,
     error: false,
     lapCoords: { lat: 51.081021, long: -114.136084 },
+    favourites: [],
     loading: true,
     playbackSwitch: false,
     radioConnected: false,
@@ -120,6 +120,7 @@ export function AppStateContextProvider({ children }: Props) {
         connectionType: parsedSettings.connectionType,
         darkMode: parsedSettings.darkMode,
         lapCoords: parsedSettings.lapCoords,
+        darkMode: parsedSettings.darkMode,
         favourites: parsedSettings.favourites,
       }));
     }
