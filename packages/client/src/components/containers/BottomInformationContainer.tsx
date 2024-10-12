@@ -76,7 +76,7 @@ function BottomInformationContainer() {
     <div className="align-middle">
       <div className="flex h-full flex-row flex-wrap justify-evenly gap-4 pt-1 text-center text-base md:gap-2 2xl:text-xl">
         {favourites.map((favourite: string, index: number) => (
-          <div key={index} className="min-w-32 p-3">
+          <div className="min-w-32 p-3" key={index}>
             <div className="text-xs 2xl:text-sm">{favourite.toUpperCase()}</div>
             <div className="text-helios">
               {
@@ -138,9 +138,9 @@ function BottomInformationContainer() {
           <div className="text-xs 2xl:text-sm"> BUS VOLTAGE </div>
           <div className="text-helios">{fakeData["Bus Voltage"]}</div>
         </div> */
+    //   </div>
+    // </div>
+    //);
   }
-  //   </div>
-  // </div>
-  //);
 }
 export default BottomInformationContainer;
