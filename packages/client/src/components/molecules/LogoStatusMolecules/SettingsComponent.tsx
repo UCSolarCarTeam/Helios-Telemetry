@@ -56,18 +56,22 @@ function SettingsComponent() {
       >
         <SettingsIcon />
       </h2>
+
       <Modal
         aria-describedby="modal-modal-description"
         aria-labelledby="modal-modal-title"
+        className="flex flex-grow items-center justify-center"
         onClose={() => setOpen(false)}
         open={open}
       >
-        <div className="fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col rounded-lg bg-white p-4 shadow-lg">
-          <h5 className="text-text-gray dark:text-text-gray-dark mb-4 text-2xl">
+        <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none sm:max-w-[75%]">
+          <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
             Settings
           </h5>
-
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+          <div
+            className="mb-4 grid items-center justify-between"
+            style={{ gridTemplateColumns: "40% 60%" }}
+          >
             <div className="col-span-1">
               <label className="mr-2">Appearance:</label>
             </div>
@@ -89,8 +93,10 @@ function SettingsComponent() {
               </ToggleButtonGroup>
             </div>
           </div>
-
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+          <div
+            className="grid-cols-[40% 60%] mb-4 grid items-center justify-between"
+            style={{ gridTemplateColumns: "40% 60%" }}
+          >
             <div className="col-span-1">
               <label className="mr-2">Units:</label>
             </div>
@@ -112,42 +118,45 @@ function SettingsComponent() {
             </div>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
+          <div
+            className="grid-cols-[40% 60%] items-top mb-2 grid justify-between"
+            style={{ gridTemplateColumns: "40% 60%" }}
+          >
             <div className="col-span-1">
               <label className="mr-2">Connection:</label>
             </div>
-            <div>
-              <div className="col-span-1">
-                <ToggleButtonGroup
-                  aria-label="Connection"
-                  className="w-full"
-                  exclusive
-                  onChange={handleConnectionChange}
-                  value={currentAppState.connectionType}
-                >
-                  {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
-                    (key) => {
-                      const disabled =
-                        (key === CONNECTIONTYPES.NETWORK &&
-                          !currentAppState.socketConnected) ||
-                        (key === CONNECTIONTYPES.RADIO &&
-                          !currentAppState.radioConnected);
 
-                      return (
-                        <ToggleButton
-                          className="flex w-1/3 flex-col text-sm"
-                          disabled={disabled}
-                          key={key}
-                          value={key}
-                        >
-                          {key}
-                        </ToggleButton>
-                      );
-                    },
-                  )}
-                </ToggleButtonGroup>
-              </div>
-              <div className="justify-top col-span-1 flex items-start">
+            <div className="col-span-1">
+              <ToggleButtonGroup
+                aria-label="Connection"
+                className="w-full"
+                exclusive
+                onChange={handleConnectionChange}
+                value={currentAppState.connectionType}
+              >
+                {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
+                  (key) => {
+                    const disabled =
+                      (key === CONNECTIONTYPES.NETWORK &&
+                        !currentAppState.socketConnected) ||
+                      (key === CONNECTIONTYPES.RADIO &&
+                        !currentAppState.radioConnected);
+
+                    return (
+                      <ToggleButton
+                        className="flex w-1/3 text-sm"
+                        disabled={disabled}
+                        key={key}
+                        value={key}
+                      >
+                        {key}
+                      </ToggleButton>
+                    );
+                  },
+                )}
+              </ToggleButtonGroup>
+
+              <div className="flex">
                 {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
                   (key) => {
                     const disabledText =
@@ -163,16 +172,22 @@ function SettingsComponent() {
                         className="w-1/3 items-center justify-center"
                         key={key}
                       >
-                        {disabledText ? (
-                          <div className="flex flex-col items-center">
-                            <span className="text-helios">Not Available</span>
-                            <span className="text-xs">({disabledText})</span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center">
-                            <span className="text-green">Available</span>
-                          </div>
-                        )}
+                        <div className="my-1 flex flex-col items-center">
+                          {disabledText ? (
+                            <>
+                              <span className="text-center text-sm text-helios">
+                                Not Available
+                              </span>
+                              <span className="text-center text-xs">
+                                ({disabledText})
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-sm text-green">
+                              Available
+                            </span>
+                          )}
+                        </div>
                       </div>
                     );
                   },
