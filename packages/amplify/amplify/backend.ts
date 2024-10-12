@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
+import * as custom from "aws-cdk-lib/custom-resources";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
@@ -256,6 +257,8 @@ const TelemetryBackendRenewCertificateLambda = new lambda.NodejsFunction(
     ),
     environment: {
       DNS_RECORD: "aedes.calgarysolarcar.ca",
+      ECS_CLUSTER_NAME: TelemetryECSCluster.clusterName,
+      ECS_SERVICE_NAME: TelemetryECSService.serviceName,
       HOSTED_ZONE_ID: SolarCarHostedZone.hostedZoneId,
       SECRET_CERT_NAME: TelemetryBackendSecretsManagerCertificate.secretName,
       SECRET_CHAIN_NAME: TelemetryBackendSecretsManagerChain.secretName,
@@ -281,6 +284,13 @@ TelemetryBackendRenewCertificateLambda.addToRolePolicy(
   new iam.PolicyStatement({
     actions: ["route53:ChangeResourceRecordSets"],
     resources: [SolarCarHostedZone.hostedZoneArn],
+  }),
+);
+
+TelemetryBackendRenewCertificateLambda.addToRolePolicy(
+  new iam.PolicyStatement({
+    actions: ["ecs:UpdateService"],
+    resources: [TelemetryECSService.serviceArn, TelemetryECSCluster.clusterArn],
   }),
 );
 

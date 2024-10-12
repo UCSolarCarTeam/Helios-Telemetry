@@ -8,6 +8,7 @@ import {
   UpdateSecretCommand,
   SecretsManagerClient,
 } from "@aws-sdk/client-secrets-manager";
+import { ECSClient, UpdateServiceCommand } from "@aws-sdk/client-ecs";
 
 import acme from "acme-client";
 
@@ -168,7 +169,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
 
   /* Done */
 
-  return await Promise.all([
+  await Promise.all([
     await secretsManager.send(
       new UpdateSecretCommand({
         SecretId: process.env.SECRET_CHAIN_NAME,
@@ -188,6 +189,17 @@ export const handler: EventBridgeHandler = async (event, context) => {
       }),
     ),
   ]);
+
+  const ecsclient = new ECSClient();
+
+  await ecsclient.send(
+    new UpdateServiceCommand({
+      cluster: process.env.ECS_CLUSTER_NAME,
+      desiredCount: 1,
+      forceNewDeployment: true,
+      service: process.env.ECS_SERVICE_NAME,
+    }),
+  );
 
   // Request cert from LetsEncrypt
   // Update Route53 with DNS challenge
