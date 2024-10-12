@@ -50,12 +50,12 @@ const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
     appUnits: APPUNITS.METRIC,
-    favourites: [],
     carLatency: 0,
     connectionType: CONNECTIONTYPES.NETWORK,
     darkMode: false,
     displayLoading: true,
     error: false,
+    favourites: [],
     loading: true,
     radioConnected: false,
     socketConnected: false,
@@ -113,8 +113,8 @@ export function AppStateContextProvider({ children }: Props) {
         ...prev,
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
-        favourites: parsedSettings.favourites,
         darkMode: parsedSettings.darkMode,
+        favourites: parsedSettings.favourites,
       }));
     }
   }, []);

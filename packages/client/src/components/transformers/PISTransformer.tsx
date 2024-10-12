@@ -71,7 +71,7 @@ function FieldUnitsHandler(
 }
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
-  const { value, unit, min, max, expectedBool } = props.fieldData;
+  const { expectedBool, max, min, unit, value } = props.fieldData;
   const valueType = typeof value;
   const inRange =
     // If value is of type string range is true
