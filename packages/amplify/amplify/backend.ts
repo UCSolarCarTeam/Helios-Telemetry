@@ -2,7 +2,6 @@ import * as cdk from "aws-cdk-lib";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
-import * as custom from "aws-cdk-lib/custom-resources";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
@@ -15,7 +14,6 @@ import * as url from "node:url";
 import { defineBackend } from "@aws-amplify/backend";
 
 const backend = defineBackend({});
-console.log(process.env);
 
 const TelemetryBackendStack = backend.createStack("TelemetryBackend");
 
@@ -104,7 +102,16 @@ TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
-  {},
+  {
+    volumes: [
+      {
+        efsVolumeConfiguration: {
+          fileSystemId: "fs-0ef2c6e2055ced2c7",
+        },
+        name: "TelemetryBackendEFS",
+      },
+    ],
+  },
 );
 
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
