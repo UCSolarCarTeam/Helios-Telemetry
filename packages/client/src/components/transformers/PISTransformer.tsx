@@ -16,6 +16,7 @@ function FieldUnitsHandler(
   unit: UnitType | undefined,
   value: string | number | boolean,
 ) {
+  // const [favorites,setFavorites]= useState([]); MAKE THIS A CONTEXT
   const { currentAppState } = useAppState();
 
   let unitReturn: string | undefined;
@@ -71,17 +72,17 @@ function FieldUnitsHandler(
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { expectedBool, max, min, unit, value } = props.fieldData;
-
+  const valueType = typeof value;
   const inRange =
     // If value is of type string range is true
-    typeof value === "string"
+    valueType === "string"
       ? true
       : // If value is of type number range is true if min and max are undefined or value is between min and max
-        typeof value === "number"
+        valueType === "number"
         ? (min === undefined || value >= min) &&
           (max === undefined || value <= max)
         : // If value is of type boolean range is true if expectedBool is undefined and value is false or value is equal to expectedBool
-          typeof value === "boolean"
+          valueType === "boolean"
           ? (expectedBool === undefined && value === false) ||
             expectedBool === value
           : false;
@@ -168,8 +169,8 @@ type FieldPrinterProps = {
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const [isHovered, setIsHovered] = useState(false);
   const { setCurrentAppState } = useAppState();
-
   const { field } = props;
+
   if (
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
@@ -187,10 +188,11 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
       : [];
 
     // Check if the parsedFavourites array is already full
-    if (parsedFavourites.length === 10 && typeof field.name === "string") {
-      // can't add more than 10 favourites, so replace the first one
+    if (parsedFavourites.length === 8 && typeof field.name === "string") {
+      // can't add more than 8 favourites, so replace the first one
       parsedFavourites.shift();
       parsedFavourites.push(field.name);
+
       setCurrentAppState((prev) => ({
         ...prev,
         favourites: parsedFavourites,
@@ -213,26 +215,29 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
       return;
     }
   };
-
-  return isHovered ? (
-    <div
-      className="mt-1 flex items-center justify-between text-xs"
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <span
-        className="flex cursor-pointer items-center text-xs font-bold text-helios"
-        onClick={handleAddToFavourites}
-      >
-        Add to Favourites
-      </span>
-    </div>
-  ) : (
-    <div
-      className="mt-1 flex items-center justify-between text-xs"
-      onMouseEnter={() => setIsHovered(true)}
-    >
-      {field.name}:
-      <FieldDataFormatter data={field.data} fstring={field.fstring} />
+  return (
+    <div>
+      {isHovered && field.isFault === undefined ? (
+        <div
+          className="mt-1 flex items-center justify-between text-xs"
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <span
+            className="flex cursor-pointer items-center text-xs font-bold text-helios"
+            onClick={handleAddToFavourites}
+          >
+            Add to Favourites
+          </span>
+        </div>
+      ) : (
+        <div
+          className="mt-1 flex items-center justify-between text-xs"
+          onMouseEnter={() => setIsHovered(true)}
+        >
+          {field.name}:
+          <FieldDataFormatter data={field.data} fstring={field.fstring} />
+        </div>
+      )}
     </div>
   );
 }

@@ -20,6 +20,7 @@ const Faults = (): I_PIS => {
                   .InternalCommunicationFault,
             },
           ],
+          isFault: true,
           name: "Internal Communication Fault",
         },
         {
@@ -31,6 +32,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags.InternalConversionFault,
             },
           ],
+          isFault: true,
           name: "Internal Conversion Fault",
         },
         {
@@ -41,6 +43,7 @@ const Faults = (): I_PIS => {
               value: currentPacket?.BatteryFaults.ErrorFlags.WeakCellFault,
             },
           ],
+          isFault: true,
           name: "Weak Cell Fault",
         },
         {
@@ -52,7 +55,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags.LowCellVoltageFault,
             },
           ],
-          name: "Low Cell Voltage Fault",
+          isFault: true,
         },
         {
           data: [
@@ -62,7 +65,7 @@ const Faults = (): I_PIS => {
               value: currentPacket?.BatteryFaults.ErrorFlags.OpenWiringFault,
             },
           ],
-          name: "Open Wiring Fault",
+          isFault: true,
         },
         {
           data: [
@@ -72,7 +75,7 @@ const Faults = (): I_PIS => {
               value: currentPacket?.BatteryFaults.ErrorFlags.CurrentSensorFault,
             },
           ],
-          name: "Current Sensor Fault",
+          isFault: true,
         },
         {
           data: [
@@ -83,7 +86,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags.PackVoltageSensorFault,
             },
           ],
-          name: "Pack Voltage Sensor Fault",
+          isFault: true,
         },
         {
           data: [
@@ -93,7 +96,7 @@ const Faults = (): I_PIS => {
               value: currentPacket?.BatteryFaults.ErrorFlags.WeakPackFault,
             },
           ],
-          name: "Weak Pack Fault",
+          isFault: true,
         },
         {
           data: [
@@ -104,7 +107,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags.VoltageRedundancyFault,
             },
           ],
-          name: "Voltage Redundancy Fault",
+          isFault: true,
         },
         {
           data: [
@@ -114,7 +117,7 @@ const Faults = (): I_PIS => {
               value: currentPacket?.BatteryFaults.ErrorFlags.FanMonitorFault,
             },
           ],
-          name: "Fan Monitor Fault",
+          isFault: true,
         },
         {
           data: [
@@ -124,7 +127,7 @@ const Faults = (): I_PIS => {
               value: currentPacket?.BatteryFaults.ErrorFlags.ThermistorFault,
             },
           ],
-          name: "Thermistor Fault",
+          isFault: true,
         },
         {
           data: [
@@ -136,7 +139,7 @@ const Faults = (): I_PIS => {
                   .CANBUSCommunicationsFault,
             },
           ],
-          name: "CANBUS Communications Fault",
+          isFault: true,
         },
         {
           data: [
@@ -147,7 +150,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags.AlwaysOnSupplyFault,
             },
           ],
-          name: "Always On Supply Fault",
+          isFault: true,
         },
         {
           data: [
@@ -159,7 +162,7 @@ const Faults = (): I_PIS => {
                   .HighVoltageIsolationFault,
             },
           ],
-          name: "High Voltage Isolation Fault",
+          isFault: true,
         },
         {
           data: [
@@ -170,7 +173,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags["12vPowerSupplyFault"],
             },
           ],
-          name: "12V Power Supply Fault",
+          isFault: true,
         },
         {
           data: [
@@ -182,7 +185,7 @@ const Faults = (): I_PIS => {
                   .ChargeLimitEnforcementFault,
             },
           ],
-          name: "Charge Limit Enforcement Fault",
+          isFault: true,
         },
         {
           data: [
@@ -194,7 +197,7 @@ const Faults = (): I_PIS => {
                   .DischargeLimitEnforcementFault,
             },
           ],
-          name: "Discharge Limit Enforcement Fault",
+          isFault: true,
         },
         {
           data: [
@@ -205,7 +208,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags.ChargerSafetyRelayFault,
             },
           ],
-          name: "Charger Safety Relay Fault",
+          isFault: true,
         },
         {
           data: [
@@ -216,7 +219,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.ErrorFlags.InternalMemoryFault,
             },
           ],
-          name: "Internal Memory Fault",
+          isFault: true,
         },
         {
           data: [
@@ -228,7 +231,7 @@ const Faults = (): I_PIS => {
                   .InternalThermistorsFault,
             },
           ],
-          name: "Internal Thermistors Fault",
+          isFault: true,
         },
         {
           data: [
@@ -238,7 +241,7 @@ const Faults = (): I_PIS => {
               value: currentPacket?.BatteryFaults.ErrorFlags.InternalLogicFault,
             },
           ],
-          name: "Internal Logic Fault",
+          isFault: true,
         },
       ],
       LimitFlags: [
@@ -251,7 +254,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags.DclReducedDueToLowSoc,
             },
           ],
-          name: "Dcl Reduced Due To Low Soc",
+          isFault: true,
         },
         {
           data: [
@@ -263,7 +266,7 @@ const Faults = (): I_PIS => {
                   .DclReducedDueToHighCellResistance,
             },
           ],
-          name: "Dcl Reduced Due to HighCell Resistance",
+          isFault: true,
         },
         {
           data: [
@@ -275,7 +278,7 @@ const Faults = (): I_PIS => {
                   .DclReducedDueToTemperature,
             },
           ],
-          name: "Dcl Reduced Due to Temperature",
+          isFault: true,
         },
         {
           data: [
@@ -287,7 +290,7 @@ const Faults = (): I_PIS => {
                   .DclReducedDueToLowCellVoltage,
             },
           ],
-          name: "Dcl Reduced Due to Low Cell Voltage",
+          isFault: true,
         },
         {
           data: [
@@ -299,7 +302,7 @@ const Faults = (): I_PIS => {
                   .DclReducedDueToLowPackVoltage,
             },
           ],
-          name: "Dcl Reduced Due to Low Pack Voltage",
+          isFault: true,
         },
         {
           data: [
@@ -311,7 +314,7 @@ const Faults = (): I_PIS => {
                   .DclandCclReducedDueToVoltageFailsafe,
             },
           ],
-          name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
+          isFault: true,
         },
         {
           data: [
@@ -323,7 +326,7 @@ const Faults = (): I_PIS => {
                   .DclandCclReducedDueToCommunicationFailsafe,
             },
           ],
-          name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
+          isFault: true,
         },
         {
           data: [
@@ -334,7 +337,7 @@ const Faults = (): I_PIS => {
                 currentPacket?.BatteryFaults.LimitFlags.CclReducedDueToHighSoc,
             },
           ],
-          name: "Ccl Reduced Due to High Soc",
+          isFault: true,
         },
         {
           data: [
@@ -346,7 +349,7 @@ const Faults = (): I_PIS => {
                   .CclReducedDueToHighCellResistance,
             },
           ],
-          name: "Ccl Reduced to High Cell Resistance",
+          isFault: true,
         },
         {
           data: [
@@ -358,7 +361,7 @@ const Faults = (): I_PIS => {
                   .CclReducedDueToTemperature,
             },
           ],
-          name: "Ccl Reduced Due to Temperature",
+          isFault: true,
         },
         {
           data: [
@@ -370,7 +373,7 @@ const Faults = (): I_PIS => {
                   .CclReducedDueToHighCellVoltage,
             },
           ],
-          name: "Ccl Reduced Due to High Cell Voltage",
+          isFault: true,
         },
         {
           data: [
@@ -382,7 +385,7 @@ const Faults = (): I_PIS => {
                   .CclReducedDueToHighPackVoltage,
             },
           ],
-          name: "Ccl Reduced Due to High Pack Voltage",
+          isFault: true,
         },
         {
           data: [
@@ -394,7 +397,7 @@ const Faults = (): I_PIS => {
                   .CclReducedDueToChargerLatch,
             },
           ],
-          name: "Ccl Reduced Due to Charger Latch",
+          isFault: true,
         },
         {
           data: [
@@ -406,7 +409,7 @@ const Faults = (): I_PIS => {
                   .CclReducedDueToAlternateCurrentLimit,
             },
           ],
-          name: "Ccl Reduced Due to Alternate Current Limit",
+          isFault: true,
         },
       ],
     },
@@ -421,7 +424,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[0]?.ErrorFlags.MotorOverSpeed,
               },
             ],
-            name: "Motor Over Speed",
+            isFault: true,
           },
           {
             data: [
@@ -432,7 +435,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0]?.ErrorFlags.SoftwareOverCurrent,
               },
             ],
-            name: "Software Over Current",
+            isFault: true,
           },
           {
             data: [
@@ -443,7 +446,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0]?.ErrorFlags.DcBusOverVoltage,
               },
             ],
-            name: "Dc Bus Over Voltage",
+            isFault: true,
           },
           {
             data: [
@@ -455,7 +458,7 @@ const Faults = (): I_PIS => {
                     .BadMotorPositionHallSequence,
               },
             ],
-            name: "Bad Motor Position Hall Sequence",
+            isFault: true,
           },
           {
             data: [
@@ -467,7 +470,7 @@ const Faults = (): I_PIS => {
                     .WatchdogCausedLastReset,
               },
             ],
-            name: "Watch Dog Caused Last Reset",
+            isFault: true,
           },
           {
             data: [
@@ -478,7 +481,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0]?.ErrorFlags.ConfigReadError,
               },
             ],
-            name: "Config Read Error",
+            isFault: true,
           },
           {
             data: [
@@ -490,7 +493,7 @@ const Faults = (): I_PIS => {
                     .Wail15VUnderVoltageLockOut,
               },
             ],
-            name: "Wail 15V Under Voltage Lock Out",
+            isFault: true,
           },
           {
             data: [
@@ -501,7 +504,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0]?.ErrorFlags.DesaturationFault,
               },
             ],
-            name: "Desaturation Fault",
+            isFault: true,
           },
         ],
         LimitFlags: [
@@ -514,7 +517,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0]?.LimitFlags.OutputVoltagePwm,
               },
             ],
-            name: "Output Voltage Pwm",
+            isFault: true,
           },
           {
             data: [
@@ -524,7 +527,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[0]?.LimitFlags.MotorCurrent,
               },
             ],
-            name: "Motor Current",
+            isFault: true,
           },
           {
             data: [
@@ -534,7 +537,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[0]?.LimitFlags.Velocity,
               },
             ],
-            name: "Velocity",
+            isFault: true,
           },
           {
             data: [
@@ -544,7 +547,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[0]?.LimitFlags.BusCurrent,
               },
             ],
-            name: "Bus Current",
+            isFault: true,
           },
           {
             data: [
@@ -555,7 +558,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0]?.LimitFlags.BusVoltageUpper,
               },
             ],
-            name: "Bus Voltage Upper",
+            isFault: true,
           },
           {
             data: [
@@ -566,7 +569,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[0]?.LimitFlags.BusVoltageLower,
               },
             ],
-            name: "Bus Voltage Lower",
+            isFault: true,
           },
           {
             data: [
@@ -578,7 +581,7 @@ const Faults = (): I_PIS => {
                     .IpmOrMotorTemperature,
               },
             ],
-            name: "Ipm or Motor Temperature",
+            isFault: true,
           },
         ],
       },
@@ -592,7 +595,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[1]?.ErrorFlags.MotorOverSpeed,
               },
             ],
-            name: "Motor Over Speed",
+            isFault: true,
           },
           {
             data: [
@@ -604,7 +607,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1]?.ErrorFlags.SoftwareOverCurrent,
               },
             ],
-            name: "Software Over Current",
+            isFault: true,
           },
           {
             data: [
@@ -615,7 +618,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1]?.ErrorFlags.DcBusOverVoltage,
               },
             ],
-            name: "Dc Bus Over Voltage",
+            isFault: true,
           },
           {
             data: [
@@ -627,7 +630,7 @@ const Faults = (): I_PIS => {
                     .BadMotorPositionHallSequence,
               },
             ],
-            name: "Bad Motor Position Hall Sequence",
+            isFault: true,
           },
           {
             data: [
@@ -639,7 +642,7 @@ const Faults = (): I_PIS => {
                     .WatchdogCausedLastReset,
               },
             ],
-            name: "Watch Dog Caused Last Reset",
+            isFault: true,
           },
           {
             data: [
@@ -650,7 +653,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1]?.ErrorFlags.ConfigReadError,
               },
             ],
-            name: "Config Read Error",
+            isFault: true,
           },
           {
             data: [
@@ -662,7 +665,7 @@ const Faults = (): I_PIS => {
                     .Wail15VUnderVoltageLockOut,
               },
             ],
-            name: "Wail 15V Under Voltage Lock Out",
+            isFault: true,
           },
           {
             data: [
@@ -673,7 +676,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1]?.ErrorFlags.DesaturationFault,
               },
             ],
-            name: "Desaturation Fault",
+            isFault: true,
           },
         ],
         LimitFlags: [
@@ -686,7 +689,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1]?.LimitFlags.OutputVoltagePwm,
               },
             ],
-            name: "Output Voltage Pwm",
+            isFault: true,
           },
           {
             data: [
@@ -696,7 +699,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[1]?.LimitFlags.MotorCurrent,
               },
             ],
-            name: "Motor Current",
+            isFault: true,
           },
           {
             data: [
@@ -706,7 +709,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[1]?.LimitFlags.Velocity,
               },
             ],
-            name: "Velocity",
+            isFault: true,
           },
           {
             data: [
@@ -716,7 +719,7 @@ const Faults = (): I_PIS => {
                 value: currentPacket?.MotorFaults[1]?.LimitFlags.BusCurrent,
               },
             ],
-            name: "Bus Current",
+            isFault: true,
           },
           {
             data: [
@@ -727,7 +730,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1]?.LimitFlags.BusVoltageUpper,
               },
             ],
-            name: "Bus Voltage Upper",
+            isFault: true,
           },
           {
             data: [
@@ -738,7 +741,7 @@ const Faults = (): I_PIS => {
                   currentPacket?.MotorFaults[1]?.LimitFlags.BusVoltageLower,
               },
             ],
-            name: "Bus Voltage Lower",
+            isFault: true,
           },
           {
             data: [
@@ -750,7 +753,7 @@ const Faults = (): I_PIS => {
                     .IpmOrMotorTemperature,
               },
             ],
-            name: "Ipm or Motor Temperature",
+            isFault: true,
           },
         ],
       },
