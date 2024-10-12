@@ -187,33 +187,34 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
       ? (JSON.parse(storedFavourites) as string[])
       : [];
 
-    // Check if the parsedFavourites array is already full
-    if (parsedFavourites.length === 8 && typeof field.name === "string") {
-      // can't add more than 8 favourites, so replace the first one
-      parsedFavourites.shift();
-      parsedFavourites.push(field.name);
-
-      setCurrentAppState((prev) => ({
-        ...prev,
-        favourites: parsedFavourites,
-      }));
-      localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
-      return;
-    }
-
     // Check if the field is already in the favourites
     if (
       !parsedFavourites.some((fav) => fav === field.name) &&
       typeof field.name === "string"
     ) {
-      parsedFavourites.push(field.name);
-      setCurrentAppState((prev) => ({
-        ...prev,
-        favourites: parsedFavourites,
-      }));
-      localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
-      return;
+      if (parsedFavourites.length === 8 && typeof field.name === "string") {
+        // can't add more than 8 favourites, so replace the first one
+        parsedFavourites.shift();
+        parsedFavourites.push(field.name);
+
+        setCurrentAppState((prev) => ({
+          ...prev,
+          favourites: parsedFavourites,
+        }));
+        localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
+        return;
+      } else {
+        parsedFavourites.push(field.name);
+        setCurrentAppState((prev) => ({
+          ...prev,
+          favourites: parsedFavourites,
+        }));
+        localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
+        return;
+      }
     }
+
+    // Check if the parsedFavourites array is already full
   };
   return (
     <div>
