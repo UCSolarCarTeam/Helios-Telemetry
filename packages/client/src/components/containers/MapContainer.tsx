@@ -2,20 +2,28 @@ import { useEffect, useState } from "react";
 
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
+import { useAppState } from "@/contexts/AppStateContext";
+import type { Coords } from "@shared/helios-types";
 
 function MapContainer(): JSX.Element {
-  const [mapInputs, setMapInputs] = useState({
-    carLocation: { lat: 38.9277572, lng: -95.6777937 },
-    lapLocation: { lat: 38.9377572, lng: -95.677937 },
+  const { currentAppState } = useAppState();
+  const [mapInputs, setMapInputs] = useState<{
+    lapLocation: Coords;
+    carLocation: Coords;
+  }>({
+    carLocation: {
+      lat: currentAppState.lapCoords.lat,
+      long: currentAppState.lapCoords.long,
+    },
+    lapLocation: currentAppState.lapCoords,
   });
-
   useEffect(() => {
     const interval = setInterval(() => {
       setMapInputs((prevState) => ({
         ...prevState,
         carLocation: {
           lat: prevState.carLocation.lat + 0.0001,
-          lng: prevState.carLocation.lng,
+          long: prevState.carLocation.long,
         },
       }));
     }, 1000);
@@ -23,12 +31,22 @@ function MapContainer(): JSX.Element {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    setMapInputs((prevMapInputs) => ({
+      ...prevMapInputs,
+      lapLocation: {
+        lat: currentAppState.lapCoords.lat,
+        long: currentAppState.lapCoords.long,
+      },
+    }));
+  }, [currentAppState.lapCoords]);
+
   return (
     <div className="size-full">
       <div className="grid h-[90%]">
         <Map
           carLocation={mapInputs.carLocation}
-          lapLocation={mapInputs.lapLocation}
+          lapLocation={currentAppState.lapCoords}
           mapLocation={mapInputs.carLocation}
         />
       </div>

@@ -1,22 +1,62 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
-import { getDistance } from "@/utils/lapCalculations";
+import { convertToDecimalDegrees, getDistance } from "@/utils/lapCalculations";
+import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import type { ILapData, ITelemetryData } from "@shared/helios-types";
+import type {
+  CoordInfoUpdate,
+  CoordUpdateResponse,
+  Coords,
+  ILapData,
+  ITelemetryData,
+} from "@shared/helios-types";
 
+const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
+  public finishLineLocation: Coords = {
+    lat: 51.081021,
+    long: -114.136084,
+  };
   backendController: BackendController;
 
   constructor(backendController: BackendController) {
     this.backendController = backendController;
   }
 
+  public setFinishLineLocation(
+    newCoordInfo: CoordInfoUpdate,
+  ): CoordUpdateResponse {
+    logger.info(JSON.stringify(newCoordInfo));
+    const { lat, long, password } = newCoordInfo;
+    if (password !== process.env.LAP_POSITION_PASSWORD) {
+      logger.error("Invalid Password: " + password);
+      return { error: "Invalid Password", invalidFields: ["password"] };
+    }
+    try {
+      const newFinishLinelocation = convertToDecimalDegrees(lat, long);
+      this.finishLineLocation = newFinishLinelocation;
+      logger.info("Finish Line Location Set: ", this.finishLineLocation);
+      return this.finishLineLocation;
+    } catch (e) {
+      logger.error(
+        "Error: " + (e as Error).message + " must be in DD, DMM, or DMS format",
+      );
+      return {
+        error:
+          "Invalid Coordinates: " +
+          (e as Error).message +
+          " must be in DD, DMM, or DMS format",
+        invalidFields: [(e as Error).message as keyof CoordInfoUpdate],
+      };
+    }
+  }
+
   public async handlePacket(packet: ITelemetryData) {
-    if (this.checkLap(packet)) {
+    if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
@@ -56,20 +96,16 @@ export class LapController implements LapControllerType {
   //checks if lap has been acheived
   private checkLap(packet: ITelemetryData) {
     const carLocation = {
-      lat: 51,
-      long: 101,
+      lat: 51.081021,
+      long: -114.136084,
     };
 
-    const finishlineLocation = {
-      lat: 51.1,
-      long: 100.2,
-    };
     const inProximity =
       getDistance(
         carLocation.lat,
         carLocation.long,
-        finishlineLocation.lat,
-        finishlineLocation.long,
+        this.finishLineLocation.lat,
+        this.finishLineLocation.long,
       ) <= 0.01;
     let lapHappened = false;
     if (!this.previouslyInFinishLineProximity && inProximity) {

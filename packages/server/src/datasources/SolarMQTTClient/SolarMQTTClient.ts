@@ -48,7 +48,6 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     this.client.on("message", (topic, message) => {
       if (topic === pongTopic) {
         const carLatency = (Date.now() - this.pingLastSent) / 2;
-        logger.info("Current Ping: ", carLatency);
         this.backendController.socketIO.broadcastCarLatency(carLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");

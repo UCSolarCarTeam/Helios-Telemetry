@@ -31,6 +31,7 @@ export class BackendController implements BackendControllerTypes {
     this.mqtt.pingTimer(5000);
   }
 
+  // This isn't being called anywhere?
   public handleCarLatency(carLatency: number) {
     // Broadcast the car latency to the frontend
     this.socketIO.broadcastCarLatency(carLatency);
@@ -43,6 +44,7 @@ export class BackendController implements BackendControllerTypes {
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
+    this.socketIO.broadcastLapCoords(this.lapController.finishLineLocation);
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);
