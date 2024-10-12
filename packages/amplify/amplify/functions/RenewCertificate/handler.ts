@@ -192,7 +192,7 @@ export const handler: EventBridgeHandler = async (event, context) => {
 
   const ecsclient = new ECSClient();
 
-  await ecsclient.send(
+  return await ecsclient.send(
     new UpdateServiceCommand({
       cluster: process.env.ECS_CLUSTER_NAME,
       desiredCount: 1,
