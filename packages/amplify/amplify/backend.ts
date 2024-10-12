@@ -264,8 +264,6 @@ const TelemetryBackendRenewCertificateLambda = new lambda.NodejsFunction(
     ),
     environment: {
       DNS_RECORD: "aedes.calgarysolarcar.ca",
-      ECS_CLUSTER_NAME: TelemetryECSCluster.clusterName,
-      ECS_SERVICE_NAME: TelemetryECSService.serviceName,
       HOSTED_ZONE_ID: SolarCarHostedZone.hostedZoneId,
       SECRET_CERT_NAME: TelemetryBackendSecretsManagerCertificate.secretName,
       SECRET_CHAIN_NAME: TelemetryBackendSecretsManagerChain.secretName,
@@ -291,13 +289,6 @@ TelemetryBackendRenewCertificateLambda.addToRolePolicy(
   new iam.PolicyStatement({
     actions: ["route53:ChangeResourceRecordSets"],
     resources: [SolarCarHostedZone.hostedZoneArn],
-  }),
-);
-
-TelemetryBackendRenewCertificateLambda.addToRolePolicy(
-  new iam.PolicyStatement({
-    actions: ["ecs:UpdateService"],
-    resources: [TelemetryECSService.serviceArn, TelemetryECSCluster.clusterArn],
   }),
 );
 
