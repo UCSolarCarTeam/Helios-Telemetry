@@ -105,7 +105,6 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   {
     volumes: [
       {
-        configuredAtLaunch: true,
         efsVolumeConfiguration: {
           fileSystemId: "fs-0ef2c6e2055ced2c7",
         },
