@@ -32,10 +32,7 @@ export const socketIO: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   { autoConnect: false },
 );
 
-interface ISocketContextReturn {}
-const socketContext = createContext<ISocketContextReturn>(
-  {} as ISocketContextReturn,
-);
+const socketContext = createContext({});
 export function SocketContextProvider({
   children,
 }: PropsWithChildren): JSX.Element {
@@ -90,6 +87,6 @@ export function SocketContextProvider({
   return <socketContext.Provider value={{}}>{children}</socketContext.Provider>;
 }
 
-export function useSocket(): ISocketContextReturn {
+export function useSocket() {
   return useContext(socketContext);
 }
