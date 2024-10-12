@@ -8,9 +8,9 @@ import {
   topics,
 } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
-import { type ITelemetryData } from "@/interfaces/telemetry-data.interface";
-
 import { createLightweightApplicationLogger } from "@/utils/logger";
+
+import { type ITelemetryData } from "@shared/helios-types";
 
 const { packetTopic, pingTopic, pongTopic } = topics;
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
@@ -23,6 +23,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     this.client = connect(options.url);
     this.backendController = backendController;
     this.initializeListeners();
+    this.pingLastSent = Date.now();
   }
   public pingTimer(miliseconds: number) {
     const myMessage = "t";
@@ -34,6 +35,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
 
   public initializeListeners() {
     this.client.on("connect", () => {
+      logger.info("MQTT CLient connected");
       this.client.subscribe([packetTopic, pongTopic], (error) => {
         if (!error) {
           //

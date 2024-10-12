@@ -4,12 +4,12 @@ function LogoComponent() {
   return (
     <div className="w-full pt-2">
       <Image
-        className="m-auto w-3/4"
-        src="/assets/Logo.png"
         alt="Solar Car Logo"
-        layout="cover"
-        width={100}
+        className="m-auto w-3/4"
         height={100}
+        layout="cover"
+        src="/assets/Logo.png"
+        width={100}
       />
     </div>
   );

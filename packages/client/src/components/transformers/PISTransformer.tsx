@@ -102,9 +102,8 @@ type FormatStringProps = {
 };
 
 function FormatString(props: FormatStringProps): JSX.Element {
-  const { fstring, data } = props;
+  const { data, fstring } = props;
   // %s •C (%s) - %s •C (%s)
-  // console.log("TEST", fstring.split("%s"));
 
   return (
     <span>
@@ -158,7 +157,7 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
     </div>
   ) : (
     <div>
-      <FormatString fstring={fstring} data={data} />
+      <FormatString data={data} fstring={fstring} />
     </div>
   );
 }
@@ -176,7 +175,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
   ) {
-    console.error(
+    global.console.error(
       "PIS ERROR: The fstring must contain the same amount of %s's as PIS data fields",
     );
     return <div>PIS ERROR: </div>;
@@ -249,7 +248,7 @@ type FieldsPrinterProps = {
 };
 
 function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
-  const { fields, depth = 0 } = props;
+  const { depth = 0, fields } = props;
   return (
     <div
       className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `max-h-[260px]` : `max-h-[260px]`}`}
@@ -266,14 +265,14 @@ type PIStransformerProps = {
 };
 
 function PISTransformer(props: PIStransformerProps): JSX.Element {
-  const { root, depth = 0 } = props;
+  const { depth = 0, root } = props;
   return (
     root && (
       <div className="flex size-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[330px]">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
-            <div key={index} id={key} className={`flex flex-col`}>
+            <div className={`flex flex-col`} id={key} key={index}>
               <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
                 <p
                   className={`pt-3 font-bold text-helios ${
@@ -284,9 +283,9 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
                 </p>
               </div>
               {Array.isArray(value) ? (
-                <FieldsPrinter fields={value} depth={depth + 1} />
+                <FieldsPrinter depth={depth + 1} fields={value} />
               ) : (
-                <PISTransformer root={value as I_PIS} depth={depth + 1} />
+                <PISTransformer depth={depth + 1} root={value as I_PIS} />
               )}
             </div>
           );

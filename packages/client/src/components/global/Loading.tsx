@@ -38,13 +38,12 @@ const Loading = (props: { currentLoadingState: LOADINGSTAGES }) => {
       <div className="left-1/2 top-1/2 flex flex-col items-center justify-center">
         <div className="flex size-96 items-center justify-center">
           <Image
-            priority
-            quality={50}
-            className={twMerge("z-40", carAnimationClass)}
-            src="/assets/HeliosSideview.png"
             alt="Loading..."
-            width={300}
+            className={twMerge("z-40", carAnimationClass)}
             height={300}
+            quality={50}
+            src="/assets/HeliosSideview.png"
+            width={300}
           />
         </div>
         <div
@@ -56,11 +55,11 @@ const Loading = (props: { currentLoadingState: LOADINGSTAGES }) => {
           )}
         >
           <Image
-            className="z"
-            src="/assets/Sun.png"
             alt="Loading..."
-            width={65}
+            className="z"
             height={65}
+            src="/assets/Sun.png"
+            width={65}
           />
         </div>
         <div className="absolute bottom-0 z-30 h-1/2 w-full bg-white dark:bg-dark" />

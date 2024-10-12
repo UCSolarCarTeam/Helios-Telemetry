@@ -64,11 +64,11 @@ export function FaultsContextProvider({ children }: PropsWithChildren) {
           }
           const newFault: IFaults = {
             faultTimer: 0,
-            severity: fault?.data[0]?.severity as ISeverity,
             indicationLocation: fault?.data[0]
               ?.indicationLocation as FaultLocations,
-            value: !!fault?.data[0]?.value,
             name: fault.name,
+            severity: fault?.data[0]?.severity as ISeverity,
+            value: !!fault?.data[0]?.value,
           };
           trueFaultsRef.current.set(fault.name, newFault);
         });

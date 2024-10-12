@@ -6,12 +6,13 @@
     "clean": "rimraf dist",
     "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
     "build": "npm run clean && npm run tsc",
-    "dev": "nodemon - exec 'ts-node' src/server.ts",
+    "dev": "NODE_ENV=development nodemon - exec 'ts-node' src/server.ts",
     "tsc": "tsc -p ./tsconfig.json"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^9.0.3",
     "@godaddy/terminus": "^4.12.1",
+    "@shared/helios-types": "*",
     "@types/sqlite3": "^3.1.11",
     "aedes": "^0.51.2",
     "axios": "^1.7.2",
@@ -26,7 +27,6 @@
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
-    "tsc": "^2.0.4",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.3"
   },

@@ -1,6 +1,5 @@
-import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
-
 import { faker } from "@faker-js/faker";
+import { ITelemetryData } from "./types";
 
 export function generateFakeTelemetryData(): ITelemetryData {
   return {

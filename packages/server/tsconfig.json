@@ -1,8 +1,6 @@
 {
   "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ]
+    "require": ["tsconfig-paths/register"]
   },
   "compilerOptions": {
     "module": "CommonJS",
@@ -14,22 +12,10 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@/client/*": [
-        "../client/src/*"
-      ]
+      "@/*": ["src/*"],
+      "@/client/*": ["../client/src/*"]
     }
   },
-  "include": [
-    ".eslint.config.mjs",
-    "src/**/*",
-    "**/*.cjs",
-    "**/*.mjs"
-  ],
-  "exclude": [
-    "dist",
-    "../client"
-  ]
+  "include": [".eslint.config.mjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
+  "exclude": ["dist", "../client"]
 }

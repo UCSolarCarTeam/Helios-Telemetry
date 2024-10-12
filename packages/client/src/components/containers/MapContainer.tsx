@@ -28,8 +28,8 @@ function MapContainer(): JSX.Element {
       <div className="grid h-[90%]">
         <Map
           carLocation={mapInputs.carLocation}
-          mapLocation={mapInputs.carLocation}
           lapLocation={mapInputs.lapLocation}
+          mapLocation={mapInputs.carLocation}
         />
       </div>
       <div className="grid h-[10%]">

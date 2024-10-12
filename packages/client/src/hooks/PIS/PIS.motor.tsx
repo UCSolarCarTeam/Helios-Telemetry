@@ -8,404 +8,404 @@ const Motor = (): I_PIS => {
   return {
     Key_Left_Motor_Details: [
       {
-        name: "Alive",
         data: [
           {
             value: currentPacket?.KeyMotor[0]?.Alive,
           },
         ],
+        name: "Alive",
       },
       {
-        name: "Set Current",
         data: [
           {
-            value: currentPacket?.KeyMotor[0]?.SetCurrent,
             unit: "%",
+            value: currentPacket?.KeyMotor[0]?.SetCurrent,
           },
         ],
+        name: "Set Current",
       },
       {
-        name: "Set Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[0]?.SetVelocity,
             unit: UnitType.RPM,
+            value: currentPacket?.KeyMotor[0]?.SetVelocity,
           },
         ],
+        name: "Set Velocity",
       },
       {
-        name: "Bus Current",
         data: [
           {
-            value: currentPacket?.KeyMotor[0]?.BusCurrent,
             unit: UnitType.AMPERAGE,
+            value: currentPacket?.KeyMotor[0]?.BusCurrent,
           },
         ],
+        name: "Bus Current",
       },
       {
-        name: "Bus Voltage",
         data: [
           {
-            value: currentPacket?.KeyMotor[0]?.BusVoltage,
             unit: UnitType.VOLTAGE,
+            value: currentPacket?.KeyMotor[0]?.BusVoltage,
           },
         ],
+        name: "Bus Voltage",
       },
       {
-        name: "Vehicle Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[0]?.VehicleVelocity,
             unit: UnitType.SPEED,
+            value: currentPacket?.KeyMotor[0]?.VehicleVelocity,
           },
         ],
+        name: "Vehicle Velocity",
       },
     ] as unknown as I_PISField[],
     Key_Right_Motor_Details: [
       {
-        name: "Alive",
         data: [
           {
             value: currentPacket?.KeyMotor[1]?.Alive,
           },
         ],
+        name: "Alive",
       },
       {
-        name: "Set Current",
         data: [
           {
-            value: currentPacket?.KeyMotor[1]?.SetCurrent,
             unit: "%",
+            value: currentPacket?.KeyMotor[1]?.SetCurrent,
           },
         ],
+        name: "Set Current",
       },
       {
-        name: "Set Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[1]?.SetVelocity,
             unit: UnitType.RPM,
+            value: currentPacket?.KeyMotor[1]?.SetVelocity,
           },
         ],
+        name: "Set Velocity",
       },
       {
-        name: "Bus Current",
         data: [
           {
+            unit: UnitType.AMPERAGE,
             value: currentPacket?.KeyMotor[1]?.BusCurrent,
-            unit: UnitType.AMPERAGE,
           },
         ],
+        name: "Bus Current",
       },
       {
-        name: "Bus Voltage",
         data: [
           {
+            unit: UnitType.AMPERAGE,
             value: currentPacket?.KeyMotor[1]?.BusVoltage,
-            unit: UnitType.AMPERAGE,
           },
         ],
+        name: "Bus Voltage",
       },
       {
-        name: "Vehicle Velocity",
         data: [
           {
-            value: currentPacket?.KeyMotor[1]?.VehicleVelocity,
             unit: UnitType.SPEED,
+            value: currentPacket?.KeyMotor[1]?.VehicleVelocity,
           },
         ],
+        name: "Vehicle Velocity",
       },
     ] as unknown as I_PISField[],
     Left_Motor_Details: [
       {
-        name: "Phase C Current",
         data: [
           {
+            unit: UnitType.AMPRMS,
             value: currentPacket?.MotorDetails[0]?.PhaseCCurrent,
-            unit: UnitType.AMPRMS,
           },
         ],
+        name: "Phase C Current",
       },
       {
-        name: "Phase B Current",
         data: [
           {
+            unit: UnitType.AMPRMS,
             value: currentPacket?.MotorDetails[0]?.PhaseBCurrent,
-            unit: UnitType.AMPRMS,
           },
         ],
+        name: "Phase B Current",
       },
       {
-        name: "Motor Voltage Real",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[0]?.MotorVoltageReal,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Motor Voltage Real",
       },
       {
+        data: [
+          {
+            unit: UnitType.VOLTAGE,
+            value: currentPacket?.MotorDetails[0]?.MotorVoltageImaginary,
+          },
+        ],
         name: "Motor Voltage Imaginary",
-        data: [
-          {
-            value: currentPacket?.MotorDetails[0]?.MotorVoltageImaginary,
-            unit: UnitType.VOLTAGE,
-          },
-        ],
       },
       {
-        name: "Motor Current Real",
         data: [
           {
+            unit: UnitType.AMPERAGE,
             value: currentPacket?.MotorDetails[0]?.MotorCurrentReal,
-            unit: UnitType.AMPERAGE,
           },
         ],
+        name: "Motor Current Real",
       },
       {
-        name: "Motor Current Imaginary",
         data: [
           {
+            unit: UnitType.AMPERAGE,
             value: currentPacket?.MotorDetails[0]?.MotorVoltageImaginary,
-            unit: UnitType.AMPERAGE,
           },
         ],
+        name: "Motor Current Imaginary",
       },
       {
-        name: "Back EMF",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[0]?.BackEmf,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Back EMF",
       },
       {
-        name: "Voltage Rail 15V",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[0]?.VoltageRail15VSupply,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Voltage Rail 15V",
       },
       {
-        name: "Voltage Rail 3V",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[0]?.VoltageRail3VSupply,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Voltage Rail 3V",
       },
       {
-        name: "Voltage Rail 1V",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[0]?.VoltageRail1VSupply,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Voltage Rail 1V",
       },
       {
-        name: "Heat Sink Temp",
         data: [
           {
-            value: currentPacket?.MotorDetails[0]?.HeatSinkTemp,
             unit: UnitType.TEMP,
+            value: currentPacket?.MotorDetails[0]?.HeatSinkTemp,
           },
         ],
+        name: "Heat Sink Temp",
       },
       {
-        name: "Motor Temp",
         data: [
           {
+            unit: "°C",
             value: currentPacket?.MotorDetails[0]?.MotorTemp,
-            unit: "°C",
           },
         ],
+        name: "Motor Temp",
       },
       {
-        name: "DSP Board Temp",
         data: [
           {
+            unit: "°C",
             value: currentPacket?.MotorDetails[0]?.DspBoardTemp,
-            unit: "°C",
           },
         ],
+        name: "DSP Board Temp",
       },
       {
-        name: "Dc Bus Amp Hours",
         data: [
           {
-            value: currentPacket?.MotorDetails[0]?.DcBusAmpHours,
             unit: "Ah",
+            value: currentPacket?.MotorDetails[0]?.DcBusAmpHours,
           },
         ],
+        name: "Dc Bus Amp Hours",
       },
       {
-        name: "Odometer",
         data: [
           {
-            value: currentPacket?.MotorDetails[0]?.Odometer,
             unit: "m",
+            value: currentPacket?.MotorDetails[0]?.Odometer,
           },
         ],
+        name: "Odometer",
       },
       {
-        name: "Slip Speed",
         data: [
           {
-            value: currentPacket?.MotorDetails[0]?.SlipSpeed,
             unit: UnitType.HERTZ,
+            value: currentPacket?.MotorDetails[0]?.SlipSpeed,
           },
         ],
+        name: "Slip Speed",
       },
     ] as unknown as I_PISField[],
     Right_Motor_Details: [
       {
-        name: "Phase C Current",
         data: [
           {
+            unit: UnitType.AMPRMS,
             value: currentPacket?.MotorDetails[1]?.PhaseCCurrent,
-            unit: UnitType.AMPRMS,
           },
         ],
+        name: "Phase C Current",
       },
       {
-        name: "Phase B Current",
         data: [
           {
+            unit: UnitType.AMPRMS,
             value: currentPacket?.MotorDetails[1]?.PhaseBCurrent,
-            unit: UnitType.AMPRMS,
           },
         ],
+        name: "Phase B Current",
       },
       {
-        name: "Motor Voltage Real",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[1]?.MotorVoltageReal,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Motor Voltage Real",
       },
       {
+        data: [
+          {
+            unit: UnitType.VOLTAGE,
+            value: currentPacket?.MotorDetails[1]?.MotorVoltageImaginary,
+          },
+        ],
         name: "Motor Voltage Imaginary",
-        data: [
-          {
-            value: currentPacket?.MotorDetails[1]?.MotorVoltageImaginary,
-            unit: UnitType.VOLTAGE,
-          },
-        ],
       },
       {
-        name: "Motor Current Real",
         data: [
           {
+            unit: UnitType.AMPERAGE,
             value: currentPacket?.MotorDetails[1]?.MotorCurrentReal,
-            unit: UnitType.AMPERAGE,
           },
         ],
+        name: "Motor Current Real",
       },
       {
-        name: "Motor Current Imaginary",
         data: [
           {
+            unit: UnitType.AMPERAGE,
             value: currentPacket?.MotorDetails[1]?.MotorVoltageImaginary,
-            unit: UnitType.AMPERAGE,
           },
         ],
+        name: "Motor Current Imaginary",
       },
       {
-        name: "Back EMF",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[1]?.BackEmf,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Back EMF",
       },
       {
-        name: "Voltage Rail 15V",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[1]?.VoltageRail15VSupply,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Voltage Rail 15V",
       },
       {
-        name: "Voltage Rail 3V",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[1]?.VoltageRail3VSupply,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Voltage Rail 3V",
       },
       {
-        name: "Voltage Rail 1V",
         data: [
           {
+            unit: UnitType.VOLTAGE,
             value: currentPacket?.MotorDetails[1]?.VoltageRail1VSupply,
-            unit: UnitType.VOLTAGE,
           },
         ],
+        name: "Voltage Rail 1V",
       },
       {
-        name: "Heat Sink Temp",
         data: [
           {
+            unit: UnitType.TEMP,
             value: currentPacket?.MotorDetails[1]?.HeatSinkTemp,
-            unit: UnitType.TEMP,
           },
         ],
+        name: "Heat Sink Temp",
       },
       {
-        name: "Motor Temp",
         data: [
           {
+            unit: UnitType.TEMP,
             value: currentPacket?.MotorDetails[1]?.MotorTemp,
-            unit: UnitType.TEMP,
           },
         ],
+        name: "Motor Temp",
       },
       {
-        name: "DSP Board Temp",
         data: [
           {
+            unit: UnitType.TEMP,
             value: currentPacket?.MotorDetails[1]?.DspBoardTemp,
-            unit: UnitType.TEMP,
           },
         ],
+        name: "DSP Board Temp",
       },
       {
-        name: "Dc Bus Amp Hours",
         data: [
           {
-            value: currentPacket?.MotorDetails[1]?.DcBusAmpHours,
             unit: UnitType.AMPHOUR,
+            value: currentPacket?.MotorDetails[1]?.DcBusAmpHours,
           },
         ],
+        name: "Dc Bus Amp Hours",
       },
       {
-        name: "Odometer",
         data: [
           {
-            value: currentPacket?.MotorDetails[1]?.Odometer,
             unit: UnitType.DISTANCE,
+            value: currentPacket?.MotorDetails[1]?.Odometer,
           },
         ],
+        name: "Odometer",
       },
       {
-        name: "Slip Speed",
         data: [
           {
-            value: currentPacket?.MotorDetails[1]?.SlipSpeed,
             unit: UnitType.HERTZ,
+            value: currentPacket?.MotorDetails[1]?.SlipSpeed,
           },
         ],
+        name: "Slip Speed",
       },
     ] as unknown as I_PISField[],
   };

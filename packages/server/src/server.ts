@@ -1,7 +1,7 @@
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { startAedes } from "@/aedes";
-import server from "@/index";
+import { server } from "@/index";
 import main from "@/main";
 
 const logger = createLightweightApplicationLogger("server.ts");

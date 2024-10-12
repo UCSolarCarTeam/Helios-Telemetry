@@ -1,6 +1,6 @@
 import { type Server, type Socket } from "socket.io";
 
-import type { ITelemetryData } from "@/interfaces/telemetry-data.interface";
+import type { ITelemetryData } from "@shared/helios-types";
 
 export interface SocketIOType {
   broadcastCarLatency(latency: number): void;

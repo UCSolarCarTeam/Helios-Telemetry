@@ -41,33 +41,33 @@ function NavBar(): JSX.Element {
 
   return (
     <Tabs
-      className="w-full"
-      value={value}
-      onChange={handleChange}
-      variant="scrollable" // make scrollable
-      scrollButtons // show scroll buttons
-      selectionFollowsFocus // allows use of arrow keys
+      TabIndicatorProps={{ style: { backgroundColor: "#B94A6C" } }} // indicate what tab you are on
       allowScrollButtonsMobile // shows scroll buttons on mobile
       aria-label="scrollable tabs"
-      TabIndicatorProps={{ style: { backgroundColor: "#B94A6C" } }} // indicate what tab you are on
+      className="w-full"
+      onChange={handleChange}
+      scrollButtons // show scroll buttons
+      selectionFollowsFocus // allows use of arrow keys
       sx={{
-        minHeight: "4vh",
-        display: "flex",
         "& .MuiTabs-flexContainer": {
-          display: "flex",
-          justifyContent: "space-around",
           alignItems: "center",
+          display: "flex",
           flexWrap: "nowrap",
+          justifyContent: "space-around",
         },
+        display: "flex",
+        minHeight: "4vh",
       }}
+      value={value}
+      variant="scrollable" // make scrollable
     >
       {routes.map((route: SolarCarRoutes, i: number) => (
         <Tab
-          sx={{ minHeight: "4vh", height: "4vh" }}
           disableRipple
           key={i}
-          value={route.value}
           label={<h3 className="text-light dark:text-dark">{route.id}</h3>}
+          sx={{ height: "4vh", minHeight: "4vh" }}
+          value={route.value}
         ></Tab>
       ))}
     </Tabs>

@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import http from "http";
+import https from "https";
 import "module-alias";
 
 import router from "@/routes/health.route";
@@ -13,6 +14,7 @@ import {
   shutdownLoggers,
 } from "@/utils/logger";
 
+import { getCredentials } from "@/credentials";
 import { type TerminusOptions, createTerminus } from "@godaddy/terminus";
 
 dotenv.config();
@@ -67,7 +69,12 @@ const terminusOption: TerminusOptions = {
   timeout: 12 * 1000, // waits before closing the server
 };
 
-export const server = createTerminus(http.createServer(app), terminusOption);
+export const server = createTerminus(
+  process.env.NODE_ENV === "development"
+    ? http.createServer(app)
+    : https.createServer(getCredentials(), app),
+  terminusOption,
+);
 
 process.on("SIGQUIT", gracefullyShutdown);
 
