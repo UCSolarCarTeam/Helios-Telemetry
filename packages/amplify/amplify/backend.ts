@@ -107,9 +107,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
       {
         efsVolumeConfiguration: {
           fileSystemId: "fs-0ef2c6e2055ced2c7",
-        },
-        host: {
-          sourcePath: "/mnt/efs",
+          rootDirectory: "/mnt/efs",
         },
         name: "TelemetryBackendEFS",
       },
