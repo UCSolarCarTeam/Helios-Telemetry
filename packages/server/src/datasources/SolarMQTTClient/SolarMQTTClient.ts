@@ -35,6 +35,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
 
   public initializeListeners() {
     this.client.on("connect", () => {
+      logger.info("MQTT CLient connected");
       this.client.subscribe([packetTopic, pongTopic], (error) => {
         if (!error) {
           //

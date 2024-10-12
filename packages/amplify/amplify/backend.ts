@@ -108,6 +108,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
+  logging: ecs.LogDrivers.awsLogs({ streamPrefix: "TelemetryBackend" }),
   memoryLimitMiB: 900,
   portMappings: [
     {
