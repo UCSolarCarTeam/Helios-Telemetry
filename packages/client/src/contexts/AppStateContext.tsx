@@ -55,7 +55,7 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     displayLoading: true,
     error: false,
-    lapCoords: { lat: 38.9377572, long: -95.677937 },
+    lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
     radioConnected: false,
     socketConnected: false,

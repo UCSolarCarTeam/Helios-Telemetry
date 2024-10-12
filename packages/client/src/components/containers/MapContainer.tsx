@@ -8,12 +8,14 @@ import type { Coords } from "@shared/helios-types";
 function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
   const [mapInputs, setMapInputs] = useState<{
+    lapLocation: Coords;
     carLocation: Coords;
   }>({
     carLocation: {
       lat: currentAppState.lapCoords.lat,
       long: currentAppState.lapCoords.long,
     },
+    lapLocation: currentAppState.lapCoords,
   });
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,6 +30,16 @@ function MapContainer(): JSX.Element {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    setMapInputs((prevMapInputs) => ({
+      ...prevMapInputs,
+      lapLocation: {
+        lat: currentAppState.lapCoords.lat,
+        long: currentAppState.lapCoords.long,
+      },
+    }));
+  }, [currentAppState.lapCoords]);
 
   return (
     <div className="size-full">

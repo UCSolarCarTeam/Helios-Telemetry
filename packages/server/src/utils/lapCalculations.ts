@@ -33,22 +33,22 @@ export function convertToDecimalDegrees(lat: string, long: string): Coords {
   lat = lat.trim();
   long = long.trim();
 
-  if (isDMM(lat)) {
-    latitude = dmmToDecimal(lat);
-  } else if (isDMS(lat)) {
+  if (isDMS(lat)) {
     latitude = dmsToDecimal(lat);
+  } else if (isDMM(lat)) {
+    latitude = dmmToDecimal(lat);
   } else if (isDDLat(lat)) {
     latitude = parseFloat(lat);
   } else {
     throw new Error("lat");
   }
 
-  if (isDMM(long)) {
+  if (isDMS(long)) {
+    longitude = dmsToDecimal(long);
+  } else if (isDMM(long)) {
     longitude = dmmToDecimal(long);
   } else if (isDDLong(long)) {
     longitude = parseFloat(long);
-  } else if (isDMS(long)) {
-    longitude = dmsToDecimal(long);
   } else {
     throw new Error("long");
   }
