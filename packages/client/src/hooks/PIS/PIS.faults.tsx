@@ -21,6 +21,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Internal Conversion Fault",
@@ -32,6 +33,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Weak Cell Fault",
@@ -42,6 +44,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Low Cell Voltage Fault",
@@ -53,6 +56,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Open Wiring Fault",
@@ -63,6 +67,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Current Sensor Fault",
@@ -73,6 +78,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Pack Voltage Sensor Fault",
@@ -84,6 +90,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Weak Pack Fault",
@@ -94,6 +101,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Voltage Redundancy Fault",
@@ -105,6 +113,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Fan Monitor Fault",
@@ -115,6 +124,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Thermistor Fault",
@@ -125,6 +135,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "CANBUS Communications Fault",
@@ -137,6 +148,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Always On Supply Fault",
@@ -148,6 +160,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "High Voltage Isolation Fault",
@@ -160,6 +173,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "12V Power Supply Fault",
@@ -171,6 +185,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Charge Limit Enforcement Fault",
@@ -183,6 +198,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Discharge Limit Enforcement Fault",
@@ -195,6 +211,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Charger Safety Relay Fault",
@@ -206,6 +223,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Internal Memory Fault",
@@ -217,6 +235,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Internal Thermistors Fault",
@@ -229,6 +248,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Internal Logic Fault",
@@ -239,6 +259,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
       ],
       LimitFlags: [
@@ -252,6 +273,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Dcl Reduced Due to HighCell Resistance",
@@ -264,6 +286,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Dcl Reduced Due to Temperature",
@@ -276,6 +299,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Dcl Reduced Due to Low Cell Voltage",
@@ -288,6 +312,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Dcl Reduced Due to Low Pack Voltage",
@@ -300,6 +325,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
@@ -312,6 +338,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
@@ -324,6 +351,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Ccl Reduced Due to High Soc",
@@ -335,6 +363,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Ccl Reduced to High Cell Resistance",
@@ -347,6 +376,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Ccl Reduced Due to Temperature",
@@ -359,6 +389,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Ccl Reduced Due to High Cell Voltage",
@@ -371,6 +402,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Ccl Reduced Due to High Pack Voltage",
@@ -383,6 +415,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Ccl Reduced Due to Charger Latch",
@@ -395,6 +428,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
         {
           name: "Ccl Reduced Due to Alternate Current Limit",
@@ -407,6 +441,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
             },
           ],
+          isFault: true,
         },
       ],
     },
@@ -422,6 +457,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Software Over Current",
@@ -433,6 +469,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Dc Bus Over Voltage",
@@ -444,6 +481,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bad Motor Position Hall Sequence",
@@ -456,6 +494,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Watch Dog Caused Last Reset",
@@ -468,6 +507,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Config Read Error",
@@ -479,6 +519,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Wail 15V Under Voltage Lock Out",
@@ -491,6 +532,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Desaturation Fault",
@@ -502,6 +544,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
         ],
         LimitFlags: [
@@ -515,6 +558,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Motor Current",
@@ -525,6 +569,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Velocity",
@@ -535,6 +580,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bus Current",
@@ -545,6 +591,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bus Voltage Upper",
@@ -556,6 +603,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bus Voltage Lower",
@@ -567,6 +615,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Ipm or Motor Temperature",
@@ -579,6 +628,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
               },
             ],
+            isFault: true,
           },
         ],
       },
@@ -593,6 +643,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Software Over Current",
@@ -605,6 +656,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Dc Bus Over Voltage",
@@ -616,6 +668,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bad Motor Position Hall Sequence",
@@ -628,6 +681,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Watch Dog Caused Last Reset",
@@ -640,6 +694,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Config Read Error",
@@ -651,6 +706,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Wail 15V Under Voltage Lock Out",
@@ -663,6 +719,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Desaturation Fault",
@@ -674,6 +731,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
         ],
         LimitFlags: [
@@ -687,6 +745,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Motor Current",
@@ -697,6 +756,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Velocity",
@@ -707,6 +767,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bus Current",
@@ -717,6 +778,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bus Voltage Upper",
@@ -728,6 +790,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Bus Voltage Lower",
@@ -739,6 +802,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
           {
             name: "Ipm or Motor Temperature",
@@ -751,6 +815,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
               },
             ],
+            isFault: true,
           },
         ],
       },
