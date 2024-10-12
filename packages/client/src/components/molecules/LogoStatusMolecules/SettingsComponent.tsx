@@ -95,6 +95,7 @@ function SettingsComponent() {
             </div>
           </div>
 
+          {/* Made 40% 60% width */}
           <div
             style={{ gridTemplateColumns: "40% 60%" }}
             className="mb-4 grid items-center justify-between"
