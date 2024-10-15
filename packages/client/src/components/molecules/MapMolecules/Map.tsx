@@ -11,30 +11,26 @@ import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
+import type { Coords } from "@shared/helios-types";
 
 // @ts-expect-error:next-line
 type MapLibType = MapLib<mapboxgl.Map>;
 
-type ILocation = {
-  lat: number;
-  lng: number;
-};
-
 type IMapProps = {
-  carLocation: ILocation;
-  mapLocation: ILocation;
-  lapLocation: ILocation;
+  carLocation: Coords;
+  mapLocation: Coords;
+  lapLocation: Coords;
 };
 
 const fitToBounds = (
   map: mapboxgl.Map,
-  carLocation: ILocation,
-  lapLocation: ILocation,
+  carLocation: Coords,
+  lapLocation: Coords,
 ) => {
   if (!map) return;
   const bounds: LngLatBoundsLike = [
-    [carLocation.lng, carLocation.lat],
-    [lapLocation.lng, lapLocation.lat],
+    [carLocation.long, carLocation.lat],
+    [lapLocation.long, lapLocation.lat],
   ];
 
   map.fitBounds(bounds, {
@@ -64,7 +60,7 @@ function Map(props: IMapProps): JSX.Element {
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    const isOutsideBounds = (coordinates: ILocation[]): boolean => {
+    const isOutsideBounds = (coordinates: Coords[]): boolean => {
       if (!mapRef.current) return false;
       const bounds = mapRef.current?.getBounds() as LngLatBounds | undefined;
       const { lat, lng } = bounds?.getNorthEast() || { lat: 0, lng: 0 };
@@ -77,8 +73,8 @@ function Map(props: IMapProps): JSX.Element {
         const coord = coordinates[i];
         if (
           coord &&
-          (coord.lng < westLng ||
-            coord.lng > lng ||
+          (coord.long < westLng ||
+            coord.long > lng ||
             coord.lat < southLat ||
             coord.lat > lat)
         ) {
@@ -87,12 +83,12 @@ function Map(props: IMapProps): JSX.Element {
       }
       return false;
     };
-    const coordinates: ILocation[] = [carLocation, mapLocation, lapLocation];
+    const coordinates: Coords[] = [carLocation, mapLocation, lapLocation];
     if (isOutsideBounds(coordinates) && mapRef.current && !mapStates.centered) {
       fitToBounds(mapRef.current, carLocation, lapLocation);
     } else if (mapStates.centered && mapRef.current) {
       mapRef.current.flyTo({
-        center: [carLocation.lng, carLocation.lat],
+        center: [carLocation.long, carLocation.lat],
         curve: 1, // Adjust the curve of the animation
         easing: (t) => t, // Easing function for the animation
         speed: 1.5, // Adjust the speed of the animation
@@ -112,13 +108,13 @@ function Map(props: IMapProps): JSX.Element {
           t,
         );
         const newLng = lerp(
-          prevMapStates.currentCarLocation.lng,
-          carLocation.lng,
+          prevMapStates.currentCarLocation.long,
+          carLocation.long,
           t,
         );
         return {
           ...prevMapStates,
-          currentCarLocation: { lat: newLat, lng: newLng },
+          currentCarLocation: { lat: newLat, long: newLng },
         };
       });
       animationFrameId = requestAnimationFrame(animateCarMarker);
@@ -177,7 +173,7 @@ function Map(props: IMapProps): JSX.Element {
           dragRotate={true}
           initialViewState={{
             latitude: mapLocation.lat,
-            longitude: mapLocation.lng,
+            longitude: mapLocation.long,
             zoom: 14,
           }}
           keyboard={false}
@@ -204,7 +200,7 @@ function Map(props: IMapProps): JSX.Element {
         >
           <Marker
             latitude={mapStates.currentCarLocation.lat}
-            longitude={mapStates.currentCarLocation.lng}
+            longitude={mapStates.currentCarLocation.long}
           >
             <Image
               alt="map-pin"
@@ -215,7 +211,7 @@ function Map(props: IMapProps): JSX.Element {
           </Marker>
           <Marker
             latitude={lapLocation.lat}
-            longitude={lapLocation.lng}
+            longitude={lapLocation.long}
             style={{
               color:
                 mapStates.satelliteMode === true
