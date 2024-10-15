@@ -5,19 +5,6 @@ import usePIS from "@/hooks/PIS/usePIS";
 import type { I_PISField } from "@/objects/PIS/PIS.interface";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 
-// const fakeData = {
-//   "Motor Temp": 55,
-//   "Battery Power": 54.35,
-//   Motor: 55,
-//   "Motor Temp1": 55,
-//   "Motor Temp2": 55,
-//   "Motor Temp3": 55,
-//   "Pack Voltage": 55,
-//   MPPT: 55,
-//   "Battery Current": 55,
-//   "Bus Voltage": 55,
-// };
-
 function BottomInformationContainer() {
   const { currentAppState } = useAppState();
   const { battery, motor, mppt } = usePIS();
@@ -94,53 +81,5 @@ function BottomInformationContainer() {
       </div>
     </div>
   );
-
-  {
-    /* <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE </div>
-          <div className="text-helios">{fakeData["Motor Temp"]}</div>
-        </div> */
-  }
-  {
-    /* <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> BATTERY POWER </div>
-          <div className="text-helios">{fakeData["Battery Power"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> MOTOR </div>
-          <div className="text-helios">{fakeData["Motor"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE</div>
-          <div className="text-helios">{fakeData["Motor Temp1"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE </div>
-          <div className="text-helios">{fakeData["Motor Temp2"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> MOTOR TEMPERATURE </div>
-          <div className="text-helios">{fakeData["Motor Temp3"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> PACK VOLTAGE </div>
-          <div className="text-helios">{fakeData["Pack Voltage"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> MPPT </div>
-          <div className="text-helios">{fakeData["MPPT"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> BATTERY CURRENT </div>
-          <div className="text-helios">{fakeData["Battery Current"]}</div>
-        </div>
-        <div className="min-w-32">
-          <div className="text-xs 2xl:text-sm"> BUS VOLTAGE </div>
-          <div className="text-helios">{fakeData["Bus Voltage"]}</div>
-        </div> */
-    //   </div>
-    // </div>
-    //);
-  }
 }
 export default BottomInformationContainer;
