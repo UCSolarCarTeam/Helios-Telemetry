@@ -1,5 +1,6 @@
 import BatteryTab from "@/components/tabs/BatteryTab";
 import FaultsTab from "@/components/tabs/FaultsTab";
+import LapTab from "@/components/tabs/LapTab";
 import MotorTab from "@/components/tabs/MotorTab";
 import MpptTab from "@/components/tabs/MpptTab";
 import PlaybackTab from "@/components/tabs/PlaybackTab";
@@ -20,4 +21,5 @@ export const routes: SolarCarRoutes[] = [
   { element: <MpptTab />, id: "MPPT", path: "/mppt", value: "4" },
   { element: <PlaybackTab />, id: "Playback", path: "/playback", value: "5" },
   { element: <RaceTab />, id: "Race", path: "/race", value: "6" },
+  { element: <LapTab />, id: "Lap", path: "/lap", value: "7" },
 ];
