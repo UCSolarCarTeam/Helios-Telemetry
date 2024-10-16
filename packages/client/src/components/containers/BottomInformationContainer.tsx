@@ -8,7 +8,7 @@ import type I_PIS from "@/objects/PIS/PIS.interface";
 function BottomInformationContainer() {
   const { currentAppState } = useAppState();
   const { battery, motor, mppt } = usePIS();
-  const favourites = currentAppState.favourites;
+  const favourites = currentAppState?.favourites ?? [];
 
   const findValueByNameInData = (
     dataArray: I_PIS[],

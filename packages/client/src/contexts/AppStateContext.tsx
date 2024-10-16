@@ -109,14 +109,16 @@ export function AppStateContextProvider({ children }: Props) {
 
   const fetchSettingsFromLocalStorage = useCallback(() => {
     const savedSettings = localStorage.getItem("settings");
-    if (savedSettings) {
+    const favourites = localStorage.getItem("favourites");
+    if (savedSettings && favourites) {
       const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
+      const parsedFavourites: string[] = JSON.parse(favourites) as string[];
       setCurrentAppState((prev) => ({
         ...prev,
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
         darkMode: parsedSettings.darkMode,
-        favourites: parsedSettings.favourites,
+        favourites: parsedFavourites,
         lapCoords: parsedSettings.lapCoords,
       }));
     }
