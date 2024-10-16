@@ -1,9 +1,8 @@
-import { type MqttClient, connect } from "mqtt";
+import { IClientOptions, type MqttClient, connect } from "mqtt";
 
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
 import {
-  type MQTTOptions,
   type SolarMQTTClientType,
   topics,
 } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
@@ -19,8 +18,8 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   client: MqttClient;
   backendController: BackendController;
   pingLastSent: number;
-  constructor(options: MQTTOptions, backendController: BackendController) {
-    this.client = connect(options.url);
+  constructor(options: IClientOptions, backendController: BackendController) {
+    this.client = connect(options);
     this.backendController = backendController;
     this.initializeListeners();
     this.pingLastSent = Date.now();
@@ -40,7 +39,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         if (!error) {
           //
         } else {
-          console.error("Subscription error: ", error);
+          logger.error("Subscription error: ", error);
         }
       });
       this.pingTimer(5000);
@@ -56,6 +55,9 @@ export class SolarMQTTClient implements SolarMQTTClientType {
       } else {
         logger.info("unknown topic: ", topic, "message: ", message.toString());
       }
+    });
+    this.client.on("error", (error) => {
+      logger.error("MQTT Client error: ", error);
     });
   }
 }
