@@ -1,12 +1,15 @@
 import type { MqttClient } from "mqtt";
 import type { IClientOptions } from "mqtt/*";
 
-import type { ITelemetryData } from "@shared/helios-types";
-
-export type MQTTOptions = IClientOptions & { url: string };
-export const options: MQTTOptions = {
-  url: `mqtt://localhost:1883`,
+export const options: IClientOptions = {
+  host: "127.0.0.1",
+  port: 1883,
+  protocolVersion: 3,
+  username: "urMom",
+  password: "hasAedes",
+  protocol: "tcp",
 };
+
 export const topics = {
   packetTopic: "packet",
   pingTopic: "ping",

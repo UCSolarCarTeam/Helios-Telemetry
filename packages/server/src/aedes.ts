@@ -12,6 +12,7 @@ class MqttError extends Error {
   returnCode: number;
 
   constructor(message: string, returnCode: number) {
+    logger.warn(message + ` - ${returnCode}`);
     super(message);
     this.returnCode = returnCode;
     // Set the prototype explicitly.
