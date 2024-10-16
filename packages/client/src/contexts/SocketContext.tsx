@@ -9,18 +9,24 @@ import {
 import { type Socket, io } from "socket.io-client";
 
 import { useAppState } from "@/contexts/AppStateContext";
-import type { ITelemetryData } from "@shared/helios-types";
+import type {
+  CoordInfoUpdate,
+  CoordUpdateResponse,
+  Coords,
+  ITelemetryData,
+} from "@shared/helios-types";
 
 interface ClientToServerEvents {
   ping: (cb: (val: number) => void) => void;
+  setLapCoords: (coords: CoordInfoUpdate) => void;
 }
 
 interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
+  lapCoords: (coords: CoordUpdateResponse) => void;
   carLatency: (value: number) => void;
 }
 
-// TODO:set undefined to ServerURL once deployed.
 const URL =
   process.env.NODE_ENV === "production"
     ? "aedes.calgarysolarcar.ca:3001"
@@ -49,6 +55,16 @@ export function SocketContextProvider({
     [setCurrentAppState],
   );
 
+  const onLapCoords = useCallback(
+    (coords: CoordUpdateResponse) => {
+      if ("error" in coords) {
+        return;
+      }
+      setCurrentAppState((prev) => ({ ...prev, lapCoords: coords as Coords }));
+    },
+    [setCurrentAppState],
+  );
+
   useEffect(() => {
     // Connect to the socket
     socketIO.connect();
@@ -65,12 +81,14 @@ export function SocketContextProvider({
 
     // Register event listeners
     socketIO.on("carLatency", onCarLatency);
+    socketIO.on("lapCoords", onLapCoords);
     return () => {
       socketIO.disconnect();
       clearInterval(id);
       socketIO.off("carLatency", onCarLatency);
+      socketIO.off("lapCoords", onLapCoords);
     };
-  }, [onCarLatency, setCurrentAppState]);
+  }, [onCarLatency, onLapCoords, setCurrentAppState]);
 
   // Socket connection status listeners
   socketIO.on("connect", () => {

@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+import type { Coords } from "@shared/helios-types";
+
 interface Props {
   children: ReactNode | ReactNode[];
 }
@@ -35,6 +37,7 @@ interface IAppState {
   radioConnected: boolean;
   userLatency: number;
   carLatency: number;
+  lapCoords: Coords;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -52,6 +55,7 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     displayLoading: true,
     error: false,
+    lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
     radioConnected: false,
     socketConnected: false,
@@ -110,6 +114,7 @@ export function AppStateContextProvider({ children }: Props) {
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
         darkMode: parsedSettings.darkMode,
+        lapCoords: parsedSettings.lapCoords,
       }));
     }
   }, []);
