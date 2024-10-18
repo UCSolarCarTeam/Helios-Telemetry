@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import {
   type I_PISField,
@@ -14,6 +16,7 @@ function FieldUnitsHandler(
   unit: UnitType | undefined,
   value: string | number | boolean,
 ) {
+  // const [favorites,setFavorites]= useState([]); MAKE THIS A CONTEXT
   const { currentAppState } = useAppState();
 
   let unitReturn: string | undefined;
@@ -69,17 +72,17 @@ function FieldUnitsHandler(
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { expectedBool, max, min, unit, value } = props.fieldData;
-
+  const valueType = typeof value;
   const inRange =
     // If value is of type string range is true
-    typeof value === "string"
+    valueType === "string"
       ? true
       : // If value is of type number range is true if min and max are undefined or value is between min and max
-        typeof value === "number"
-        ? (min === undefined || value >= min) &&
-          (max === undefined || value <= max)
+        valueType === "number"
+        ? (min === undefined || (typeof value === "number" && value >= min)) &&
+          (max === undefined || (typeof value === "number" && value <= max))
         : // If value is of type boolean range is true if expectedBool is undefined and value is false or value is equal to expectedBool
-          typeof value === "boolean"
+          valueType === "boolean"
           ? (expectedBool === undefined && value === false) ||
             expectedBool === value
           : false;
@@ -164,7 +167,10 @@ type FieldPrinterProps = {
 };
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
+  const [isHovered, setIsHovered] = useState(false);
+  const { setCurrentAppState } = useAppState();
   const { field } = props;
+
   if (
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
@@ -174,10 +180,65 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     );
     return <div>PIS ERROR: </div>;
   }
+
+  const handleAddToFavourites = () => {
+    const storedFavourites = localStorage.getItem("favourites");
+    const parsedFavourites: string[] = storedFavourites
+      ? (JSON.parse(storedFavourites) as string[])
+      : [];
+
+    // Check if the field is already in the favourites
+    if (
+      !parsedFavourites.some((fav) => fav === field.name) &&
+      typeof field.name === "string"
+    ) {
+      if (parsedFavourites.length === 8 && typeof field.name === "string") {
+        // can't add more than 8 favourites, so replace the first one
+        parsedFavourites.shift();
+        parsedFavourites.push(field.name);
+
+        setCurrentAppState((prev) => ({
+          ...prev,
+          favourites: parsedFavourites,
+        }));
+        localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
+        return;
+      } else {
+        parsedFavourites.push(field.name);
+        setCurrentAppState((prev) => ({
+          ...prev,
+          favourites: parsedFavourites,
+        }));
+        localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
+        return;
+      }
+    }
+
+    // Check if the parsedFavourites array is already full
+  };
   return (
-    <div className="mt-1 flex items-center justify-between text-xs">
-      {field.name}:
-      <FieldDataFormatter data={field.data} fstring={field.fstring} />
+    <div>
+      {isHovered && field.isFault === undefined ? (
+        <div
+          className="mt-1 flex items-center justify-between text-xs"
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <span
+            className="flex cursor-pointer items-center text-xs font-bold text-helios"
+            onClick={handleAddToFavourites}
+          >
+            Add to Favourites
+          </span>
+        </div>
+      ) : (
+        <div
+          className="mt-1 flex items-center justify-between text-xs"
+          onMouseEnter={() => setIsHovered(true)}
+        >
+          {field.name}:
+          <FieldDataFormatter data={field.data} fstring={field.fstring} />
+        </div>
+      )}
     </div>
   );
 }
