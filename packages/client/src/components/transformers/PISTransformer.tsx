@@ -229,6 +229,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
           >
             Add to Favourites
           </span>
+          <FieldDataFormatter data={field.data} fstring={field.fstring} />
         </div>
       ) : (
         <div
