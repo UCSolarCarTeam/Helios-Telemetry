@@ -9,7 +9,7 @@ function TabsContainer() {
   const { slug } = router.query;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex h-full flex-col">
       <NavBar />
       {routes.map((route: SolarCarRoutes) => {
         if (route.path === "/" + slug?.toString()) {
