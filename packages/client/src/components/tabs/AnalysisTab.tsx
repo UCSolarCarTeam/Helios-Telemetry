@@ -5,6 +5,8 @@ import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
+import MLContainer from "../containers/MLContainer";
+
 type TabContentProps = React.PropsWithChildren<{
   index: number;
   value: number;
@@ -84,8 +86,8 @@ function AnalysisTab() {
       </div>
 
       {/* MAIN */}
-      <div className="flex size-full flex-col justify-between gap-x-2 gap-y-6 md:flex-row">
-        <div className="flex max-w-44 flex-col gap-y-1">
+      <div className="flex flex-col flex-wrap justify-between gap-y-6 md:flex-row md:gap-x-4">
+        <div className="flex max-w-44 flex-col gap-y-1 md:w-auto">
           {filters.map((filter) => (
             <div className="flex items-center" key={filter}>
               <label className="flex cursor-pointer items-center gap-x-2">
@@ -104,11 +106,15 @@ function AnalysisTab() {
         </div>
 
         <div
-          className="flex flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-4"
+          className="flex w-full flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-4 lg:w-auto"
           id="main-content"
         >
           <TabContent index={0} value={value}>
-            Graphs
+            {/* Graphs */}
+            <div className="flex size-full items-center justify-center gap-x-4">
+              <MLContainer />
+              {/* Put other graphs here */}
+            </div>
           </TabContent>
           <TabContent index={1} value={value}>
             Stats
