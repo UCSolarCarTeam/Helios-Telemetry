@@ -3,6 +3,7 @@ import HeroContainer from "@/components/containers/HeroContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
 import TabsContainer from "@/components/containers/TabsContainer";
+import PlaybackSlider from "@/components/molecules/PlaybackMolecules/PlaybackSlider";
 import { useAppState } from "@/contexts/AppStateContext";
 
 export default function Home() {
@@ -29,7 +30,11 @@ export default function Home() {
             </div>
           </div>
           <div className="grid">
-            <BottomInformationContainer />
+            {currentAppState.playbackSwitch ? (
+              <PlaybackSlider />
+            ) : (
+              <BottomInformationContainer />
+            )}
           </div>
         </div>
       </div>

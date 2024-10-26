@@ -36,6 +36,9 @@ const config: Config = {
       textDecorationColor: {
         helios: "#B94A6C",
       },
+      focus: {
+        helios: "#B94A6C",
+      },
       animation: {
         driveOffScreen: "driveOffScreen 1s ease-in forwards",
         driveInScreen: "driveInScreen 1s ease-out forwards",
