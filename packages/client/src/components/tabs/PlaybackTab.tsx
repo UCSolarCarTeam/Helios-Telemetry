@@ -1,5 +1,5 @@
 function PlaybackTab() {
-  return <p>Playback Tab</p>;
+  return <div>PlaybackTab</div>;
 }
 
 export default PlaybackTab;

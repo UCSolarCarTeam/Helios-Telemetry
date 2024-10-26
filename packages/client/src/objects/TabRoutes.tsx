@@ -18,6 +18,5 @@ export const routes: SolarCarRoutes[] = [
   { element: <FaultsTab />, id: "Faults", path: "/faults", value: "2" },
   { element: <MotorTab />, id: "Motor", path: "/motor", value: "3" },
   { element: <MpptTab />, id: "MPPT", path: "/mppt", value: "4" },
-  { element: <PlaybackTab />, id: "Playback", path: "/playback", value: "5" },
-  { element: <RaceTab />, id: "Race", path: "/race", value: "6" },
+  { element: <RaceTab />, id: "Race", path: "/race", value: "5" },
 ];
