@@ -4,6 +4,7 @@ import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
+import PlaybackDateSelector from "@/components/molecules/PlaybackMolecules/PlaybackDateSelector";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
 
@@ -44,9 +45,13 @@ function StatusComponent() {
         <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs">
           Timestamp:
         </h5>
-        <h5 className="text-text-gray dark:text-text-gray-dark text-nowrap pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
-          {packetTime}
-        </h5>
+        {currentAppState.playbackSwitch ? (
+          <PlaybackDateSelector />
+        ) : (
+          <h5 className="text-text-gray dark:text-text-gray-dark text-nowrap pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
+            {packetTime}
+          </h5>
+        )}
         <h5 className="text-text-gray dark:text-text-gray-dark pb-1 text-xs">
           Connection:
         </h5>
