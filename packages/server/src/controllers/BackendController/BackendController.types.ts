@@ -1,5 +1,6 @@
 import type { LapController } from "@/controllers/LapController/LapController";
 
+import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import type { SQLite } from "@/datasources/DynamoDB/SQLite";
 import type { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import type { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
@@ -13,5 +14,5 @@ export interface BackendControllerTypes {
   lapController: LapController;
   mqtt: SolarMQTTClient;
   socketIO: SocketIO;
-  sqLite: SQLite;
+  dynamoDB: DynamoDB;
 }
