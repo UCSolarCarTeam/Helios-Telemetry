@@ -69,7 +69,7 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
           value: TelemetryBackendImageRepository.repositoryUri,
         },
         IMAGE_TAG: {
-          value: "latest",
+          value: Math.random().toString(36).substring(2, 10),
         },
       },
       privileged: true,
