@@ -245,6 +245,25 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   "Aedes - Allow inbound traffic on port 1883",
 );
 
+//Give DynamoDB Permissions to hte packet data and lap data
+const dynamoDbAccessPolicy = new iam.PolicyStatement({
+  actions: [
+    "dynamodb:PutItem",
+    "dynamodb:GetItem",
+    "dynamodb:Scan",
+    "dynamodb:Query",
+  ],
+  effect: iam.Effect.ALLOW,
+
+  resources: [
+    `arn:aws:dynamodb:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:table/packet_data_table`,
+    `arn:aws:dynamodb:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:table/lap_data_table`,
+  ],
+});
+
+// Attach the policy to the ECS Task Role
+TelemetryECSTaskDefintion.taskRole.addToPrincipalPolicy(dynamoDbAccessPolicy);
+
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
 const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
   TelemetryBackendStack,
