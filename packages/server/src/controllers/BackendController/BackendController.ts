@@ -3,7 +3,7 @@ import type { IncomingMessage, Server, ServerResponse } from "http";
 import type { BackendControllerTypes } from "@/controllers/BackendController/BackendController.types";
 import { LapController } from "@/controllers/LapController/LapController";
 
-import { SQLite } from "@/datasources/SQLite/SQLite";
+import { SQLite } from "@/datasources/DynamoDB/SQLite";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
