@@ -14,5 +14,4 @@ export interface BackendControllerTypes {
   lapController: LapController;
   mqtt: SolarMQTTClient;
   socketIO: SocketIO;
-  sqLite: SQLite;
 }
