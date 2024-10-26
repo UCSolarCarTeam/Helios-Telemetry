@@ -8,11 +8,10 @@ import type { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTCli
 import type { ITelemetryData } from "@shared/helios-types";
 
 export interface BackendControllerTypes {
+  dynamoDB: DynamoDB;
   establishCarPinging(): void;
   handleCarLatency(carLatency: number): void;
   handlePacketReceive(message: ITelemetryData): void;
   lapController: LapController;
   mqtt: SolarMQTTClient;
-  socketIO: SocketIO;
-  dynamoDB: DynamoDB;
 }
