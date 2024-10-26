@@ -13,4 +13,6 @@ export interface BackendControllerTypes {
   handlePacketReceive(message: ITelemetryData): void;
   lapController: LapController;
   mqtt: SolarMQTTClient;
+  socketIO: SocketIO;
+  sqLite: SQLite;
 }

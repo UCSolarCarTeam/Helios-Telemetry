@@ -40,7 +40,7 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    // await this.sqLite.insertPacketData(message);
+    await this.dynamoDB.insertPacketData(message);
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
