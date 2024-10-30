@@ -2,6 +2,8 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useEffect, useRef, useState } from "react";
 
+import PauseIcon from "@/components/atoms/PauseIcon";
+import PlayIcon from "@/components/atoms/PlayIcon";
 import { usePacket } from "@/contexts/PacketContext";
 
 export default function PlaybackSlider() {
@@ -44,19 +46,30 @@ export default function PlaybackSlider() {
   };
 
   return (
-    <div className="flex flex-row items-center justify-center gap-2">
+    <div className="flex flex-row items-center justify-center gap-2 py-1">
       <button
-        className="rounded-xl bg-red-500 p-2"
+        className="focus:none rounded-md bg-helios p-1"
         onClick={() => {
           setIsPlaying((prev) => !prev);
         }}
       >
-        {isPlaying ? "Pause" : "Play"}
+        {isPlaying ? (
+          <PauseIcon color="white" height="25" width="25" />
+        ) : (
+          <PlayIcon color="white" height="25" width="25" />
+        )}
       </button>
-      <Slider
-        onChange={(value) => handleSliderChange(value as number)}
-        value={sliderValue}
-      />
+      <div className="w-full rounded-md bg-helios p-2">
+        <Slider
+          handleStyle={{
+            backgroundColor: "red",
+            borderColor: "white",
+          }}
+          onChange={(value) => handleSliderChange(value as number)}
+          trackStyle={{ backgroundColor: "#fff" }}
+          value={sliderValue}
+        />
+      </div>
     </div>
   );
 }
