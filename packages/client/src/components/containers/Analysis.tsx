@@ -26,7 +26,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
           margin: "10px",
           width: squareWidth,
         }}
-      />
+      >
+        <p>Optimal Driving speed at 38%</p>
+      </div>
 
       {/* Second square */}
       <div
