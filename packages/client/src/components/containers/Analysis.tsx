@@ -12,9 +12,9 @@ interface ShapeProps {
 
 const GreyShapes: React.FC<ShapeProps> = ({
   infoNumber = 78,
-  rectangleHeight = 100,
-  rectangleWidth = 20,
-  squareWidth = 100,
+  rectangleHeight = "107px",
+  rectangleWidth = "285px",
+  squareWidth = "285px",
 }) => {
   return (
     <div>
@@ -39,6 +39,16 @@ const GreyShapes: React.FC<ShapeProps> = ({
       />
 
       {/* Rectangle 1 */}
+      <div
+        style={{
+          backgroundColor: "grey",
+          height: rectangleHeight,
+          margin: "10px",
+          width: rectangleWidth,
+        }}
+      />
+
+      {/* Rectangle 2 */}
       <div
         style={{
           backgroundColor: "grey",
