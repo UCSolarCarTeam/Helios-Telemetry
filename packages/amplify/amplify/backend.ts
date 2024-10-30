@@ -10,6 +10,7 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as eventbridge from "aws-cdk-lib/aws-events";
 import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
 import * as url from "node:url";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -245,6 +246,26 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   "Aedes - Allow inbound traffic on port 1883",
 );
 
+const packetDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "packet_data_table",
+  {
+    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+  },
+);
+
+const lapDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "lap_data_table",
+  {
+    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+  },
+);
+
 //Give DynamoDB Permissions to hte packet data and lap data
 const dynamoDbAccessPolicy = new iam.PolicyStatement({
   actions: [
@@ -256,8 +277,10 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
   effect: iam.Effect.ALLOW,
 
   resources: [
-    `arn:aws:dynamodb:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:table/packet_data_table`,
-    `arn:aws:dynamodb:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:table/lap_data_table`,
+    packetDataTable.tableArn,
+    lapDataTable.tableArn,
+    `${packetDataTable.tableArn}/index/*`,
+    `${lapDataTable.tableArn}/index/*`,
   ],
 });
 
