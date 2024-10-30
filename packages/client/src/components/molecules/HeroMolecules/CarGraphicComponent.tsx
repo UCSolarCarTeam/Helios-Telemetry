@@ -10,6 +10,7 @@ import type {
   IndicationLocations,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
+import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
@@ -25,6 +26,7 @@ const duration = 500;
 
 const CarGraphicComponent = () => {
   const { currentPacket } = usePacket();
+  const { currentAppState } = useAppState();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
     battery: ISeverity.CLEAR,
@@ -97,7 +99,11 @@ const CarGraphicComponent = () => {
         <RoadComponent
           direction={currentPacket?.DriverControls}
           size={20}
-          speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
+          speed={
+            currentAppState.playbackSwitch
+              ? 0
+              : (currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5
+          }
         />
         <ContactShadows
           blur={2.5}
