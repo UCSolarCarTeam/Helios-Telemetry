@@ -1,6 +1,7 @@
 // ticket 207 on jira - to find more info about this
 //notes: on figma, go to file called Race Tab - Analysis Mockup 2 - Stats
 // I have to create the 2 squares and rectangles
+// make an analysis tab to view the shapes
 import React from "react";
 
 interface ShapeProps {
@@ -27,7 +28,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           width: squareWidth,
         }}
       >
-        <p>Optimal Driving speed at 38%</p>
+        <p>Optimal Driving speed at {infoNumber}</p>
       </div>
 
       {/* Second square */}
