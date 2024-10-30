@@ -27,6 +27,26 @@ const GreyShapes: React.FC<ShapeProps> = ({
           width: squareWidth,
         }}
       />
+
+      {/* Second square */}
+      <div
+        style={{
+          backgroundColor: "grey",
+          height: squareWidth,
+          margin: "10px",
+          width: squareWidth,
+        }}
+      />
+
+      {/* Rectangle 1 */}
+      <div
+        style={{
+          backgroundColor: "grey",
+          height: rectangleHeight,
+          margin: "10px",
+          width: rectangleWidth,
+        }}
+      />
     </div>
   );
 };
