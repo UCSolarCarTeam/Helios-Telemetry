@@ -100,23 +100,36 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 
-const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
+const packetDataTable = new dynamodb.Table(
   TelemetryBackendStack,
-  "TelemetryECSTaskDefintion",
+  "packet_data_table",
   {
-    volumes: [
-      {
-        efsVolumeConfiguration: {
-          fileSystemId: "fs-0ef2c6e2055ced2c7",
-          rootDirectory: "/mnt/efs",
-        },
-        name: "TelemetryBackendEFS",
-      },
-    ],
+    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
   },
 );
 
+const lapDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "lap_data_table",
+  {
+    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+  },
+);
+
+const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
+  TelemetryBackendStack,
+  "TelemetryECSTaskDefintion",
+);
+
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
+  environment: {
+    LAP_TABLE_NAME: lapDataTable.tableName,
+    PACKET_TABLE_NAME: packetDataTable.tableName,
+  },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "TelemetryBackend" }),
   memoryLimitMiB: 900,
@@ -246,26 +259,6 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   "Aedes - Allow inbound traffic on port 1883",
 );
 
-const packetDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "packet_data_table",
-  {
-    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.DESTROY,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
-  },
-);
-
-const lapDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "lap_data_table",
-  {
-    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.DESTROY,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
-  },
-);
-
 //Give DynamoDB Permissions to hte packet data and lap data
 const dynamoDbAccessPolicy = new iam.PolicyStatement({
   actions: [
@@ -276,12 +269,7 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
   ],
   effect: iam.Effect.ALLOW,
 
-  resources: [
-    packetDataTable.tableArn,
-    lapDataTable.tableArn,
-    `${packetDataTable.tableArn}/index/*`,
-    `${lapDataTable.tableArn}/index/*`,
-  ],
+  resources: [packetDataTable.tableArn, lapDataTable.tableArn],
 });
 
 // Attach the policy to the ECS Task Role
