@@ -10,6 +10,8 @@
     "tsc": "tsc -p ./tsconfig.json"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.682.0",
+    "@aws-sdk/lib-dynamodb": "^3.682.0",
     "@faker-js/faker": "^9.0.3",
     "@godaddy/terminus": "^4.12.1",
     "@shared/helios-types": "*",

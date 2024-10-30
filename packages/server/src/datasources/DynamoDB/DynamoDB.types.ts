@@ -1,12 +1,17 @@
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { type ILapData, type ITelemetryData } from "@shared/helios-types";
 
 export interface DynamoDBtypes {
   close(): Promise<void>;
-  client: DynamoDBDocumentClient;
-  getLapData(date: Date): Promise<ILapData[]>;
-  getPacketData(date: Date): Promise<ITelemetryData[]>;
-  getFirstAndLastPacketDates(): Promise<[Date | null, Date | null]>;
-  insertLapData(packet: ILapData): Promise<{ id: number }>;
-  insertPacketData(packet: ITelemetryData): Promise<{ id: number }>;
+  client: DynamoDBClient;
+  // getLapData(date: Date): Promise<ILapData[]>;
+  getPacketData(date: Date): void;
+  // getFirstAndLastPacketDates(): Promise<[Date | null, Date | null]>;
+  // insertLapData(packet: ILapData): Promise<{ id: number }>;
+  insertPacketData(packet: ITelemetryData): Promise<GenericResponse>;
+}
+
+export interface GenericResponse {
+  httpsStatusCode: number;
+  requestId: string;
 }

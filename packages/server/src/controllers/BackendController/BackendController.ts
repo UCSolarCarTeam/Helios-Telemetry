@@ -42,6 +42,9 @@ export class BackendController implements BackendControllerTypes {
     // Insert the packet into the database
     await this.dynamoDB.insertPacketData(message);
 
+    this.dynamoDB.getPacketData(new Date());
+    this.dynamoDB.insertPacketData(message);
+
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
     this.socketIO.broadcastLapCoords(this.lapController.finishLineLocation);

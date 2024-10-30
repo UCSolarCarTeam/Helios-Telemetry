@@ -83,7 +83,7 @@ export class LapController implements LapControllerType {
         totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
 
-      await this.backendController.sqLite.insertLapData(lapData);
+      // await this.backendController.sqLite.insertLapData(lapData);
       this.lastLapPackets = [];
     }
     this.lastLapPackets.push(packet);
