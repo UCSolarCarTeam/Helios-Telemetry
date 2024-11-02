@@ -40,9 +40,6 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    await this.dynamoDB.insertPacketData(message);
-
-    this.dynamoDB.getPacketData(new Date());
     this.dynamoDB.insertPacketData(message);
 
     // Broadcast the packet to the frontend
