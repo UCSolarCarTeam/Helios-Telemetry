@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
 import {
@@ -13,6 +15,16 @@ import {
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
+if (!process.env.LAP_TABLE_NAME) {
+  throw new Error("Lap table name not defined");
+}
+
+if (!process.env.PACKET_TABLE_NAME) {
+  throw new Error("Lap table name not defined");
+}
+
+const packetTableName = process.env.PACKET_TABLE_NAME;
+const lapTableName = process.env.LAP_TABLE_NAME;
 export class DynamoDB implements DynamoDBtypes {
   public client: DynamoDBClient;
   backendController: BackendController;
@@ -23,8 +35,8 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       this.backendController = backendController;
       this.client = new DynamoDBClient({ region: "ca-central-1" });
-      this.lapTableName = process.env.LAP_TABLE_NAME;
-      this.packetTableName = process.env.PACKET_TABLE_NAME;
+      this.lapTableName = lapTableName;
+      this.packetTableName = packetTableName;
     } catch (error) {
       console.error("Error connecting to dynamo client");
       throw new Error(error);
@@ -76,10 +88,12 @@ export class DynamoDB implements DynamoDBtypes {
     packet: ITelemetryData,
   ): Promise<GenericResponse> {
     try {
+      console.log(this.packetTableName);
       const command = new PutCommand({
         TableName: this.packetTableName,
         Item: {
-          id: packet.TimeStamp.toString(),
+          id: uuidv4(),
+          timestamp: packet.TimeStamp.toString(),
           data: packet,
         },
       });
@@ -101,7 +115,8 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         TableName: this.lapTableName,
         Item: {
-          id: packet.timeStamp.toString(),
+          id: uuidv4(),
+          timestamp: packet.timeStamp.toString(),
           data: packet,
         },
       });
