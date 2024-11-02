@@ -67,12 +67,28 @@ function BottomInformationContainer() {
   const handleRemoveFavourite: HandleRemoveFavourite = useCallback(
     (favourite: string) => {
       const newFavourites = favourites.filter((item) => item !== favourite);
-      setCurrentAppState((prev) => ({
-        ...prev,
-        favourites: newFavourites,
-      }));
-      localStorage.setItem("favourites", JSON.stringify(newFavourites));
-      return;
+      if (newFavourites.length === 0) {
+        setCurrentAppState((prev) => ({
+          ...prev,
+          favourites: [
+            "Motor Temp",
+            "Battery Cell Voltage",
+            "Vehicle Velocity",
+            "Pack Voltage",
+            "Pack Current",
+            "Battery Average Voltage",
+          ],
+        }));
+        localStorage.removeItem("favourites");
+        return;
+      } else {
+        setCurrentAppState((prev) => ({
+          ...prev,
+          favourites: newFavourites,
+        }));
+        localStorage.setItem("favourites", JSON.stringify(newFavourites));
+        return;
+      }
     },
     [currentAppState, favourites],
   );
