@@ -1,3 +1,5 @@
+import { BackendController } from "./controllers/BackendController/BackendController";
+
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import cors from "cors";
@@ -20,9 +22,19 @@ import { type TerminusOptions, createTerminus } from "@godaddy/terminus";
 dotenv.config();
 
 const app = express();
+let backendController: BackendController | null;
+export const setBackendController = (backend: BackendController) => {
+  backendController = backend;
+};
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+
+app.use((req, res, next) => {
+  app.locals.backendController = backendController;
+  next();
+});
+
 app.use("/", healthRouter);
 
 export const logger = createLightweightApplicationLogger("index.ts");
@@ -77,5 +89,3 @@ export const server = createTerminus(
 );
 
 process.on("SIGQUIT", gracefullyShutdown);
-
-export default app;

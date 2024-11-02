@@ -104,21 +104,29 @@ const packetDataTable = new dynamodb.Table(
   TelemetryBackendStack,
   "packet_data_table",
   {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
     removalPolicy: cdk.RemovalPolicy.DESTROY,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
   },
 );
+packetDataTable.addGlobalSecondaryIndex({
+  indexName: "timestamp-index",
+  partitionKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+});
 
 const lapDataTable = new dynamodb.Table(
   TelemetryBackendStack,
   "lap_data_table",
   {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
     removalPolicy: cdk.RemovalPolicy.DESTROY,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
   },
 );
+lapDataTable.addGlobalSecondaryIndex({
+  indexName: "timestamp-index",
+  partitionKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+});
 
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,

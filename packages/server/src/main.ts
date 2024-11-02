@@ -5,5 +5,5 @@ import { BackendController } from "@/controllers/BackendController/BackendContro
 export default function main(
   httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
 ) {
-  new BackendController(httpsServer);
+  return new BackendController(httpsServer);
 }
