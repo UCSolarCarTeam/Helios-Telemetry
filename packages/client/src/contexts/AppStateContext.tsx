@@ -1,3 +1,4 @@
+import { set } from "lodash";
 import {
   type Dispatch,
   type ReactNode,
@@ -123,6 +124,18 @@ export function AppStateContextProvider({ children }: Props) {
         darkMode: parsedSettings.darkMode,
         favourites: parsedFavourites,
         lapCoords: parsedSettings.lapCoords,
+      }));
+    } else if (favourites === null) {
+      setCurrentAppState((prev) => ({
+        ...prev,
+        favourites: [
+          "Motor Temp",
+          "Battery Cell Voltage",
+          "Vehicle Velocity",
+          "Pack Voltage",
+          "Pack Current",
+          "Battery Average Voltage",
+        ],
       }));
     }
   }, []);
