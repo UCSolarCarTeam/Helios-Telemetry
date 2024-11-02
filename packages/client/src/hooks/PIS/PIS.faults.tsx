@@ -56,6 +56,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Low Cell Voltage Fault",
         },
         {
           data: [
@@ -66,6 +67,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Open Wiring Fault",
         },
         {
           data: [
@@ -76,6 +78,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Current Sensor Fault",
         },
         {
           data: [
@@ -87,6 +90,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Pack Voltage Sensor Fault",
         },
         {
           data: [
@@ -97,6 +101,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Weak Pack Fault",
         },
         {
           data: [
@@ -108,6 +113,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Voltage Redundancy Fault",
         },
         {
           data: [
@@ -118,6 +124,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Fan Monitor Fault",
         },
         {
           data: [
@@ -128,6 +135,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Thermistor Fault",
         },
         {
           data: [
@@ -140,6 +148,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "CANBUS Communications Fault",
         },
         {
           data: [
@@ -151,6 +160,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Always On Supply Fault",
         },
         {
           data: [
@@ -163,6 +173,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "High Voltage Isolation Fault",
         },
         {
           data: [
@@ -174,6 +185,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "12V Power Supply Fault",
         },
         {
           data: [
@@ -186,6 +198,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Charge Limit Enforcement Fault",
         },
         {
           data: [
@@ -198,6 +211,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Discharge Limit Enforcement Fault",
         },
         {
           data: [
@@ -209,6 +223,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Charger Safety Relay Fault",
         },
         {
           data: [
@@ -220,6 +235,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Internal Memory Fault",
         },
         {
           data: [
@@ -232,6 +248,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Internal Thermistors Fault",
         },
         {
           data: [
@@ -242,6 +259,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Internal Logic Fault",
         },
       ],
       LimitFlags: [
@@ -255,6 +273,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Dcl Reduced Due To Low Soc",
         },
         {
           data: [
@@ -267,6 +286,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Dcl Reduced Due to HighCell Resistance",
         },
         {
           data: [
@@ -279,6 +299,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Dcl Reduced Due to Temperature",
         },
         {
           data: [
@@ -291,6 +312,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Dcl Reduced Due to Low Cell Voltage",
         },
         {
           data: [
@@ -303,6 +325,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Dcl Reduced Due to Low Pack Voltage",
         },
         {
           data: [
@@ -315,6 +338,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
         },
         {
           data: [
@@ -327,6 +351,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
         },
         {
           data: [
@@ -338,6 +363,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Ccl Reduced Due to High Soc",
         },
         {
           data: [
@@ -350,6 +376,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Ccl Reduced to High Cell Resistance",
         },
         {
           data: [
@@ -362,6 +389,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Ccl Reduced Due to Temperature",
         },
         {
           data: [
@@ -374,6 +402,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Ccl Reduced Due to High Cell Voltage",
         },
         {
           data: [
@@ -386,6 +415,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Ccl Reduced Due to High Pack Voltage",
         },
         {
           data: [
@@ -398,6 +428,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Ccl Reduced Due to Charger Latch",
         },
         {
           data: [
@@ -410,6 +441,7 @@ const Faults = (): I_PIS => {
             },
           ],
           isFault: true,
+          name: "Ccl Reduced Due to Alternate Current Limit",
         },
       ],
     },
@@ -425,6 +457,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Motor Over Speed",
           },
           {
             data: [
@@ -436,6 +469,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Software Over Current",
           },
           {
             data: [
@@ -447,6 +481,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Dc Bus Over Voltage",
           },
           {
             data: [
@@ -459,6 +494,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bad Motor Position Hall Sequence",
           },
           {
             data: [
@@ -471,6 +507,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Watch Dog Caused Last Reset",
           },
           {
             data: [
@@ -482,6 +519,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Config Read Error",
           },
           {
             data: [
@@ -494,6 +532,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Wail 15V Under Voltage Lock Out",
           },
           {
             data: [
@@ -505,6 +544,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Desaturation Fault",
           },
         ],
         LimitFlags: [
@@ -518,6 +558,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Output Voltage Pwm",
           },
           {
             data: [
@@ -528,6 +569,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Motor Current",
           },
           {
             data: [
@@ -538,6 +580,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Velocity",
           },
           {
             data: [
@@ -548,6 +591,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bus Current",
           },
           {
             data: [
@@ -559,6 +603,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bus Voltage Upper",
           },
           {
             data: [
@@ -570,6 +615,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bus Voltage Lower",
           },
           {
             data: [
@@ -582,6 +628,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Ipm or Motor Temperature",
           },
         ],
       },
@@ -596,6 +643,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Motor Over Speed",
           },
           {
             data: [
@@ -608,6 +656,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Software Over Current",
           },
           {
             data: [
@@ -619,6 +668,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Dc Bus Over Voltage",
           },
           {
             data: [
@@ -631,6 +681,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bad Motor Position Hall Sequence",
           },
           {
             data: [
@@ -643,6 +694,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Watch Dog Caused Last Reset",
           },
           {
             data: [
@@ -654,6 +706,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Config Read Error",
           },
           {
             data: [
@@ -666,6 +719,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Wail 15V Under Voltage Lock Out",
           },
           {
             data: [
@@ -677,6 +731,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Desaturation Fault",
           },
         ],
         LimitFlags: [
@@ -690,6 +745,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Output Voltage Pwm",
           },
           {
             data: [
@@ -700,6 +756,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Motor Current",
           },
           {
             data: [
@@ -710,6 +767,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Velocity",
           },
           {
             data: [
@@ -720,6 +778,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bus Current",
           },
           {
             data: [
@@ -731,6 +790,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bus Voltage Upper",
           },
           {
             data: [
@@ -742,6 +802,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Bus Voltage Lower",
           },
           {
             data: [
@@ -754,6 +815,7 @@ const Faults = (): I_PIS => {
               },
             ],
             isFault: true,
+            name: "Ipm or Motor Temperature",
           },
         ],
       },

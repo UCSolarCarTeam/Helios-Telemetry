@@ -6,8 +6,12 @@ import usePIS from "@/hooks/PIS/usePIS";
 import type { I_PISField } from "@/objects/PIS/PIS.interface";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 
+interface HandleRemoveFavourite {
+  (favourite: string): void;
+}
+
 function BottomInformationContainer() {
-  const { currentAppState } = useAppState();
+  const { currentAppState, setCurrentAppState } = useAppState();
   const { battery, motor, mppt } = usePIS();
   const favourites = currentAppState?.favourites ?? [];
 
@@ -60,12 +64,30 @@ function BottomInformationContainer() {
     [],
   );
 
+  const handleRemoveFavourite: HandleRemoveFavourite = useCallback(
+    (favourite: string) => {
+      const newFavourites = favourites.filter((item) => item !== favourite);
+      setCurrentAppState((prev) => ({
+        ...prev,
+        favourites: newFavourites,
+      }));
+      localStorage.setItem("favourites", JSON.stringify(newFavourites));
+      return;
+    },
+    [currentAppState, favourites],
+  );
+
   return (
     <div className="align-middle">
       <div className="flex h-full flex-row flex-wrap justify-evenly gap-4 pt-1 text-center text-base md:gap-2 2xl:text-xl">
         {favourites.map((favourite: string, index: number) => (
           <div className="min-w-32 p-3" key={index}>
-            <div className="text-xs 2xl:text-sm">{favourite.toUpperCase()}</div>
+            <div
+              className="text-xs hover:cursor-pointer 2xl:text-sm"
+              onClick={() => handleRemoveFavourite(favourite)}
+            >
+              {favourite.toUpperCase()}
+            </div>
             <div className="text-helios">
               {
                 /*Search for the value associated with the favourite name string */

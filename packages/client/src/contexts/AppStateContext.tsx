@@ -58,8 +58,8 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     displayLoading: true,
     error: false,
-    lapCoords: { lat: 51.081021, long: -114.136084 },
     favourites: [],
+    lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
     playbackSwitch: false,
     radioConnected: false,
@@ -121,9 +121,8 @@ export function AppStateContextProvider({ children }: Props) {
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
         darkMode: parsedSettings.darkMode,
-        lapCoords: parsedSettings.lapCoords,
-        darkMode: parsedSettings.darkMode,
         favourites: parsedFavourites,
+        lapCoords: parsedSettings.lapCoords,
       }));
     }
   }, []);
