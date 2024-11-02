@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import {
@@ -171,17 +171,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const { setCurrentAppState } = useAppState();
   const { field } = props;
 
-  if (
-    field.fstring !== undefined &&
-    (field?.fstring.match(/%s/g) || []).length !== field.data.length
-  ) {
-    global.console.error(
-      "PIS ERROR: The fstring must contain the same amount of %s's as PIS data fields",
-    );
-    return <div>PIS ERROR: </div>;
-  }
-
-  const handleAddToFavourites = () => {
+  const handleAddToFavourites = useCallback(() => {
     const storedFavourites = localStorage.getItem("favourites");
     const parsedFavourites: string[] = storedFavourites
       ? (JSON.parse(storedFavourites) as string[])
@@ -203,9 +193,20 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
       }));
       localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
     }
-  };
+  }, [field.name, setCurrentAppState]);
+
+  if (
+    field.fstring !== undefined &&
+    (field?.fstring.match(/%s/g) || []).length !== field.data.length
+  ) {
+    global.console.error(
+      "PIS ERROR: The fstring must contain the same amount of %s's as PIS data fields",
+    );
+    return <div>PIS ERROR: </div>;
+  }
+
   return (
-    <div>
+    <>
       {isHovered && field.isFault === undefined ? (
         <div
           className="mt-1 flex items-center justify-between text-xs"
@@ -228,7 +229,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
           <FieldDataFormatter data={field.data} fstring={field.fstring} />
         </div>
       )}
-    </div>
+    </>
   );
 }
 
