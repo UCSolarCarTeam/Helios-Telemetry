@@ -125,9 +125,13 @@ export function AppStateContextProvider({ children }: Props) {
         favourites: parsedFavourites,
         lapCoords: parsedSettings.lapCoords,
       }));
-    } else if (favourites === null) {
+    } else if (favourites === null && savedSettings) {
+      const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
       setCurrentAppState((prev) => ({
         ...prev,
+        appUnits: parsedSettings.appUnits,
+        connectionType: parsedSettings.connectionType,
+        darkMode: parsedSettings.darkMode,
         favourites: [
           "Motor Temp",
           "Battery Cell Voltage",
@@ -136,6 +140,7 @@ export function AppStateContextProvider({ children }: Props) {
           "Pack Current",
           "Battery Average Voltage",
         ],
+        lapCoords: parsedSettings.lapCoords,
       }));
     }
   }, []);
