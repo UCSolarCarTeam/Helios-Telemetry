@@ -33,8 +33,9 @@
     "eslint-plugin-sort-destructure-keys": "^2.0.0",
     "eslint-plugin-sort-keys": "^2.3.5",
     "husky": "^8.0.3",
-    "lerna": "^8.1.6",
+    "lerna": "^8.1.9",
     "lint-staged": "^13.2.2",
+    "nx": "20.0.3",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "typescript": "^5.5.4"
