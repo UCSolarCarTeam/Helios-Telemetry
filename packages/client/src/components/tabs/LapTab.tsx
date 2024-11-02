@@ -110,7 +110,7 @@ function formatHeaders(header: string) {
 }
 //javascript libraries are used to seperate the words
 
-function RaceTab() {
+function LapTab() {
   const [checked, setChecked] = useState<string[]>(tableHeaders); //all columns are shown initially
 
   const handleCheckboxChange = (header: string) => {
@@ -175,4 +175,4 @@ function RaceTab() {
   );
 }
 
-export default RaceTab;
+export default LapTab;
