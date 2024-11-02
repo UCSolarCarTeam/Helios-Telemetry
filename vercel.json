@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn build:client",
+  "buildCommand": "cd packages/client && yarn build",
   "devCommand": "yarn dev:client",
   "framework": "nextjs",
   "installCommand": "yarn",
