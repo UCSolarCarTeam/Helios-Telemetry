@@ -1,7 +1,7 @@
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { startAedes } from "@/aedes";
-import { server } from "@/index";
+import { server, setBackendController } from "@/index";
 import main from "@/main";
 
 const logger = createLightweightApplicationLogger("server.ts");
@@ -23,5 +23,6 @@ export const httpServer = server
     throw error;
   })
   .on("listening", () => {
-    main(httpServer);
+    const backendController = main(httpServer);
+    setBackendController(backendController);
   });
