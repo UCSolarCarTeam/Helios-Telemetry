@@ -4,9 +4,11 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "dependencies": {
-    "typescript": "^5.5.3"
+    "protobufjs": "^7.4.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.0.3"
+    "@faker-js/faker": "^9.0.3",
+    "ts-proto": "^2.2.5",
+    "typescript": "^5.6.3"
   }
 }
