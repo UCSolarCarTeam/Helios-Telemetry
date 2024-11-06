@@ -51,11 +51,11 @@ export class DynamoDB implements DynamoDBtypes {
     //  add type to return
     try {
       const command = new GetItemCommand({
-        TableName: this.packetTableName,
         Key: {
           id: { S: "packet" },
           timestamp: { S: date.toString() },
         },
+        TableName: this.packetTableName,
       });
       const response = await this.client.send(command);
       return response;
@@ -69,11 +69,11 @@ export class DynamoDB implements DynamoDBtypes {
   public async getLapData(date: Date) {
     try {
       const command = new GetItemCommand({
-        TableName: this.lapTableName,
         Key: {
           id: { S: "lap" },
           timestamp: { S: date.toString() },
         },
+        TableName: this.lapTableName,
       });
       const response = await this.client.send(command);
       return response;
@@ -89,12 +89,12 @@ export class DynamoDB implements DynamoDBtypes {
   ): Promise<GenericResponse> {
     try {
       const command = new PutCommand({
-        TableName: this.packetTableName,
         Item: {
+          data: packet,
           id: "packet",
           timestamp: packet.TimeStamp.toString(),
-          data: packet,
         },
+        TableName: this.packetTableName,
       });
       const response = await this.client.send(command);
       return {
@@ -111,12 +111,12 @@ export class DynamoDB implements DynamoDBtypes {
   public async insertLapData(packet: ILapData): Promise<GenericResponse> {
     try {
       const command = new PutCommand({
-        TableName: this.lapTableName,
         Item: {
+          data: packet,
           id: "lap",
           timestamp: packet.timeStamp.toString(),
-          data: packet,
         },
+        TableName: this.lapTableName,
       });
       const response = await this.client.send(command);
       return {
@@ -136,22 +136,22 @@ export class DynamoDB implements DynamoDBtypes {
   }> {
     try {
       const firstCommand = new QueryCommand({
-        TableName: this.packetTableName,
+        ExpressionAttributeValues: {
+          ":id": { S: "packet" },
+        },
+        KeyConditionExpression: "id = :id",
         Limit: 1,
         ScanIndexForward: true,
-        KeyConditionExpression: "id = :id",
-        ExpressionAttributeValues: {
-          ":id": { S: "packet" },
-        },
+        TableName: this.packetTableName,
       });
       const lastCommand = new QueryCommand({
-        TableName: this.packetTableName,
-        Limit: 1,
-        ScanIndexForward: false,
-        KeyConditionExpression: "id = :id",
         ExpressionAttributeValues: {
           ":id": { S: "packet" },
         },
+        KeyConditionExpression: "id = :id",
+        Limit: 1,
+        ScanIndexForward: false,
+        TableName: this.packetTableName,
       });
 
       const firstResponse = await this.client.send(firstCommand);

@@ -41,7 +41,7 @@ function SettingsComponent() {
   }, []);
   useEffect(() => {
     socketIO.on("lapCoords", onLapCoords);
-    () => {
+    return () => {
       socketIO.off("lapCoords");
     };
   }, [onLapCoords]);
