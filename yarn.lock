@@ -9110,6 +9110,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4":
+  version: 4.17.10
+  resolution: "@types/lodash@npm:4.17.10"
+  checksum: 10c0/149b2b9fcc277204393423ed14df28894980c2322ec522fc23f2c6f7edef6ee8d876ee09ed4520f45d128adc0a7a6e618bb0017668349716cd99c6ef54a21621
+  languageName: node
+  linkType: hard
+
 "@types/lodash@npm:^4.14.175":
   version: 4.17.12
   resolution: "@types/lodash@npm:4.17.12"
@@ -11330,6 +11337,7 @@ __metadata:
     "@trivago/prettier-plugin-sort-imports": "npm:^4.3.0"
     "@types/eslint": "npm:^8.56.10"
     "@types/google.maps": "npm:^3.55.11"
+    "@types/lodash": "npm:^4"
     "@types/node": "npm:^20.14.10"
     "@types/prettier": "npm:^3.0.0"
     "@types/react": "npm:^18.3.3"
@@ -11346,6 +11354,7 @@ __metadata:
     eslint-plugin-tailwindcss: "npm:^3.17.4"
     framer-motion: "npm:^11.0.6"
     gltf-pipeline: "npm:^4.1.0"
+    lodash: "npm:^4.17.21"
     mapbox-gl: "npm:^3.5.1"
     next: "npm:14.2.10"
     prettier: "npm:^3.3.2"
