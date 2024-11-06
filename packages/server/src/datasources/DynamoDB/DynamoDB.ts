@@ -88,17 +88,15 @@ export class DynamoDB implements DynamoDBtypes {
     packet: ITelemetryData,
   ): Promise<GenericResponse> {
     try {
-      console.log(this.packetTableName);
       const command = new PutCommand({
         TableName: this.packetTableName,
         Item: {
-          id: uuidv4(),
+          id: "packet",
           timestamp: packet.TimeStamp.toString(),
           data: packet,
         },
       });
       const response = await this.client.send(command);
-      console.log(response);
       return {
         httpsStatusCode: response.$metadata.httpStatusCode,
         requestId: response.$metadata.requestId,
@@ -115,13 +113,12 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         TableName: this.lapTableName,
         Item: {
-          id: uuidv4(),
+          id: "lap",
           timestamp: packet.timeStamp.toString(),
           data: packet,
         },
       });
       const response = await this.client.send(command);
-      console.log(response);
       return {
         httpsStatusCode: response.$metadata.httpStatusCode,
         requestId: response.$metadata.requestId,
