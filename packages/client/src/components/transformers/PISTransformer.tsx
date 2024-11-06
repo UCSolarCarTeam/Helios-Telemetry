@@ -210,10 +210,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
       </span>
       <div className="mt-1 flex items-center justify-between text-xs group-hover:hidden">
         {field.name}:
-        <FieldDataFormatter data={field.data} fstring={field.fstring} />
       </div>
-
-      {/* This section is always visible (displaying data) */}
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
   );
