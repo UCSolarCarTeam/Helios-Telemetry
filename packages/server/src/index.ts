@@ -1,5 +1,4 @@
 import { BackendController } from "./controllers/BackendController/BackendController";
-import playbackRouter from "./routes/playback.route";
 
 import axios from "axios";
 import axiosRetry from "axios-retry";
@@ -11,6 +10,7 @@ import https from "https";
 import "module-alias";
 
 import healthRouter from "@/routes/health.route";
+import playbackRouter from "@/routes/playback.route";
 
 import {
   createLightweightApplicationLogger,
