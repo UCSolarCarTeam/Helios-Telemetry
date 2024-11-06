@@ -16,7 +16,6 @@ function FieldUnitsHandler(
   unit: UnitType | undefined,
   value: string | number | boolean,
 ) {
-  // const [favorites,setFavorites]= useState([]); MAKE THIS A CONTEXT
   const { currentAppState } = useAppState();
 
   let unitReturn: string | undefined;
@@ -72,17 +71,16 @@ function FieldUnitsHandler(
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { expectedBool, max, min, unit, value } = props.fieldData;
-  const valueType = typeof value;
   const inRange =
     // If value is of type string range is true
-    valueType === "string"
+    typeof value === "string"
       ? true
       : // If value is of type number range is true if min and max are undefined or value is between min and max
-        valueType === "number"
-        ? (min === undefined || (typeof value === "number" && value >= min)) &&
-          (max === undefined || (typeof value === "number" && value <= max))
+        typeof value === "number"
+        ? (min === undefined || value >= min) &&
+          (max === undefined || value <= max)
         : // If value is of type boolean range is true if expectedBool is undefined and value is false or value is equal to expectedBool
-          valueType === "boolean"
+          typeof value === "boolean"
           ? (expectedBool === undefined && value === false) ||
             expectedBool === value
           : false;
@@ -167,7 +165,6 @@ type FieldPrinterProps = {
 };
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
-  const [isHovered, setIsHovered] = useState(false);
   const { setCurrentAppState } = useAppState();
   const { field } = props;
 
@@ -177,13 +174,11 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
       ? (JSON.parse(storedFavourites) as string[])
       : [];
 
-    // Check if the field is already in the favourites
     if (
       !parsedFavourites.some((fav) => fav === field.name) &&
       typeof field.name === "string"
     ) {
       if (parsedFavourites.length === 8 && typeof field.name === "string") {
-        // can't add more than 8 favourites, so replace the first one
         parsedFavourites.shift();
       }
       parsedFavourites.push(field.name);
@@ -206,30 +201,21 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   }
 
   return (
-    <>
-      {isHovered && field.isFault === undefined ? (
-        <div
-          className="mt-1 flex items-center justify-between text-xs"
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <span
-            className="flex cursor-pointer items-center text-xs font-bold text-helios"
-            onClick={handleAddToFavourites}
-          >
-            Add to Favourites
-          </span>
-          <FieldDataFormatter data={field.data} fstring={field.fstring} />
-        </div>
-      ) : (
-        <div
-          className="mt-1 flex items-center justify-between text-xs"
-          onMouseEnter={() => setIsHovered(true)}
-        >
-          {field.name}:
-          <FieldDataFormatter data={field.data} fstring={field.fstring} />
-        </div>
-      )}
-    </>
+    <div className="group mt-1 flex items-center justify-between text-xs">
+      <span
+        className="hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
+        onClick={handleAddToFavourites}
+      >
+        Add to Favourites
+      </span>
+      <div className="mt-1 flex items-center justify-between text-xs group-hover:hidden">
+        {field.name}:
+        <FieldDataFormatter data={field.data} fstring={field.fstring} />
+      </div>
+
+      {/* This section is always visible (displaying data) */}
+      <FieldDataFormatter data={field.data} fstring={field.fstring} />
+    </div>
   );
 }
 

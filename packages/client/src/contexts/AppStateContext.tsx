@@ -9,7 +9,6 @@ import {
   useState,
 } from "react";
 
-import { PausePresentationRounded } from "@mui/icons-material";
 import type { Coords } from "@shared/helios-types";
 
 interface Props {

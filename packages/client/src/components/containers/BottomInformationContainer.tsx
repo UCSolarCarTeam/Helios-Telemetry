@@ -6,14 +6,10 @@ import usePIS from "@/hooks/PIS/usePIS";
 import type { I_PISField } from "@/objects/PIS/PIS.interface";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 
-interface HandleRemoveFavourite {
-  (favourite: string): void;
-}
-
 function BottomInformationContainer() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const { battery, motor, mppt } = usePIS();
-  const favourites = currentAppState?.favourites ?? [];
+  const favourites = currentAppState.favourites;
 
   const findValueByNameInData = useCallback(
     (dataArray: I_PIS[], providedName: string): string | number | undefined => {
@@ -41,7 +37,6 @@ function BottomInformationContainer() {
               }
             }
           }
-          return undefined; // Return undefined if no matching name is found
         } else {
           for (const sectionKey of Object.keys(data)) {
             const section = data[sectionKey] as I_PISField[]; // Get the array of items under each key
@@ -59,24 +54,13 @@ function BottomInformationContainer() {
           }
         }
       }
-      return undefined; // Return undefined if no matching name is found
     },
     [],
   );
 
-  const handleRemoveFavourite: HandleRemoveFavourite = useCallback(
+  const handleRemoveFavourite = useCallback(
     (favourite: string) => {
       const newFavourites = favourites.filter((item) => item !== favourite);
-      if (newFavourites.length === 0) {
-        newFavourites.push(
-          "Motor Temp",
-          "Battery Cell Voltage",
-          "Vehicle Velocity",
-          "Pack Voltage",
-          "Pack Current",
-          "Battery Average Voltage",
-        );
-      }
       setCurrentAppState((prev) => ({
         ...prev,
         favourites: newFavourites,
@@ -96,7 +80,7 @@ function BottomInformationContainer() {
               className="text-xs hover:cursor-pointer 2xl:text-sm"
               onClick={() => handleRemoveFavourite(favourite)}
             >
-              {favourite.toUpperCase()}
+              {favourite}
             </div>
             <div className="text-helios">
               {
