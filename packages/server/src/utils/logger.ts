@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type Request, type Response } from "express";
 import log4j, { configure, getLogger, levels } from "log4js";
 
