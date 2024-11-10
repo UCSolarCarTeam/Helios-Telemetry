@@ -1,6 +1,6 @@
 # Solar Car Helios Telemetry
 
-Deployment available at: https://telemetry-beta.calgarysolarcar.ca
+Deployment available at: <https://telemetry-beta.calgarysolarcar.ca>
 
 ## Table of contents
 
@@ -69,11 +69,11 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
   - [Socket.IO](./docs/SERVER.md#wtf-is-a-socketio)
   - [MQTT](#what-is-mqtt)
   - [Express.js](#what-do-we-use-expressjs-for)
-    - [Routes](#what-is-a-route)
+  - [Routes](#what-is-a-route)
   - [Controllers](#controllers)
-    - [Backend Controller](#backend-controller)
-    - [Lap Controller](#lap-controller)
-    - [DynamoDB Controller](#dynamo-db-controller)
+  - [Backend Controller](#backend-controller)
+  - [Lap Controller](#lap-controller)
+  - [DynamoDB Controller](#dynamo-db-controller)
 
 ### [Shared Folder](./docs/SHARED.md)
 
@@ -102,7 +102,7 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 
 ### Start Web App + Backend (Dev Build)
 
-```
+```bash
 yarn dev
 ```
 
@@ -110,12 +110,18 @@ Appending `:client` or `:server` behind the dev command will start the servers i
 
 ### Build Web App + Backend (Production build)
 
-```
+```bash
 yarn build
 yarn start
 ```
 
 Appending `:client` or `:server` behind the build command will build/start the production servers individually
+
+### Generate Protobuf Typescript Definitions
+
+```bash
+npx protoc --plugin=protoc-gen-ts_proto=".\\node_modules\\.bin\\protoc-gen-ts_proto.cmd" --ts_proto_out="./" ./packages/shared/src/.proto
+```
 
 ### Secrets and environment variables
 
@@ -123,7 +129,7 @@ Specific functions of the website require you to have certain environment variab
 
 In packages/server `.env`:
 
-```
+```bash
 LAP_POSITION_PASSWORD=
 LAP_TABLE_NAME=
 PACKET_TABLE_NAME=
@@ -135,7 +141,7 @@ MQTT_PASSWORD=
 
 In packages/client `.env`:
 
-```
+```bash
 NEXT_PUBLIC_MAPSAPIKEY=
 ```
 

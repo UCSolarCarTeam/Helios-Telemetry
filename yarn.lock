@@ -5819,6 +5819,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@bufbuild/protobuf@npm:^2.0.0":
+  version: 2.2.2
+  resolution: "@bufbuild/protobuf@npm:2.2.2"
+  checksum: 10c0/17687c36c85b2e489c7ffd676479c54e12437270eb5a724775cb880b09948cad205b79e5822a4d10cefde0eef433b781350d73bb649d8de9e84d7745871ee719
+  languageName: node
+  linkType: hard
+
 "@cdklabs/tskb@npm:^0.0.3":
   version: 0.0.3
   resolution: "@cdklabs/tskb@npm:0.0.3"
@@ -8912,9 +8919,9 @@ __metadata:
   dependencies:
     "@aws-sdk/client-secrets-manager": "npm:^3.658.1"
     "@faker-js/faker": "npm:^9.0.3"
-    fp-ts: "npm:^2.16.9"
-    io-ts: "npm:^2.2.22"
-    typescript: "npm:^5.5.3"
+    protobufjs: "npm:^7.4.0"
+    ts-proto: "npm:^2.2.5"
+    typescript: "npm:^5.6.3"
   languageName: unknown
   linkType: soft
 
@@ -13156,6 +13163,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"case-anything@npm:^2.1.13":
+  version: 2.1.13
+  resolution: "case-anything@npm:2.1.13"
+  checksum: 10c0/b02ffa51d7d58b9a32df7b40973836e16afad131eae7d343e64cb3ca7be57a936bf3d6c9d57a7aa242cf2f545d9a33990b755e93bcac2517761d77773a4a6a30
+  languageName: node
+  linkType: hard
+
 "case@npm:1.6.3":
   version: 1.6.3
   resolution: "case@npm:1.6.3"
@@ -14638,6 +14652,15 @@ __metadata:
   version: 16.4.7
   resolution: "dotenv@npm:16.4.7"
   checksum: 10c0/be9f597e36a8daf834452daa1f4cc30e5375a5968f98f46d89b16b983c567398a330580c88395069a77473943c06b877d1ca25b4afafcdd6d4adb549e8293462
+  languageName: node
+  linkType: hard
+
+"dprint-node@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "dprint-node@npm:1.0.8"
+  dependencies:
+    detect-libc: "npm:^1.0.3"
+  checksum: 10c0/39c1f8511833226cde773129afc5862dfd05babe062375e6b1f5824e221a5743a4d9c48626f32f7c2080113566270fe80521a50acb9029a20a2e80a3cd5e4106
   languageName: node
   linkType: hard
 
@@ -24457,6 +24480,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-poet@npm:^6.7.0":
+  version: 6.9.0
+  resolution: "ts-poet@npm:6.9.0"
+  dependencies:
+    dprint-node: "npm:^1.0.8"
+  checksum: 10c0/c1e3ee6048f075407c2076c8b884b405a3402ae6c013c0af9d0f6b8a6d939c71751a954882d2bd33a606c013d4a57519f5305e0bb1fd6aa0d23edda93e6007bf
+  languageName: node
+  linkType: hard
+
+"ts-proto-descriptors@npm:2.0.0":
+  version: 2.0.0
+  resolution: "ts-proto-descriptors@npm:2.0.0"
+  dependencies:
+    "@bufbuild/protobuf": "npm:^2.0.0"
+  checksum: 10c0/a4f47a6db7de6b328a5b22bb0bed2a0dac929c28002567613db7980e0a8392b9148530e432a602a8c6b2cfda9909be9568a2e5c545f5624bb5d5eba52031c059
+  languageName: node
+  linkType: hard
+
+"ts-proto@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "ts-proto@npm:2.2.5"
+  dependencies:
+    "@bufbuild/protobuf": "npm:^2.0.0"
+    case-anything: "npm:^2.1.13"
+    ts-poet: "npm:^6.7.0"
+    ts-proto-descriptors: "npm:2.0.0"
+  bin:
+    protoc-gen-ts_proto: protoc-gen-ts_proto
+  checksum: 10c0/12629a5319681567dfd8bcae35e958d3182045919f5adeaac53e1ec2b4fa6d8900f2cb0edc2317db146a3ceddac67f88aed6e826aa8ceb1f9989173092288e4b
+  languageName: node
+  linkType: hard
+
 "tsconfig-paths@npm:^3.15.0":
   version: 3.15.0
   resolution: "tsconfig-paths@npm:3.15.0"
@@ -24816,9 +24871,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=3 < 6, typescript@npm:^5.5.3, typescript@npm:^5.5.4":
-  version: 5.8.3
-  resolution: "typescript@npm:5.8.3"
+"typescript@npm:>=3 < 6, typescript@npm:^5.5.3, typescript@npm:^5.5.4, typescript@npm:^5.6.3":
+  version: 5.6.3
+  resolution: "typescript@npm:5.6.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -24836,9 +24891,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A>=3 < 6#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.4#optional!builtin<compat/typescript>":
-  version: 5.8.3
-  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
+"typescript@patch:typescript@npm%3A>=3 < 6#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.4#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.6.3#optional!builtin<compat/typescript>":
+  version: 5.6.3
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
