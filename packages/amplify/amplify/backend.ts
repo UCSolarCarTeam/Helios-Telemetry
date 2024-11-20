@@ -40,6 +40,18 @@ const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   },
 );
 
+// TODO: Change this to use a different username
+const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(TelemetryBackendStack,
+  "HeliosTelemetryBackendMQTT/Username",{
+    secretName: "HeliosTelemetryMQTT/Username" + backend.stack.stackName,
+    generateSecretString: {
+      secretStringTemplate:JSON.stringify({username: '<InsertingSomethingElse>'}),
+      generateStringKey: 'password',
+      excludeCharacters: '/@!&*'
+    }
+  }
+);
+
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
   "TelemetryBackendImageRepository",
@@ -160,8 +172,12 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
+    MQTT_CREDENTIALS: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerMQTTCredentials)
   },
+
 });
+
+
 
 // Allow ECS Task to read the Secrets Manager Store
 TelemetryBackendSecretsManagerPrivKey.grantRead(
@@ -173,6 +189,10 @@ TelemetryBackendSecretsManagerChain.grantRead(
 TelemetryBackendSecretsManagerCertificate.grantRead(
   TelemetryECSTaskDefintion.taskRole,
 );
+TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
+  TelemetryECSTaskDefintion.taskRole
+);
+
 
 const TelemetryBackendVPC = new ec2.Vpc(
   TelemetryBackendStack,
