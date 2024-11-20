@@ -3,7 +3,7 @@ import type { IncomingMessage, Server, ServerResponse } from "http";
 import type { BackendControllerTypes } from "@/controllers/BackendController/BackendController.types";
 import { LapController } from "@/controllers/LapController/LapController";
 
-import { SQLite } from "@/datasources/SQLite/SQLite";
+import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
@@ -12,14 +12,14 @@ import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
 
 export class BackendController implements BackendControllerTypes {
-  public sqLite: SQLite;
+  public dynamoDB: DynamoDB;
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
   ) {
-    this.sqLite = new SQLite("./database.sqlite", this);
+    this.dynamoDB = new DynamoDB(this);
     this.socketIO = new SocketIO(httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
@@ -40,7 +40,7 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    // await this.sqLite.insertPacketData(message);
+    this.dynamoDB.insertPacketData(message);
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);

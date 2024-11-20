@@ -1,8 +1,13 @@
+import { BackendController } from "../BackendController/BackendController";
+
 import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
 
 export const getHealth = (request: Request, response: Response) => {
+  const backendController = request.app.locals
+    .backendController as BackendController;
+
   const logger = createApplicationLogger(
     "health.controller.ts",
     request,

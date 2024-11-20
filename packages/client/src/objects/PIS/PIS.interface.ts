@@ -31,6 +31,7 @@ type I_PISField = {
   name: string;
   fstring?: string;
   data: I_PISFieldData[];
+  isFault?: boolean;
 };
 
 type I_PIS = {
