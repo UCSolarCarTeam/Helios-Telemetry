@@ -60,7 +60,10 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex items-center justify-center rounded-2xl bg-gray-500 p-4"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="text-sm text-white">
+        <p className="underline-from-font decoration-skip-ink-none text-center font-[Anta] text-[18px] text-sm font-normal leading-[21.97px] text-white">
+          Optimal Driving speed at {infoNumber}
+        </p>
+        <p className="underline-from-font decoration-skip-ink-none text-center font-[Anta] text-[32px] text-sm font-normal leading-[21.97px] text-white">
           Optimal Driving speed at {infoNumber}
         </p>
       </div>
