@@ -1,13 +1,16 @@
+import axios from "axios";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useEffect, useRef, useState } from "react";
 
 import PauseIcon from "@/components/atoms/PauseIcon";
 import PlayIcon from "@/components/atoms/PlayIcon";
+import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
 
 export default function PlaybackSlider() {
   const { currentPacket } = usePacket();
+  const { currentAppState } = useAppState();
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [sliderValue, setSliderValue] = useState(1);
@@ -44,6 +47,9 @@ export default function PlaybackSlider() {
   const handleSliderChange = (e: number) => {
     setSliderValue(e);
   };
+
+  //when a date is selected, fetch the packets for that date
+  useEffect(() => {}, [currentAppState.playbackDate]);
 
   return (
     <div className="flex flex-row items-center justify-center gap-2 py-1">

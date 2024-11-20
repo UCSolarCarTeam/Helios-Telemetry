@@ -1,3 +1,4 @@
+import axios from "axios";
 import { twMerge } from "tailwind-merge";
 
 import AWSIcon from "@/components/atoms/AWSIcon";
@@ -19,6 +20,28 @@ function StatusComponent() {
   const packetTime = currentAppState.socketConnected
     ? new Date(currentPacket.TimeStamp).toLocaleString()
     : "DISCONNECTED";
+
+  const handlePlaybackSwitch = () => {
+    axios.get("/firstAndLastPacket").then((res) => {
+      if (res.data) {
+        const firstAndLastPacketDate = res.data;
+        const firstPacketDate = new Date(firstAndLastPacketDate.firstDate)
+          .toISOString()
+          .split("T")[0]; // Format: YYYY-MM-DD
+        const lastPacketDate = new Date(firstAndLastPacketDate.lastDate)
+          .toISOString()
+          .split("T")[0]; // Format: YYYY-MM-DD
+
+        setCurrentAppState((prev) => ({
+          ...prev,
+          firstPlaybackDate: firstPacketDate,
+          lastPlaybackDate: lastPacketDate,
+          playbackSwitch: !prev.playbackSwitch,
+        }));
+      }
+      return res;
+    });
+  };
 
   return (
     <div className="grid gap-y-2">
@@ -75,12 +98,7 @@ function StatusComponent() {
         <span>Playback: </span>
         <button
           className={`bordertransition-colors relative h-6 w-12 cursor-pointer rounded-full ${currentAppState.playbackSwitch ? "bg-helios" : "bg-gray-400"}`}
-          onClick={() =>
-            setCurrentAppState((prevState) => ({
-              ...prevState,
-              playbackSwitch: !prevState.playbackSwitch,
-            }))
-          }
+          onClick={handlePlaybackSwitch}
         >
           <div
             className={`absolute left-1 top-1/2 size-4 -translate-y-1/2 translate-x-0 rounded-full bg-white transition-transform ${currentAppState.playbackSwitch ? "translate-x-6" : "translate-x-0"}`}

@@ -40,6 +40,9 @@ interface IAppState {
   carLatency: number;
   lapCoords: Coords;
   playbackSwitch: boolean;
+  currentPlaybackDate: Date | undefined;
+  firstPlaybackDate: string | undefined;
+  lastPlaybackDate: string | undefined;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -58,7 +61,9 @@ export function AppStateContextProvider({ children }: Props) {
     displayLoading: true,
     error: false,
     favourites: [],
+    firstPlaybackDate: "",
     lapCoords: { lat: 51.081021, long: -114.136084 },
+    lastPlaybackDate: "",
     loading: true,
     playbackSwitch: false,
     radioConnected: false,
