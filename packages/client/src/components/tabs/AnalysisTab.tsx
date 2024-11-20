@@ -57,20 +57,35 @@ const GreyShapes: React.FC<ShapeProps> = ({
     <div className="flex gap-4">
       {/* First square */}
       <div
-        className="flex items-center justify-center rounded-2xl bg-gray-500 p-4"
+        className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="underline-from-font decoration-skip-ink-none text-center font-[Anta] text-[18px] text-sm font-normal leading-[21.97px] text-white">
-          Optimal Driving speed at {infoNumber}
+        <p className="decoration-skip-ink-none text-center font-[Anta] text-[18px] font-normal leading-[21.97px] text-white">
+          Optimal Driving speed at {infoNumber}%
         </p>
-        <p className="underline-from-font decoration-skip-ink-none text-center font-[Anta] text-[32px] text-sm font-normal leading-[21.97px] text-white">
-          Optimal Driving speed at {infoNumber}
+        <p className="text-center font-[Anta] text-[32px] font-normal leading-[39.06px] text-[#9C0534]">
+          50 km/h
         </p>
+
+        {/* Container for numbers and line */}
+        <div
+          className="flex w-[245px] items-center justify-between"
+          style={{ gap: "0px", opacity: 1 }} // Adjust opacity if needed
+        >
+          {/* Left number */}
+          <span className="text-sm">Number 1</span>
+
+          {/* Horizontal line */}
+          <div className="h-[13px] flex-grow bg-black"></div>
+
+          {/* Right number */}
+          <span className="text-sm">Number 2</span>
+        </div>
       </div>
 
       {/* Second square */}
       <div
-        className="rounded-2xl bg-gray-500"
+        className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       />
 
@@ -78,13 +93,13 @@ const GreyShapes: React.FC<ShapeProps> = ({
       <div className="flex flex-col gap-4">
         {/* Rectangle 1 */}
         <div
-          className="rounded-2xl bg-gray-500"
+          className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
         />
 
         {/* Rectangle 2 */}
         <div
-          className="rounded-2xl bg-gray-500"
+          className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
         />
       </div>
