@@ -14,6 +14,7 @@ export interface LapControllerType {
     motorOdometer: number,
     motorDistanceTraveledSession: number,
   ): boolean;
+  driverRFID: string;
   getAveragePowerIn(packetArray: ITelemetryData[]): number;
   getAveragePowerOut(packetArray: ITelemetryData[]): number;
   getLastPacket(): ITelemetryData[];
