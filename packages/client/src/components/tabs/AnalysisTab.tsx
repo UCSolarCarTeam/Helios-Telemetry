@@ -166,7 +166,8 @@ function AnalysisTab() {
           className="flex flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-4"
           id="main-content"
         >
-          <TabContent index={0} value={value}>
+          <TabContent index={0} value={value}></TabContent>
+          <TabContent index={1} value={value}>
             {/* Display GreyShapes component here */}
             <GreyShapes
               infoNumber={100}
@@ -174,9 +175,6 @@ function AnalysisTab() {
               rectangleWidth="300px"
               squareWidth="270px"
             />
-          </TabContent>
-          <TabContent index={1} value={value}>
-            Stats
           </TabContent>
         </div>
       </div>
