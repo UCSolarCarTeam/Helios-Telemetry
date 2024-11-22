@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React, { useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
@@ -10,6 +11,7 @@ import MLContainer from "../containers/MLContainer";
 type TabContentProps = React.PropsWithChildren<{
   index: number;
   value: number;
+  className?: string;
 }>;
 
 const filters: string[] = [
@@ -34,9 +36,19 @@ const theme = createTheme({
   },
 });
 
-export function TabContent({ children, index, value }: TabContentProps) {
+export function TabContent({
+  children,
+  className,
+  index,
+  value,
+}: TabContentProps) {
   return (
-    <div hidden={value !== index} id={`tabpanel-${index}`} role="tabpanel">
+    <div
+      className={twMerge(`${className}`)}
+      hidden={value !== index}
+      id={`tabpanel-${index}`}
+      role="tabpanel"
+    >
       {value === index && children}
     </div>
   );
@@ -102,12 +114,12 @@ function AnalysisTab() {
         </div>
 
         <div
-          className="flex w-full flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-4 lg:w-auto"
+          className="flex w-full flex-1 flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-4 lg:w-auto"
           id="main-content"
         >
-          <TabContent index={0} value={value}>
+          <TabContent className="w-full" index={0} value={value}>
             {/* Graphs */}
-            <div className="flex size-full items-center justify-center gap-x-4">
+            <div className="flex size-full max-h-96 flex-1 items-center justify-center gap-x-4">
               <MLContainer />
               {/* Put other graphs here */}
             </div>
