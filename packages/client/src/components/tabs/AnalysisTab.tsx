@@ -100,11 +100,18 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
         {/* Container for numbers and line */}
         <div
-          className="flex w-[245px] items-center justify-between"
-          style={{ gap: "0px", opacity: 1 }} // Adjust opacity if needed
+          className="flex w-[245px] items-center justify-center"
+          style={{ opacity: 1 }} // Adjust opacity if needed
         >
-          {/* outer circle */}
-          <div className="h-16 w-16 items-center justify-between rounded-full bg-black"></div>
+          {/* Outer circle */}
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F]">
+            {/* Inner circle */}
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF]">
+              <span className="text-center font-[Anta] text-[24px] font-normal leading-[39.06px] text-[#4D6BDB]">
+                78%
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
