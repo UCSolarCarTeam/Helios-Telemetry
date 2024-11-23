@@ -40,14 +40,17 @@ const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   },
 );
 
+const MQTT_PASSWORD_ENV = process.env.MQTT_PASSWORD_ENV;
+const MQTT_USERNAME_ENV = process.env.MQTT_USERNAME_ENV;
 const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(TelemetryBackendStack,
   "HeliosTelemetryBackendMQTT/Username", {
-  secretName: "HeliosTelemetryMQTT/Username" + backend.stack.stackName,
-  generateSecretString: {
-    secretStringTemplate: JSON.stringify({ username: 'solarCarMQTTUser' }),
-    generateStringKey: 'password',
-    excludeCharacters: '/@!&*'
-  }
+  secretName: "HeliosTelemetryMQTTCredentials",
+  secretStringValue: cdk.SecretValue.unsafePlainText(
+    JSON.stringify({
+      username: MQTT_USERNAME_ENV,
+      password: MQTT_PASSWORD_ENV
+    })
+  )
 }
 );
 
