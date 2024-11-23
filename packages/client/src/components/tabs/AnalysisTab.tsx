@@ -39,7 +39,7 @@ export function TabContent({ children, index, value }: TabContentProps) {
     </div>
   );
 }
-
+//to do: move grey shapes to molecules tab: called analysis molecule, make shapes responsive, make text responsive too: dont use pixels, use this: h-20 w-20
 interface ShapeProps {
   infoNumber?: number;
   rectangleHeight?: string;
@@ -60,13 +60,13 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="decoration-skip-ink-none text-center font-[Anta] text-[18px] font-normal leading-[21.97px] text-white">
+        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] text-white">
           Optimal Driving speed at&nbsp;
-          <span className="text-center font-[Anta] text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
             {infoNumber}%
           </span>
         </p>
-        <p className="text-center font-[Anta] text-[32px] font-normal leading-[39.06px] text-[#9C0534]">
+        <p className="text-center text-[32px] font-normal leading-[39.06px] text-[#9C0534]">
           50 km/h
         </p>
 
@@ -91,9 +91,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="decoration-skip-ink-none text-center font-[Anta] text-[18px] font-normal leading-[21.97px] text-white">
+        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] text-white">
           Motor Efficiency at&nbsp;
-          <span className="text-center font-[Anta] text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
             78%
           </span>
         </p>
@@ -107,7 +107,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F]">
             {/* Inner circle */}
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF]">
-              <span className="text-center font-[Anta] text-[24px] font-normal leading-[39.06px] text-[#4D6BDB]">
+              <span className="text-center text-[24px] font-normal leading-[39.06px] text-[##4D6BDB]">
                 78%
               </span>
             </div>
@@ -116,18 +116,35 @@ const GreyShapes: React.FC<ShapeProps> = ({
       </div>
 
       {/* Container to stack rectangles vertically */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-center gap-4">
         {/* Rectangle 1 */}
         <div
           className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
-        />
-        <p className="decoration-skip-ink-none text-center font-[Anta] text-[18px] font-normal leading-[21.97px] text-white">
-          Motor Efficiency at&nbsp;
-          <span className="text-center font-[Anta] text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
-            78%
-          </span>
-        </p>
+        >
+          <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] text-white">
+            Motor Efficiency at&nbsp;
+            <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+              78%
+            </span>
+          </p>
+
+          {/* Container for numbers and line */}
+          <div
+            className="flex w-[245px] items-center justify-center"
+            style={{ opacity: 1 }} // Adjust opacity if needed
+          >
+            {/* Outer circle */}
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F]">
+              {/* Inner circle */}
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF]">
+                <span className="text-center text-[24px] font-normal leading-[39.06px] text-[##4D6BDB]">
+                  78%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Rectangle 2 */}
         <div
