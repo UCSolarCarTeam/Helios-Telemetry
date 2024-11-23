@@ -28,8 +28,8 @@ aedes.authenticate = function (
   done: (error: AuthenticateError | null, success: boolean) => void,
 ) {
   // TO DO: Convert to ENV VARS
-  const validUsername = "urMom"; // Replace with your valid username
-  const validPassword = "hasAedes"; // Replace with your valid password
+  const validUsername = process.env.MQTT_USERNAME;
+  const validPassword = process.env.MQTT_PASSWORD;
   if (!username || !password) {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed

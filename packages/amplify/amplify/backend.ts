@@ -40,16 +40,15 @@ const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   },
 );
 
-// TODO: Change this to use a different username
 const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(TelemetryBackendStack,
-  "HeliosTelemetryBackendMQTT/Username",{
-    secretName: "HeliosTelemetryMQTT/Username" + backend.stack.stackName,
-    generateSecretString: {
-      secretStringTemplate:JSON.stringify({username: '<InsertingSomethingElse>'}),
-      generateStringKey: 'password',
-      excludeCharacters: '/@!&*'
-    }
+  "HeliosTelemetryBackendMQTT/Username", {
+  secretName: "HeliosTelemetryMQTT/Username" + backend.stack.stackName,
+  generateSecretString: {
+    secretStringTemplate: JSON.stringify({ username: 'solarCarMQTTUser' }),
+    generateStringKey: 'password',
+    excludeCharacters: '/@!&*'
   }
+}
 );
 
 const TelemetryBackendImageRepository = new ecr.Repository(
@@ -172,7 +171,14 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
-    MQTT_CREDENTIALS: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerMQTTCredentials)
+    MQTT_USERNAME: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "username"
+    ),
+    MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "password"
+    )
   },
 
 });
