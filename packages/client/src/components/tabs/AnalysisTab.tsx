@@ -61,7 +61,10 @@ const GreyShapes: React.FC<ShapeProps> = ({
         style={{ height: squareWidth, width: squareWidth }}
       >
         <p className="decoration-skip-ink-none text-center font-[Anta] text-[18px] font-normal leading-[21.97px] text-white">
-          Optimal Driving speed at {infoNumber}%
+          Optimal Driving speed at&nbsp;
+          <span className="text-center font-[Anta] text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+            {infoNumber}%
+          </span>
         </p>
         <p className="text-center font-[Anta] text-[32px] font-normal leading-[39.06px] text-[#9C0534]">
           50 km/h
@@ -87,7 +90,23 @@ const GreyShapes: React.FC<ShapeProps> = ({
       <div
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
-      />
+      >
+        <p className="decoration-skip-ink-none text-center font-[Anta] text-[18px] font-normal leading-[21.97px] text-white">
+          Motor Efficiency at&nbsp;
+          <span className="text-center font-[Anta] text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+            78%
+          </span>
+        </p>
+
+        {/* Container for numbers and line */}
+        <div
+          className="flex w-[245px] items-center justify-between"
+          style={{ gap: "0px", opacity: 1 }} // Adjust opacity if needed
+        >
+          {/* outer circle */}
+          <div className="h-16 w-16 items-center justify-between rounded-full bg-black"></div>
+        </div>
+      </div>
 
       {/* Container to stack rectangles vertically */}
       <div className="flex flex-col gap-4">
