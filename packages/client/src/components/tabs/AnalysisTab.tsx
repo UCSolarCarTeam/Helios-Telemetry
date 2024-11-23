@@ -122,6 +122,12 @@ const GreyShapes: React.FC<ShapeProps> = ({
           className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
         />
+        <p className="decoration-skip-ink-none text-center font-[Anta] text-[18px] font-normal leading-[21.97px] text-white">
+          Motor Efficiency at&nbsp;
+          <span className="text-center font-[Anta] text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+            78%
+          </span>
+        </p>
 
         {/* Rectangle 2 */}
         <div
