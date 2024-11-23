@@ -87,14 +87,16 @@ function AnalysisTab() {
       <div className="flex size-full flex-col justify-between gap-x-2 gap-y-6 md:flex-row">
         <div className="flex max-w-44 flex-col gap-y-1">
           {filters.map((filter) => (
-            <div className="flex items-center space-x-2" key={filter}>
-              <input
-                className="h-4 w-4 accent-[#B94A6C]"
-                id={filter}
-                name={filter}
-                type="checkbox"
-              />
-              <span>{filter}</span>
+            <div className="flex items-center gap-x-2" key={filter}>
+              <label className="flex cursor-pointer items-center gap-x-2">
+                <input
+                  className="size-4 cursor-pointer accent-helios"
+                  id={filter}
+                  name={filter}
+                  type="checkbox"
+                />
+                <span>{filter}</span>
+              </label>
             </div>
           ))}
         </div>
