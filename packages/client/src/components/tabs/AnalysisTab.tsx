@@ -107,7 +107,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           style={{ opacity: 1 }} // Adjust opacity if needed
         >
           {/* Outer circle */}
-          <div className="h-23 w-23 m-2 flex items-center justify-center rounded-full bg-[#65558F]">
+          <div className="m-2 flex h-24 w-24 items-center justify-center rounded-full bg-[#65558F]">
             {/* Inner circle */}
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#BFBFBF]">
               <span className="text-center text-[35px] font-normal leading-[39.06px] text-[#4D6BDB]">
@@ -174,10 +174,41 @@ const GreyShapes: React.FC<ShapeProps> = ({
             <p className="mt-2 text-center text-lg font-normal leading-[22px] text-white">
               Driver Performance Score
             </p>
-            <div className="mt-2 flex justify-center">
-              {/* Container circle */}
+            <div className="mt-2 flex justify-center space-x-4">
+              {/* First circle */}
               <div
-                className="flex w-[245px] items-center justify-center"
+                className="flex items-center justify-center"
+                style={{ opacity: 1 }} // Adjust opacity if needed
+              >
+                {/* Outer circle */}
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#65558F]">
+                  {/* Inner circle */}
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
+                    <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB]">
+                      83
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Horizontal line with numbers */}
+              <div
+                className="flex w-[50px] items-center justify-between"
+                style={{ gap: "0px", opacity: 1 }}
+              >
+                {/* Left number */}
+                <span className="text-left text-sm">28</span>
+
+                {/* Horizontal line */}
+                <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
+
+                {/* Right number */}
+                <span className="text-right text-sm">97</span>
+              </div>
+
+              {/* Second circle */}
+              <div
+                className="flex items-center justify-center"
                 style={{ opacity: 1 }} // Adjust opacity if needed
               >
                 {/* Outer circle */}
@@ -191,7 +222,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex justify-center">
+
+            <div className="mt-2 flex justify-center space-x-4">
+              {/* Horizontal line with numbers */}
               <div
                 className="flex w-[50px] items-center justify-between"
                 style={{ gap: "0px", opacity: 1 }}
