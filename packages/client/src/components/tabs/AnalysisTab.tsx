@@ -122,37 +122,40 @@ const GreyShapes: React.FC<ShapeProps> = ({
           className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
         >
-          <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] text-white">
-            Driver Performance Score&nsbp
+          <p className="mt-2 text-center text-lg font-normal leading-[22px] text-white">
+            Driver Performance Score
           </p>
-
-          {/* Container circle */}
-          <div
-            className="flex w-[245px] items-center justify-center"
-            style={{ opacity: 1 }} // Adjust opacity if needed
-          >
-            {/* Outer circle */}
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#65558F]">
-              {/* Inner circle */}
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
-                <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#4D6BDB]">
-                  83
-                </span>
+          <div className="mt-2 flex justify-center">
+            {/* Container circle */}
+            <div
+              className="flex w-[245px] items-center justify-center"
+              style={{ opacity: 1 }} // Adjust opacity if needed
+            >
+              {/* Outer circle */}
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#65558F]">
+                {/* Inner circle */}
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
+                  <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#4D6BDB]">
+                    83
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-          <div
-            className="flex w-[150px] items-center justify-between"
-            style={{ gap: "0px", opacity: 1 }}
-          >
-            {/* Left number */}
-            <span className="text-left text-sm">28</span>
+          <div className="flex justify-center">
+            <div
+              className="flex w-[50px] items-center justify-between"
+              style={{ gap: "0px", opacity: 1 }}
+            >
+              {/* Left number */}
+              <span className="text-left text-[18px] text-sm">28</span>
 
-            {/* Horizontal line */}
-            <div className="h-[13px] flex-1 bg-[#e3e4e5]"></div>
+              {/* Horizontal line */}
+              <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
 
-            {/* Right number */}
-            <span className="text-right text-sm">97</span>
+              {/* Right number */}
+              <span className="text-right text-sm">97</span>
+            </div>
           </div>
         </div>
 
