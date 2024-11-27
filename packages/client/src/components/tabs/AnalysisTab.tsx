@@ -135,7 +135,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
               style={{ opacity: 1 }} // Adjust opacity if needed
             >
               {/* Outer circle */}
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#65558F]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#CF4242]">
                 {/* Inner circle */}
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
                   <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB]">
@@ -174,68 +174,65 @@ const GreyShapes: React.FC<ShapeProps> = ({
             <p className="mt-2 text-center text-lg font-normal leading-[22px] text-white">
               Driver Performance Score
             </p>
+
+            {/* Container for first circle and line */}
             <div className="mt-2 flex justify-center space-x-4">
-              {/* First circle */}
-              <div
-                className="flex items-center justify-center"
-                style={{ opacity: 1 }} // Adjust opacity if needed
-              >
+              {/* First circle with line below */}
+              <div className="flex flex-col items-center justify-center">
                 {/* Outer circle */}
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#65558F]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#CF4242]">
                   {/* Inner circle */}
                   <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
-                    <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB]">
-                      83
+                    <span className="text-center text-[20px] font-normal leading-[39.06px] text-[#4D6BDB]">
+                      148
                     </span>
                   </div>
                 </div>
+
+                {/* Horizontal line with numbers under the first circle */}
+                <div
+                  className="mt-2 flex w-[50px] items-center justify-between"
+                  style={{ gap: "0px", opacity: 1 }}
+                >
+                  <span className="text-left text-sm">135</span>
+                  <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
+                  <span className="text-right text-sm">269</span>
+                </div>
               </div>
 
-              {/* Horizontal line with numbers */}
-              <div
-                className="flex w-[50px] items-center justify-between"
-                style={{ gap: "0px", opacity: 1 }}
-              >
-                {/* Left number */}
-                <span className="text-left text-sm">28</span>
-
-                {/* Horizontal line */}
-                <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
-
-                {/* Right number */}
-                <span className="text-right text-sm">97</span>
-              </div>
-
-              {/* Second circle */}
-              <div
-                className="flex items-center justify-center"
-                style={{ opacity: 1 }} // Adjust opacity if needed
-              >
+              {/* Second circle with line below */}
+              <div className="flex flex-col items-center justify-center">
                 {/* Outer circle */}
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#65558F]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#CF4242]">
                   {/* Inner circle */}
                   <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
                     <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB]">
-                      83
+                      76
                     </span>
                   </div>
+                </div>
+
+                {/* Horizontal line with numbers under the second circle */}
+                <div
+                  className="mt-2 flex w-[50px] items-center justify-between"
+                  style={{ gap: "0px", opacity: 1 }}
+                >
+                  <span className="text-left text-sm">28</span>
+                  <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
+                  <span className="text-right text-sm">97</span>
                 </div>
               </div>
             </div>
 
+            {/* Container for horizontal line with numbers (under both circles) */}
             <div className="mt-2 flex justify-center space-x-4">
-              {/* Horizontal line with numbers */}
+              {/* Horizontal line with numbers (shared line for the circles) */}
               <div
                 className="flex w-[50px] items-center justify-between"
                 style={{ gap: "0px", opacity: 1 }}
               >
-                {/* Left number */}
                 <span className="text-left text-sm">28</span>
-
-                {/* Horizontal line */}
                 <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
-
-                {/* Right number */}
                 <span className="text-right text-sm">97</span>
               </div>
             </div>
