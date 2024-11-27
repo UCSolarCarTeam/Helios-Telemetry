@@ -60,7 +60,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] text-white">
+        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px]">
           Optimal Driving speed at&nbsp;
           <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
             {infoNumber}%
@@ -79,13 +79,13 @@ const GreyShapes: React.FC<ShapeProps> = ({
           style={{ gap: "0px", opacity: 1 }} // Adjust opacity if needed
         >
           {/* Left number */}
-          <span className="text-sm">46</span>
+          <span className="text-sm text-[#9C0534]">46</span>
 
           {/* Horizontal line */}
           <div className="h-[13px] flex-grow bg-[#BFBFBF]"></div>
 
           {/* Right number */}
-          <span className="text-sm">55</span>
+          <span className="text-sm text-[#9C0534]">55</span>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] text-white">
+        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px]">
           Motor Efficiency at&nbsp;
           <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
             78%
@@ -125,7 +125,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
         >
-          <p className="mt-2 text-center text-lg font-normal leading-[22px] text-white">
+          <p className="mt-2 text-center text-lg font-normal leading-[22px]">
             Driver Performance Score
           </p>
           <div className="mt-1 flex justify-center">
@@ -167,7 +167,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: "133px", width: rectangleWidth }}
         >
-          <p className="mt-2 text-center text-lg font-normal leading-[22px] text-white">
+          <p className="mt-2 text-center text-lg font-normal leading-[22px]">
             End of Day Predictors
           </p>
 
