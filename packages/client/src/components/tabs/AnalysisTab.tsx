@@ -98,7 +98,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           </span>
         </p>
 
-        {/* Container for numbers and line */}
+        {/* Container for circle */}
         <div
           className="flex w-[245px] items-center justify-center"
           style={{ opacity: 1 }} // Adjust opacity if needed
@@ -107,8 +107,8 @@ const GreyShapes: React.FC<ShapeProps> = ({
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F]">
             {/* Inner circle */}
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF]">
-              <span className="text-center text-[24px] font-normal leading-[39.06px] text-[##4D6BDB]">
-                78%
+              <span className="text-center text-[24px] font-normal leading-[39.06px] text-[#4D6BDB]">
+                78
               </span>
             </div>
           </div>
@@ -123,26 +123,36 @@ const GreyShapes: React.FC<ShapeProps> = ({
           style={{ height: rectangleHeight, width: rectangleWidth }}
         >
           <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] text-white">
-            Motor Efficiency at&nbsp;
-            <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
-              78%
-            </span>
+            Driver Performance Score&nsbp
           </p>
 
-          {/* Container for numbers and line */}
+          {/* Container circle */}
           <div
             className="flex w-[245px] items-center justify-center"
             style={{ opacity: 1 }} // Adjust opacity if needed
           >
             {/* Outer circle */}
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F]">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#65558F]">
               {/* Inner circle */}
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF]">
-                <span className="text-center text-[24px] font-normal leading-[39.06px] text-[##4D6BDB]">
-                  78%
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
+                <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#4D6BDB]">
+                  83
                 </span>
               </div>
             </div>
+          </div>
+          <div
+            className="flex w-[150px] items-center justify-between"
+            style={{ gap: "0px", opacity: 1 }}
+          >
+            {/* Left number */}
+            <span className="text-left text-sm">28</span>
+
+            {/* Horizontal line */}
+            <div className="h-[13px] flex-1 bg-[#e3e4e5]"></div>
+
+            {/* Right number */}
+            <span className="text-right text-sm">97</span>
           </div>
         </div>
 
