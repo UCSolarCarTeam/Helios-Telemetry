@@ -191,12 +191,12 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
                 {/* Horizontal line with numbers under the first circle */}
                 <div
-                  className="mt-2 flex w-[50px] items-center justify-between"
+                  className="flex w-[50px] items-center justify-between"
                   style={{ gap: "0px", opacity: 1 }}
                 >
-                  <span className="text-left text-sm">135</span>
+                  <span className="text-left text-sm text-[#9C0534]">135</span>
                   <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
-                  <span className="text-right text-sm">269</span>
+                  <span className="text-right text-sm text-[#369A34]">269</span>
                 </div>
               </div>
 
@@ -207,33 +207,20 @@ const GreyShapes: React.FC<ShapeProps> = ({
                   {/* Inner circle */}
                   <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
                     <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB]">
-                      76
+                      89
                     </span>
                   </div>
                 </div>
 
                 {/* Horizontal line with numbers under the second circle */}
                 <div
-                  className="mt-2 flex w-[50px] items-center justify-between"
+                  className="flex w-[50px] items-center justify-between"
                   style={{ gap: "0px", opacity: 1 }}
                 >
-                  <span className="text-left text-sm">28</span>
+                  <span className="text-left text-sm text-[#9C0534]">57</span>
                   <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
-                  <span className="text-right text-sm">97</span>
+                  <span className="text-right text-sm text-[#369A34]">104</span>
                 </div>
-              </div>
-            </div>
-
-            {/* Container for horizontal line with numbers (under both circles) */}
-            <div className="mt-2 flex justify-center space-x-4">
-              {/* Horizontal line with numbers (shared line for the circles) */}
-              <div
-                className="flex w-[50px] items-center justify-between"
-                style={{ gap: "0px", opacity: 1 }}
-              >
-                <span className="text-left text-sm">28</span>
-                <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
-                <span className="text-right text-sm">97</span>
               </div>
             </div>
           </div>
