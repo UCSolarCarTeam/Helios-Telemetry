@@ -60,9 +60,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px]">
+        <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Optimal Driving speed at&nbsp;
-          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+          <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
             {infoNumber}%
           </span>
         </p>
@@ -94,9 +94,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="decoration-skip-ink-none text-center text-[14px] font-normal leading-[21.97px] sm:text-[16px] md:text-[18px]">
+        <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Motor Efficiency at&nbsp;
-          <span className="text-center text-[14px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[16px] md:text-[18px]">
+          <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
             78%
           </span>
         </p>
