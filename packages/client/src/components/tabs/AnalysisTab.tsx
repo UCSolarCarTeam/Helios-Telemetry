@@ -56,10 +56,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
   return (
     <div className="flex gap-4">
       {/* First square */}
-      <div
-        className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
-        style={{ height: squareWidth, width: squareWidth }}
-      >
+      <div className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4 sm:w-[50%] md:w-[40%] lg:w-[30%]">
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Optimal Driving speed at&nbsp;
           <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
@@ -72,28 +69,31 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
         {/* Container for numbers and line */}
         {/* Horizontal line */}
-        <div className="h-[13px] w-[150px] rounded-full bg-black"></div>
+
+        <div className="h-[13px] w-full rounded-full bg-black"></div>
 
         <div
-          className="flex w-[145px] items-center justify-between"
+          className="flex w-full items-center justify-between"
           style={{ gap: "0px", opacity: 1 }} // Adjust opacity if needed
         >
           {/* Left number */}
-          <span className="text-sm text-[#9C0534]">46</span>
+          <span className="text-sm text-[#9C0534] sm:text-base md:text-lg">
+            46
+          </span>
 
           {/* Horizontal line */}
-          <div className="h-[13px] flex-grow bg-[#BFBFBF]"></div>
+          <div className="h-[13px] bg-[#BFBFBF]"></div>
 
           {/* Right number */}
-          <span className="text-sm text-[#9C0534]">55</span>
+          <span className="text-sm text-[#9C0534] sm:text-base md:text-lg">
+            55
+          </span>
         </div>
       </div>
 
       {/* Second square */}
-      <div
-        className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
-        style={{ height: squareWidth, width: squareWidth }}
-      >
+      <div className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4 sm:w-[50%] md:w-[40%] lg:w-[30%]">
+
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Motor Efficiency at&nbsp;
           <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
@@ -168,7 +168,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           style={{ height: "133px", width: rectangleWidth }}
         >
           {/* Title */}
-          <p className="mt-[-8px] text-center text-lg font-normal leading-[22px]">
+          <p className="mt-[-8px] text-center text-[14px] font-normal leading-[22px] sm:text-[16px] md:text-[18px]">
             End of Day Predictors
           </p>
 
