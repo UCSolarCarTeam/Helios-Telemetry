@@ -94,9 +94,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
         className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF]"
         style={{ height: squareWidth, width: squareWidth }}
       >
-        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px]">
+        <p className="decoration-skip-ink-none text-center text-[14px] font-normal leading-[21.97px] sm:text-[16px] md:text-[18px]">
           Motor Efficiency at&nbsp;
-          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534]">
+          <span className="text-center text-[14px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[16px] md:text-[18px]">
             78%
           </span>
         </p>
@@ -107,9 +107,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
           style={{ opacity: 1 }} // Adjust opacity if needed
         >
           {/* Outer circle */}
-          <div className="m-2 flex h-24 w-24 items-center justify-center rounded-full bg-[#65558F]">
+          <div className="m-2 flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F] sm:h-24 sm:w-24 md:h-28 md:w-28">
             {/* Inner circle */}
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#BFBFBF]">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-20 sm:w-20 md:h-24 md:w-24">
               <span className="text-center text-[35px] font-normal leading-[39.06px] text-[#4D6BDB]">
                 78
               </span>
