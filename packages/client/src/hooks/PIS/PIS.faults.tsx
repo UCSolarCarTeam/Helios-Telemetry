@@ -173,7 +173,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.Battery.BatteryPack.Input12V,
+              value: currentPacket?.BatteryFaults.Errors.PowerSupply12VFault,
             },
           ],
           isFault: true,
@@ -190,6 +190,18 @@ const Faults = (): I_PIS => {
           ],
           isFault: true,
           name: "Charge Limit Enforcement Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.ChargerSafetyRelayFault,
+            },
+          ],
+          isFault: true,
+          name: "Charge Safety Relay Fault",
         },
         {
           data: [
@@ -442,6 +454,57 @@ const Faults = (): I_PIS => {
               {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorErrors
+                    .CanCommsTimeoutError,
+              },
+            ],
+            isFault: true,
+            name: "Can Comms Timeout Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorErrors
+                    .ErrorInDclinkCommunication,
+              },
+            ],
+            isFault: true,
+            name: "Error in DC Link Communication",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorErrors.ErrorReadingEncoder,
+              },
+            ],
+            isFault: true,
+            name: "Error Reading Encoder",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorErrors
+                    .ErrorReadingTempSensor,
+              },
+            ],
+            isFault: true,
+            name: "Error Reading Temp Sensor",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
                 value: currentPacket?.MotorDetails0?.MotorErrors.OverspeedError,
               },
             ],
@@ -616,12 +679,50 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
+                  currentPacket?.MotorDetails0?.MotorErrors.DcUndervoltageError,
+              },
+            ],
+            isFault: true,
+            name: "Dc Bus Under Voltage Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
                   currentPacket?.MotorDetails0?.MotorErrors
                     .InvalidHallSensorSequence, // this doesn't exist in the packet anymore I think
               },
             ],
             isFault: true,
             name: "Bad Motor Position Hall Sequence",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorErrors
+                    .PositionSensorReadingError, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Position Sensor Reading Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorErrors
+                    .LostFramesOnCanBusError,
+              },
+            ],
+            isFault: true,
+            name: "Lost Frame on Can Bus Error",
           },
           {
             data: [
@@ -637,7 +738,228 @@ const Faults = (): I_PIS => {
             name: "Config Read Error",
           },
         ],
-        LimitFlags: [],
+        LimitFlags: [
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .CanCommsTimeoutWarning,
+              },
+            ],
+            isFault: true,
+            name: "Can Comms Timeout Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings.OverspeedWarning,
+              },
+            ],
+            isFault: true,
+            name: "Motor Over Speed",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter1FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 1 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter1OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 1 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter2FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 2 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter2OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 2 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter3FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 3 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter3OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 3 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter4FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 4 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter4OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 4 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter5FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 5 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter5OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 5 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter6FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 6 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .Inverter6OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 6 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .DcOvervoltageWarning,
+              },
+            ],
+            isFault: true,
+            name: "Dc Bus Over Voltage",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .DcUndervoltageWarning,
+              },
+            ],
+            isFault: true,
+            name: "Dc Bus Under Voltage Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails0?.MotorWarnings
+                    .LostFramesOnCanBusWarning,
+              },
+            ],
+            isFault: true,
+            name: "Lost Frame on Can Bus Error",
+          },
+        ],
       },
       MotorRight: {
         ErrorFlags: [
@@ -646,7 +968,58 @@ const Faults = (): I_PIS => {
               {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
-                value: currentPacket?.MotorDetails0?.MotorErrors.OverspeedError,
+                value:
+                  currentPacket?.MotorDetails1?.MotorErrors
+                    .CanCommsTimeoutError,
+              },
+            ],
+            isFault: true,
+            name: "Can Comms Timeout Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorErrors
+                    .ErrorInDclinkCommunication,
+              },
+            ],
+            isFault: true,
+            name: "Error in DC Link Communication",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorErrors.ErrorReadingEncoder,
+              },
+            ],
+            isFault: true,
+            name: "Error Reading Encoder",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorErrors
+                    .ErrorReadingTempSensor,
+              },
+            ],
+            isFault: true,
+            name: "Error Reading Temp Sensor",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value: currentPacket?.MotorDetails1?.MotorErrors.OverspeedError,
               },
             ],
             isFault: true,
@@ -658,7 +1031,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter1FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter1FaultError, // this doesn't exist in the packet anymore I think
               },
             ],
             isFault: true,
@@ -670,7 +1043,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .Inverter1OvercurrentError, // this doesn't exist in the packet anymore I think
               },
             ],
@@ -683,7 +1056,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter2FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter2FaultError, // this doesn't exist in the packet anymore I think
               },
             ],
             isFault: true,
@@ -695,7 +1068,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .Inverter2OvercurrentError, // this doesn't exist in the packet anymore I think
               },
             ],
@@ -708,7 +1081,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter3FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter3FaultError, // this doesn't exist in the packet anymore I think
               },
             ],
             isFault: true,
@@ -720,7 +1093,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .Inverter3OvercurrentError, // this doesn't exist in the packet anymore I think
               },
             ],
@@ -733,7 +1106,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter4FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter4FaultError, // this doesn't exist in the packet anymore I think
               },
             ],
             isFault: true,
@@ -745,7 +1118,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .Inverter4OvercurrentError, // this doesn't exist in the packet anymore I think
               },
             ],
@@ -758,7 +1131,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter5FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter5FaultError, // this doesn't exist in the packet anymore I think
               },
             ],
             isFault: true,
@@ -770,7 +1143,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .Inverter5OvercurrentError, // this doesn't exist in the packet anymore I think
               },
             ],
@@ -783,7 +1156,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter6FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter6FaultError, // this doesn't exist in the packet anymore I think
               },
             ],
             isFault: true,
@@ -795,7 +1168,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .Inverter6OvercurrentError, // this doesn't exist in the packet anymore I think
               },
             ],
@@ -808,7 +1181,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.DcOvervoltageError,
+                  currentPacket?.MotorDetails1?.MotorErrors.DcOvervoltageError,
               },
             ],
             isFault: true,
@@ -820,7 +1193,19 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors.DcUndervoltageError,
+              },
+            ],
+            isFault: true,
+            name: "Dc Bus Under Voltage Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .InvalidHallSensorSequence, // this doesn't exist in the packet anymore I think
               },
             ],
@@ -833,7 +1218,33 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.WARNING,
                 value:
-                  currentPacket?.MotorDetails0.MotorErrors
+                  currentPacket?.MotorDetails1?.MotorErrors
+                    .PositionSensorReadingError, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Position Sensor Reading Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorErrors
+                    .LostFramesOnCanBusError,
+              },
+            ],
+            isFault: true,
+            name: "Lost Frame on Can Bus Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorErrors
                     .ControllerDataReadingTimeout,
               },
             ],
@@ -841,7 +1252,228 @@ const Faults = (): I_PIS => {
             name: "Config Read Error",
           },
         ],
-        LimitFlags: [],
+        LimitFlags: [
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .CanCommsTimeoutWarning,
+              },
+            ],
+            isFault: true,
+            name: "Can Comms Timeout Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings.OverspeedWarning,
+              },
+            ],
+            isFault: true,
+            name: "Motor Over Speed",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter1FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 1 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter1OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 1 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter2FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 2 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter2OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 2 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter3FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 3 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter3OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 3 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter4FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 4 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter4OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 4 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter5FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 5 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter5OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 5 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter6FaultWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 6 Fault Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .Inverter6OverCurrentWarning, // this doesn't exist in the packet anymore I think
+              },
+            ],
+            isFault: true,
+            name: "Inverter 6 Overcurrent Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .DcOvervoltageWarning,
+              },
+            ],
+            isFault: true,
+            name: "Dc Bus Over Voltage",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .DcUndervoltageWarning,
+              },
+            ],
+            isFault: true,
+            name: "Dc Bus Under Voltage Error",
+          },
+          {
+            data: [
+              {
+                indicationLocation: FaultLocations.LEFTMOTOR,
+                severity: ISeverity.WARNING,
+                value:
+                  currentPacket?.MotorDetails1?.MotorWarnings
+                    .LostFramesOnCanBusWarning,
+              },
+            ],
+            isFault: true,
+            name: "Lost Frame on Can Bus Error",
+          },
+        ],
       },
     },
   };
