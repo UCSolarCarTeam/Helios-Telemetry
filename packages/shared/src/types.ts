@@ -22,7 +22,6 @@ enum Motor {
 }
 
 export interface ITelemetryData {
-  Pi: IPi;
   B3: IB3;
   Battery: IBattery;
   BatteryFaults: IBatteryFaults;
@@ -34,9 +33,10 @@ export interface ITelemetryData {
   MPPT3: IMPPT;
   MotorDetails0: IMotorDetails;
   MotorDetails1: IMotorDetails;
+  Pi: IPi;
   ProximitySensors: IProximitySensors;
   Telemetry: ITelemetry;
-  TimeStamp: string;
+  TimeStamp: number;
   Title: string;
 }
 
@@ -124,6 +124,10 @@ export interface IB3 {
 
 export interface IBattery {
   AlwaysOnSignalStatus: boolean;
+  BatteryCell: IBatteryCell;
+  BatteryFan: IBatteryFan;
+  BatteryPack: IBatteryPack;
+  BatteryTemperature: IBatteryTemperature;
   BmuAlive: number;
   ChargeRelayEnabled: boolean;
   ChargerSafetyEnabled: boolean;
