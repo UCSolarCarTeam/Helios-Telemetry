@@ -280,7 +280,6 @@ export interface IMotorDetails {
   CanSendWarning: boolean;
   ControlMode: boolean;
   ControlValue: number;
-  ControllerDataReadingTimeout: boolean;
   CpuOverload: boolean;
   CpuTempTooHigh: boolean;
   CpuTemperatureVeryHigh: boolean;
@@ -299,7 +298,6 @@ export interface IMotorDetails {
   HwEnableNotSet: boolean;
   InitError: boolean;
   InvalidHallSector: boolean;
-  InvalidHallSensorSequence: boolean;
   Inverter1TempTooHigh: boolean;
   Inverter1TempVeryHigh: boolean;
   Inverter2TempTooHigh: boolean;
@@ -328,11 +326,13 @@ export interface IMotorDetails {
 
 export interface IMotorErrors {
   CanCommsTimeoutError: boolean;
+  ControllerDataReadingTimeout: boolean;
   DcOvervoltageError: boolean;
   ErrorInDclinkCommunication: boolean;
   ErrorReadingEncoder: boolean;
   ErrorReadingTempSensor: boolean;
   DcUndervoltageError: boolean;
+  InvalidHallSensorSequence: boolean;
   Inverter1FaultError: boolean;
   Inverter1OvercurrentError: boolean;
   Inverter2FaultError: boolean;
