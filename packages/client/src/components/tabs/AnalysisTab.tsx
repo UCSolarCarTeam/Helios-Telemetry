@@ -107,10 +107,10 @@ const GreyShapes: React.FC<ShapeProps> = ({
           style={{ opacity: 1 }} // Adjust opacity if needed
         >
           {/* Outer circle */}
-          <div className="m-2 flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F] sm:h-24 sm:w-24 md:h-28 md:w-28">
+          <div className="md:h-27 md:w-27 m-2 flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F] sm:h-24 sm:w-24">
             {/* Inner circle */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-20 sm:w-20 md:h-24 md:w-24">
-              <span className="text-center text-[35px] font-normal leading-[39.06px] text-[#4D6BDB]">
+            <div className="md:h-23 md:w-23 flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-20 sm:w-20">
+              <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB] sm:text-[27px] md:text-[37px]">
                 78
               </span>
             </div>
@@ -125,7 +125,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
         >
-          <p className="mt-2 text-center text-lg font-normal leading-[22px]">
+          <p className="mt-2 text-center text-[14px] font-normal leading-[22px] sm:text-[16px] md:text-[18px]">
             Driver Performance Score
           </p>
           <div className="mt-1 flex justify-center">
@@ -135,7 +135,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
               style={{ opacity: 1 }} // Adjust opacity if needed
             >
               {/* Outer circle */}
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#CF4242]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#CF4242] sm:text-[16px] md:text-[18px]">
                 {/* Inner circle */}
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#BFBFBF]">
                   <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB]">
