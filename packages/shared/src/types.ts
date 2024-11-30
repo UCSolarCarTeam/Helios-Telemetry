@@ -20,19 +20,24 @@ enum Motor {
   RightMotor = 1,
   LeftMotor = 0,
 }
+
 export interface ITelemetryData {
-  AuxBms: IAuxBms;
+  Pi: IPi;
+  B3: IB3;
   Battery: IBattery;
-  BatteryFaults: IBatteryFault;
-  Ccs: ICcs;
-  DriverControls: IDriverControls;
-  KeyMotor: IKeyMotor[];
-  Lights: ILights;
-  MPPT: IMPPT[];
-  MotorDetails: IMotorDetail[];
-  MotorFaults: IMotorFault[];
-  PacketTitle: string;
-  TimeStamp: number;
+  BatteryFaults: IBatteryFaults;
+  KeyMotor: IKeyMotor;
+  MBMS: IMbms;
+  MPPT0: IMPPT;
+  MPPT1: IMPPT;
+  MPPT2: IMPPT;
+  MPPT3: IMPPT;
+  MotorDetails0: IMotorDetails;
+  MotorDetails1: IMotorDetails;
+  ProximitySensors: IProximitySensors;
+  Telemetry: ITelemetry;
+  TimeStamp: string;
+  Title: string;
 }
 
 export interface ILapData {
@@ -87,106 +92,89 @@ export class LapData {
   averageSpeed = -1;
 }
 
-export interface IAuxBms {
-  AllowCharge: boolean;
-  AllowDischarge: boolean;
-  AuxBmsAlive: boolean;
-  AuxVoltage: number;
-  ChargeContactorError: boolean;
-  ChargeNotClosedDueToHighCurrent: boolean;
-  ChargeOpenButShouldBeClosed: boolean;
-  ChargeShouldTrip: boolean;
-  ChargeTripDueToHighCellVoltage: boolean;
-  ChargeTripDueToHighTemperatureAndCurrent: boolean;
-  ChargeTripDueToPackCurrent: boolean;
-  CommonContactorError: boolean;
-  DischargeContactorError: boolean;
-  DischargeNotClosedDueToHighCurrent: boolean;
-  DischargeOpenButShouldBeClosed: boolean;
-  DischargeShouldTrip: boolean;
-  DischargeTripDueToHighTemperatureAndCurrent: boolean;
-  DischargeTripDueToLowCellVoltage: boolean;
-  DischargeTripDueToPackCurrent: boolean;
-  HighVoltageEnableState: boolean;
-  OrionCANReceivedRecently: boolean;
-  PrechargeState: string;
-  ProtectionTrip: boolean;
-  StrobeBmsLight: boolean;
-  TripDueToOrionMessageTimeout: boolean;
+export interface IPi {
+  rfid: number;
 }
 
-export interface IKeyMotor {
-  Alive: boolean;
-  BusCurrent: number;
-  BusVoltage: number;
-  SetCurrent: number;
-  SetVelocity: number;
-  VehicleVelocity: number;
-}
-
-export interface IMotorDetail {
-  BackEmf: number;
-  DcBusAmpHours: number;
-  DspBoardTemp: number;
-  HeatSinkTemp: number;
-  MotorCurrentImaginary: number;
-  MotorCurrentReal: number;
-  MotorTemp: number;
-  MotorVoltageImaginary: number;
-  MotorVoltageReal: number;
-  Odometer: number;
-  PhaseBCurrent: number;
-  PhaseCCurrent: number;
-  SlipSpeed: number;
-  VoltageRail15VSupply: number;
-  VoltageRail1VSupply: number;
-  VoltageRail3VSupply: number;
-}
-
-export interface IDriverControls {
+export interface IB3 {
   Acceleration: number;
-  Alive: boolean;
-  Aux: boolean;
-  Brakes: boolean;
-  Forward: boolean;
-  Hazard: boolean;
-  HeadlightsHigh: boolean;
-  HeadlightsLow: boolean;
-  HeadlightsOff: boolean;
-  Horn: boolean;
-  Interior: boolean;
+  BrakeLightSignalOut: boolean;
+  BrakeSwitch: boolean;
+  DaytimeRunningLightSignalOut: boolean;
+  ForwardIn: boolean;
+  ForwardSwitchIn: boolean;
+  HandbrakeSwitch: boolean;
+  HazardLightsIn: boolean;
+  HeadightsSwitchIn: boolean;
+  HeadlightSignalOut: boolean;
+  HornSignalOut: boolean;
+  HornSwitchIn: boolean;
   Lap: boolean;
-  NextSong: boolean;
-  PrevSong: boolean;
-  PushToTalk: boolean;
+  LeftSignalIn: boolean;
+  LeftSignalOut: boolean;
+  MotorReset: boolean;
+  Neutral: boolean;
+  RaceMode: boolean;
   RegenBraking: number;
-  Reset: boolean;
   Reverse: boolean;
-  SignalLeft: boolean;
-  SignalRight: boolean;
-  VolumeDown: boolean;
-  VolumeUp: boolean;
+  RightSignalIn: boolean;
+  RightSignalOut: boolean;
+  ZoomZoom: boolean;
 }
 
-export interface ILights {
-  Alive: boolean;
-  BmsStrobeLight: boolean;
-  Brakes: boolean;
-  HighBeams: boolean;
-  LeftSignal: boolean;
-  LowBeams: boolean;
-  RightSignal: boolean;
+export interface IBattery {
+  AlwaysOnSignalStatus: boolean;
+  BmuAlive: number;
+  ChargeRelayEnabled: boolean;
+  ChargerSafetyEnabled: boolean;
+  DischargeRelayEnabled: boolean;
+  HighThermistorId: number;
+  IsChargingSignalStatus: boolean;
+  IsReadySignalStatus: boolean;
+  LowThermistorId: number;
+  MalfunctionIndicatorActive: boolean;
+  MultiPurposeInputSignalStatus: boolean;
 }
 
-export interface IBatteryFault {
-  ErrorFlags: IBatteryErrorFlags;
-  LimitFlags: IBatteryLimitFlags;
+export interface IBatteryCell {
+  AverageCellVoltage: number;
+  HighCellVoltage: number;
+  HighCellVoltageId: number;
+  LowCellVoltage: number;
+  LowCellVoltageId: number;
+  PopulatedCells: number;
 }
 
-export interface IBatteryErrorFlags {
-  "12vPowerSupplyFault": boolean;
+export interface IBatteryFan {
+  FanSpeed: number;
+  FanVoltage: number;
+  RequestedFanSpeed: number;
+}
+
+export interface IBatteryPack {
+  Input12V: number;
+  PackAmphours: number;
+  PackCurrent: number;
+  PackDepthOfDischarge: number;
+  PackStateOfCharge: number;
+  PackVoltage: number;
+}
+
+export interface IBatteryTemperature {
+  LowTemperature: number;
+  AverageTemperature: number;
+  InternalTemperature: number;
+  HighTemperature: number;
+}
+
+export interface IBatteryFaults {
+  Warnings: IBatteryFaultsWarnings;
+  Errors: IBatteryFaultsErrors;
+}
+
+export interface IBatteryFaultsErrors {
   AlwaysOnSupplyFault: boolean;
-  CANBUSCommunicationsFault: boolean;
+  CanbusCommunicationFault: boolean;
   ChargeLimitEnforcementFault: boolean;
   ChargerSafetyRelayFault: boolean;
   CurrentSensorFault: boolean;
@@ -197,17 +185,18 @@ export interface IBatteryErrorFlags {
   InternalConversionFault: boolean;
   InternalLogicFault: boolean;
   InternalMemoryFault: boolean;
-  InternalThermistorsFault: boolean;
+  InternalThermistorFault: boolean;
   LowCellVoltageFault: boolean;
   OpenWiringFault: boolean;
   PackVoltageSensorFault: boolean;
+  PowerSupply12VFault: boolean;
   ThermistorFault: boolean;
   VoltageRedundancyFault: boolean;
   WeakCellFault: boolean;
   WeakPackFault: boolean;
 }
 
-export interface IBatteryLimitFlags {
+export interface IBatteryFaultsWarnings {
   CclReducedDueToAlternateCurrentLimit: boolean;
   CclReducedDueToChargerLatch: boolean;
   CclReducedDueToHighCellResistance: boolean;
@@ -215,89 +204,192 @@ export interface IBatteryLimitFlags {
   CclReducedDueToHighPackVoltage: boolean;
   CclReducedDueToHighSoc: boolean;
   CclReducedDueToTemperature: boolean;
+  DclAndCclReducedDueToCommunicationFailsafe: boolean;
+  DclAndCclReducedDueToVoltageFailsafe: boolean;
   DclReducedDueToHighCellResistance: boolean;
   DclReducedDueToLowCellVoltage: boolean;
   DclReducedDueToLowPackVoltage: boolean;
   DclReducedDueToLowSoc: boolean;
   DclReducedDueToTemperature: boolean;
-  DclandCclReducedDueToCommunicationFailsafe: boolean;
-  DclandCclReducedDueToVoltageFailsafe: boolean;
 }
 
-export interface ICcs {
-  CcsAlive: boolean;
+export interface IKeyMotor {
+  ControlMode: boolean;
+  DebugMode: boolean;
+  MotorMode: boolean;
+  MotorSetpoint: number;
+  SoftwareEnable: boolean;
+}
+
+export interface IMbms {
+  AllowCharge: boolean;
+  AllowDischarge: boolean;
+  ArrayContactorError: boolean;
+  ArrayContactorState: boolean;
+  ArrayCurrent: number;
+  ArrayHighTemperatureCurrentTrip: boolean;
+  ArrayVoltage: number;
+  AuxillaryBatteryVoltage: number;
+  ChargeContactorError: boolean;
+  ChargeContactorState: boolean;
+  ChargeCurrent: number;
+  ChargeHighTemperatureCurrentTrip: boolean;
+  ChargeShouldTrip: boolean;
+  ChargeVoltage: number;
+  CommonContactorError: boolean;
+  CommonContactorState: boolean;
+  CommonCurrent: number;
+  ContactorDisconnectedUnexpectedlyTrip: boolean;
+  DischargeShouldTrip: boolean;
+  HighCellVoltageTrip: boolean;
+  HighCommonCurrentTrip: boolean;
+  HighVoltageEnableState: boolean;
+  LowCellVoltageTrip: boolean;
+  LvContactorError: boolean;
+  LvContactorState: boolean;
+  LvCurrent: number;
+  LvHighTemperatureCurrentTrip: boolean;
+  LvVoltage: number;
+  MotorContactorError: boolean;
+  MotorContactorState: boolean;
+  MotorCurrent: number;
+  MotorHighTemperatureCurrentTrip: boolean;
+  MotorVoltage: number;
+  OrionCanReceivedRecently: boolean;
+  OrionMessageTimeoutTrip: boolean;
+  ProtectionTrip: boolean;
+  StrobeBmsLight: boolean;
 }
 
 export interface IMPPT {
-  Alive: boolean;
   ArrayCurrent: number;
   ArrayVoltage: number;
   BatteryVoltage: number;
+  ChannelNumber: number;
+  IsAlive: number;
   Temperature: number;
 }
 
-export interface IMotorFault {
-  ErrorFlags: IMotorErrorFlags;
-  LimitFlags: IMotorLimitFlags;
-  RxErrorCount: number;
-  TxErrorCount: number;
+export interface IMotorDetails {
+  AbsoluteAngle: number;
+  CanSendError: boolean;
+  CanSendWarning: boolean;
+  ControlMode: boolean;
+  ControlValue: number;
+  ControllerDataReadingTimeout: boolean;
+  CpuOverload: boolean;
+  CpuTempTooHigh: boolean;
+  CpuTemperatureVeryHigh: boolean;
+  CurrentMotorPower: number;
+  CurrentMotorTorque: number;
+  CurrentRpmValue: number;
+  DclinkTempTooHigh: boolean;
+  DclinkTemperatureVeryHigh: boolean;
+  DebugMode: boolean;
+  DelayInDclinkCommunication: boolean;
+  DelayInReadingPosSensor: boolean;
+  DelayInReadingTempSensor: boolean;
+  DoubleCanIdOnBus: boolean;
+  HallTempTooHigh: boolean;
+  HallTemperatureVeryHigh: boolean;
+  HwEnableNotSet: boolean;
+  InitError: boolean;
+  InvalidHallSector: boolean;
+  InvalidHallSensorSequence: boolean;
+  Inverter1TempTooHigh: boolean;
+  Inverter1TempVeryHigh: boolean;
+  Inverter2TempTooHigh: boolean;
+  Inverter2TempVeryHigh: boolean;
+  Inverter3TempTooHigh: boolean;
+  Inverter3TempVeryHigh: boolean;
+  Inverter4TempTooHigh: boolean;
+  Inverter4TempVeryHigh: boolean;
+  Inverter5TempTooHigh: boolean;
+  Inverter5TempVeryHigh: boolean;
+  Inverter6TempTooHigh: boolean;
+  Inverter6TempVeryHigh: boolean;
+  InverterPeakCurrent: number;
+  MotorAboutToStall: boolean;
+  MotorErrors: IMotorErrors;
+  MotorWarnings: IMotorWarnings;
+  MotorMode: boolean;
+  MotorStalled: boolean;
+  MotorTemperature: number;
+  SettingsNotFound: boolean;
+  SoftwareEnable: boolean;
+  StartAtHighRpm: boolean;
+  TorqueLimited: boolean;
+  ZeroPositionOffsetNotSet: boolean;
 }
 
-export interface IMotorErrorFlags {
-  BadMotorPositionHallSequence: boolean;
-  ConfigReadError: boolean;
-  DcBusOverVoltage: boolean;
-  DesaturationFault: boolean;
-  MotorOverSpeed: boolean;
-  SoftwareOverCurrent: boolean;
-  Wail15VUnderVoltageLockOut: boolean;
-  WatchdogCausedLastReset: boolean;
+export interface IMotorErrors {
+  CanCommsTimeoutError: boolean;
+  DcOvervoltageError: boolean;
+  ErrorInDclinkCommunication: boolean;
+  ErrorReadingEncoder: boolean;
+  ErrorReadingTempSensor: boolean;
+  DcUndervoltageError: boolean;
+  Inverter1FaultError: boolean;
+  Inverter1OvercurrentError: boolean;
+  Inverter2FaultError: boolean;
+  Inverter2OvercurrentError: boolean;
+  Inverter3FaultError: boolean;
+  Inverter3OvercurrentError: boolean;
+  Inverter4FaultError: boolean;
+  Inverter4OvercurrentError: boolean;
+  Inverter5FaultError: boolean;
+  Inverter5OvercurrentError: boolean;
+  Inverter6FaultError: boolean;
+  Inverter6OvercurrentError: boolean;
+  LostFramesOnCanBusError: boolean;
+  OverspeedError: boolean;
+  PositionSensorReadingError: boolean;
 }
 
-export interface IMotorLimitFlags {
-  BusCurrent: false;
-  BusVoltageLower: boolean;
-  // TO DO - check this, why is this false?
-  BusVoltageUpper: boolean;
-  IpmOrMotorTemperature: true;
-  MotorCurrent: boolean;
-  OutputVoltagePwm: boolean;
-  Velocity: boolean;
+export interface IMotorWarnings {
+  CanCommsTimeoutWarning: boolean;
+  DcOvervoltageWarning: boolean;
+  DcUndervoltageWarning: boolean;
+  Inverter1OverCurrentWarning: boolean;
+  Inverter1FaultWarning: boolean;
+  Inverter2FaultWarning: boolean;
+  Inverter2OverCurrentWarning: boolean;
+  Inverter3FaultWarning: boolean;
+  Inverter3OverCurrentWarning: boolean;
+  Inverter4FaultWarning: boolean;
+  Inverter4OverCurrentWarning: boolean;
+  Inverter5FaultWarning: boolean;
+  Inverter6FaultWarning: boolean;
+  Inverter5OverCurrentWarning: boolean;
+  Inverter6OverCurrentWarning: boolean;
+  LostFramesOnCanBusWarning: boolean;
+  OverspeedWarning: boolean;
 }
 
-export interface IBattery {
-  "12vInputVoltage": number;
-  Alive: boolean;
-  AverageCellVoltage: number;
-  AverageTemperature: number;
-  BMSRelayStatusFlags: IBMSRelayStatusFlags;
-  FanSpeed: number;
-  FanVoltage: number;
-  HighCellVoltage: number;
-  HighCellVoltageId: number;
-  HighTemperature: number;
-  HighThermistorId: number;
-  InternalTemperature: number;
-  LowCellVoltage: number;
-  LowCellVoltageId: number;
-  LowTemperature: number;
-  LowThermistorId: number;
-  PackAmphours: number;
-  PackCurrent: number;
-  PackDepthOfDischarge: number;
-  PackStateOfCharge: number;
-  PackVoltage: number;
-  PopulatedCells: number;
-  RequestedFanSpeed: number;
+export interface IProximitySensors {
+  ProximitySensor1: number;
+  ProximitySensor2: number;
+  ProximitySensor3: number;
+  ProximitySensor4: number;
 }
 
-export interface IBMSRelayStatusFlags {
-  AlwaysOnSignalStatus: boolean;
-  ChargeRelayEnabled: boolean;
-  ChargerSafetyEnabled: boolean;
-  DischargeRelayEnabled: boolean;
-  IsChargingSignalStatus: boolean;
-  IsReadySignalStatus: boolean;
-  MalfunctionIndicatorActive: boolean;
-  MultiPurposeInputSignalStatus: boolean;
+export interface ITelemetry {
+  GpsAdditionalFlags: number;
+  GpsDay: number;
+  GpsFixStatusFlags: number;
+  GpsHour: number;
+  GpsLatitude: number;
+  GpsLongitude: number;
+  GpsMinute: number;
+  GpsMonth: number;
+  GpsSecond: number;
+  GpsValidityFlags: number;
+  GpsYear: number;
+  MpuAccelerationX: number;
+  MpuAccelerationY: number;
+  MpuAccelerationZ: number;
+  MpuRotationX: number;
+  MpuRotationY: number;
+  MpuRotationZ: number;
+  MpuTemperature: number;
 }
