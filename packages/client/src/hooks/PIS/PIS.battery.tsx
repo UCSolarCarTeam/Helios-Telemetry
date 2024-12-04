@@ -5,20 +5,20 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 
 const Battery = (): I_PIS => {
   const { currentPacket } = usePacket();
-  const { MBMS } = currentPacket?.MBMS;
-  const { Battery } = currentPacket?.Batery;
-  const { BateryFaults } = currentPacket?.BatteryFaults;
+  const { Battery, MBMS } = currentPacket;
+  const { BatteryCell, BatteryFan, BatteryPack, BatteryTemperature } =
+    currentPacket?.Battery;
   //  Battery will now have be split into the faults and the warning and here we will simply show what everything means
   const data = {
     BMSRelayStatusFlags: [
       {
-        data: [{ expectedBool: true, value: currentPacket?.Battery?.Alive }],
+        data: [{ expectedBool: true, value: Battery?.BmuAlive }],
         name: "Heartbeat", //this is the bigger heartbeat
       },
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.DischargeRelayEnabled,
+            value: Battery?.DischargeRelayEnabled,
           },
         ],
         name: "Discharge Relay Enabled",
@@ -26,7 +26,7 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.ChargeRelayEnabled,
+            value: Battery?.ChargeRelayEnabled,
           },
         ],
         name: "Charge Relay Enabled",
@@ -34,7 +34,7 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.ChargerSafetyEnabled,
+            value: Battery?.ChargerSafetyEnabled,
           },
         ],
         name: "Charger Safety Enabled",
@@ -42,7 +42,7 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.MultiPurposeInputSignalStatus,
+            value: Battery?.MultiPurposeInputSignalStatus,
           },
         ],
         name: "Multipurpose Input Signal",
@@ -50,7 +50,7 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.IsReadySignalStatus,
+            value: Battery?.IsReadySignalStatus,
           },
         ],
         name: "Is Ready",
@@ -58,7 +58,7 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.IsChargingSignalStatus,
+            value: Battery?.IsChargingSignalStatus,
           },
         ],
         name: "Is Charging",
@@ -66,7 +66,7 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.MalfunctionIndicatorActive,
+            value: Battery?.MalfunctionIndicatorActive,
           },
         ],
         name: "Malfunction Indicator Active",
@@ -74,7 +74,7 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: BMSRelayStatusFlags?.AlwaysOnSignalStatus,
+            value: Battery?.AlwaysOnSignalStatus,
           },
         ],
         name: "Always On",
@@ -88,16 +88,16 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.LowCellVoltage,
+            value: BatteryCell?.LowCellVoltage,
           },
-          { value: currentPacket?.Battery?.LowCellVoltageId },
+          { value: BatteryCell?.LowCellVoltageId },
           {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.HighCellVoltage,
+            value: BatteryCell?.HighCellVoltage,
           },
-          { value: currentPacket?.Battery?.HighCellVoltageId },
+          { value: BatteryCell?.HighCellVoltageId },
         ],
         fstring: "%s (%s) - %s (%s)",
         name: "Battery Cell Voltage",
@@ -108,15 +108,13 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.AverageCellVoltage,
+            value: BatteryCell?.AverageCellVoltage,
           },
         ],
         name: "Battery Average Voltage",
       },
       {
-        data: [
-          { max: 100, min: 0, value: currentPacket?.Battery?.PopulatedCells },
-        ],
+        data: [{ max: 100, min: 0, value: BatteryCell?.PopulatedCells }],
         name: "Battery Populated Cells",
       },
     ] as I_PISField[],
@@ -128,13 +126,13 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.FanVoltage,
+            value: BatteryFan.FanVoltage,
           },
         ],
         name: "Fan Voltage",
       },
       {
-        data: [{ max: 100, min: 0, value: currentPacket?.Battery?.FanSpeed }],
+        data: [{ max: 100, min: 0, value: BatteryFan?.FanSpeed }],
         name: "Fan Speed",
       },
       {
@@ -143,7 +141,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.RequestedFanSpeed,
+            value: BatteryFan?.RequestedFanSpeed,
           },
         ],
         name: "Requested Fan Speed",
@@ -164,7 +162,7 @@ const Battery = (): I_PIS => {
         value: "Array Contactor Error",
       },
       {
-        data: [{ value: MBMS?.ArrayContractorState }],
+        data: [{ value: MBMS?.ArrayContactorState }],
         name: "Array Contractor State",
       },
       {
@@ -315,7 +313,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.AMPERAGE,
-            value: currentPacket?.Battery?.PackCurrent,
+            value: BatteryPack?.PackCurrent,
           },
         ],
         name: "Pack Current",
@@ -326,7 +324,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.PackVoltage,
+            value: BatteryPack?.PackVoltage,
           },
         ],
         name: "Pack Voltage",
@@ -337,7 +335,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.AMPHOUR,
-            value: currentPacket?.Battery?.PackAmphours,
+            value: BatteryPack?.PackAmphours,
           },
         ],
         name: "Pack Amphours",
@@ -348,7 +346,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: "%",
-            value: currentPacket?.Battery?.PackStateOfCharge,
+            value: BatteryPack?.PackStateOfCharge,
           },
         ],
         name: "Pack State of Charge",
@@ -359,7 +357,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: "%",
-            value: currentPacket?.Battery?.PackDepthOfDischarge,
+            value: BatteryPack?.PackDepthOfDischarge,
           },
         ],
         name: "Pack Depth of Discharge",
@@ -370,7 +368,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery["12vInputVoltage"],
+            value: BatteryPack?.Input12V,
           },
         ],
         name: "12V Input Voltage",
@@ -385,7 +383,7 @@ const Battery = (): I_PIS => {
             max: 25,
             min: 10,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.LowTemperature,
+            value: BatteryTemperature?.LowTemperature,
           },
           {
             hover: "Low Cell ID",
@@ -396,7 +394,7 @@ const Battery = (): I_PIS => {
             max: 75,
             min: 50,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.HighTemperature,
+            value: BatteryTemperature?.HighTemperature,
           },
           {
             hover: "High Cell ID",
@@ -412,7 +410,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.AverageTemperature,
+            value: BatteryTemperature?.AverageTemperature,
           },
         ],
         name: "Average Temperature",
@@ -423,7 +421,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.InternalTemperature,
+            value: BatteryTemperature?.InternalTemperature,
           },
         ],
         name: "Internal Temperature",
