@@ -70,7 +70,12 @@ const GreyShapes: React.FC<ShapeProps> = ({
         {/* Container for numbers and line */}
         {/* Horizontal line */}
 
-        <div className="h-[13px] w-full rounded-full bg-black"></div>
+        <div className="h-[13px] w-full rounded-full bg-[#3A3A3A]">
+          <div className="flex h-[13px] w-1/2 rounded-full bg-[#3A3A3A]">
+            <div className="ml-auto flex h-[13px] w-1/3 items-stretch bg-[#009F10] md:items-center"></div>
+            <div className="h-[18px] w-[4px] bg-[#3A3A3A]"></div>
+          </div>
+        </div>
 
         <div
           className="flex w-full items-center justify-between"
@@ -93,7 +98,6 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
       {/* Second square */}
       <div className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4 sm:w-[50%] md:w-[40%] lg:w-[30%]">
-
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Motor Efficiency at&nbsp;
           <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
