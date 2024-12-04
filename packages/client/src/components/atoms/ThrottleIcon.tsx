@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
-
 import { usePacket } from "@/contexts/PacketContext";
 
 function ThrottleIcon() {
   const { currentPacket } = usePacket();
-  const gasPos = currentPacket.DriverControls.Acceleration;
-  const regenPos = currentPacket.DriverControls.RegenBraking;
+  const gasPos = currentPacket.B3.Acceleration;
+  const regenPos = currentPacket.B3.RegenBraking;
 
   return (
     <div className="col-span-7 grid h-10 w-full content-center justify-items-center">

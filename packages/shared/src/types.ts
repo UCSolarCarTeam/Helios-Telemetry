@@ -36,7 +36,7 @@ export interface ITelemetryData {
   Pi: IPi;
   ProximitySensors: IProximitySensors;
   Telemetry: ITelemetry;
-  TimeStamp: number;
+  TimeStamp: string;
   Title: string;
 }
 
@@ -48,7 +48,7 @@ export interface ILapData {
   distance: number;
   lapTime: number;
   netPowerOut: number;
-  timeStamp: number;
+  timeStamp: string;
   totalPowerIn: number;
   totalPowerOut: number;
 }

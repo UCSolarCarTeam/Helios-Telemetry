@@ -4,11 +4,10 @@ import * as THREE from "three";
 import { PlaneGeometry } from "three";
 
 import { type Vector3, useFrame } from "@react-three/fiber";
-import { type IDriverControls } from "@shared/helios-types";
 
 interface roadComponentProps {
   size: number;
-  direction: IDriverControls;
+  direction: boolean;
   speed: number;
 }
 const RoadComponent = (props: roadComponentProps) => {
@@ -34,7 +33,7 @@ const RoadComponent = (props: roadComponentProps) => {
 interface roadStripComponentProps {
   size: number;
   speed: number;
-  direction: IDriverControls;
+  direction: boolean;
   position: Vector3;
 }
 function RoadStripComponent(props: roadStripComponentProps) {
@@ -45,7 +44,8 @@ function RoadStripComponent(props: roadStripComponentProps) {
       return;
     }
 
-    if (props.direction.Forward) {
+    if (!props.direction) {
+      // if going fowards
       mesh.current.position.z -= delta * props.speed;
     } else {
       mesh.current.position.z += delta * props.speed;
@@ -56,7 +56,8 @@ function RoadStripComponent(props: roadStripComponentProps) {
     const back = (props.size / 2) * -stripLength - stripLength;
     const front = (props.size / 2) * stripLength + stripLength;
 
-    if (props.direction.Forward) {
+    if (!props.direction) {
+      // if going forwards
       if (mesh.current.position.z < back) {
         mesh.current.position.z += totalLength;
       }

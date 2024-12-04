@@ -95,9 +95,10 @@ const CarGraphicComponent = () => {
           warningMaterial={warningMaterial}
         />
         <RoadComponent
-          direction={currentPacket?.DriverControls}
+          direction={currentPacket?.B3.Reverse}
           size={20}
-          speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
+          // speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
+          speed={10}
         />
         <ContactShadows
           blur={2.5}

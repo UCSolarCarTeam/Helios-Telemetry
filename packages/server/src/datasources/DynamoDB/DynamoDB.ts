@@ -92,7 +92,7 @@ export class DynamoDB implements DynamoDBtypes {
         Item: {
           data: packet,
           id: "packet",
-          timestamp: packet.TimeStamp.toString(),
+          timestamp: packet.TimeStamp.toString().replace(" ", "T"),
         },
         TableName: this.packetTableName,
       });
@@ -114,7 +114,7 @@ export class DynamoDB implements DynamoDBtypes {
         Item: {
           data: packet,
           id: "lap",
-          timestamp: packet.timeStamp.toString(),
+          timestamp: packet.timeStamp.toString().replace(" ", "T"),
         },
         TableName: this.lapTableName,
       });

@@ -2,6 +2,8 @@ import { faker } from "@faker-js/faker";
 import { ITelemetryData } from "./types";
 
 export function generateFakeTelemetryData(): ITelemetryData {
+  const timestamp = faker.date.recent(); // You can adjust the argument to control the recency of the date
+  const formattedTimestamp = `${timestamp.getFullYear()}-${(timestamp.getMonth() + 1).toString().padStart(2, "0")}-${timestamp.getDate().toString().padStart(2, "0")} ${timestamp.getHours().toString().padStart(2, "0")}:${timestamp.getMinutes().toString().padStart(2, "0")}:${timestamp.getSeconds().toString().padStart(2, "0")}`;
   return {
     B3: {
       Acceleration: faker.number.int({ max: 100, min: 0 }),
@@ -194,7 +196,6 @@ export function generateFakeTelemetryData(): ITelemetryData {
       CanSendWarning: faker.datatype.boolean(),
       ControlMode: faker.datatype.boolean(),
       ControlValue: faker.number.int({ max: 100, min: 0 }),
-      ControllerDataReadingTimeout: faker.datatype.boolean(),
       CpuOverload: faker.datatype.boolean(),
       CpuTempTooHigh: faker.datatype.boolean(),
       CpuTemperatureVeryHigh: faker.datatype.boolean(),
@@ -213,7 +214,6 @@ export function generateFakeTelemetryData(): ITelemetryData {
       HwEnableNotSet: faker.datatype.boolean(),
       InitError: faker.datatype.boolean(),
       InvalidHallSector: faker.datatype.boolean(),
-      InvalidHallSensorSequence: faker.datatype.boolean(),
       Inverter1TempTooHigh: faker.datatype.boolean(),
       Inverter1TempVeryHigh: faker.datatype.boolean(),
       Inverter2TempTooHigh: faker.datatype.boolean(),
@@ -230,11 +230,13 @@ export function generateFakeTelemetryData(): ITelemetryData {
       MotorAboutToStall: faker.datatype.boolean(),
       MotorErrors: {
         CanCommsTimeoutError: faker.datatype.boolean(),
+        ControllerDataReadingTimeout: faker.datatype.boolean(),
         DcOvervoltageError: faker.datatype.boolean(),
         DcUndervoltageError: faker.datatype.boolean(),
         ErrorInDclinkCommunication: faker.datatype.boolean(),
         ErrorReadingEncoder: faker.datatype.boolean(),
         ErrorReadingTempSensor: faker.datatype.boolean(),
+        InvalidHallSensorSequence: faker.datatype.boolean(),
         Inverter1FaultError: faker.datatype.boolean(),
         Inverter1OvercurrentError: faker.datatype.boolean(),
         Inverter2FaultError: faker.datatype.boolean(),
@@ -285,7 +287,6 @@ export function generateFakeTelemetryData(): ITelemetryData {
       CanSendWarning: faker.datatype.boolean(),
       ControlMode: faker.datatype.boolean(),
       ControlValue: faker.number.int({ max: 100, min: 0 }),
-      ControllerDataReadingTimeout: faker.datatype.boolean(),
       CpuOverload: faker.datatype.boolean(),
       CpuTempTooHigh: faker.datatype.boolean(),
       CpuTemperatureVeryHigh: faker.datatype.boolean(),
@@ -304,7 +305,6 @@ export function generateFakeTelemetryData(): ITelemetryData {
       HwEnableNotSet: faker.datatype.boolean(),
       InitError: faker.datatype.boolean(),
       InvalidHallSector: faker.datatype.boolean(),
-      InvalidHallSensorSequence: faker.datatype.boolean(),
       Inverter1TempTooHigh: faker.datatype.boolean(),
       Inverter1TempVeryHigh: faker.datatype.boolean(),
       Inverter2TempTooHigh: faker.datatype.boolean(),
@@ -321,11 +321,13 @@ export function generateFakeTelemetryData(): ITelemetryData {
       MotorAboutToStall: faker.datatype.boolean(),
       MotorErrors: {
         CanCommsTimeoutError: faker.datatype.boolean(),
+        ControllerDataReadingTimeout: faker.datatype.boolean(),
         DcOvervoltageError: faker.datatype.boolean(),
         DcUndervoltageError: faker.datatype.boolean(),
         ErrorInDclinkCommunication: faker.datatype.boolean(),
         ErrorReadingEncoder: faker.datatype.boolean(),
         ErrorReadingTempSensor: faker.datatype.boolean(),
+        InvalidHallSensorSequence: faker.datatype.boolean(),
         Inverter1FaultError: faker.datatype.boolean(),
         Inverter1OvercurrentError: faker.datatype.boolean(),
         Inverter2FaultError: faker.datatype.boolean(),
@@ -417,7 +419,7 @@ export function generateFakeTelemetryData(): ITelemetryData {
       }),
       MpuTemperature: faker.number.float({ max: 85, min: -40 }),
     },
-    TimeStamp: faker.date.soon().valueOf(),
+    TimeStamp: formattedTimestamp,
     Title: faker.lorem.words(2),
   };
 }
