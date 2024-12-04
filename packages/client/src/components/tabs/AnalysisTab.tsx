@@ -1,3 +1,4 @@
+import Chart from "chart.js/auto";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -104,24 +105,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
             78%
           </span>
         </p>
-
-        {/* Container for circle */}
-        <div
-          className="flex w-[245px] items-center justify-center"
-          style={{ opacity: 1 }} // Adjust opacity if needed
-        >
-          {/* Outer circle */}
-          <div className="md:h-27 md:w-27 m-2 flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F] sm:h-24 sm:w-24">
-            {/* Inner circle */}
-            <div className="md:h-23 md:w-23 flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-20 sm:w-20">
-              <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB] sm:text-[27px] md:text-[37px]">
-                78
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
-
       {/* Container to stack rectangles vertically */}
       <div className="flex flex-col items-center gap-4">
         {/* Rectangle 1 */}
@@ -318,3 +302,27 @@ export default AnalysisTab;
 // make an analysis tab to view the shapes
 //correction: need to use tailwind css
 */
+
+{
+  /* Container for circle */
+}
+{
+  /*
+        <div
+          className="flex w-[245px] items-center justify-center"
+          style={{ opacity: 1 }} // Adjust opacity if needed
+        >
+          {/* Outer circle with semicircle /}
+          <div className="relative flex items-center justify-center">
+            <div className="absolute -top-1 h-16 w-32 rounded-t-full bg-blue-500"></div>
+            <div className="md:h-27 md:w-27 m-2 flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F] sm:h-24 sm:w-24"></div>
+
+            {/* Inner circle /}
+            <div className="md:h-23 md:w-23 absolute flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-20 sm:w-20">
+              <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB] sm:text-[27px] md:text-[37px]">
+                78
+              </span>
+            </div>
+          </div>
+        </div> */
+}
