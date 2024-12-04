@@ -1,10 +1,13 @@
-import Chart from "chart.js/auto";
+//import Chart from "chart.js/auto";
+import { ArcElement, Chart } from "chart.js";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
+
+import DonutChart from "./DonutChart";
 
 type TabContentProps = React.PropsWithChildren<{
   index: number;
@@ -102,10 +105,22 @@ const GreyShapes: React.FC<ShapeProps> = ({
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Motor Efficiency at&nbsp;
           <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
-            78%
+            {infoNumber}%
           </span>
         </p>
+
+        {/* Container for the doughnut chart */}
+        <div
+          className="flex w-[245px] items-center justify-center"
+          style={{ opacity: 1 }} // Adjust opacity if needed
+        >
+          {/* Use the DonutChart component here */}
+          <DonutChart percentage={infoNumber} />
+
+          <div></div>
+        </div>
       </div>
+
       {/* Container to stack rectangles vertically */}
       <div className="flex flex-col items-center gap-4">
         {/* Rectangle 1 */}
@@ -281,7 +296,7 @@ function AnalysisTab() {
           <TabContent index={1} value={value}>
             {/* Display GreyShapes component here */}
             <GreyShapes
-              infoNumber={100}
+              infoNumber={78}
               rectangleHeight="120px"
               rectangleWidth="300px"
               squareWidth="270px"
