@@ -22,7 +22,7 @@ const filters: string[] = [
   "Power Out",
   "Battery Voltage",
   "Battery Current",
-];
+] as const;
 
 const theme = createTheme({
   palette: {
@@ -98,8 +98,8 @@ function AnalysisTab() {
       </div>
 
       {/* MAIN */}
-      <div className="flex flex-col flex-wrap justify-between gap-y-6 md:flex-row md:gap-x-4">
-        <div className="flex max-w-44 flex-col gap-y-1 md:w-auto">
+      <div className="flex flex-col justify-between gap-4 md:flex-row">
+        <div className="flex max-w-44 flex-col gap-1 md:w-auto">
           {filters.map((filter) => (
             <div className="flex items-center" key={filter}>
               <label className="flex cursor-pointer items-center gap-x-2">
@@ -118,14 +118,17 @@ function AnalysisTab() {
         </div>
 
         <div
-          className="flex w-full flex-1 flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-4 lg:w-auto"
+          className="flex w-full flex-1 flex-col justify-center gap-4 md:flex-row md:gap-x-4 lg:w-auto lg:flex-nowrap"
           id="main-content"
         >
           <TabContent className="w-full" index={0} value={value}>
-            {/* Graphs */}
-            <div className="flex size-full max-h-96 flex-1 items-center justify-center gap-x-4">
-              <MLContainer />
-              {/* Put other graphs here */}
+            <div className="grid size-full max-h-96 grid-flow-col grid-cols-2 items-center gap-4">
+              <div className="flex max-h-96 w-full items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
+                <MLContainer plotType="/api/getLapCorrelationMatrix" />
+              </div>
+              <div className="flex max-h-96 w-full items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
+                <MLContainer plotType="/api/getPacketCorrelationMatrix" />
+              </div>
             </div>
           </TabContent>
           <TabContent index={1} value={value}>
