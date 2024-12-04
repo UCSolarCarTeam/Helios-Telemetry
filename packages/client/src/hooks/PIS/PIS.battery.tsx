@@ -166,7 +166,7 @@ const Battery = (): I_PIS => {
         name: "Array Contractor State",
       },
       {
-        data: [{ value: MBMS?.ArrayCurrent }],
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.ArrayCurrent }],
         name: "Array Current",
       },
       {
@@ -180,7 +180,9 @@ const Battery = (): I_PIS => {
       },
       // TODO: Units V or mV
       {
-        data: [{ value: MBMS?.AuxillaryBatteryVoltage }],
+        data: [
+          { unit: UnitType.MILLIVOLTS, value: MBMS?.AuxillaryBatteryVoltage },
+        ],
         name: "Auxillary Battery Voltage",
       },
       {
@@ -193,7 +195,7 @@ const Battery = (): I_PIS => {
       },
       // TODO: Units A, or mA
       {
-        data: [{ value: MBMS?.ChargeCurrent }],
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.ChargeCurrent }],
         name: "Charge Current",
       },
       {
@@ -207,7 +209,7 @@ const Battery = (): I_PIS => {
 
       // TODO: Units V or mV
       {
-        data: [{ value: MBMS?.ChargeVoltage }],
+        data: [{ unit: UnitType.VOLTAGE, value: MBMS?.ChargeVoltage }],
         name: "Charge Voltage",
       },
       {
@@ -220,7 +222,7 @@ const Battery = (): I_PIS => {
       },
       // TODO: Units A or mA
       {
-        data: [{ value: MBMS?.CommonCurrent }],
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.CommonCurrent }],
         name: "Common Current",
       },
       {
@@ -276,7 +278,7 @@ const Battery = (): I_PIS => {
       },
       // TODO: Units A or mA
       {
-        data: [{ value: MBMS?.MotorCurrent }],
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.MotorCurrent }],
         name: "Motor Current",
       },
       {
