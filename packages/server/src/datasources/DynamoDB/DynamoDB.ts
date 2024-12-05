@@ -15,13 +15,13 @@ import {
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
-if (!process.env.LAP_TABLE_NAME) {
-  throw new Error("Lap table name not defined");
-}
+// if (!process.env.LAP_TABLE_NAME) {
+//   throw new Error("Lap table name not defined");
+// }
 
-if (!process.env.PACKET_TABLE_NAME) {
-  throw new Error("Lap table name not defined");
-}
+// if (!process.env.PACKET_TABLE_NAME) {
+//   throw new Error("Lap table name not defined");
+// }
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;

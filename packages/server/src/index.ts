@@ -9,6 +9,8 @@ import http from "http";
 import https from "https";
 import "module-alias";
 
+import getLapCorrelationMatrixRouter from "@/routes/getLapCorrelationMatrix.route";
+import getPacketCorrelationMatrixRouter from "@/routes/getPacketCorrelationMatrix.route";
 import healthRouter from "@/routes/health.route";
 import playbackRouter from "@/routes/playback.route";
 
@@ -38,6 +40,8 @@ app.use((req, res, next) => {
 
 app.use("/", healthRouter);
 app.use("/", playbackRouter);
+app.use("/", getLapCorrelationMatrixRouter);
+app.use("/", getPacketCorrelationMatrixRouter);
 
 export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
