@@ -11,7 +11,7 @@ const SMALL_SCREEN = 380;
 type PlotTypes =
   | "/api/getPacketCorrelationMatrix"
   | "/api/getLapCorrelationMatrix";
-export default function MLContainer({
+export default function GraphContainer({
   plotType = "/api/getLapCorrelationMatrix",
 }: {
   plotType?: PlotTypes;
@@ -22,6 +22,9 @@ export default function MLContainer({
   const fetchPlot = useCallback(async () => {
     try {
       const response = await fetch(plotType);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
       const graph = await response.json();
       const data = JSON.parse(graph);
       const layout: PlotParams["layout"] = {
@@ -41,10 +44,10 @@ export default function MLContainer({
   }, [fetchPlot]);
 
   if (!plot) {
-    return <div>Loading...</div>;
+    return <>Loading...</>;
   }
   if ("error" in plot) {
-    return <div>Error loading data</div>;
+    return <>Error loading data</>;
   }
   return (
     <Plot
