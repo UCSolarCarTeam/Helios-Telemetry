@@ -1,6 +1,57 @@
-import { useState } from "react";
+import { useMemo } from "react";
 
 import type { ILapData } from "@shared/helios-types";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+const columnHelper = createColumnHelper<ILapData>();
+
+const columns = [
+  columnHelper.accessor("ampHours", {
+    cell: (info) => info.getValue(),
+    header: "Amp Hours",
+  }),
+  columnHelper.accessor("averagePackCurrent", {
+    cell: (info) => info.getValue(),
+    header: "Average Pack Current",
+  }),
+  columnHelper.accessor("averageSpeed", {
+    cell: (info) => info.getValue(),
+    header: "Average Speed",
+  }),
+  columnHelper.accessor("batterySecondsRemaining", {
+    cell: (info) => info.getValue(),
+    header: "Battery Seconds Remaining",
+  }),
+  columnHelper.accessor("distance", {
+    cell: (info) => info.getValue(),
+    header: "Distance",
+  }),
+  columnHelper.accessor("lapTime", {
+    cell: (info) => info.getValue(),
+    header: "Lap Time",
+  }),
+  columnHelper.accessor("netPowerOut", {
+    cell: (info) => info.getValue(),
+    header: "Net Power Out",
+  }),
+  columnHelper.accessor("timeStamp", {
+    cell: (info) => info.getValue(),
+    header: "Time Stamp",
+  }),
+  columnHelper.accessor("totalPowerIn", {
+    cell: (info) => info.getValue(),
+    header: "Total Power In",
+  }),
+  columnHelper.accessor("totalPowerOut", {
+    cell: (info) => info.getValue(),
+    header: "Total Power Out",
+  }),
+];
 
 // sample data
 const exampleData: ILapData[] = [
@@ -90,52 +141,30 @@ const exampleData: ILapData[] = [
   },
 ];
 
-//names of columns to be displayed
-const tableHeaders = [
-  "ampHours",
-  "averagePackCurrent",
-  "averageSpeed",
-  "batterySecondsRemaining",
-  "distance",
-  "lapTime",
-  "netPowerOut",
-  "timeStamp",
-  "totalPowerIn",
-  "totalPowerOut",
-];
-
-function formatHeaders(header: string) {
-  return header.replace(/([a-z])([A-Z])/g, "$1 $2").toUpperCase();
-  // uses a regular expression to add a space after a lowercase letter followed by an uppercase, and then converts the whole thing to uppercase
-}
-//javascript libraries are used to seperate the words
-
 function RaceTab() {
-  const [checked, setChecked] = useState<string[]>(tableHeaders); //all columns are shown initially
+  const data = useMemo(() => exampleData, []);
 
-  const handleCheckboxChange = (header: string) => {
-    setChecked((prevChecked) =>
-      prevChecked.includes(header)
-        ? prevChecked.filter((h) => h !== header)
-        : [...prevChecked, header],
-    );
-  };
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <div className="m-4 flex justify-center gap-2">
       <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
-        {tableHeaders.map((header, i) => (
+        {table.getAllLeafColumns().map((column) => (
           <label
             className="flex items-center gap-1 text-sm text-helios"
-            key={i}
+            key={column.id}
           >
             <input
-              checked={checked.includes(header)}
+              checked={column.getIsVisible()}
               className="accent-slate-200 hover:accent-red-500"
-              onChange={() => handleCheckboxChange(header)}
+              onChange={column.getToggleVisibilityHandler()}
               type="checkbox"
             />
-            {header}
+            {column.id}
           </label>
         ))}
       </div>
@@ -143,27 +172,34 @@ function RaceTab() {
       <div className="w-3/4 overflow-x-auto">
         <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
           <thead className="border-b-2 border-helios">
-            <tr>
-              {checked.map((header, i) => (
-                <th
-                  className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
-                  key={i}
-                >
-                  {formatHeaders(header)}
-                </th>
-              ))}
-            </tr>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
+                    key={header.id}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
           </thead>
 
           <tbody className="divide-y divide-gray-200 bg-white">
-            {exampleData.map((lap, i) => (
-              <tr key={i}>
-                {checked.map((header, j) => (
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
                   <td
                     className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
-                    key={j}
+                    key={cell.id}
                   >
-                    {lap[header as keyof ILapData]}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>
