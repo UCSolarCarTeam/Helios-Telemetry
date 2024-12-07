@@ -151,20 +151,19 @@ function RaceTab() {
   });
 
   return (
-    <div className="m-4 flex justify-center gap-2">
+    <div className="m-4 flex justify-around">
       <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
         {table.getAllLeafColumns().map((column) => (
-          <label
-            className="flex items-center gap-1 text-sm text-helios"
-            key={column.id}
-          >
+          <label className="flex items-center gap-1 text-sm" key={column.id}>
             <input
               checked={column.getIsVisible()}
-              className="accent-slate-200 hover:accent-red-500"
+              className="peer size-4 cursor-pointer accent-helios"
               onChange={column.getToggleVisibilityHandler()}
               type="checkbox"
             />
-            {column.id}
+            <span className="min-w-44 select-none text-sm peer-hover:font-bold">
+              {column.id}
+            </span>
           </label>
         ))}
       </div>
