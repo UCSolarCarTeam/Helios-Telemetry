@@ -9,7 +9,9 @@ import {
   useState,
 } from "react";
 
-import type { Coords } from "@shared/helios-types";
+import { usePacket } from "@/contexts/PacketContext";
+import type { Coords } from "@/shared/types";
+import { calculateVehicleVelocity } from "@/shared/vehicleVelocity";
 
 interface Props {
   children: ReactNode | ReactNode[];
@@ -40,11 +42,13 @@ interface IAppState {
   carLatency: number;
   lapCoords: Coords;
   playbackSwitch: boolean;
+  vehicleVelocity: number;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
   toggleDarkMode: () => void;
+  calculateVehicleVelocity: (distance: number, time: number) => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
@@ -64,6 +68,7 @@ export function AppStateContextProvider({ children }: Props) {
     radioConnected: false,
     socketConnected: false,
     userLatency: 0,
+    vehicleVelocity: 0,
   });
 
   // Connection State Manager
@@ -172,9 +177,18 @@ export function AppStateContextProvider({ children }: Props) {
   //   }
   // }, [currentAppState.loading]);
 
+  const { currentPacket } = usePacket();
+
+  useEffect(() => {
+    if (currentPacket) {
+      calculateVehicleVelocity();
+    }
+  }, [currentPacket]);
+
   return (
     <appStateContext.Provider
       value={{
+        calculateVehicleVelocity,
         currentAppState,
         setCurrentAppState,
         toggleDarkMode,
