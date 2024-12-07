@@ -16,6 +16,7 @@ const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
+  public driverRFID = "";
   public lapNumber: number = 0;
   public finishLineLocation: Coords = {
     lat: 51.081021,
@@ -76,6 +77,7 @@ export class LapController implements LapControllerType {
           averagePackCurrent,
         ),
         distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+        driverRFID: this.driverRFID,
         lapTime: this.calculateLapTime(this.lastLapPackets),
         netPowerOut: this.netPower(this.lastLapPackets),
         timeStamp: packet.TimeStamp,

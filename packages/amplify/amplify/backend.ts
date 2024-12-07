@@ -122,6 +122,11 @@ const lapDataTable = new dynamodb.Table(
   },
 );
 
+lapDataTable.addGlobalSecondaryIndex({
+  indexName: "rfid-index",
+  partitionKey: { name: "rfid", type: dynamodb.AttributeType.STRING },
+});
+
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
