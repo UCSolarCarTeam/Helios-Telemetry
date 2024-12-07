@@ -202,13 +202,17 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
 
   return (
     <div className="group mt-1 flex items-center justify-between text-xs">
-      <span
-        className="hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
-        onClick={handleAddToFavourites}
+      {!field.isFault && (
+        <span
+          className="hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
+          onClick={handleAddToFavourites}
+        >
+          Add to Favourites
+        </span>
+      )}
+      <div
+        className={`mt-1 flex items-center justify-between text-xs ${field.isFault ? "" : "group-hover:hidden"}`}
       >
-        Add to Favourites
-      </span>
-      <div className="mt-1 flex items-center justify-between text-xs group-hover:hidden">
         {field.name}
       </div>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
