@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import {
@@ -209,7 +209,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
         Add to Favourites
       </span>
       <div className="mt-1 flex items-center justify-between text-xs group-hover:hidden">
-        {field.name}:
+        {field.name}
       </div>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
