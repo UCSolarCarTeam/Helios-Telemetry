@@ -10,6 +10,7 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as eventbridge from "aws-cdk-lib/aws-events";
 import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
 import * as url from "node:url";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -99,23 +100,38 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 
-const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
+const packetDataTable = new dynamodb.Table(
   TelemetryBackendStack,
-  "TelemetryECSTaskDefintion",
+  "packet_data_table",
   {
-    volumes: [
-      {
-        efsVolumeConfiguration: {
-          fileSystemId: "fs-0ef2c6e2055ced2c7",
-          rootDirectory: "/mnt/efs",
-        },
-        name: "TelemetryBackendEFS",
-      },
-    ],
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
   },
 );
 
+const lapDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "lap_data_table",
+  {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+  },
+);
+
+const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
+  TelemetryBackendStack,
+  "TelemetryECSTaskDefintion",
+);
+
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
+  environment: {
+    LAP_TABLE_NAME: lapDataTable.tableName,
+    PACKET_TABLE_NAME: packetDataTable.tableName,
+  },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "TelemetryBackend" }),
   memoryLimitMiB: 900,
@@ -244,6 +260,22 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   ec2.Port.tcp(1883),
   "Aedes - Allow inbound traffic on port 1883",
 );
+
+//Give DynamoDB Permissions to hte packet data and lap data
+const dynamoDbAccessPolicy = new iam.PolicyStatement({
+  actions: [
+    "dynamodb:PutItem",
+    "dynamodb:GetItem",
+    "dynamodb:Scan",
+    "dynamodb:Query",
+  ],
+  effect: iam.Effect.ALLOW,
+
+  resources: [packetDataTable.tableArn, lapDataTable.tableArn],
+});
+
+// Attach the policy to the ECS Task Role
+TelemetryECSTaskDefintion.taskRole.addToPrincipalPolicy(dynamoDbAccessPolicy);
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
 const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(

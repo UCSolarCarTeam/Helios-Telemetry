@@ -16,6 +16,6 @@
       "@/client/*": ["../client/src/*"]
     }
   },
-  "include": [".eslint.config.mjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
+  "include": [".eslintrc.cjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
   "exclude": ["dist", "../client"]
 }

@@ -1,5 +1,6 @@
 /** @type {import("eslint").Linter.Config} */
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const prettierConfig = require("./prettier.config.cjs");
 
 const config = {

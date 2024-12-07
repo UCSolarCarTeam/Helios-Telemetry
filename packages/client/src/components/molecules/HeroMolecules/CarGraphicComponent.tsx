@@ -15,9 +15,9 @@ import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as TWEEN from "@tweenjs/tween.js";
 
-type IndicationTriggerList = {
-  // TODO: Add indication triggers
-};
+// type IndicationTriggerList = {
+//   // TODO: Add indication triggers
+// };
 
 const initialIntensity = 0.1;
 const targetIntensity = 0.8;

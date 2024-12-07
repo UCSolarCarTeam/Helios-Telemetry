@@ -35,6 +35,11 @@ export function PacketContextProvider({
     setCurrentPacket(packet);
   }
   useEffect(() => {
+    if (currentAppState.playbackSwitch) {
+      setCurrentPacket(generateFakeTelemetryData());
+      return;
+    }
+
     if (currentAppState.connectionType === CONNECTIONTYPES.NETWORK) {
       socketIO.on("packet", onPacket);
       return () => {
@@ -48,7 +53,7 @@ export function PacketContextProvider({
     } else if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
       // Radio connection
     }
-  }, [currentAppState.connectionType]);
+  }, [currentAppState.connectionType, currentAppState.playbackSwitch]);
 
   return (
     <packetContext.Provider

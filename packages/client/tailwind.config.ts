@@ -33,6 +33,9 @@ const config: Config = {
       borderColor: {
         helios: "#B94A6C",
       },
+      textDecorationColor: {
+        helios: "#B94A6C",
+      },
       animation: {
         driveOffScreen: "driveOffScreen 1s ease-in forwards",
         driveInScreen: "driveInScreen 1s ease-out forwards",
