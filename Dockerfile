@@ -8,7 +8,7 @@ USER root
 WORKDIR /opt/helios-backend/src
 
 ENV NODE_VERSION node@20.11.1
-ENV NPM_VERSION npm@10.2.4
+ENV NPM_VERSION npm@10.5.0
 
 # Add custom user id
 RUN microdnf install util-linux
@@ -17,7 +17,7 @@ RUN groupadd --gid 1001 solarcar-user \
 
 # Remove old npm cached files and update version of npm to a node compatible version
 RUN npm cache clean -force \
-  && rm -rf /opt/helios-backend/src/.npm \
+  # && rm -rf /opt/helios-backend/src/.npm \
   && npm install -g "${NPM_VERSION}" \
   && rm -rf /usr/lib/node_modules
 

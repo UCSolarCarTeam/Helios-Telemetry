@@ -10,6 +10,7 @@ import https from "https";
 import "module-alias";
 
 import healthRouter from "@/routes/health.route";
+import playbackRouter from "@/routes/playback.route";
 
 import {
   createLightweightApplicationLogger,
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/", healthRouter);
+app.use("/", playbackRouter);
 
 export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {

@@ -26,6 +26,7 @@ const config = {
   rules: {
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     eqeqeq: ["error", "smart"],
+    "no-console": "error",
     "no-eval": "error",
     "no-var": "error",
     "prettier/prettier": ["error", prettierConfig],
@@ -33,7 +34,6 @@ const config = {
     // "no-restricted-imports": ["error", { patterns: [".*"] }],
     "sort-keys": "error",
     "sort-keys/sort-keys-fix": "error",
-    "no-console": "error",
   },
 };
 

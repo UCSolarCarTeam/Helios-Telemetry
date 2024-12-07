@@ -19,7 +19,7 @@ const LoadingWrapper = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     let driveInTimeout: NodeJS.Timeout;
     let pendingTimeout: NodeJS.Timeout;
-    let readyTimeout: NodeJS.Timeout;
+    // let readyTimeout: NodeJS.Timeout;
     let confirmTimeout: NodeJS.Timeout;
 
     // If loading is true again after loading previously finished, restart loading by setting to drive in
@@ -60,7 +60,7 @@ const LoadingWrapper = ({ children }: PropsWithChildren) => {
 
     return () => {
       clearTimeout(driveInTimeout);
-      clearTimeout(readyTimeout);
+      // clearTimeout(readyTimeout);
       clearTimeout(pendingTimeout);
       clearTimeout(confirmTimeout);
     };

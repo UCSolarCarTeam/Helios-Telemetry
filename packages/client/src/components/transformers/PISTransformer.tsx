@@ -1,3 +1,5 @@
+import { useCallback, useState } from "react";
+
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import {
   type I_PISField,
@@ -69,7 +71,6 @@ function FieldUnitsHandler(
 
 function RangeCheckedFieldData(props: RangeCheckedFieldDataProps): JSX.Element {
   const { expectedBool, max, min, unit, value } = props.fieldData;
-
   const inRange =
     // If value is of type string range is true
     typeof value === "string"
@@ -164,7 +165,31 @@ type FieldPrinterProps = {
 };
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
+  const { setCurrentAppState } = useAppState();
   const { field } = props;
+
+  const handleAddToFavourites = useCallback(() => {
+    const storedFavourites = localStorage.getItem("favourites");
+    const parsedFavourites: string[] = storedFavourites
+      ? (JSON.parse(storedFavourites) as string[])
+      : [];
+
+    if (
+      !parsedFavourites.some((fav) => fav === field.name) &&
+      typeof field.name === "string"
+    ) {
+      if (parsedFavourites.length === 8 && typeof field.name === "string") {
+        parsedFavourites.shift();
+      }
+      parsedFavourites.push(field.name);
+      setCurrentAppState((prev) => ({
+        ...prev,
+        favourites: parsedFavourites,
+      }));
+      localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
+    }
+  }, [field.name, setCurrentAppState]);
+
   if (
     field.fstring !== undefined &&
     (field?.fstring.match(/%s/g) || []).length !== field.data.length
@@ -174,9 +199,18 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     );
     return <div>PIS ERROR: </div>;
   }
+
   return (
-    <div className="mt-1 flex items-center justify-between text-xs">
-      {field.name}:
+    <div className="group mt-1 flex items-center justify-between text-xs">
+      <span
+        className="hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
+        onClick={handleAddToFavourites}
+      >
+        Add to Favourites
+      </span>
+      <div className="mt-1 flex items-center justify-between text-xs group-hover:hidden">
+        {field.name}:
+      </div>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
   );

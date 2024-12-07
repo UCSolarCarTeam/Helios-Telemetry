@@ -1,11 +1,11 @@
-import { v4 as uuidv4 } from "uuid";
-
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
 import {
   type DynamoDBtypes,
   GenericResponse,
 } from "@/datasources/DynamoDB/DynamoDB.types";
+
+import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import {
   DynamoDBClient,
@@ -25,6 +25,9 @@ if (!process.env.PACKET_TABLE_NAME) {
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
+
+const logger = createLightweightApplicationLogger("DynamoDB.ts");
+
 export class DynamoDB implements DynamoDBtypes {
   public client: DynamoDBClient;
   backendController: BackendController;
@@ -38,7 +41,7 @@ export class DynamoDB implements DynamoDBtypes {
       this.lapTableName = lapTableName;
       this.packetTableName = packetTableName;
     } catch (error) {
-      console.error("Error connecting to dynamo client");
+      logger.error("Error connecting to dynamo client");
       throw new Error(error);
     }
   }
@@ -48,18 +51,16 @@ export class DynamoDB implements DynamoDBtypes {
     //  add type to return
     try {
       const command = new GetItemCommand({
-        TableName: this.packetTableName,
         Key: {
-          id: { N: date.getTime().toString() },
+          id: { S: "packet" },
+          timestamp: { S: date.toString() },
         },
+        TableName: this.packetTableName,
       });
       const response = await this.client.send(command);
-
-      console.log(response);
-      // return it when other thigns figured out
-      // return response;
+      return response;
     } catch (error) {
-      console.error("Error getting playback table data");
+      logger.error("Error getting playback table data");
       throw new Error(error);
     }
   }
@@ -68,17 +69,16 @@ export class DynamoDB implements DynamoDBtypes {
   public async getLapData(date: Date) {
     try {
       const command = new GetItemCommand({
-        TableName: this.lapTableName,
         Key: {
-          id: { N: date.getTime().toString() },
+          id: { S: "lap" },
+          timestamp: { S: date.toString() },
         },
+        TableName: this.lapTableName,
       });
       const response = await this.client.send(command);
-      console.log(response);
-      // return it when actually works
-      // return response;
+      return response;
     } catch (error) {
-      console.error("Error getting lap table data");
+      logger.error("Error getting lap table data");
       throw new Error(error);
     }
   }
@@ -89,12 +89,12 @@ export class DynamoDB implements DynamoDBtypes {
   ): Promise<GenericResponse> {
     try {
       const command = new PutCommand({
-        TableName: this.packetTableName,
         Item: {
+          data: packet,
           id: "packet",
           timestamp: packet.TimeStamp.toString(),
-          data: packet,
         },
+        TableName: this.packetTableName,
       });
       const response = await this.client.send(command);
       return {
@@ -102,7 +102,7 @@ export class DynamoDB implements DynamoDBtypes {
         requestId: response.$metadata.requestId,
       };
     } catch (error) {
-      console.error("Error inserting playback table data");
+      logger.error("Error inserting playback table data");
       throw new Error(error);
     }
   }
@@ -111,12 +111,12 @@ export class DynamoDB implements DynamoDBtypes {
   public async insertLapData(packet: ILapData): Promise<GenericResponse> {
     try {
       const command = new PutCommand({
-        TableName: this.lapTableName,
         Item: {
+          data: packet,
           id: "lap",
           timestamp: packet.timeStamp.toString(),
-          data: packet,
         },
+        TableName: this.lapTableName,
       });
       const response = await this.client.send(command);
       return {
@@ -124,64 +124,42 @@ export class DynamoDB implements DynamoDBtypes {
         requestId: response.$metadata.requestId,
       };
     } catch (error) {
-      console.error("Error inserting lap table data");
+      logger.error("Error inserting lap table data");
       throw new Error(error);
     }
   }
 
   // // Helper function getting first and last playback packets
-  public async getFirstAndLastPacketDates(): Promise<
-    [Date | null, Date | null]
-  > {
+  public async getFirstAndLastPacketDates(): Promise<{
+    firstDate: Date | null;
+    lastDate: Date | null;
+  }> {
     try {
-      const firstPacketCommand = new QueryCommand({
-        TableName: this.packetTableName,
-        Limit: 1,
-        ScanIndexForward: true, // Ascending order for the earliest date
-        KeyConditionExpression: "#timeAdded BETWEEN :start AND :end",
-        ExpressionAttributeNames: {
-          "#timeAdded": "timeAdded",
-        },
+      const firstCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":start": { S: "1970-01-01T00:00:00Z" },
-          ":end": { S: new Date().toISOString() },
+          ":id": { S: "packet" },
         },
+        KeyConditionExpression: "id = :id",
+        Limit: 1,
+        ScanIndexForward: true,
+        TableName: this.packetTableName,
+      });
+      const lastCommand = new QueryCommand({
+        ExpressionAttributeValues: {
+          ":id": { S: "packet" },
+        },
+        KeyConditionExpression: "id = :id",
+        Limit: 1,
+        ScanIndexForward: false,
+        TableName: this.packetTableName,
       });
 
-      const firstPacketResponse = await this.client.send(firstPacketCommand);
-      const firstDate =
-        firstPacketResponse.Items && firstPacketResponse.Items.length > 0
-          ? new Date(firstPacketResponse.Items[0].timeAdded.S)
-          : null;
+      const firstResponse = await this.client.send(firstCommand);
+      const lastResponse = await this.client.send(lastCommand);
+      const firstDate = new Date(Number(firstResponse.Items[0].timestamp.S));
+      const lastDate = new Date(Number(lastResponse.Items[0].timestamp.S));
 
-      const lastPacketCommand = new QueryCommand({
-        TableName: this.packetTableName,
-        Limit: 1,
-        ScanIndexForward: false, // Descending order for the latest date
-        KeyConditionExpression: "#timeAdded BETWEEN :start AND :end",
-        ExpressionAttributeNames: {
-          "#timeAdded": "timeAdded",
-        },
-        ExpressionAttributeValues: {
-          ":start": { S: "1970-01-01T00:00:00Z" },
-          ":end": { S: new Date().toISOString() },
-        },
-      });
-      const lastPacketResponse = await this.client.send(lastPacketCommand);
-      const lastDate =
-        lastPacketResponse.Items && lastPacketResponse.Items.length > 0
-          ? new Date(lastPacketResponse.Items[0].timeAdded.S)
-          : null;
-
-      if (!firstDate) {
-        throw new Error("First date not found");
-      }
-
-      if (!lastDate) {
-        throw new Error("Last date not found");
-      }
-
-      return [firstDate, lastDate];
+      return { firstDate, lastDate };
     } catch (error) {
       throw new Error(error.message);
     }

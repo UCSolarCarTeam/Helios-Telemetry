@@ -32,6 +32,7 @@ interface IAppState {
   error: boolean;
   darkMode: boolean;
   appUnits: APPUNITS;
+  favourites: string[];
   connectionType: CONNECTIONTYPES;
   socketConnected: boolean;
   radioConnected: boolean;
@@ -56,6 +57,7 @@ export function AppStateContextProvider({ children }: Props) {
     darkMode: false,
     displayLoading: true,
     error: false,
+    favourites: [],
     lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
     playbackSwitch: false,
@@ -109,13 +111,33 @@ export function AppStateContextProvider({ children }: Props) {
 
   const fetchSettingsFromLocalStorage = useCallback(() => {
     const savedSettings = localStorage.getItem("settings");
-    if (savedSettings) {
+    const favourites = localStorage.getItem("favourites");
+    if (savedSettings && favourites) {
+      const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
+      const parsedFavourites: string[] = JSON.parse(favourites) as string[];
+      setCurrentAppState((prev) => ({
+        ...prev,
+        appUnits: parsedSettings.appUnits,
+        connectionType: parsedSettings.connectionType,
+        darkMode: parsedSettings.darkMode,
+        favourites: parsedFavourites,
+        lapCoords: parsedSettings.lapCoords,
+      }));
+    } else if (favourites === null && savedSettings) {
       const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
       setCurrentAppState((prev) => ({
         ...prev,
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
         darkMode: parsedSettings.darkMode,
+        favourites: [
+          "Motor Temp",
+          "Battery Cell Voltage",
+          "Vehicle Velocity",
+          "Pack Voltage",
+          "Pack Current",
+          "Battery Average Voltage",
+        ],
         lapCoords: parsedSettings.lapCoords,
       }));
     }
