@@ -159,7 +159,7 @@ const Battery = (): I_PIS => {
       },
       {
         data: [{ value: MBMS?.ArrayContactorError }],
-        value: "Array Contactor Error",
+        name: "Array Contactor Error",
       },
       {
         data: [{ value: MBMS?.ArrayContactorState }],

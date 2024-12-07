@@ -204,7 +204,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     <div className="group mt-1 flex items-center justify-between text-xs">
       {!field.isFault && (
         <span
-          className="hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
+          className="mt-1 hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
           onClick={handleAddToFavourites}
         >
           Add to Favourites
