@@ -263,7 +263,7 @@ const Faults = (): I_PIS => {
           name: "Internal Logic Fault",
         },
       ],
-      LimitFlags: [
+      WarningFlags: [
         {
           data: [
             {
@@ -738,7 +738,7 @@ const Faults = (): I_PIS => {
             name: "Config Read Error",
           },
         ],
-        LimitFlags: [
+        WarningFlags: [
           {
             data: [
               {
@@ -1252,7 +1252,7 @@ const Faults = (): I_PIS => {
             name: "Config Read Error",
           },
         ],
-        LimitFlags: [
+        WarningFlags: [
           {
             data: [
               {

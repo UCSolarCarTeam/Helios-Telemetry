@@ -6,7 +6,7 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 const Motor = (): I_PIS => {
   const { currentPacket } = usePacket();
   return {
-    Key_Left_Motor_Details: [
+    KeyLeftMotorDetails: [
       {
         data: [
           {
@@ -50,7 +50,7 @@ const Motor = (): I_PIS => {
         name: "Software Enable",
       },
     ] as unknown as I_PISField[],
-    Left_Motor_Details: [
+    LeftMotorDetails: [
       {
         data: [
           {
@@ -419,7 +419,8 @@ const Motor = (): I_PIS => {
         name: "Zero Position Offset Not Set",
       },
     ] as unknown as I_PISField[],
-    Right_Motor_Details: [
+
+    RightMotorDetails: [
       {
         data: [
           {

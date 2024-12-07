@@ -10,77 +10,6 @@ const Battery = (): I_PIS => {
     currentPacket?.Battery;
   //  Battery will now have be split into the faults and the warning and here we will simply show what everything means
   const data = {
-    BMSRelayStatusFlags: [
-      {
-        data: [{ expectedBool: true, value: Battery?.BmuAlive }],
-        name: "Heartbeat", //this is the bigger heartbeat
-      },
-      {
-        data: [
-          {
-            value: Battery?.DischargeRelayEnabled,
-          },
-        ],
-        name: "Discharge Relay Enabled",
-      },
-      {
-        data: [
-          {
-            value: Battery?.ChargeRelayEnabled,
-          },
-        ],
-        name: "Charge Relay Enabled",
-      },
-      {
-        data: [
-          {
-            value: Battery?.ChargerSafetyEnabled,
-          },
-        ],
-        name: "Charger Safety Enabled",
-      },
-      {
-        data: [
-          {
-            value: Battery?.MultiPurposeInputSignalStatus,
-          },
-        ],
-        name: "Multipurpose Input Signal",
-      },
-      {
-        data: [
-          {
-            value: Battery?.IsReadySignalStatus,
-          },
-        ],
-        name: "Is Ready",
-      },
-      {
-        data: [
-          {
-            value: Battery?.IsChargingSignalStatus,
-          },
-        ],
-        name: "Is Charging",
-      },
-      {
-        data: [
-          {
-            value: Battery?.MalfunctionIndicatorActive,
-          },
-        ],
-        name: "Malfunction Indicator Active",
-      },
-      {
-        data: [
-          {
-            value: Battery?.AlwaysOnSignalStatus,
-          },
-        ],
-        name: "Always On",
-      },
-    ] as I_PISField[],
-
     Cell: [
       {
         data: [
@@ -305,6 +234,77 @@ const Battery = (): I_PIS => {
       {
         data: [{ value: MBMS?.StrobeBmsLight }],
         name: " Strobe BMS Light",
+      },
+    ] as I_PISField[],
+
+    MBMSRelayStatusFlags: [
+      {
+        data: [{ expectedBool: true, value: Battery?.BmuAlive }],
+        name: "Heartbeat", //this is the bigger heartbeat
+      },
+      {
+        data: [
+          {
+            value: Battery?.DischargeRelayEnabled,
+          },
+        ],
+        name: "Discharge Relay Enabled",
+      },
+      {
+        data: [
+          {
+            value: Battery?.ChargeRelayEnabled,
+          },
+        ],
+        name: "Charge Relay Enabled",
+      },
+      {
+        data: [
+          {
+            value: Battery?.ChargerSafetyEnabled,
+          },
+        ],
+        name: "Charger Safety Enabled",
+      },
+      {
+        data: [
+          {
+            value: Battery?.MultiPurposeInputSignalStatus,
+          },
+        ],
+        name: "Multipurpose Input Signal",
+      },
+      {
+        data: [
+          {
+            value: Battery?.IsReadySignalStatus,
+          },
+        ],
+        name: "Is Ready",
+      },
+      {
+        data: [
+          {
+            value: Battery?.IsChargingSignalStatus,
+          },
+        ],
+        name: "Is Charging",
+      },
+      {
+        data: [
+          {
+            value: Battery?.MalfunctionIndicatorActive,
+          },
+        ],
+        name: "Malfunction Indicator Active",
+      },
+      {
+        data: [
+          {
+            value: Battery?.AlwaysOnSignalStatus,
+          },
+        ],
+        name: "Always On",
       },
     ] as I_PISField[],
 
