@@ -3,7 +3,6 @@ import BatteryTab from "@/components/tabs/BatteryTab";
 import FaultsTab from "@/components/tabs/FaultsTab";
 import MotorTab from "@/components/tabs/MotorTab";
 import MpptTab from "@/components/tabs/MpptTab";
-import PlaybackTab from "@/components/tabs/PlaybackTab";
 import RaceTab from "@/components/tabs/RaceTab";
 
 export interface SolarCarRoutes {
