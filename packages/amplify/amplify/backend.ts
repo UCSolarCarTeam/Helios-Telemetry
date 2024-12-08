@@ -40,6 +40,20 @@ const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   },
 );
 
+const MQTT_PASSWORD_ENV = process.env.MQTT_PASSWORD_ENV;
+const MQTT_USERNAME_ENV = process.env.MQTT_USERNAME_ENV;
+const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(TelemetryBackendStack,
+  "HeliosTelemetryBackendMQTT/Username", {
+  secretName: "HeliosTelemetryMQTTCredentials",
+  secretStringValue: cdk.SecretValue.unsafePlainText(
+    JSON.stringify({
+      username: MQTT_USERNAME_ENV,
+      password: MQTT_PASSWORD_ENV
+    })
+  )
+}
+);
+
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
   "TelemetryBackendImageRepository",
@@ -160,8 +174,19 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
+    MQTT_USERNAME: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "username"
+    ),
+    MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "password"
+    )
   },
+
 });
+
+
 
 // Allow ECS Task to read the Secrets Manager Store
 TelemetryBackendSecretsManagerPrivKey.grantRead(
@@ -173,6 +198,10 @@ TelemetryBackendSecretsManagerChain.grantRead(
 TelemetryBackendSecretsManagerCertificate.grantRead(
   TelemetryECSTaskDefintion.taskRole,
 );
+TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
+  TelemetryECSTaskDefintion.taskRole
+);
+
 
 const TelemetryBackendVPC = new ec2.Vpc(
   TelemetryBackendStack,
