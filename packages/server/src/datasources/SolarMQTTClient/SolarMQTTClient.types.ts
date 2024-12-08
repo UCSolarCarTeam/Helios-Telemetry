@@ -3,11 +3,11 @@ import type { IClientOptions } from "mqtt/*";
 
 export const options: IClientOptions = {
   host: "aedes.calgarysolarcar.ca",
-  password: "hasAedes",
+  password: process.env.MQTT_PASSWORD,
   port: 1883,
   protocol: "tcp",
   protocolVersion: 3,
-  username: "urMom",
+  username: process.env.MQTT_USERNAME,
 };
 
 export const topics = {
