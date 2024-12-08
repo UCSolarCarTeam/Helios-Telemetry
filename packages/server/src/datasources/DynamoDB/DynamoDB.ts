@@ -1,3 +1,5 @@
+import { start } from "repl";
+
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
 import {
@@ -12,7 +14,13 @@ import {
   GetItemCommand,
   QueryCommand,
 } from "@aws-sdk/client-dynamodb";
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  PutCommand,
+  QueryCommandInput,
+  ScanCommand,
+  ScanCommandInput,
+} from "@aws-sdk/lib-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
 if (!process.env.LAP_TABLE_NAME) {
@@ -27,7 +35,6 @@ const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
 
 const logger = createLightweightApplicationLogger("DynamoDB.ts");
-
 export class DynamoDB implements DynamoDBtypes {
   public client: DynamoDBClient;
   backendController: BackendController;
@@ -53,7 +60,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new GetItemCommand({
         Key: {
           id: { S: "packet" },
-          timestamp: { S: date.toString() },
+          timestamp: { N: date.toString() },
         },
         TableName: this.packetTableName,
       });
@@ -65,13 +72,45 @@ export class DynamoDB implements DynamoDBtypes {
     }
   }
 
+  public async scanPacketDataBetweenDates(
+    startUTCDate: Number,
+    endUTCDate: Number,
+  ) {
+    try {
+      let params: ScanCommandInput = {
+        TableName: this.packetTableName, // Replace with your table name
+        ScanFilter: {
+          Timestamp: {
+            ComparisonOperator: "BETWEEN",
+            AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
+          },
+        },
+      };
+
+      let lastEvaluatedKey;
+      do {
+        const command = new ScanCommand(params);
+        const response = await this.client.send(command);
+        const items = response.Items
+          ? response.Items.map((item) => unmarshall(item))
+          : [];
+
+        lastEvaluatedKey = response.LastEvaluatedKey;
+        if (lastEvaluatedKey) {
+          params.ExclusiveStartKey = lastEvaluatedKey;
+        }
+      } while (lastEvaluatedKey);
+    } catch (error) {
+      console.error(new Error(" Error Scanning Packets between Dates"));
+    }
+  }
   // // Helper function to get lap table data
-  public async getLapData(date: Date) {
+  public async getLapData(UTCDate: number) {
     try {
       const command = new GetItemCommand({
         Key: {
           id: { S: "lap" },
-          timestamp: { S: date.toString() },
+          timestamp: { N: UTCDate.toString() },
         },
         TableName: this.lapTableName,
       });
@@ -92,7 +131,7 @@ export class DynamoDB implements DynamoDBtypes {
         Item: {
           data: packet,
           id: "packet",
-          timestamp: packet.TimeStamp.toString(),
+          timestamp: packet.TimeStamp,
         },
         TableName: this.packetTableName,
       });
@@ -114,7 +153,7 @@ export class DynamoDB implements DynamoDBtypes {
         Item: {
           data: packet,
           id: "lap",
-          timestamp: packet.timeStamp.toString(),
+          timestamp: packet.timeStamp,
         },
         TableName: this.lapTableName,
       });
@@ -131,8 +170,8 @@ export class DynamoDB implements DynamoDBtypes {
 
   // // Helper function getting first and last playback packets
   public async getFirstAndLastPacketDates(): Promise<{
-    firstDate: Date | null;
-    lastDate: Date | null;
+    firstDateUTC: Number | null;
+    lastDateUTC: Number | null;
   }> {
     try {
       const firstCommand = new QueryCommand({
@@ -156,10 +195,10 @@ export class DynamoDB implements DynamoDBtypes {
 
       const firstResponse = await this.client.send(firstCommand);
       const lastResponse = await this.client.send(lastCommand);
-      const firstDate = new Date(Number(firstResponse.Items[0].timestamp.S));
-      const lastDate = new Date(Number(lastResponse.Items[0].timestamp.S));
+      const firstDateUTC = Number(firstResponse.Items[0].timestamp);
+      const lastDateUTC = Number(lastResponse.Items[0].timestamp);
 
-      return { firstDate, lastDate };
+      return { firstDateUTC, lastDateUTC };
     } catch (error) {
       throw new Error(error.message);
     }
