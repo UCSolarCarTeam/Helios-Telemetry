@@ -164,16 +164,16 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerCertificate,
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
-    PRIVATE_KEY: ecs.Secret.fromSecretsManager(
-      TelemetryBackendSecretsManagerPrivKey,
+    MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "password",
     ),
     MQTT_USERNAME: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "username",
     ),
-    MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
-      TelemetryBackendSecretsManagerMQTTCredentials,
-      "password",
+    PRIVATE_KEY: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerPrivKey,
     ),
   },
 });
