@@ -1,4 +1,3 @@
-// DonutChart.tsx
 import {
   ArcElement,
   Chart,
@@ -31,25 +30,23 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
       datasets: [
         {
           backgroundColor: [
-            "rgb(255, 99, 100)", // Red color for the percentage
-            "rgb(255, 255, 255)", // White color for the remaining part
+            "#65558F", // dark purple color for the percentage
+            "#e0daf0", // light purple color for the remaining part
           ],
           data: [percentage, 100 - percentage], // Data for the percentage and remaining
+
           hoverOffset: 4,
         },
       ],
-      labels: ["Red", "Remaining"], // Labels for segments
     };
 
     const config = {
       data: data,
       options: {
-        cutout: "70%", // Making it a doughnut chart (hole in the center)
-        plugins: {
-          legend: { display: false }, // Optional: Hide legend
-          tooltip: { enabled: false }, // Optional: Disable tooltips
-        },
-        responsive: true,
+        borderColor: "#BFBFBF",
+        cutout: "80%", // Making it a doughnut chart (hole in the center)
+        maintainAspectRatio: false, // Disable aspect ratio to allow custom size
+        responsive: true, // Ensure chart resizes
       },
       type: "doughnut" as ChartType, // Explicitly casting to ChartType
     };
@@ -65,11 +62,15 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
         chartInstance.current.destroy();
       }
     };
-  }, [percentage]); // Re-run chart rendering if percentage changes
+  }, [percentage]); // Re-render chart if percentage changes
 
   return (
-    <canvas ref={chartRef} style={{ height: "150px", width: "150px" }}></canvas>
-  ); // Adjust width and height
+    <canvas
+      height={150} // Set the canvas height explicitly
+      ref={chartRef}
+      width={150} // Set the canvas width explicitly
+    ></canvas>
+  );
 };
 
 export default DonutChart;

@@ -64,7 +64,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Optimal Driving speed at&nbsp;
           <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
-            {infoNumber}%
+            {38}%
           </span>
         </p>
         <p className="m-2 text-center text-[32px] font-normal leading-[39.06px] text-[#9C0534]">
@@ -114,8 +114,10 @@ const GreyShapes: React.FC<ShapeProps> = ({
           className="flex w-[245px] items-center justify-center"
           style={{ opacity: 1 }} // Adjust opacity if needed
         >
-          {/* Use the DonutChart component here */}
-          <DonutChart percentage={infoNumber} />
+          {/* update the donut chart based on the number */}
+          <div className="h-10px">
+            <DonutChart percentage={infoNumber} />
+          </div>
 
           <div></div>
         </div>
