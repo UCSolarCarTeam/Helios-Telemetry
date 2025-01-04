@@ -49,3 +49,5 @@ In packages/client `.env`:
 ```
 NEXT_PUBLIC_MAPSAPIKEY=
 ```
+
+Ask your lead for these keys
