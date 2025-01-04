@@ -14,9 +14,10 @@ export const getPlaybackData = async (request: Request, response: Response) => {
     response,
   );
   try {
-    const date = new Date(request.params.date);
+    const timestamp = request.params.timestamp;
 
-    const packetData = await backendController.dynamoDB.getPacketData(date);
+    const packetData =
+      await backendController.dynamoDB.getPacketData(timestamp);
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
@@ -45,13 +46,13 @@ export const getFirstAndLastPacket = async (
     response,
   );
   try {
-    const { firstDate, lastDate } =
+    const { firstDateUTC, lastDateUTC } =
       await backendController.dynamoDB.getFirstAndLastPacketDates();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
-      firstDate: firstDate,
-      lastDate: lastDate,
+      firstDate: firstDateUTC,
+      lastDate: lastDateUTC,
       message: "OK",
     };
     logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
