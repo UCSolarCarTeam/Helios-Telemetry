@@ -8,6 +8,7 @@ import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
 import DonutChart from "./DonutChart";
+import DonutChartRect from "./DonutChartRect";
 
 type TabContentProps = React.PropsWithChildren<{
   index: number;
@@ -141,15 +142,14 @@ const GreyShapes: React.FC<ShapeProps> = ({
           </p>
           {/* Container for the doughnut chart */}
           <div
-            className="flex w-[300px] items-center justify-center"
+            className="mt-[-8px] flex w-[300px] items-center justify-center"
             style={{ opacity: 1 }} // Adjust opacity if needed
           >
             {/* update the donut chart based on the number */}
             <div className="h-10px">
-              <DonutChart
-                chartColour="#CF4242"
-                chartHeight={60}
-                chartWidth={60}
+              <DonutChartRect
+                chartHeight={80}
+                chartWidth={80}
                 fontSize="18px"
                 percentage={83}
                 thickness="70%"
@@ -158,27 +158,10 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
             <div></div>
           </div>
-          {/*
-          <div className="mt-1 flex justify-center">
-            {/* circle Container }
-            <div
-              className="flex w-[245px] items-center justify-center"
-              style={{ opacity: 1 }} // Adjust opacity if needed
-            >
-              {/* Outer circle }
-              <div className="md:h-15 md:w-15 flex h-12 w-12 items-center justify-center rounded-full bg-[#CF4242] sm:h-14 sm:w-14 sm:text-[16px] md:text-[18px]">
-                {/* Inner circle}
-                <div className="md:h-13 md:w-13 flex h-9 w-9 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-11 sm:w-11">
-                  <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#4D6BDB] sm:text-[22px] md:text-[24px]">
-                    83
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div> */}
+
           <div className="flex justify-center">
             <div
-              className="flex w-[50px] items-center justify-between"
+              className="mt-[-4px] flex w-[50px] items-center justify-between"
               style={{ gap: "0px", opacity: 1 }}
             >
               {/* Left number */}
@@ -204,55 +187,67 @@ const GreyShapes: React.FC<ShapeProps> = ({
           </p>
 
           {/* Circles container */}
-          <div className="mt-2 flex items-center justify-center gap-8">
+          <div className="mt-0 flex items-center justify-center gap-8">
             {/* First circle with line below */}
-            <div className="flex flex-col items-center">
-              {/* Outer circle */}
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#CF4242]">
-                {/*inner circle */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#BFBFBF]">
-                  <span className="text-center text-[16px] font-normal leading-[25px] text-[#4D6BDB]">
-                    148
-                  </span>
+            <div className="ml-4 mt-[-8px] flex w-[100px] items-center justify-center">
+              {/* Adjust ml-4 as needed */}
+              {/* update the donut chart based on the number */}
+              <div>
+                <div className="h-10px">
+                  <DonutChartRect
+                    chartHeight={65}
+                    chartWidth={65}
+                    fontSize="18px"
+                    percentage={48}
+                    thickness="70%"
+                  />
+                </div>
+                <div>
+                  {/* Horizontal line with numbers */}
+                  <div className="flex w-[80px] items-center justify-between">
+                    <span className="text-left text-xs text-[#9C0534]">
+                      135
+                    </span>
+                    <div className="mx-1 h-[2px] flex-1 bg-[#BFBFBF]"></div>
+                    <span className="text-right text-xs text-[#369A34]">
+                      269
+                    </span>
+                  </div>
+                  {/* Text below the circle */}
+                  <p className="text-center text-[10px] leading-[12px]">
+                    Laps Left on Battery [km] (FSGP)
+                  </p>
                 </div>
               </div>
-
-              {/* Horizontal line with numbers */}
-              <div className="flex w-[80px] items-center justify-between">
-                <span className="text-left text-xs text-[#9C0534]">135</span>
-                <div className="mx-1 h-[2px] flex-1 bg-[#BFBFBF]"></div>
-                <span className="text-right text-xs text-[#369A34]">269</span>
-              </div>
-
-              {/* Text below the circle */}
-              <p className="text-center text-[10px] leading-[12px]">
-                Laps Left on Battery [km] (FSGP)
-              </p>
             </div>
-
             {/* Second circle with line below */}
-            <div className="flex flex-col items-center">
-              {/* Outer circle */}
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#CF4242]">
-                {/*inner circle */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#BFBFBF]">
-                  <span className="text-center text-[16px] font-normal leading-[25px] text-[#4D6BDB]">
-                    89
-                  </span>
+            <div className="mt-[-8px] flex w-[80px] items-center justify-center">
+              {/* update the donut chart based on the number */}
+              <div>
+                <div className="h-10px">
+                  <DonutChartRect
+                    chartHeight={65}
+                    chartWidth={65}
+                    fontSize="18px"
+                    percentage={89}
+                    thickness="70%"
+                  />
+                </div>
+                <div>
+                  {/* Horizontal line with numbers */}
+                  <div className="flex w-[80px] items-center justify-between">
+                    <span className="text-left text-xs text-[#9C0534]">57</span>
+                    <div className="mx-1 h-[2px] flex-1 bg-[#BFBFBF]"></div>
+                    <span className="text-right text-xs text-[#369A34]">
+                      104
+                    </span>
+                  </div>
+                  {/* Text below the circle */}
+                  <p className="text-center text-[10px] leading-[12px]">
+                    Battery Time Remaining [min]
+                  </p>
                 </div>
               </div>
-
-              {/* Horizontal line with numbers */}
-              <div className="flex w-[80px] items-center justify-between">
-                <span className="text-left text-xs text-[#9C0534]">135</span>
-                <div className="mx-1 h-[2px] flex-1 bg-[#BFBFBF]"></div>
-                <span className="text-right text-xs text-[#369A34]">269</span>
-              </div>
-
-              {/* Text below the circle */}
-              <p className="text-center text-[10px] leading-[12px]">
-                Battery Time Remaining [min]
-              </p>
             </div>
           </div>
         </div>

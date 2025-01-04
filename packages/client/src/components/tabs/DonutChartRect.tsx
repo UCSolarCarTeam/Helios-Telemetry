@@ -11,6 +11,7 @@ import {
 import { plugins } from "prettier.config.cjs";
 import React, { useEffect, useRef } from "react";
 
+import { Rotate90DegreesCcw } from "@mui/icons-material";
 import { CubeTexture } from "@react-three/drei";
 
 // Register the required elements, controllers, and plugins for the doughnut chart
@@ -21,12 +22,12 @@ interface DonutChartProps {
   chartHeight: number;
   chartWidth: number;
   fontSize: string;
-  chartColour: string;
+  //chartColour: string;
   thickness: string;
 }
 
 const DonutChart: React.FC<DonutChartProps> = ({
-  chartColour,
+  //chartColour,
   chartHeight,
   chartWidth,
   fontSize,
@@ -47,7 +48,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
       datasets: [
         {
           backgroundColor: [
-            chartColour, // dark purple color for the percentage
+            "#CF4242", // dark purple color for the percentage
             "#e0daf0", // light purple color for the remaining part
           ],
           data: [percentage, 100 - percentage], // Data for the percentage and remaining
@@ -61,7 +62,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
       data: data,
       options: {
         borderColor: "#BFBFBF",
-        borderRadius: 100,
+        circumference: 310,
         cutout: thickness, // Making it a doughnut chart (hole in the center)
         maintainAspectRatio: false, // Disable aspect ratio to allow custom size
         plugins: {
@@ -73,10 +74,9 @@ const DonutChart: React.FC<DonutChartProps> = ({
             enabled: true, // Ensure tooltips still work
           },
         },
-        responsive: true, // Ensure chart resizes
 
-        rotation: 150,
-        spacing: -10,
+        responsive: true, // Ensure chart resizes
+        rotation: 200,
       },
       plugins: [
         {
