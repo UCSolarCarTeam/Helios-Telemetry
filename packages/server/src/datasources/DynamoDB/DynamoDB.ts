@@ -60,7 +60,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new GetItemCommand({
         Key: {
           id: { S: "packet" },
-          timestamp: { S: timestamp },
+          timestamp: { N: timestamp },
         },
         TableName: this.packetTableName,
       });
@@ -105,12 +105,12 @@ export class DynamoDB implements DynamoDBtypes {
     }
   }
   // // Helper function to get lap table data
-  public async getLapData(timestamp: number) {
+  public async getLapData(timestamp: string) {
     try {
       const command = new GetItemCommand({
         Key: {
           id: { S: "lap" },
-          timestamp: { S: timestamp },
+          timestamp: { N: timestamp },
         },
         TableName: this.lapTableName,
       });
