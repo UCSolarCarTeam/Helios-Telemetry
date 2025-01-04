@@ -47,13 +47,13 @@ export class DynamoDB implements DynamoDBtypes {
   }
 
   // Helper function to get playback table data
-  public async getPacketData(date: Date) {
+  public async getPacketData(timestamp: string) {
     //  add type to return
     try {
       const command = new GetItemCommand({
         Key: {
           id: { S: "packet" },
-          timestamp: { S: date.toString() },
+          timestamp: { S: timestamp },
         },
         TableName: this.packetTableName,
       });
@@ -66,12 +66,12 @@ export class DynamoDB implements DynamoDBtypes {
   }
 
   // // Helper function to get lap table data
-  public async getLapData(date: Date) {
+  public async getLapData(timestamp: string) {
     try {
       const command = new GetItemCommand({
         Key: {
           id: { S: "lap" },
-          timestamp: { S: date.toString() },
+          timestamp: { S: timestamp },
         },
         TableName: this.lapTableName,
       });
