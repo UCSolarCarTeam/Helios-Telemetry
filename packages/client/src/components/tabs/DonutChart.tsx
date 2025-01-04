@@ -11,14 +11,28 @@ import {
 import { plugins } from "prettier.config.cjs";
 import React, { useEffect, useRef } from "react";
 
+import { CubeTexture } from "@react-three/drei";
+
 // Register the required elements, controllers, and plugins for the doughnut chart
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
 
 interface DonutChartProps {
   percentage: number;
+  chartHeight: number;
+  chartWidth: number;
+  fontSize: string;
+  chartColour: string;
+  thickness: string;
 }
 
-const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
+const DonutChart: React.FC<DonutChartProps> = ({
+  chartColour,
+  chartHeight,
+  chartWidth,
+  fontSize,
+  percentage,
+  thickness,
+}) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null); // Track the chart instance
 
@@ -33,7 +47,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
       datasets: [
         {
           backgroundColor: [
-            "#65558F", // dark purple color for the percentage
+            chartColour, // dark purple color for the percentage
             "#e0daf0", // light purple color for the remaining part
           ],
           data: [percentage, 100 - percentage], // Data for the percentage and remaining
@@ -47,8 +61,8 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
       data: data,
       options: {
         borderColor: "#BFBFBF",
-        cutout: "78%", // Making it a doughnut chart (hole in the center)
-        maintainAspectRatio: true, // Disable aspect ratio to allow custom size
+        cutout: thickness, // Making it a doughnut chart (hole in the center)
+        maintainAspectRatio: false, // Disable aspect ratio to allow custom size
         plugins: {
           // Add custom text plugin
           centerText: {
@@ -78,7 +92,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
             ctx.save();
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.font = "bold 32px Arial"; // Customize font
+            ctx.font = `${fontSize} Arial`;
             ctx.fillStyle = "#4D6BDB"; // Text color
             ctx.fillText(text, centerX, centerY);
             ctx.restore();
@@ -101,11 +115,19 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
         chartInstance.current.destroy();
       }
     };
-  }, [percentage]); // Re-render chart if percentage changes
+  }, [percentage, fontSize]); // Re-render chart if percentage changes
 
   return (
-    <div style={{ height: "100px", width: "100px" }}>
-      <canvas ref={chartRef}></canvas>
+    <div
+      style={{
+        alignItems: "center",
+        display: "flex",
+        height: chartHeight,
+        justifyContent: "center",
+        width: chartWidth,
+      }}
+    >
+      <canvas ref={chartRef} style={{ display: "block" }}></canvas>
     </div>
   );
 };

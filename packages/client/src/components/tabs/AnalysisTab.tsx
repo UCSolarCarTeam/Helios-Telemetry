@@ -55,7 +55,6 @@ const GreyShapes: React.FC<ShapeProps> = ({
   infoNumber = 78,
   rectangleHeight = "107px",
   rectangleWidth = "285px",
-  squareWidth = "250px",
 }) => {
   return (
     <div className="flex gap-4">
@@ -116,7 +115,14 @@ const GreyShapes: React.FC<ShapeProps> = ({
         >
           {/* update the donut chart based on the number */}
           <div className="h-10px">
-            <DonutChart percentage={infoNumber} />
+            <DonutChart
+              chartColour="#65558F"
+              chartHeight={100}
+              chartWidth={100}
+              fontSize="32px"
+              percentage={infoNumber}
+              thickness="78%"
+            />
           </div>
 
           <div></div>
@@ -133,15 +139,35 @@ const GreyShapes: React.FC<ShapeProps> = ({
           <p className="mt-2 text-center text-[14px] font-normal leading-[22px] sm:text-[16px] md:text-[18px]">
             Driver Performance Score
           </p>
+          {/* Container for the doughnut chart */}
+          <div
+            className="flex w-[300px] items-center justify-center"
+            style={{ opacity: 1 }} // Adjust opacity if needed
+          >
+            {/* update the donut chart based on the number */}
+            <div className="h-10px">
+              <DonutChart
+                chartColour="#CF4242"
+                chartHeight={60}
+                chartWidth={60}
+                fontSize="18px"
+                percentage={83}
+                thickness="70%"
+              />
+            </div>
+
+            <div></div>
+          </div>
+          {/*
           <div className="mt-1 flex justify-center">
-            {/* circle Container */}
+            {/* circle Container }
             <div
               className="flex w-[245px] items-center justify-center"
               style={{ opacity: 1 }} // Adjust opacity if needed
             >
-              {/* Outer circle */}
+              {/* Outer circle }
               <div className="md:h-15 md:w-15 flex h-12 w-12 items-center justify-center rounded-full bg-[#CF4242] sm:h-14 sm:w-14 sm:text-[16px] md:text-[18px]">
-                {/* Inner circle */}
+                {/* Inner circle}
                 <div className="md:h-13 md:w-13 flex h-9 w-9 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-11 sm:w-11">
                   <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#4D6BDB] sm:text-[22px] md:text-[24px]">
                     83
@@ -149,20 +175,20 @@ const GreyShapes: React.FC<ShapeProps> = ({
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="flex justify-center">
             <div
               className="flex w-[50px] items-center justify-between"
               style={{ gap: "0px", opacity: 1 }}
             >
               {/* Left number */}
-              <span className="text-left text-sm">28</span>
+              <span className="text-left text-sm text-[#9C0534]">28</span>
 
               {/* Horizontal line */}
               <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
 
               {/* Right number */}
-              <span className="text-right text-sm">97</span>
+              <span className="text-right text-sm text-[#369A34]">97</span>
             </div>
           </div>
         </div>
@@ -225,7 +251,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
               {/* Text below the circle */}
               <p className="text-center text-[10px] leading-[12px]">
-                Laps Left on Battery [km] (FSGP)
+                Battery Time Remaining [min]
               </p>
             </div>
           </div>
