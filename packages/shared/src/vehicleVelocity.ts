@@ -1,4 +1,4 @@
-import { useAppState } from "../../client/src/contexts/AppStateContext";
+import { useAppState } from "@/contexts/AppStateContext";
 
 export const calculateVehicleVelocity = (
   currentRpmValueMotor0?: number,

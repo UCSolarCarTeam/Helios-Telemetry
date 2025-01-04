@@ -14,8 +14,12 @@
     "paths": {
       "@/*": ["src/*"],
       "@/client/*": ["../client/src/*"],
-      "@/shared/vehicleVelocity": ["../shared/src/vehicleVelocity"]
-    }
+      "@/shared/vehicleVelocity": ["../shared/src/vehicleVelocity"],
+      "@/contexts/*": ["../client/src/contexts/*"],
+      "@/shared/*": ["../shared/src/*"]
+    },
+    "jsx": "react-jsx",
+    "resolveJsonModule": true
   },
   "include": [".eslintrc.cjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
   "exclude": ["dist", "../client"]
