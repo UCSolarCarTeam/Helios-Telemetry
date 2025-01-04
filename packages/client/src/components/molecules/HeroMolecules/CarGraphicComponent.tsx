@@ -12,9 +12,9 @@ import type {
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
-import { calculateVehicleVelocity } from "@/shared/vehicleVelocity";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { calculateVehicleVelocity } from "@shared/helios-types";
 import * as TWEEN from "@tweenjs/tween.js";
 
 // type IndicationTriggerList = {

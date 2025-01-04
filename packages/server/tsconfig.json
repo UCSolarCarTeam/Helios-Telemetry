@@ -12,11 +12,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@/client/*": ["../client/src/*"],
-      "@/shared/vehicleVelocity": ["../shared/src/vehicleVelocity"],
-      "@/contexts/*": ["../client/src/contexts/*"],
-      "@/shared/*": ["../shared/src/*"]
+      "@/*": ["src/*"]
     },
     "jsx": "react-jsx",
     "resolveJsonModule": true

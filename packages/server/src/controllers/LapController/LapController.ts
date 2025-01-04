@@ -4,7 +4,7 @@ import { type LapControllerType } from "@/controllers/LapController/LapControlle
 import { convertToDecimalDegrees, getDistance } from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { calculateVehicleVelocity } from "@/shared/vehicleVelocity";
+import { calculateVehicleVelocity } from "@shared/helios-types";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,

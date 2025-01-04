@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import type { Coords } from "@/shared/types";
+import type { Coords } from "@shared/helios-types";
 
 interface Props {
   children: ReactNode | ReactNode[];

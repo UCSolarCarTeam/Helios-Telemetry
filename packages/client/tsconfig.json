@@ -4,18 +4,8 @@
     "checkJs": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/server/*": [
-        "../server/src/*"
-      ],
-      "@/shared/vehicleVelocity": [
-        "../shared/src/vehicleVelocity"
-      ],
-      "@/shared/types": [
-        "../shared/src/types.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@/server/*": ["../server/src/*"]
     },
     "jsx": "preserve"
   },
@@ -27,8 +17,5 @@
     "**/*.cjs",
     "**/*.mjs"
   ],
-  "exclude": [
-    "node_modules",
-    "tailwind.config.ts"
-  ]
+  "exclude": ["node_modules", "tailwind.config.ts"]
 }
