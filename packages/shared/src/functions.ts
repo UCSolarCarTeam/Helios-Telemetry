@@ -275,6 +275,9 @@ export function generateFakeTelemetryData(): ITelemetryData {
         TxErrorCount: faker.number.int({ max: 100, min: 0 }),
       },
     ],
+    Other: {
+      RFID: faker.string.uuid(),
+    },
     PacketTitle: faker.lorem.words(2),
     TimeStamp: faker.date.soon().valueOf(),
   };

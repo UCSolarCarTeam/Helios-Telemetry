@@ -38,9 +38,22 @@ export class BackendController implements BackendControllerTypes {
     logger.info("Car Latency: ", carLatency.toString());
   }
 
+  public handleDriverRFID(driverRFID: string) {
+    if (
+      this.lapController.driverRFID === "" ||
+      this.lapController.driverRFID === driverRFID
+    ) {
+      this.lapController.driverRFID = driverRFID;
+      logger.info("Driver ID Scanned: ", this.lapController.driverRFID);
+    } // if its not set yet, or its different from the last
+  }
+
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
     this.dynamoDB.insertPacketData(message);
+
+    // check to see if the driver rfid has changed
+    this.handleDriverRFID(message.Other.RFID);
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);

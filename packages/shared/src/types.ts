@@ -33,6 +33,11 @@ export interface ITelemetryData {
   MotorFaults: IMotorFault[];
   PacketTitle: string;
   TimeStamp: number;
+  Other: IOther;
+}
+
+export interface IOther {
+  RFID: string;
 }
 
 export interface ILapData {
@@ -46,6 +51,7 @@ export interface ILapData {
   timeStamp: number;
   totalPowerIn: number;
   totalPowerOut: number;
+  driverRFID: string;
 }
 
 export class LapData {
