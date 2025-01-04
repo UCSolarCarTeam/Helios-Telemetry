@@ -54,13 +54,13 @@ export class DynamoDB implements DynamoDBtypes {
   }
 
   // Helper function to get playback table data
-  public async getPacketData(date: Date) {
+  public async getPacketData(timestamp: string) {
     //  add type to return
     try {
       const command = new GetItemCommand({
         Key: {
           id: { S: "packet" },
-          timestamp: { N: date.toString() },
+          timestamp: { N: timestamp },
         },
         TableName: this.packetTableName,
       });
@@ -73,18 +73,18 @@ export class DynamoDB implements DynamoDBtypes {
   }
 
   public async scanPacketDataBetweenDates(
-    startUTCDate: Number,
-    endUTCDate: Number,
+    startUTCDate: number,
+    endUTCDate: number,
   ) {
     try {
-      let params: ScanCommandInput = {
-        TableName: this.packetTableName, // Replace with your table name
+      const params: ScanCommandInput = {
         ScanFilter: {
           Timestamp: {
-            ComparisonOperator: "BETWEEN",
             AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
+            ComparisonOperator: "BETWEEN",
           },
         },
+        TableName: this.packetTableName, // Replace with your table name
       };
 
       let lastEvaluatedKey;
@@ -105,12 +105,12 @@ export class DynamoDB implements DynamoDBtypes {
     }
   }
   // // Helper function to get lap table data
-  public async getLapData(UTCDate: number) {
+  public async getLapData(timestamp: string) {
     try {
       const command = new GetItemCommand({
         Key: {
           id: { S: "lap" },
-          timestamp: { N: UTCDate.toString() },
+          timestamp: { N: timestamp },
         },
         TableName: this.lapTableName,
       });
@@ -170,8 +170,8 @@ export class DynamoDB implements DynamoDBtypes {
 
   // // Helper function getting first and last playback packets
   public async getFirstAndLastPacketDates(): Promise<{
-    firstDateUTC: Number | null;
-    lastDateUTC: Number | null;
+    firstDateUTC: number | null;
+    lastDateUTC: number | null;
   }> {
     try {
       const firstCommand = new QueryCommand({

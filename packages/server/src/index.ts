@@ -1,4 +1,5 @@
 import { BackendController } from "./controllers/BackendController/BackendController";
+import lapRouter from "./routes/lap.route";
 
 import axios from "axios";
 import axiosRetry from "axios-retry";
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
 
 app.use("/", healthRouter);
 app.use("/", playbackRouter);
+app.use("/", lapRouter);
 
 export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
