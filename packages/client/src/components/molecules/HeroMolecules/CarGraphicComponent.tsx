@@ -12,6 +12,7 @@ import type {
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { calculateVehicleVelocity } from "@/shared/vehicleVelocity";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as TWEEN from "@tweenjs/tween.js";
@@ -99,7 +100,12 @@ const CarGraphicComponent = () => {
         <RoadComponent
           direction={currentPacket?.B3.Reverse}
           size={20}
-          speed={currentAppState.vehicleVelocity * 0.5}
+          speed={
+            calculateVehicleVelocity(
+              currentPacket.MotorDetails0?.CurrentRpmValue,
+              currentPacket.MotorDetails1?.CurrentRpmValue,
+            ) * 0.5
+          }
         />
         <ContactShadows
           blur={2.5}

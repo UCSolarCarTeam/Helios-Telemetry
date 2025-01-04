@@ -1,16 +1,22 @@
-import { useAppState } from "@/contexts/AppStateContext";
 import { APPUNITS } from "@/contexts/AppStateContext";
+import { useAppState } from "@/contexts/AppStateContext";
+import { usePacket } from "@/contexts/PacketContext";
+import { calculateVehicleVelocity } from "@/shared/vehicleVelocity";
 
 function SpeedAtom() {
   const { currentAppState } = useAppState();
+  const { currentPacket } = usePacket();
 
-  let speedValue = 0;
+  let speedValue = calculateVehicleVelocity(
+    currentPacket.MotorDetails0?.CurrentRpmValue,
+    currentPacket.MotorDetails1?.CurrentRpmValue,
+  );
+
   let speedUnit = "km/h";
+
   if (currentAppState.appUnits === APPUNITS.IMPERIAL) {
-    speedValue = currentAppState.vehicleVelocity * 0.621371;
+    speedValue = speedValue * 0.621371;
     speedUnit = "mph";
-  } else {
-    speedValue = currentAppState.vehicleVelocity;
   }
 
   return (
