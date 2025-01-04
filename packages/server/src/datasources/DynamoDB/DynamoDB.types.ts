@@ -4,10 +4,10 @@ import { type ILapData, type ITelemetryData } from "@shared/helios-types";
 export interface DynamoDBtypes {
   close(): Promise<void>;
   client: DynamoDBClient;
-  // getLapData(date: Date): Promise<ILapData[]>;
-  getPacketData(date: Date): void;
-  // getFirstAndLastPacketDates(): Promise<[Date | null, Date | null]>;
-  // insertLapData(packet: ILapData): Promise<{ id: number }>;
+  getLapData(timestamp: number): void;
+  getPacketData(timestamp: number): void;
+  scanPacketDataBetweenDates(startUTCDate: number, endUTCDate: number): void;
+  insertLapData(packet: ILapData): Promise<GenericResponse>;
   insertPacketData(packet: ITelemetryData): Promise<GenericResponse>;
 }
 
