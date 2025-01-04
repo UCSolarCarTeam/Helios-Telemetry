@@ -1,11 +1,14 @@
 import {
   ArcElement,
   Chart,
+  ChartConfiguration,
   ChartType,
   DoughnutController,
   Legend,
+  Plugin,
   Tooltip,
 } from "chart.js";
+import { plugins } from "prettier.config.cjs";
 import React, { useEffect, useRef } from "react";
 
 // Register the required elements, controllers, and plugins for the doughnut chart
@@ -44,10 +47,46 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
       data: data,
       options: {
         borderColor: "#BFBFBF",
-        cutout: "80%", // Making it a doughnut chart (hole in the center)
-        maintainAspectRatio: false, // Disable aspect ratio to allow custom size
+        cutout: "78%", // Making it a doughnut chart (hole in the center)
+        maintainAspectRatio: true, // Disable aspect ratio to allow custom size
+        plugins: {
+          // Add custom text plugin
+          centerText: {
+            text: percentage, // Text to display in the center
+          },
+          tooltip: {
+            enabled: true, // Ensure tooltips still work
+          },
+        },
         responsive: true, // Ensure chart resizes
       },
+      plugins: [
+        {
+          beforeDraw(chart) {
+            const { width } = chart;
+            const ctx = chart.ctx;
+
+            // get the coordinates of the center
+            const centerX = width / 2;
+            const centerY =
+              chart.chartArea.top +
+              (chart.chartArea.bottom - chart.chartArea.top) / 2;
+
+            //get the text to display from options
+            const text = chart.options.plugins.centerText?.text || ""; // if theres no text, display nothing
+
+            ctx.save();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = "bold 32px Arial"; // Customize font
+            ctx.fillStyle = "#4D6BDB"; // Text color
+            ctx.fillText(text, centerX, centerY);
+            ctx.restore();
+          },
+          id: "centerText",
+        },
+      ],
+
       type: "doughnut" as ChartType, // Explicitly casting to ChartType
     };
 
@@ -65,11 +104,9 @@ const DonutChart: React.FC<DonutChartProps> = ({ percentage }) => {
   }, [percentage]); // Re-render chart if percentage changes
 
   return (
-    <canvas
-      height={150} // Set the canvas height explicitly
-      ref={chartRef}
-      width={150} // Set the canvas width explicitly
-    ></canvas>
+    <div style={{ height: "100px", width: "100px" }}>
+      <canvas ref={chartRef}></canvas>
+    </div>
   );
 };
 
