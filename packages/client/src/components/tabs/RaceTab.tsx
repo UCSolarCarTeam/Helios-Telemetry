@@ -150,6 +150,13 @@ function RaceTab() {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  function checkBoxFormatting(text: string) {
+    const spaced: string = text.replace(/([A-Z])/g, " $1");
+    const result: string = spaced.charAt(0).toUpperCase() + spaced.slice(1);
+
+    return result;
+  }
+
   return (
     <div className="m-4 flex justify-around">
       <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
@@ -162,7 +169,7 @@ function RaceTab() {
               type="checkbox"
             />
             <span className="min-w-44 select-none text-sm peer-hover:font-bold">
-              {column.id}
+              {checkBoxFormatting(column.id)}
             </span>
           </label>
         ))}
