@@ -6,13 +6,17 @@ import { PlotParams } from "react-plotly.js";
 
 import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const Plot = dynamic<PlotParams>(() => import("react-plotly.js"), {
+  ssr: false,
+});
 const SMALL_SCREEN = 380;
+
 type PlotTypes =
   | "/api/getPacketCorrelationMatrix"
   | "/api/getLapCorrelationMatrix";
+
 export default function MLContainer({
-  plotType = "/api/getLapCorrelationMatrix",
+  plotType = "/api/getPacketCorrelationMatrix",
 }: {
   plotType?: PlotTypes;
 }) {
@@ -26,6 +30,7 @@ export default function MLContainer({
       const data = JSON.parse(graph);
       const layout: PlotParams["layout"] = {
         autosize: true,
+        margin: { l: 175, t: 75 },
         title: data.layout.title.text,
       };
       data.layout = layout;
@@ -48,7 +53,7 @@ export default function MLContainer({
   }
   return (
     <Plot
-      className="h-96 w-full"
+      className="h-72 w-full"
       config={{
         displayModeBar: width < SMALL_SCREEN,
         displaylogo: false,
