@@ -160,10 +160,16 @@ function RaceTab() {
 
   // Function to fetch lap data
   const fetchLapData = async () => {
-    const response = await axios.get(
-      "https://aedes.calgarysolarcar.ca:3001/lap?timestamp=1707484374089",
-    );
-    return response.data;
+    try {
+      const timestamp = 1715859951742;
+      const response = await axios.get(
+        `https://aedes.calgarysolarcar.ca:3001/lap/${timestamp}`,
+      );
+      return response.data;
+    } catch {
+      // console.error("Error fetching lap data", error);
+      return { error: "Error fetching lap data" };
+    }
   };
   const [lapData, setLapData] = useState<ILapData[]>([]);
 
