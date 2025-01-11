@@ -7,6 +7,7 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 - Run `corepack enable` to activate Corepack
 - Go into the project root
 - Run `yarn set version berry`
+- Run `npm i io-ts fp-ts` to install the io-ts library
 
 ### Installing dependencies
 
