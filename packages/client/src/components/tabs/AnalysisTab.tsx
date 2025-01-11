@@ -58,7 +58,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
   rectangleWidth = "285px",
 }) => {
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-wrap justify-start gap-4">
       {/* First square */}
       <div className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4 sm:w-[50%] md:w-[40%] lg:w-[30%]">
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
@@ -150,7 +150,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
               <DonutChartRect
                 chartHeight={80}
                 chartWidth={80}
-                fontSize="18px"
+                fontSize="22px"
                 percentage={83}
                 thickness="70%"
               />
@@ -193,7 +193,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
               {/* Adjust ml-4 as needed */}
               {/* update the donut chart based on the number */}
               <div>
-                <div className="h-10px">
+                <div className="h-10px ml-2">
                   <DonutChartRect
                     chartHeight={65}
                     chartWidth={65}
@@ -224,7 +224,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
             <div className="mt-[-8px] flex w-[80px] items-center justify-center">
               {/* update the donut chart based on the number */}
               <div>
-                <div className="h-10px">
+                <div className="h-10px ml-2">
                   <DonutChartRect
                     chartHeight={65}
                     chartWidth={65}
