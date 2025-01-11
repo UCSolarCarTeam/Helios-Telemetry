@@ -75,8 +75,8 @@ const DonutChart: React.FC<DonutChartProps> = ({
         },
         responsive: true, // Ensure chart resizes
 
-        rotation: 150,
-        spacing: -10,
+        rotation: 220,
+        //spacing: -10,
       },
       plugins: [
         {

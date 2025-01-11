@@ -49,7 +49,6 @@ interface ShapeProps {
   infoNumber?: number;
   rectangleHeight?: string;
   rectangleWidth?: string;
-  squareWidth?: string;
 }
 
 const GreyShapes: React.FC<ShapeProps> = ({
@@ -61,9 +60,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
     <div className="flex flex-wrap justify-start gap-4">
       {/* First square */}
       <div className="flex h-[270px] w-[300px] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
-        <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
+        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Optimal Driving speed at&nbsp;
-          <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
+          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
             {38}%
           </span>
         </p>
@@ -102,9 +101,9 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
       {/* Second square */}
       <div className="flex h-[270px] w-[300px] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
-        <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
+        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Motor Efficiency at&nbsp;
-          <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
+          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
             {infoNumber}%
           </span>
         </p>
@@ -322,7 +321,6 @@ function AnalysisTab() {
               infoNumber={78}
               rectangleHeight="120px"
               rectangleWidth="300px"
-              squareWidth="270px"
             />
           </TabContent>
         </div>
