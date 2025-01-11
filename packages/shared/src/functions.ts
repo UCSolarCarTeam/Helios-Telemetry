@@ -2,8 +2,6 @@ import { faker } from "@faker-js/faker";
 import { ITelemetryData } from "./types";
 
 export function generateFakeTelemetryData(): ITelemetryData {
-  const timestamp = faker.date.recent(); // You can adjust the argument to control the recency of the date
-  const formattedTimestamp = `${timestamp.getFullYear()}-${(timestamp.getMonth() + 1).toString().padStart(2, "0")}-${timestamp.getDate().toString().padStart(2, "0")} ${timestamp.getHours().toString().padStart(2, "0")}:${timestamp.getMinutes().toString().padStart(2, "0")}:${timestamp.getSeconds().toString().padStart(2, "0")}`;
   return {
     B3: {
       Acceleration: faker.number.int({ max: 100, min: 0 }),
@@ -519,7 +517,7 @@ export function generateFakeTelemetryData(): ITelemetryData {
       }),
       MpuTemperature: faker.number.float({ max: 85, min: -40 }),
     },
-    TimeStamp: formattedTimestamp,
+    TimeStamp: faker.date.recent().getTime(),
     Title: faker.lorem.words(2),
   };
 }
