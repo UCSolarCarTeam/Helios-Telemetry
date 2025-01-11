@@ -78,9 +78,9 @@ export class LapController implements LapControllerType {
         ),
         distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
         lapTime: this.calculateLapTime(this.lastLapPackets),
-        netPowerOut: this.netPower(this.lastLapPackets),
+        netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
         timeStamp: packet.TimeStamp,
-        totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
+        totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
         totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
 
@@ -161,50 +161,54 @@ export class LapController implements LapControllerType {
     return sumAveragePack / lastLapPackets.length;
   }
 
-  public checkIfMotorReset(
-    motorOdometer: number,
-    motorDistanceTraveledSession: number,
-  ): boolean {
-    let motorReset = false;
-    if (
-      Math.round(motorOdometer) === 0 &&
-      Math.abs(motorOdometer - motorDistanceTraveledSession) > 1.0
-    ) {
-      motorReset = true;
-    }
+  // public checkIfMotorReset(
+  //   motorOdometer: number,
+  //   motorDistanceTraveledSession: number,
+  // ): boolean {
+  //   let motorReset = false;
+  //   if (
+  //     Math.round(motorOdometer) === 0 &&
+  //     Math.abs(motorOdometer - motorDistanceTraveledSession) > 1.0
+  //   ) {
+  //     motorReset = true;
+  //   }
 
-    return motorReset;
-  }
+  //   return motorReset;
+  // }
 
   public calculateMotorDistance(
     packetArray: ITelemetryData[],
-    odometerIndex: number,
+    motorIndex: number,
   ): number {
     // The Motor's Odometer resets every time a motor trips or the car power cycles
     let totalDistanceTraveled = 0;
-    let motorDistanceTraveledSession = 0;
 
     for (let i = 0; i < packetArray.length; i++) {
-      // Check if the motor had reset, keep a tally of the distance travelled
-      if (
-        this.checkIfMotorReset(
-          packetArray[i]?.[`MotorDetails${odometerIndex}`]?.Odometer as number,
-          motorDistanceTraveledSession,
-        )
-      ) {
-        totalDistanceTraveled += motorDistanceTraveledSession;
-      }
+      totalDistanceTraveled += (packetArray[i]?.[`MotorDetails${motorIndex}`]
+        ?.CurrentRpmValue *
+        0.15 *
+        0.5) as number;
 
-      motorDistanceTraveledSession = packetArray[i]?.[
-        `MotorDetails${odometerIndex}`
-      ]?.Odometer as number;
+      // Check if the motor had reset, keep a tally of the distance travelled
+      // if (
+      //   this.checkIfMotorReset(
+      //     packetArray[i]?.[`MotorDetails${odometerIndex}`]?.Odometer as number,
+      //     motorDistanceTraveledSession,
+      //   )
+      // ) {
+      //   totalDistanceTraveled += motorDistanceTraveledSession;
+      // }
+
+      // motorDistanceTraveledSession = packetArray[i]?.[
+      //   `MotorDetails${odometerIndex}`
+      // ]?.Odometer as number;
     }
-    totalDistanceTraveled += motorDistanceTraveledSession;
-    // Remove the initial distance
-    totalDistanceTraveled -= packetArray[0]?.[`MotorDetails${odometerIndex}`]
-      ?.Odometer as number;
-    // Convert to kilometers (odometer reports as meters)
-    totalDistanceTraveled /= 1000;
+    // totalDistanceTraveled += motorDistanceTraveledSession;
+    // // Remove the initial distance
+    // totalDistanceTraveled -= packetArray[0]?.[`MotorDetails${odometerIndex}`]
+    //   ?.Odometer as number;
+    // // Convert to kilometers (odometer reports as meters)
+    // totalDistanceTraveled /= 1000;
 
     return totalDistanceTraveled;
   }
