@@ -2,6 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
 import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
@@ -56,6 +57,7 @@ export function TabContent({
 
 function AnalysisTab() {
   const [value, setValue] = useState<number>(0);
+  const { width } = useWindowDimensions();
 
   return (
     <div className="flex flex-col gap-y-4 px-4">
@@ -121,12 +123,20 @@ function AnalysisTab() {
           className="flex w-full flex-1 flex-col justify-center gap-4 md:flex-row md:gap-x-4 lg:w-auto lg:flex-nowrap"
           id="main-content"
         >
-          <TabContent className="w-full" index={0} value={value}>
-            <div className="grid size-full max-h-96 grid-flow-col grid-cols-2 items-center gap-4">
-              <div className="flex max-h-96 w-full items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
+          <TabContent className="my-auto w-full" index={0} value={value}>
+            <div
+              className="grid max-h-72 w-full flex-1 grid-flow-row items-center gap-4"
+              style={{
+                gridTemplateColumns:
+                  width >= 1200
+                    ? "repeat(2, minmax(0, 1fr))"
+                    : "repeat(1, minmax(0, 1fr))",
+              }}
+            >
+              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
                 <MLContainer plotType="/api/getLapCorrelationMatrix" />
               </div>
-              <div className="flex max-h-96 w-full items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
+              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
                 <MLContainer plotType="/api/getPacketCorrelationMatrix" />
               </div>
             </div>
