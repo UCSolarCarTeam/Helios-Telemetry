@@ -60,7 +60,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
   return (
     <div className="flex flex-wrap justify-start gap-4">
       {/* First square */}
-      <div className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4 sm:w-[50%] md:w-[40%] lg:w-[30%]">
+      <div className="flex h-[270px] w-[300px] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Optimal Driving speed at&nbsp;
           <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
@@ -101,7 +101,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
       </div>
 
       {/* Second square */}
-      <div className="flex flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4 sm:w-[50%] md:w-[40%] lg:w-[30%]">
+      <div className="flex h-[270px] w-[300px] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
         <p className="decoration-skip-ink-none text-center text-[16px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
           Motor Efficiency at&nbsp;
           <span className="text-center text-[16px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
