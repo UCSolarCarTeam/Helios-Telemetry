@@ -1,14 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
-import { PlotParams } from "react-plotly.js";
+import { useEffect, useState } from "react";
+import type { PlotParams } from "react-plotly.js";
 
 import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
 
-const Plot = dynamic<PlotParams>(() => import("react-plotly.js"), {
-  ssr: false,
-});
+import Plotly from "./Plotly";
+
 const SMALL_SCREEN = 380;
 
 type PlotTypes =
@@ -23,27 +21,30 @@ export default function MLContainer({
   const [plot, setPlot] = useState<PlotParams | { error: boolean }>();
   const { width } = useWindowDimensions();
 
-  const fetchPlot = useCallback(async () => {
-    try {
-      const response = await fetch(plotType);
-      const graph = await response.json();
-      const data = JSON.parse(graph);
-      const layout: PlotParams["layout"] = {
-        autosize: true,
-        margin: { l: 175, t: 75 },
-        title: data.layout.title.text,
-      };
-      data.layout = layout;
-
-      setPlot(data);
-    } catch (e) {
-      setPlot({ error: true });
-    }
-  }, [plotType]);
-
   useEffect(() => {
+    const fetchPlot = async () => {
+      try {
+        const response = await fetch(plotType);
+        const graph = await response.json();
+        const data = JSON.parse(graph) as PlotParams;
+        const layout: PlotParams["layout"] = {
+          autosize: true,
+          font: {
+            color: "black",
+          },
+          margin: { l: 175, t: 75 },
+          paper_bgcolor: "rgba(0,0,0,0)",
+          title: data.layout.title,
+        };
+        data.layout = layout;
+
+        setPlot(data);
+      } catch (e) {
+        setPlot({ error: true });
+      }
+    };
     fetchPlot();
-  }, [fetchPlot]);
+  }, [plotType]);
 
   if (!plot) {
     return <div>Loading...</div>;
@@ -52,8 +53,8 @@ export default function MLContainer({
     return <div>Error loading data</div>;
   }
   return (
-    <Plot
-      className="h-72 w-full"
+    <Plotly
+      className="h-72 w-full bg-inherit"
       config={{
         displayModeBar: width < SMALL_SCREEN,
         displaylogo: false,
@@ -68,7 +69,6 @@ export default function MLContainer({
       }}
       data={plot.data}
       layout={plot.layout}
-      useResizeHandler={true}
     />
   );
 }

@@ -125,18 +125,14 @@ function AnalysisTab() {
         >
           <TabContent className="my-auto w-full" index={0} value={value}>
             <div
-              className="grid max-h-72 w-full flex-1 grid-flow-row items-center gap-4"
-              style={{
-                gridTemplateColumns:
-                  width >= 1200
-                    ? "repeat(2, minmax(0, 1fr))"
-                    : "repeat(1, minmax(0, 1fr))",
-              }}
+              className={twMerge(
+                `grid max-h-72 w-full flex-1 grid-flow-row items-center gap-4 ${width >= 1200 ? "grid-cols-2" : "grid-cols-1 overflow-y-auto"}`,
+              )}
             >
-              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
+              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold dark:bg-[#BAB8B8] dark:text-black">
                 <MLContainer plotType="/api/getLapCorrelationMatrix" />
               </div>
-              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold">
+              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold dark:bg-[#BAB8B8] dark:text-black">
                 <MLContainer plotType="/api/getPacketCorrelationMatrix" />
               </div>
             </div>

@@ -4,9 +4,12 @@
     "checkJs": true,
     "baseUrl": ".",
     "paths": {
+      "plotly.js-dist-min": [
+        "node_modules/@types/plotly.js"
+      ],
       "@/*": [
         "./src/*",
-        "./public/*"
+        "./public/*",
       ],
       "@/server/*": [
         "../server/src/*"
