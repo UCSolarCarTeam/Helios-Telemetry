@@ -4,6 +4,7 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.726.1",
     "typescript": "^5.5.3"
   },
   "devDependencies": {
