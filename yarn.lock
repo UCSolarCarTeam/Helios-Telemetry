@@ -9146,6 +9146,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/plotly.js-dist-min@npm:^2":
+  version: 2.3.4
+  resolution: "@types/plotly.js-dist-min@npm:2.3.4"
+  dependencies:
+    "@types/plotly.js": "npm:*"
+  checksum: 10c0/f947c5c3f4326596d3652d8ec55ca5338229043134519a3316e27365e8e41f2a146625564e53e2711303144aef643f48a10060a4cc59f0954615f08f89655b21
+  languageName: node
+  linkType: hard
+
+"@types/plotly.js@npm:*, @types/plotly.js@npm:^2.35.1":
+  version: 2.35.1
+  resolution: "@types/plotly.js@npm:2.35.1"
+  checksum: 10c0/c941c6bee0a0c291ae6d5e7cac8a938f357e4958f122d4e0ad6704d3cfd330ba4134b3fc6ae98186a07c4677cecd85f7756f14a55de095a7e1a9db6ceb108ec2
+  languageName: node
+  linkType: hard
+
 "@types/prettier@npm:^3.0.0":
   version: 3.0.0
   resolution: "@types/prettier@npm:3.0.0"
@@ -9182,6 +9198,16 @@ __metadata:
   dependencies:
     "@types/react": "npm:*"
   checksum: 10c0/8b416551c60bb6bd8ec10e198c957910cfb271bc3922463040b0d57cf4739cdcd24b13224f8d68f10318926e1ec3cd69af0af79f0291b599a992f8c80d47f1eb
+  languageName: node
+  linkType: hard
+
+"@types/react-plotly.js@npm:^2.6.3":
+  version: 2.6.3
+  resolution: "@types/react-plotly.js@npm:2.6.3"
+  dependencies:
+    "@types/plotly.js": "npm:*"
+    "@types/react": "npm:*"
+  checksum: 10c0/8cd6f99766009d541615471251b377200c5fd00a08995b64566f4cdfb6d1938ee64ba38d3847c7fe3d1d7515e59c1b0111e3262481480540b1a5e5a041cc4e3b
   languageName: node
   linkType: hard
 
@@ -10442,7 +10468,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.2, axios@npm:^1.7.4":
+"axios@npm:^1.7.2, axios@npm:^1.7.4, axios@npm:^1.7.7":
   version: 1.7.7
   resolution: "axios@npm:1.7.7"
   dependencies:
@@ -11259,13 +11285,17 @@ __metadata:
     "@types/google.maps": "npm:^3.55.11"
     "@types/lodash": "npm:^4"
     "@types/node": "npm:^20.14.10"
+    "@types/plotly.js": "npm:^2.35.1"
+    "@types/plotly.js-dist-min": "npm:^2"
     "@types/prettier": "npm:^3.0.0"
     "@types/react": "npm:^18.3.3"
     "@types/react-dom": "npm:^18.3.0"
+    "@types/react-plotly.js": "npm:^2.6.3"
     "@types/three": "npm:^0.161.2"
     "@typescript-eslint/eslint-plugin": "npm:^7.16.0"
     "@typescript-eslint/parser": "npm:^7.16.0"
     autoprefixer: "npm:^10.4.19"
+    axios: "npm:^1.7.7"
     eslint: "npm:8.57.0"
     eslint-config-next: "npm:^14.2.5"
     eslint-config-prettier: "npm:^9.1.0"
@@ -11277,6 +11307,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     mapbox-gl: "npm:^3.5.1"
     next: "npm:14.2.10"
+    plotly.js-dist-min: "npm:^2.35.3"
     prettier: "npm:^3.3.2"
     prettier-plugin-tailwindcss: "npm:^0.6.6"
     react: "npm:^18"
@@ -18208,6 +18239,13 @@ __metadata:
   dependencies:
     find-up: "npm:^4.0.0"
   checksum: 10c0/c56bda7769e04907a88423feb320babaed0711af8c436ce3e56763ab1021ba107c7b0cafb11cde7529f669cfc22bffcaebffb573645cbd63842ea9fb17cd7728
+  languageName: node
+  linkType: hard
+
+"plotly.js-dist-min@npm:^2.35.3":
+  version: 2.35.3
+  resolution: "plotly.js-dist-min@npm:2.35.3"
+  checksum: 10c0/1c3bc768445f7b6c6ea67b2a5d4a0fc9376619ac52f18faa21c72dfa6a03e82f99af93d42fa0e0e5239cc13fc3f65d8249a3de5527e6ebd95eab1d08dda61719
   languageName: node
   linkType: hard
 
