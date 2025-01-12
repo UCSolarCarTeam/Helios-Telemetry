@@ -7533,6 +7533,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@shared/helios-types@workspace:packages/shared"
   dependencies:
+    "@aws-sdk/client-secrets-manager": "npm:^3.658.1"
     "@faker-js/faker": "npm:^9.0.3"
     typescript: "npm:^5.5.3"
   languageName: unknown
@@ -9941,7 +9942,7 @@ __metadata:
     "@aws-amplify/data-schema-types": "npm:^0.7.5"
     "@aws-amplify/plugin-types": "npm:^0.8.0"
     "@aws-sdk/client-route-53": "npm:^3.658.1"
-    "@aws-sdk/client-secrets-manager": "npm:^3.658.1"
+    "@shared/helios-types": "npm:*"
     acme-client: "npm:^5.4.0"
     aws-amplify: "npm:^6.4.0"
     aws-cdk: "npm:^2.149.0"

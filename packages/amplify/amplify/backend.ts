@@ -40,6 +40,13 @@ const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   },
 );
 
+// grabs existing secrets from SSM
+const TelemetryBackendSecretsManagerMQTTCredentials =
+  secretsmanager.Secret.fromSecretNameV2(
+    TelemetryBackendStack,
+    "HeliosTelemetryBackendMQTT/Username",
+    "HeliosTelemetryMQTTCredentials",
+  );
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
   "TelemetryBackendImageRepository",
@@ -157,6 +164,14 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerCertificate,
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
+    MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "password",
+    ),
+    MQTT_USERNAME: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "username",
+    ),
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
@@ -171,6 +186,9 @@ TelemetryBackendSecretsManagerChain.grantRead(
   TelemetryECSTaskDefintion.taskRole,
 );
 TelemetryBackendSecretsManagerCertificate.grantRead(
+  TelemetryECSTaskDefintion.taskRole,
+);
+TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefintion.taskRole,
 );
 
