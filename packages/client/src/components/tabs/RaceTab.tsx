@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 
-import type { ILapData } from "@shared/helios-types";
+import { type ILapData } from "@shared/helios-types";
 import {
   createColumnHelper,
   flexRender,
@@ -158,30 +158,37 @@ function RaceTab() {
     return result;
   }
 
-  // Function to fetch lap data
+  const [lapData, setLapData] = useState<ILapData>({});
+
   const fetchLapData = async () => {
     try {
       const timestamp = 1715859951742;
       const response = await axios.get(
         `https://aedes.calgarysolarcar.ca:3001/lap/${timestamp}`,
       );
-      return response.data;
+      return response.data.data.Item.data.M;
     } catch {
       // console.error("Error fetching lap data", error);
       return { error: "Error fetching lap data" };
     }
   };
-  const [lapData, setLapData] = useState<ILapData[]>([]);
 
-  // Fetch lap data on mount
   useEffect(() => {
     fetchLapData()
       .then((data) => {
-        if (Array.isArray(data)) {
-          setLapData(data); // Set the actual array of ILapData objects
-        } else {
-          // console.error("Unexpected API response structure", data);
-        }
+        // console.log(data);
+        setLapData({
+          ampHours: parseInt(data.ampHours.N, 10),
+          averagePackCurrent: parseInt(data.averagePackCurrent.N, 10),
+          averageSpeed: parseFloat(data.averageSpeed.N),
+          batterySecondsRemaining: parseInt(data.batterySecondsRemaining.N, 10),
+          distance: parseFloat(data.distance.N),
+          lapTime: parseInt(data.lapTime.N, 10),
+          netPowerOut: parseInt(data.netPowerOut.N, 10),
+          timeStamp: parseInt(data.timeStamp.N, 10),
+          totalPowerIn: parseInt(data.totalPowerIn.N, 10),
+          totalPowerOut: parseInt(data.totalPowerOut.N, 10),
+        });
       })
       .catch((error) => {
         // console.error("Error fetching lap data", error);
@@ -205,24 +212,10 @@ function RaceTab() {
           </label>
         ))}
         <div>
-          {Array.isArray(lapData) ? (
-            lapData.map((lap, index) => (
-              <div key={index}>
-                <h1>{`Lap ${index + 1}`}</h1>
-                <p>{`Amp Hours: ${lap.ampHours}`}</p>
-                <p>{`Average Pack Current: ${lap.averagePackCurrent}`}</p>
-                <p>{`Average Speed: ${lap.averageSpeed}`}</p>
-                <p>{`Battery Seconds Remaining: ${lap.batterySecondsRemaining}`}</p>
-                <p>{`Distance: ${lap.distance}`}</p>
-                <p>{`Lap Time: ${lap.lapTime}`}</p>
-                <p>{`Net Power Out: ${lap.netPowerOut}`}</p>
-                <p>{`Time Stamp: ${lap.timeStamp}`}</p>
-                <p>{`Total Power In: ${lap.totalPowerIn}`}</p>
-                <p>{`Total Power Out: ${lap.totalPowerOut}`}</p>
-              </div>
-            ))
-          ) : (
-            <p>No lap data available</p>
+          {lapData && (
+            <div>
+              <pre>{JSON.stringify(lapData, null, 2)}</pre>
+            </div>
           )}
         </div>
       </div>
