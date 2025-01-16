@@ -2,6 +2,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
+import { usePacket } from "@/contexts/PacketContext";
 import type { ILapData } from "@shared/helios-types";
 import {
   createColumnHelper,
@@ -146,6 +147,8 @@ const exampleData: ILapData[] = [
 function RaceTab() {
   const data = useMemo(() => exampleData, []);
 
+  const { currentPacket } = usePacket();
+
   const table = useReactTable({
     columns,
     data,
@@ -192,7 +195,7 @@ function RaceTab() {
   return (
     <div className="m-4 flex justify-around">
       <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
-        <div className="justify-left flex items-center gap-x-2 border border-black p-2">
+        <div className="justify-left flex items-center gap-x-2 pb-2 pr-2">
           <Image
             alt="pfp"
             className="rounded-full border-2 border-helios object-cover p-2"
@@ -200,7 +203,9 @@ function RaceTab() {
             src="/assets/HeliosSideview.png"
             width={50}
           />
-          <span className="text-sm">Insert Name</span>
+          <span className="text-sm">
+            Current Driver: {currentPacket.Pi.rfid}
+          </span>
         </div>
         {table.getAllLeafColumns().map((column) => (
           <label className="flex items-center gap-1 text-sm" key={column.id}>
