@@ -14092,6 +14092,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fp-ts@npm:^2.16.9":
+  version: 2.16.9
+  resolution: "fp-ts@npm:2.16.9"
+  checksum: 10c0/704fcc2e792bd17cb653e7b62b5d9d905c04327776df8bf2a1f67e1c6823b06c7c36036345279ac04f0b6b7214ad01f91f109f548e144c9f866a491392fbfbcc
+  languageName: node
+  linkType: hard
+
 "fraction.js@npm:^4.3.7":
   version: 4.3.7
   resolution: "fraction.js@npm:4.3.7"
@@ -15297,6 +15304,15 @@ __metadata:
   dependencies:
     loose-envify: "npm:^1.0.0"
   checksum: 10c0/5af133a917c0bcf65e84e7f23e779e7abc1cd49cb7fdc62d00d1de74b0d8c1b5ee74ac7766099fb3be1b05b26dfc67bab76a17030d2fe7ea2eef867434362dfc
+  languageName: node
+  linkType: hard
+
+"io-ts@npm:^2.2.22":
+  version: 2.2.22
+  resolution: "io-ts@npm:2.2.22"
+  peerDependencies:
+    fp-ts: ^2.5.0
+  checksum: 10c0/5382c2f09807d8ef7e468cb0061f44ccc691d0173b376d1f8a50ef5cf3c1e38b1402030817fa7a3402969c842de2386ef0d19f6437b0fdfca203a9c5fc3d493a
   languageName: node
   linkType: hard
 
@@ -20007,7 +20023,9 @@ __metadata:
     eslint-plugin-promise: "npm:^6.4.0"
     eslint-plugin-sort-destructure-keys: "npm:^2.0.0"
     eslint-plugin-sort-keys: "npm:^2.3.5"
+    fp-ts: "npm:^2.16.9"
     husky: "npm:^8.0.3"
+    io-ts: "npm:^2.2.22"
     lerna: "npm:^8.1.9"
     lint-staged: "npm:^13.2.2"
     nx: "npm:20.0.3"
