@@ -1,4 +1,5 @@
 import axios from "axios";
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
 import type { ILapData } from "@shared/helios-types";
@@ -191,6 +192,16 @@ function RaceTab() {
   return (
     <div className="m-4 flex justify-around">
       <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
+        <div className="justify-left flex items-center gap-x-2 border border-black p-2">
+          <Image
+            alt="pfp"
+            className="rounded-full border-2 border-helios object-cover p-2"
+            height={50}
+            src="/assets/HeliosSideview.png"
+            width={50}
+          />
+          <span className="text-sm">Insert Name</span>
+        </div>
         {table.getAllLeafColumns().map((column) => (
           <label className="flex items-center gap-1 text-sm" key={column.id}>
             <input
