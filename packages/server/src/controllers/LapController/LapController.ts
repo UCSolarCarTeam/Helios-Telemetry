@@ -82,6 +82,8 @@ export class LapController implements LapControllerType {
         timeStamp: packet.TimeStamp,
         totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
         totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
+        driverRFID: packet.Pi.rfid
+
       };
 
       await this.backendController.dynamoDB.insertLapData(lapData);
