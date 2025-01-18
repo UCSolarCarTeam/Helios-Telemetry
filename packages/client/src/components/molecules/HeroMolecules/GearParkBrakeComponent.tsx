@@ -6,9 +6,9 @@ import { usePacket } from "@/contexts/PacketContext";
 function GearParkBrakeComponent() {
   const { currentPacket } = usePacket();
   const selectedCSS = "font-bold text-helios";
-  const reverse = currentPacket.DriverControls.Reverse;
-  const forward = currentPacket.DriverControls.Forward;
-  const brake = currentPacket.DriverControls.Brakes;
+  const reverse = currentPacket.B3.Reverse;
+  const forward = !currentPacket.B3.Reverse;
+  const brake = currentPacket.B3.BrakeSwitch;
   return (
     <>
       <div className="flex flex-col items-center">

@@ -1,5 +1,8 @@
-import { useMemo } from "react";
+import axios from "axios";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 
+import { usePacket } from "@/contexts/PacketContext";
 import type { ILapData } from "@shared/helios-types";
 import {
   createColumnHelper,
@@ -75,7 +78,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -87,7 +90,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -99,7 +102,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -111,7 +114,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -123,7 +126,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -135,7 +138,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -144,15 +147,66 @@ const exampleData: ILapData[] = [
 function RaceTab() {
   const data = useMemo(() => exampleData, []);
 
+  const { currentPacket } = usePacket();
+
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
   });
 
+  function checkBoxFormatting(text: string) {
+    const spaced: string = text.replace(/([A-Z])/g, " $1");
+    const result: string = spaced.charAt(0).toUpperCase() + spaced.slice(1);
+
+    return result;
+  }
+
+  // Function to fetch lap data
+  const fetchLapData = async () => {
+    try {
+      const timestamp = 1715859951742;
+      const response = await axios.get(
+        `https://aedes.calgarysolarcar.ca:3001/lap/${timestamp}`,
+      );
+      return response.data;
+    } catch {
+      // console.error("Error fetching lap data", error);
+      return { error: "Error fetching lap data" };
+    }
+  };
+  const [lapData, setLapData] = useState<ILapData[]>([]);
+
+  // Fetch lap data on mount
+  useEffect(() => {
+    fetchLapData()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setLapData(data); // Set the actual array of ILapData objects
+        } else {
+          // console.error("Unexpected API response structure", data);
+        }
+      })
+      .catch((error) => {
+        // console.error("Error fetching lap data", error);
+      });
+  }, []);
+
   return (
     <div className="m-4 flex justify-around">
       <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
+        <div className="justify-left flex items-center gap-x-2 pb-2 pr-2">
+          <Image
+            alt="pfp"
+            className="rounded-full border-2 border-helios object-cover p-2"
+            height={50}
+            src="/assets/HeliosSideview.png"
+            width={50}
+          />
+          <span className="text-sm">
+            Current Driver: {currentPacket.Pi.rfid}
+          </span>
+        </div>
         {table.getAllLeafColumns().map((column) => (
           <label className="flex items-center gap-1 text-sm" key={column.id}>
             <input
@@ -162,10 +216,31 @@ function RaceTab() {
               type="checkbox"
             />
             <span className="min-w-44 select-none text-sm peer-hover:font-bold">
-              {column.id}
+              {checkBoxFormatting(column.id)}
             </span>
           </label>
         ))}
+        <div>
+          {Array.isArray(lapData) ? (
+            lapData.map((lap, index) => (
+              <div key={index}>
+                <h1>{`Lap ${index + 1}`}</h1>
+                <p>{`Amp Hours: ${lap.ampHours}`}</p>
+                <p>{`Average Pack Current: ${lap.averagePackCurrent}`}</p>
+                <p>{`Average Speed: ${lap.averageSpeed}`}</p>
+                <p>{`Battery Seconds Remaining: ${lap.batterySecondsRemaining}`}</p>
+                <p>{`Distance: ${lap.distance}`}</p>
+                <p>{`Lap Time: ${lap.lapTime}`}</p>
+                <p>{`Net Power Out: ${lap.netPowerOut}`}</p>
+                <p>{`Time Stamp: ${lap.timeStamp}`}</p>
+                <p>{`Total Power In: ${lap.totalPowerIn}`}</p>
+                <p>{`Total Power Out: ${lap.totalPowerOut}`}</p>
+              </div>
+            ))
+          ) : (
+            <p>No lap data available</p>
+          )}
+        </div>
       </div>
 
       <div className="w-3/4 overflow-x-auto">

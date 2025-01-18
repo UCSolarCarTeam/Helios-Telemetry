@@ -10,10 +10,10 @@ export interface LapControllerType {
     packetArray: ITelemetryData[],
     odometerIndex: number,
   ): number;
-  checkIfMotorReset(
-    motorOdometer: number,
-    motorDistanceTraveledSession: number,
-  ): boolean;
+  // checkIfMotorReset(
+  //   motorOdometer: number,
+  //   motorDistanceTraveledSession: number,
+  // ): boolean;
   getAveragePowerIn(packetArray: ITelemetryData[]): number;
   getAveragePowerOut(packetArray: ITelemetryData[]): number;
   getLastPacket(): ITelemetryData[];

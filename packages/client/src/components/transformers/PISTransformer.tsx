@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import {
@@ -202,14 +202,18 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
 
   return (
     <div className="group mt-1 flex items-center justify-between text-xs">
-      <span
-        className="hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
-        onClick={handleAddToFavourites}
+      {!field.isFault && (
+        <span
+          className="mt-1 hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
+          onClick={handleAddToFavourites}
+        >
+          Add to Favourites
+        </span>
+      )}
+      <div
+        className={`mt-1 flex items-center justify-between text-xs ${field.isFault ? "" : "group-hover:hidden"}`}
       >
-        Add to Favourites
-      </span>
-      <div className="mt-1 flex items-center justify-between text-xs group-hover:hidden">
-        {field.name}:
+        {field.name}
       </div>
       <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
@@ -240,6 +244,13 @@ type PIStransformerProps = {
 
 function PISTransformer(props: PIStransformerProps): JSX.Element {
   const { depth = 0, root } = props;
+  const formatKey = (key: string): string => {
+    return key
+      .replace(/([a-z])([A-Z])/g, "$1 $2") // Add space between lowercase and uppercase
+      .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2") // Add space between consecutive uppercase followed by lowercase
+      .replace(/([a-zA-Z])(\d)/g, "$1 $2"); // Add space between letters and numbers
+  };
+
   return (
     root && (
       <div className="flex size-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[330px]">
@@ -253,7 +264,7 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
                     depth >= 2 ? `text-xs` : depth === 1 ? "text-sm" : "text-lg"
                   }`}
                 >
-                  {key}
+                  {formatKey(key)}
                 </p>
               </div>
               {Array.isArray(value) ? (

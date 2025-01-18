@@ -14,9 +14,10 @@ export const getPlaybackData = async (request: Request, response: Response) => {
     response,
   );
   try {
-    const date = new Date(request.params.date);
+    const timestamp = request.params.timestamp;
 
-    const packetData = await backendController.dynamoDB.getPacketData(date);
+    const packetData =
+      await backendController.dynamoDB.getPacketData(timestamp);
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {

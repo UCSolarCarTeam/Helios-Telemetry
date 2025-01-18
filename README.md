@@ -28,3 +28,26 @@ yarn build
 yarn start
 ```
 Appending `:client` or `:server` behind the build command will build/start the production servers individually
+
+### Secrets and environment variables
+
+Specific functions of the website require you to have certain environment variables set.
+
+In packages/server `.env`:
+
+```
+LAP_POSITION_PASSWORD=
+LAP_TABLE_NAME=
+PACKET_TABLE_NAME=
+MQTT_USERNAME=
+MQTT_PASSWORD=
+```
+
+In packages/client `.env`:
+
+
+```
+NEXT_PUBLIC_MAPSAPIKEY=
+```
+
+Ask your lead for these keys

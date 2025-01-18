@@ -5,221 +5,11 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 
 const Battery = (): I_PIS => {
   const { currentPacket } = usePacket();
+  const { Battery, MBMS } = currentPacket;
+  const { BatteryCell, BatteryFan, BatteryPack, BatteryTemperature } =
+    currentPacket?.Battery;
+  //  Battery will now have be split into the faults and the warning and here we will simply show what everything means
   const data = {
-    AuxBMS: [
-      {
-        data: [{ value: currentPacket?.AuxBms?.AuxBmsAlive }],
-        name: "Heartbeat",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.StrobeBmsLight }],
-        name: "Strobe BMS",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.AllowCharge }],
-        name: "Allow Charge",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.AllowDischarge }],
-        name: "Allow Discharge",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.HighVoltageEnableState }],
-        name: "High Voltage Enable",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.OrionCANReceivedRecently }],
-        name: "Orion CAN Received",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.DischargeShouldTrip }],
-        name: "Discharge Should Trip",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.ChargeShouldTrip }],
-        name: "Charge Should Trip",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.ChargeOpenButShouldBeClosed }],
-        name: "Charge Open but Should be Closed",
-      },
-      {
-        data: [
-          { value: currentPacket?.AuxBms?.DischargeOpenButShouldBeClosed },
-        ],
-        name: "Discharge Open but Should be Closed",
-      },
-      {
-        data: [
-          {
-            max: 100,
-            min: 0,
-            unit: UnitType.MILLIVOLTS,
-            value: currentPacket?.AuxBms?.AuxVoltage,
-          },
-        ],
-        name: "Aux Voltage",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.PrechargeState }],
-        name: "Precharge State",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.ChargeContactorError }],
-        name: "Charge Contactor Error",
-      },
-      {
-        data: [
-          { value: currentPacket?.AuxBms?.ChargeTripDueToHighCellVoltage },
-        ],
-        name: "Charge Trip Due To High Cell Voltage",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.AuxBms?.ChargeTripDueToHighTemperatureAndCurrent,
-          },
-        ],
-        name: "Charge Trip Due To High Temperature And Current",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.ChargeTripDueToPackCurrent }],
-        name: "Charge Trip Due To Pack Current",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.CommonContactorError }],
-        name: "Common Contactor Error",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.DischargeContactorError }],
-        name: "Discharge Contactor Error",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.AuxBms
-                ?.DischargeTripDueToHighTemperatureAndCurrent,
-          },
-        ],
-        name: "Discharge Trip Due To High Temperature And Current",
-      },
-      {
-        data: [
-          { value: currentPacket?.AuxBms?.DischargeTripDueToLowCellVoltage },
-        ],
-        name: "Discharge Trip Due To Low Cell Voltage",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.DischargeTripDueToPackCurrent }],
-        name: "Discharge Trip Due To Pack Current",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.ProtectionTrip }],
-        name: "Protection Trip",
-      },
-      {
-        data: [{ value: currentPacket?.AuxBms?.TripDueToOrionMessageTimeout }],
-        name: "Trip Due To Orion Message Timeout",
-      },
-      {
-        data: [
-          { value: currentPacket?.AuxBms?.ChargeNotClosedDueToHighCurrent },
-        ],
-        name: "Charge Not Closed Due To High Current",
-      },
-      {
-        data: [
-          { value: currentPacket?.AuxBms?.DischargeNotClosedDueToHighCurrent },
-        ],
-        name: "Discharge Not Closed Due To High Current",
-      },
-    ] as I_PISField[],
-
-    BMSRelayStatusFlags: [
-      {
-        data: [{ expectedBool: true, value: currentPacket?.Battery?.Alive }],
-        name: "Heartbeat", //this is the bigger heartbeat
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags
-                ?.DischargeRelayEnabled,
-          },
-        ],
-        name: "Discharge Relay Enabled",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags?.ChargeRelayEnabled,
-          },
-        ],
-        name: "Charge Relay Enabled",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags?.ChargerSafetyEnabled,
-          },
-        ],
-        name: "Charger Safety Enabled",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags
-                ?.MultiPurposeInputSignalStatus,
-          },
-        ],
-        name: "Multipurpose Input Signal",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags?.IsReadySignalStatus,
-          },
-        ],
-        name: "Is Ready",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags
-                ?.IsChargingSignalStatus,
-          },
-        ],
-        name: "Is Charging",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags
-                ?.MalfunctionIndicatorActive,
-          },
-        ],
-        name: "Malfunction Indicator Active",
-      },
-      {
-        data: [
-          {
-            value:
-              currentPacket?.Battery?.BMSRelayStatusFlags?.AlwaysOnSignalStatus,
-          },
-        ],
-        name: "Always On",
-      },
-    ] as I_PISField[],
-
     Cell: [
       {
         data: [
@@ -227,16 +17,16 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.LowCellVoltage,
+            value: BatteryCell?.LowCellVoltage,
           },
-          { value: currentPacket?.Battery?.LowCellVoltageId },
+          { value: BatteryCell?.LowCellVoltageId },
           {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.HighCellVoltage,
+            value: BatteryCell?.HighCellVoltage,
           },
-          { value: currentPacket?.Battery?.HighCellVoltageId },
+          { value: BatteryCell?.HighCellVoltageId },
         ],
         fstring: "%s (%s) - %s (%s)",
         name: "Battery Cell Voltage",
@@ -247,15 +37,13 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.AverageCellVoltage,
+            value: BatteryCell?.AverageCellVoltage,
           },
         ],
         name: "Battery Average Voltage",
       },
       {
-        data: [
-          { max: 100, min: 0, value: currentPacket?.Battery?.PopulatedCells },
-        ],
+        data: [{ max: 100, min: 0, value: BatteryCell?.PopulatedCells }],
         name: "Battery Populated Cells",
       },
     ] as I_PISField[],
@@ -267,13 +55,13 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.FanVoltage,
+            value: BatteryFan.FanVoltage,
           },
         ],
         name: "Fan Voltage",
       },
       {
-        data: [{ max: 100, min: 0, value: currentPacket?.Battery?.FanSpeed }],
+        data: [{ max: 100, min: 0, value: BatteryFan?.FanSpeed }],
         name: "Fan Speed",
       },
       {
@@ -282,10 +70,241 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.RequestedFanSpeed,
+            value: BatteryFan?.RequestedFanSpeed,
           },
         ],
         name: "Requested Fan Speed",
+      },
+    ] as I_PISField[],
+
+    MBMS: [
+      {
+        data: [{ value: MBMS?.AllowCharge }],
+        name: "Allow Charge",
+      },
+      {
+        data: [{ value: MBMS?.AllowDischarge }],
+        name: "Allow Discharge",
+      },
+      {
+        data: [{ value: MBMS?.ArrayContactorError }],
+        name: "Array Contactor Error",
+      },
+      {
+        data: [{ value: MBMS?.ArrayContactorState }],
+        name: "Array Contractor State",
+      },
+      {
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.ArrayCurrent }],
+        name: "Array Current",
+      },
+      {
+        data: [{ value: MBMS?.ArrayHighTemperatureCurrentTrip }],
+        name: "Array High Temperature Current Trip",
+      },
+      //TODO: Units V or mV
+      {
+        data: [{ value: MBMS?.ArrayVoltage }],
+        name: "Array Voltage",
+      },
+      // TODO: Units V or mV
+      {
+        data: [
+          { unit: UnitType.MILLIVOLTS, value: MBMS?.AuxillaryBatteryVoltage },
+        ],
+        name: "Auxillary Battery Voltage",
+      },
+      {
+        data: [{ value: MBMS?.ChargeContactorError }],
+        name: "Charge Contactor Error",
+      },
+      {
+        data: [{ value: MBMS?.ChargeContactorState }],
+        name: "Charge Contactor State",
+      },
+      // TODO: Units A, or mA
+      {
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.ChargeCurrent }],
+        name: "Charge Current",
+      },
+      {
+        data: [{ value: MBMS?.ChargeHighTemperatureCurrentTrip }],
+        name: "Charge High Temperature Current Trip",
+      },
+      {
+        data: [{ value: MBMS?.ChargeShouldTrip }],
+        name: "Charge Should Trip",
+      },
+
+      // TODO: Units V or mV
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MBMS?.ChargeVoltage }],
+        name: "Charge Voltage",
+      },
+      {
+        data: [{ value: MBMS?.CommonContactorError }],
+        name: "Common Contactor Error",
+      },
+      {
+        data: [{ value: MBMS?.CommonContactorState }],
+        name: "Common Contactor State",
+      },
+      // TODO: Units A or mA
+      {
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.CommonCurrent }],
+        name: "Common Current",
+      },
+      {
+        data: [{ value: MBMS?.ContactorDisconnectedUnexpectedlyTrip }],
+        name: "ContactorDisconnectedUnexpectedlyTrip",
+      },
+      {
+        data: [{ value: MBMS?.DischargeShouldTrip }],
+        name: "Discharge Should Trip",
+      },
+      {
+        data: [{ value: MBMS?.HighCellVoltageTrip }],
+        name: "High Cell Voltage Trip",
+      },
+      {
+        data: [{ value: MBMS?.HighCommonCurrentTrip }],
+        name: "High Common Current Trip",
+      },
+      {
+        data: [{ value: MBMS?.HighVoltageEnableState }],
+        name: "High Voltage Enable State",
+      },
+      {
+        data: [{ value: MBMS?.LowCellVoltageTrip }],
+        name: "Low Cell Voltage Trip",
+      },
+      {
+        data: [{ value: MBMS?.LvContactorError }],
+        name: "Lv Contactor Error",
+      },
+      {
+        data: [{ value: MBMS?.LvContactorState }],
+        name: "Lv Contactor State",
+      },
+      // TODO: Units, A or mA
+      { data: [{ value: MBMS?.LvCurrent }], name: "Lv Current" },
+      {
+        data: [{ value: MBMS?.LvHighTemperatureCurrentTrip }],
+        name: "Lv High Temperature Current Trip",
+      },
+      // TODO: Units, V or mV
+      {
+        data: [{ value: MBMS?.LvVoltage }],
+        name: "Lv Voltage",
+      },
+      {
+        data: [{ value: MBMS?.MotorContactorError }],
+        name: "Motor Contactor Error",
+      },
+      {
+        data: [{ value: MBMS?.MotorContactorState }],
+        name: "Motor Contactor State",
+      },
+      // TODO: Units A or mA
+      {
+        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.MotorCurrent }],
+        name: "Motor Current",
+      },
+      {
+        data: [{ value: MBMS?.MotorHighTemperatureCurrentTrip }],
+        name: "Motor High Temperature Current Trip",
+      },
+      // TODO: Units V or mV
+      {
+        data: [{ value: MBMS?.MotorVoltage }],
+        name: "Motor Voltage",
+      },
+      {
+        data: [{ value: MBMS?.OrionCanReceivedRecently }],
+        name: "Orion CAN Received Recently",
+      },
+      {
+        data: [{ value: MBMS?.OrionMessageTimeoutTrip }],
+        name: "Orion Message Timeout Trip",
+      },
+      {
+        data: [{ value: MBMS?.ProtectionTrip }],
+        name: "Protection Trip",
+      },
+      {
+        data: [{ value: MBMS?.StrobeBmsLight }],
+        name: " Strobe BMS Light",
+      },
+    ] as I_PISField[],
+
+    MBMSRelayStatusFlags: [
+      {
+        data: [{ expectedBool: true, value: Battery?.BmuAlive }],
+        name: "Heartbeat", //this is the bigger heartbeat
+      },
+      {
+        data: [
+          {
+            value: Battery?.DischargeRelayEnabled,
+          },
+        ],
+        name: "Discharge Relay Enabled",
+      },
+      {
+        data: [
+          {
+            value: Battery?.ChargeRelayEnabled,
+          },
+        ],
+        name: "Charge Relay Enabled",
+      },
+      {
+        data: [
+          {
+            value: Battery?.ChargerSafetyEnabled,
+          },
+        ],
+        name: "Charger Safety Enabled",
+      },
+      {
+        data: [
+          {
+            value: Battery?.MultiPurposeInputSignalStatus,
+          },
+        ],
+        name: "Multipurpose Input Signal",
+      },
+      {
+        data: [
+          {
+            value: Battery?.IsReadySignalStatus,
+          },
+        ],
+        name: "Is Ready",
+      },
+      {
+        data: [
+          {
+            value: Battery?.IsChargingSignalStatus,
+          },
+        ],
+        name: "Is Charging",
+      },
+      {
+        data: [
+          {
+            value: Battery?.MalfunctionIndicatorActive,
+          },
+        ],
+        name: "Malfunction Indicator Active",
+      },
+      {
+        data: [
+          {
+            value: Battery?.AlwaysOnSignalStatus,
+          },
+        ],
+        name: "Always On",
       },
     ] as I_PISField[],
 
@@ -296,7 +315,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.AMPERAGE,
-            value: currentPacket?.Battery?.PackCurrent,
+            value: BatteryPack?.PackCurrent,
           },
         ],
         name: "Pack Current",
@@ -307,7 +326,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery?.PackVoltage,
+            value: BatteryPack?.PackVoltage,
           },
         ],
         name: "Pack Voltage",
@@ -318,7 +337,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.AMPHOUR,
-            value: currentPacket?.Battery?.PackAmphours,
+            value: BatteryPack?.PackAmphours,
           },
         ],
         name: "Pack Amphours",
@@ -329,7 +348,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: "%",
-            value: currentPacket?.Battery?.PackStateOfCharge,
+            value: BatteryPack?.PackStateOfCharge,
           },
         ],
         name: "Pack State of Charge",
@@ -340,7 +359,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: "%",
-            value: currentPacket?.Battery?.PackDepthOfDischarge,
+            value: BatteryPack?.PackDepthOfDischarge,
           },
         ],
         name: "Pack Depth of Discharge",
@@ -351,7 +370,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: currentPacket?.Battery["12vInputVoltage"],
+            value: BatteryPack?.Input12V,
           },
         ],
         name: "12V Input Voltage",
@@ -366,7 +385,7 @@ const Battery = (): I_PIS => {
             max: 25,
             min: 10,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.LowTemperature,
+            value: BatteryTemperature?.LowTemperature,
           },
           {
             hover: "Low Cell ID",
@@ -377,7 +396,7 @@ const Battery = (): I_PIS => {
             max: 75,
             min: 50,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.HighTemperature,
+            value: BatteryTemperature?.HighTemperature,
           },
           {
             hover: "High Cell ID",
@@ -393,7 +412,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.AverageTemperature,
+            value: BatteryTemperature?.AverageTemperature,
           },
         ],
         name: "Average Temperature",
@@ -404,7 +423,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.TEMP,
-            value: currentPacket?.Battery?.InternalTemperature,
+            value: BatteryTemperature?.InternalTemperature,
           },
         ],
         name: "Internal Temperature",

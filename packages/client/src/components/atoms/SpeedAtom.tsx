@@ -1,19 +1,31 @@
-import { useAppState } from "@/contexts/AppStateContext";
+import React from "react";
+
 import { APPUNITS } from "@/contexts/AppStateContext";
+import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { calculateVehicleVelocity } from "@shared/helios-types";
 
 function SpeedAtom() {
-  const { currentPacket } = usePacket();
   const { currentAppState } = useAppState();
+  const { currentPacket } = usePacket();
 
-  let speedValue = 0;
+  let speedValue = React.useMemo(
+    () =>
+      calculateVehicleVelocity(
+        currentPacket.MotorDetails0?.CurrentRpmValue,
+        currentPacket.MotorDetails1?.CurrentRpmValue,
+      ),
+    [
+      currentPacket.MotorDetails0?.CurrentRpmValue,
+      currentPacket.MotorDetails1?.CurrentRpmValue,
+    ],
+  );
+
   let speedUnit = "km/h";
+
   if (currentAppState.appUnits === APPUNITS.IMPERIAL) {
-    speedValue =
-      (currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.621371;
+    speedValue = speedValue * 0.621371;
     speedUnit = "mph";
-  } else {
-    speedValue = currentPacket?.KeyMotor[0]?.VehicleVelocity as number;
   }
 
   return (

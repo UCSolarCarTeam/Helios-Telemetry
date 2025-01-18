@@ -4,13 +4,10 @@
     "checkJs": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/server/*": [
-        "../server/src/*"
-      ]
-    }
+      "@/*": ["./src/*"],
+      "@/server/*": ["../server/src/*"]
+    },
+    "jsx": "preserve"
   },
   "include": [
     ".eslintrc.cjs",
@@ -20,8 +17,5 @@
     "**/*.cjs",
     "**/*.mjs"
   ],
-  "exclude": [
-    "node_modules",
-    "tailwind.config.ts"
-  ]
+  "exclude": ["node_modules", "tailwind.config.ts"]
 }

@@ -11,7 +11,9 @@ enum UnitType {
   AMPERAGE = "A",
   AMPHOUR = "Ah",
   MILLIVOLTS = "mV",
+  NEWTONMETERS = "Nm",
   RPM = "RPM",
+  WATT = "W",
   AMPRMS = "A(rms)",
   HERTZ = "Hz",
 }

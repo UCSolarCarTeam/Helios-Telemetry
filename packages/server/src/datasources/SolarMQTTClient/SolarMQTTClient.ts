@@ -7,6 +7,7 @@ import {
   topics,
 } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
+import { getSecrets } from "@/utils/getSecrets";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { type ITelemetryData } from "@shared/helios-types";
@@ -19,9 +20,8 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   backendController: BackendController;
   pingLastSent: number;
   constructor(options: IClientOptions, backendController: BackendController) {
-    this.client = connect(options);
     this.backendController = backendController;
-    this.initializeListeners();
+    this.connectToAedes(options);
     this.pingLastSent = Date.now();
   }
   public pingTimer(miliseconds: number) {
@@ -32,6 +32,16 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     }, miliseconds);
   }
 
+  public async connectToAedes(options: IClientOptions) {
+    try {
+      options.username = process.env.MQTT_USERNAME;
+      options.password = process.env.MQTT_PASSWORD;
+      this.client = connect(options);
+      this.initializeListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
   public initializeListeners() {
     this.client.on("connect", () => {
       logger.info("MQTT Client connected");
