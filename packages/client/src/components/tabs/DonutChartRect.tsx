@@ -2,6 +2,7 @@ import {
   ArcElement,
   Chart,
   ChartConfiguration,
+  ChartOptions,
   ChartType,
   DoughnutController,
   Legend,
@@ -26,7 +27,7 @@ interface DonutChartProps {
   thickness: string;
 }
 
-const DonutChart: React.FC<DonutChartProps> = ({
+const DonutChartRect: React.FC<DonutChartProps> = ({
   //chartColour,
   chartHeight,
   chartWidth,
@@ -80,7 +81,15 @@ const DonutChart: React.FC<DonutChartProps> = ({
       },
       plugins: [
         {
-          beforeDraw(chart) {
+          beforeDraw(chart: {
+            ctx: CanvasRenderingContext2D;
+            chartArea: {
+              top: number;
+              bottom: number;
+            };
+            options: ChartOptions;
+            width: number;
+          }) {
             const { width } = chart;
             const ctx = chart.ctx;
 
@@ -91,14 +100,14 @@ const DonutChart: React.FC<DonutChartProps> = ({
               (chart.chartArea.bottom - chart.chartArea.top) / 2;
 
             //get the text to display from options
-            const text = chart.options.plugins.centerText?.text || ""; // if theres no text, display nothing
+            //const text = chart.options.plugins.centerText?.text || ""; // if theres no text, display nothing
 
             ctx.save();
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.font = `${fontSize} Arial`;
             ctx.fillStyle = "#4D6BDB"; // Text color
-            ctx.fillText(text, centerX, centerY);
+            ctx.fillText(percentage.toString(), centerX, centerY);
             ctx.restore();
           },
           id: "centerText",
@@ -136,4 +145,4 @@ const DonutChart: React.FC<DonutChartProps> = ({
   );
 };
 
-export default DonutChart;
+export default DonutChartRect;

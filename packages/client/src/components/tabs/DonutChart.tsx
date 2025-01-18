@@ -2,6 +2,7 @@ import {
   ArcElement,
   Chart,
   ChartConfiguration,
+  ChartOptions,
   ChartType,
   DoughnutController,
   Legend,
@@ -11,6 +12,7 @@ import {
 import { plugins } from "prettier.config.cjs";
 import React, { useEffect, useRef } from "react";
 
+import { Rotate90DegreesCcw } from "@mui/icons-material";
 import { CubeTexture } from "@react-three/drei";
 
 // Register the required elements, controllers, and plugins for the doughnut chart
@@ -61,7 +63,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
       data: data,
       options: {
         borderColor: "#BFBFBF",
-        borderRadius: 100,
+        circumference: 310,
         cutout: thickness, // Making it a doughnut chart (hole in the center)
         maintainAspectRatio: false, // Disable aspect ratio to allow custom size
         plugins: {
@@ -73,14 +75,21 @@ const DonutChart: React.FC<DonutChartProps> = ({
             enabled: true, // Ensure tooltips still work
           },
         },
-        responsive: true, // Ensure chart resizes
 
-        rotation: 220,
-        //spacing: -10,
+        responsive: true, // Ensure chart resizes
+        rotation: 200,
       },
       plugins: [
         {
-          beforeDraw(chart) {
+          beforeDraw(chart: {
+            ctx: CanvasRenderingContext2D;
+            chartArea: {
+              top: number;
+              bottom: number;
+            };
+            options: ChartOptions;
+            width: number;
+          }) {
             const { width } = chart;
             const ctx = chart.ctx;
 
@@ -91,14 +100,14 @@ const DonutChart: React.FC<DonutChartProps> = ({
               (chart.chartArea.bottom - chart.chartArea.top) / 2;
 
             //get the text to display from options
-            const text = chart.options.plugins.centerText?.text || ""; // if theres no text, display nothing
+            //const text = chart.options.plugins.centerText?.text || ""; // if theres no text, display nothing
 
             ctx.save();
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.font = `${fontSize} Arial`;
             ctx.fillStyle = "#4D6BDB"; // Text color
-            ctx.fillText(text, centerX, centerY);
+            ctx.fillText(percentage.toString(), centerX, centerY);
             ctx.restore();
           },
           id: "centerText",
