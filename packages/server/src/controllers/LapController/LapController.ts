@@ -77,6 +77,7 @@ export class LapController implements LapControllerType {
           averagePackCurrent,
         ),
         distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+        driverRFID: packet.Pi.rfid,
         lapTime: this.calculateLapTime(this.lastLapPackets),
         netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
         timeStamp: packet.TimeStamp,
