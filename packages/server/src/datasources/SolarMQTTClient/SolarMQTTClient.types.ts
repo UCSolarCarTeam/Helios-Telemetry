@@ -2,12 +2,13 @@ import type { MqttClient } from "mqtt";
 import type { IClientOptions } from "mqtt/*";
 
 export const options: IClientOptions = {
-  host: "aedes.calgarysolarcar.ca",
-  password: "hasAedes",
+  host:
+    process.env.NODE_ENV === "development"
+      ? "localhost"
+      : "aedes.calgarysolarcar.ca",
   port: 1883,
   protocol: "tcp",
   protocolVersion: 3,
-  username: "urMom",
 };
 
 export const topics = {

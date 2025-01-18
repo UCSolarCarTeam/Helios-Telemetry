@@ -1,3 +1,5 @@
+import { getSecrets } from "./utils/getSecrets";
+
 import Aedes, { type AuthenticateError, type Client } from "aedes";
 import { createServer } from "net";
 
@@ -5,8 +7,6 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("aedes.ts");
 const port = process.env.MQTT_SERVER_PORT || 1883;
-
-const aedes: Aedes = new Aedes();
 
 class MqttError extends Error {
   returnCode: number;
@@ -20,16 +20,16 @@ class MqttError extends Error {
   }
 }
 
+const aedes: Aedes = new Aedes();
 // Authentication function
-aedes.authenticate = function (
+aedes.authenticate = async function (
   client: Client,
   username: string | undefined,
   password: Buffer | undefined,
   done: (error: AuthenticateError | null, success: boolean) => void,
 ) {
-  // TO DO: Convert to ENV VARS
-  const validUsername = "urMom"; // Replace with your valid username
-  const validPassword = "hasAedes"; // Replace with your valid password
+  const validUsername = process.env.MQTT_USERNAME;
+  const validPassword = process.env.MQTT_PASSWORD;
   if (!username || !password) {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
@@ -37,6 +37,7 @@ aedes.authenticate = function (
   }
   if (username === validUsername && password.toString() === validPassword) {
     done(null, true); // Authentication successful
+    logger.info(`Solar MQTT Client ${client.id} successfully authenticated!`);
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
@@ -45,7 +46,7 @@ aedes.authenticate = function (
 
 export const startAedes = () => {
   return createServer(aedes.handle)
-    .listen(port, () => {
+    .listen(port, async () => {
       logger.info(`Aedes server started and listening on port ${port}`);
     })
     .on("error", (error: Error) => {
