@@ -28,9 +28,8 @@ aedes.authenticate = async function (
   password: Buffer | undefined,
   done: (error: AuthenticateError | null, success: boolean) => void,
 ) {
-  const secret = await getSecrets("HeliosTelemetryMQTTCredentials");
-  const validUsername = secret.username;
-  const validPassword = secret.password;
+  const validUsername = process.env.MQTT_USERNAME;
+  const validPassword = process.env.MQTT_PASSWORD;
   if (!username || !password) {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
@@ -49,7 +48,6 @@ export const startAedes = () => {
   return createServer(aedes.handle)
     .listen(port, async () => {
       logger.info(`Aedes server started and listening on port ${port}`);
-      getSecrets("HeliosTelemetryMQTTCredentials");
     })
     .on("error", (error: Error) => {
       logger.error(error.message);

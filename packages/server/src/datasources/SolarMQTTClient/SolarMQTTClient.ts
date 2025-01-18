@@ -34,9 +34,8 @@ export class SolarMQTTClient implements SolarMQTTClientType {
 
   public async connectToAedes(options: IClientOptions) {
     try {
-      const secret = await getSecrets("HeliosTelemetryMQTTCredentials");
-      options.username = secret.username;
-      options.password = secret.password;
+      options.username = process.env.MQTT_USERNAME;
+      options.password = process.env.MQTT_PASSWORD;
       this.client = connect(options);
       this.initializeListeners();
     } catch (error) {

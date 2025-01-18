@@ -40,13 +40,18 @@ const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   },
 );
 
-// grabs existing secrets from SSM
-const TelemetryBackendSecretsManagerMQTTCredentials =
-  secretsmanager.Secret.fromSecretNameV2(
-    TelemetryBackendStack,
-    "HeliosTelemetryBackendMQTT/Username",
-    "HeliosTelemetryMQTTCredentials",
-  );
+const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
+  TelemetryBackendStack,
+  "HeliosTelemetryMQTTCredentials",
+  {
+    secretName: "HeliosTelemetryMQTTCredentials" + backend.stack.stackName,
+    secretObjectValue: {
+      password: "",
+      username: "",
+    },
+  },
+);
+
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
   "TelemetryBackendImageRepository",
