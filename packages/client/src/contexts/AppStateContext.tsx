@@ -53,7 +53,7 @@ export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
     appUnits: APPUNITS.METRIC,
     carLatency: 0,
-    connectionType: CONNECTIONTYPES.NETWORK,
+    connectionType: CONNECTIONTYPES.DEMO,
     darkMode: false,
     displayLoading: true,
     error: false,
@@ -103,7 +103,6 @@ export function AppStateContextProvider({ children }: Props) {
     setTimeout(() => {
       setCurrentAppState((prev) => ({
         ...prev,
-        connectionType: CONNECTIONTYPES.DEMO,
         loading: false,
       }));
     }, 5000);
