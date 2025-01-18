@@ -35,6 +35,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   public async connectToAedes(options: IClientOptions) {
     try {
       this.client = connect(options);
+      console.log("Connecting to MQTT", options);
       this.initializeListeners();
     } catch (error) {
       throw error;
