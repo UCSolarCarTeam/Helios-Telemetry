@@ -7534,6 +7534,8 @@ __metadata:
   resolution: "@shared/helios-types@workspace:packages/shared"
   dependencies:
     "@faker-js/faker": "npm:^9.0.3"
+    fp-ts: "npm:^2.16.9"
+    io-ts: "npm:^2.2.22"
     typescript: "npm:^5.5.3"
   languageName: unknown
   linkType: soft
