@@ -1,19 +1,13 @@
 import {
   ArcElement,
   Chart,
-  ChartConfiguration,
   ChartOptions,
   ChartType,
   DoughnutController,
   Legend,
-  Plugin,
   Tooltip,
 } from "chart.js";
-import { plugins } from "prettier.config.cjs";
 import React, { useEffect, useRef } from "react";
-
-import { Rotate90DegreesCcw } from "@mui/icons-material";
-import { CubeTexture } from "@react-three/drei";
 
 // Register the required elements, controllers, and plugins for the doughnut chart
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
@@ -49,8 +43,8 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
       datasets: [
         {
           backgroundColor: [
-            "#CF4242", // dark purple color for the percentage
-            "#e0daf0", // light purple color for the remaining part
+            "#CF4242", // dark red color for the percentage
+            "#e0daf0", // white color for the remaining part
           ],
           data: [percentage, 100 - percentage], // Data for the percentage and remaining
 

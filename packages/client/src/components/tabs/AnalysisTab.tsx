@@ -1,7 +1,5 @@
-//import Chart from "chart.js/auto";
-import { ArcElement, Chart } from "chart.js";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";

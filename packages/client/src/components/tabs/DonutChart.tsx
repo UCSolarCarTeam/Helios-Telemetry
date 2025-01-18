@@ -1,19 +1,13 @@
 import {
   ArcElement,
   Chart,
-  ChartConfiguration,
   ChartOptions,
   ChartType,
   DoughnutController,
   Legend,
-  Plugin,
   Tooltip,
 } from "chart.js";
-import { plugins } from "prettier.config.cjs";
 import React, { useEffect, useRef } from "react";
-
-import { Rotate90DegreesCcw } from "@mui/icons-material";
-import { CubeTexture } from "@react-three/drei";
 
 // Register the required elements, controllers, and plugins for the doughnut chart
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
