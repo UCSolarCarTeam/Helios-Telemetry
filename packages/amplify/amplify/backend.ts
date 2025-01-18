@@ -46,8 +46,8 @@ const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
   {
     secretName: "HeliosTelemetryMQTTCredentials" + backend.stack.stackName,
     secretObjectValue: {
-      password: "",
-      username: "",
+      password: cdk.SecretValue.unsafePlainText(""),
+      username: cdk.SecretValue.unsafePlainText(""),
     },
   },
 );
