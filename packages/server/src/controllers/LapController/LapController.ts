@@ -1,7 +1,6 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
-import { getSecrets } from "@/utils/getSecrets";
 import { convertToDecimalDegrees, getDistance } from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
@@ -23,17 +22,10 @@ export class LapController implements LapControllerType {
     lat: 51.081021,
     long: -114.136084,
   };
-  private LAP_POSITION_PASSWORD: string;
   backendController: BackendController;
 
   constructor(backendController: BackendController) {
     this.backendController = backendController;
-    this.initializeLapPositionPassword();
-  }
-
-  private async initializeLapPositionPassword() {
-    const secret = await getSecrets("HeliosLapPositionPassword");
-    this.LAP_POSITION_PASSWORD = secret.LAP_POSITION_PASSWORD;
   }
 
   public setFinishLineLocation(
@@ -41,7 +33,7 @@ export class LapController implements LapControllerType {
   ): CoordUpdateResponse {
     logger.info(JSON.stringify(newCoordInfo));
     const { lat, long, password } = newCoordInfo;
-    if (password !== this.LAP_POSITION_PASSWORD) {
+    if (password !== process.env.LAP_POSITION_PASSWORD) {
       logger.error("Invalid Password: " + password);
       return { error: "Invalid Password", invalidFields: ["password"] };
     }
