@@ -1,6 +1,58 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
 
 import type { ILapData } from "@shared/helios-types";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+const columnHelper = createColumnHelper<ILapData>();
+
+const columns = [
+  columnHelper.accessor("ampHours", {
+    cell: (info) => info.getValue(),
+    header: "Amp Hours",
+  }),
+  columnHelper.accessor("averagePackCurrent", {
+    cell: (info) => info.getValue(),
+    header: "Average Pack Current",
+  }),
+  columnHelper.accessor("averageSpeed", {
+    cell: (info) => info.getValue(),
+    header: "Average Speed",
+  }),
+  columnHelper.accessor("batterySecondsRemaining", {
+    cell: (info) => info.getValue(),
+    header: "Battery Seconds Remaining",
+  }),
+  columnHelper.accessor("distance", {
+    cell: (info) => info.getValue(),
+    header: "Distance",
+  }),
+  columnHelper.accessor("lapTime", {
+    cell: (info) => info.getValue(),
+    header: "Lap Time",
+  }),
+  columnHelper.accessor("netPowerOut", {
+    cell: (info) => info.getValue(),
+    header: "Net Power Out",
+  }),
+  columnHelper.accessor("timeStamp", {
+    cell: (info) => info.getValue(),
+    header: "Time Stamp",
+  }),
+  columnHelper.accessor("totalPowerIn", {
+    cell: (info) => info.getValue(),
+    header: "Total Power In",
+  }),
+  columnHelper.accessor("totalPowerOut", {
+    cell: (info) => info.getValue(),
+    header: "Total Power Out",
+  }),
+];
 
 // sample data
 const exampleData: ILapData[] = [
@@ -24,7 +76,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -36,7 +88,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -48,7 +100,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -60,7 +112,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -72,7 +124,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
@@ -84,86 +136,128 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
-    timeStamp: 324235,
+    timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
 ];
-
-//names of columns to be displayed
-const tableHeaders = [
-  "ampHours",
-  "averagePackCurrent",
-  "averageSpeed",
-  "batterySecondsRemaining",
-  "distance",
-  "lapTime",
-  "netPowerOut",
-  "timeStamp",
-  "totalPowerIn",
-  "totalPowerOut",
-];
-
-function formatHeaders(header: string) {
-  return header.replace(/([a-z])([A-Z])/g, "$1 $2").toUpperCase();
-  // uses a regular expression to add a space after a lowercase letter followed by an uppercase, and then converts the whole thing to uppercase
-}
-//javascript libraries are used to seperate the words
 
 function RaceTab() {
-  const [checked, setChecked] = useState<string[]>(tableHeaders); //all columns are shown initially
+  const data = useMemo(() => exampleData, []);
 
-  const handleCheckboxChange = (header: string) => {
-    setChecked((prevChecked) =>
-      prevChecked.includes(header)
-        ? prevChecked.filter((h) => h !== header)
-        : [...prevChecked, header],
-    );
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  function checkBoxFormatting(text: string) {
+    const spaced: string = text.replace(/([A-Z])/g, " $1");
+    const result: string = spaced.charAt(0).toUpperCase() + spaced.slice(1);
+
+    return result;
+  }
+
+  // Function to fetch lap data
+  const fetchLapData = async () => {
+    try {
+      const timestamp = 1715859951742;
+      const response = await axios.get(
+        `https://aedes.calgarysolarcar.ca:3001/lap/${timestamp}`,
+      );
+      return response.data;
+    } catch {
+      // console.error("Error fetching lap data", error);
+      return { error: "Error fetching lap data" };
+    }
   };
+  const [lapData, setLapData] = useState<ILapData[]>([]);
+
+  // Fetch lap data on mount
+  useEffect(() => {
+    fetchLapData()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setLapData(data); // Set the actual array of ILapData objects
+        } else {
+          // console.error("Unexpected API response structure", data);
+        }
+      })
+      .catch((error) => {
+        // console.error("Error fetching lap data", error);
+      });
+  }, []);
 
   return (
-    <div className="m-4 flex justify-center gap-2">
+    <div className="m-4 flex justify-around">
       <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
-        {tableHeaders.map((header, i) => (
-          <label
-            className="flex items-center gap-1 text-sm text-helios"
-            key={i}
-          >
+        {table.getAllLeafColumns().map((column) => (
+          <label className="flex items-center gap-1 text-sm" key={column.id}>
             <input
-              checked={checked.includes(header)}
-              className="accent-slate-200 hover:accent-red-500"
-              onChange={() => handleCheckboxChange(header)}
+              checked={column.getIsVisible()}
+              className="peer size-4 cursor-pointer accent-helios"
+              onChange={column.getToggleVisibilityHandler()}
               type="checkbox"
             />
-            {header}
+            <span className="min-w-44 select-none text-sm peer-hover:font-bold">
+              {checkBoxFormatting(column.id)}
+            </span>
           </label>
         ))}
+        <div>
+          {Array.isArray(lapData) ? (
+            lapData.map((lap, index) => (
+              <div key={index}>
+                <h1>{`Lap ${index + 1}`}</h1>
+                <p>{`Amp Hours: ${lap.ampHours}`}</p>
+                <p>{`Average Pack Current: ${lap.averagePackCurrent}`}</p>
+                <p>{`Average Speed: ${lap.averageSpeed}`}</p>
+                <p>{`Battery Seconds Remaining: ${lap.batterySecondsRemaining}`}</p>
+                <p>{`Distance: ${lap.distance}`}</p>
+                <p>{`Lap Time: ${lap.lapTime}`}</p>
+                <p>{`Net Power Out: ${lap.netPowerOut}`}</p>
+                <p>{`Time Stamp: ${lap.timeStamp}`}</p>
+                <p>{`Total Power In: ${lap.totalPowerIn}`}</p>
+                <p>{`Total Power Out: ${lap.totalPowerOut}`}</p>
+              </div>
+            ))
+          ) : (
+            <p>No lap data available</p>
+          )}
+        </div>
       </div>
 
-      <div>
-        <table className="w-3/4 w-full table-fixed divide-gray-200 overflow-x-auto border-b-2 border-helios">
+      <div className="w-3/4 overflow-x-auto">
+        <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
           <thead className="border-b-2 border-helios">
-            <tr>
-              {checked.map((header, i) => (
-                <th
-                  className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
-                  key={i}
-                >
-                  {formatHeaders(header)}
-                </th>
-              ))}
-            </tr>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
+                    key={header.id}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
           </thead>
 
           <tbody className="divide-y divide-gray-200 bg-white">
-            {exampleData.map((lap, i) => (
-              <tr key={i}>
-                {checked.map((header, j) => (
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
                   <td
                     className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
-                    key={j}
+                    key={cell.id}
                   >
-                    {lap[header as keyof ILapData]}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>

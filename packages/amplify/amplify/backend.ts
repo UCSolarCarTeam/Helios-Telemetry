@@ -107,7 +107,7 @@ const packetDataTable = new dynamodb.Table(
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
     removalPolicy: cdk.RemovalPolicy.DESTROY,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
   },
 );
 
@@ -118,7 +118,7 @@ const lapDataTable = new dynamodb.Table(
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
     removalPolicy: cdk.RemovalPolicy.DESTROY,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.STRING },
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
   },
 );
 

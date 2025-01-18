@@ -298,14 +298,18 @@ function AnalysisTab() {
       <div className="flex size-full flex-col justify-between gap-x-2 gap-y-6 md:flex-row">
         <div className="flex max-w-44 flex-col gap-y-1">
           {filters.map((filter) => (
-            <div className="flex items-center space-x-2" key={filter}>
-              <input
-                className="h-4 w-4 accent-[#B94A6C]"
-                id={filter}
-                name={filter}
-                type="checkbox"
-              />
-              <span>{filter}</span>
+            <div className="flex items-center" key={filter}>
+              <label className="flex cursor-pointer items-center gap-x-2">
+                <input
+                  className="peer size-4 cursor-pointer accent-helios"
+                  id={filter}
+                  name={filter}
+                  type="checkbox"
+                />
+                <span className="select-none text-sm peer-hover:font-bold">
+                  {filter}
+                </span>
+              </label>
             </div>
           ))}
         </div>
@@ -330,35 +334,3 @@ function AnalysisTab() {
 }
 
 export default AnalysisTab;
-
-/*
-// ticket 207 on jira - to find more info about this
-//notes: on figma, go to file called Race Tab - Analysis Mockup 2 - Stats
-// I have to create the 2 squares and rectangles
-// make an analysis tab to view the shapes
-//correction: need to use tailwind css
-*/
-
-{
-  /* Container for circle */
-}
-{
-  /*
-        <div
-          className="flex w-[245px] items-center justify-center"
-          style={{ opacity: 1 }} // Adjust opacity if needed
-        >
-          {/* Outer circle with semicircle /}
-          <div className="relative flex items-center justify-center">
-            <div className="absolute -top-1 h-16 w-32 rounded-t-full bg-blue-500"></div>
-            <div className="md:h-27 md:w-27 m-2 flex h-20 w-20 items-center justify-center rounded-full bg-[#65558F] sm:h-24 sm:w-24"></div>
-
-            {/* Inner circle /}
-            <div className="md:h-23 md:w-23 absolute flex h-16 w-16 items-center justify-center rounded-full bg-[#BFBFBF] sm:h-20 sm:w-20">
-              <span className="text-center text-[22px] font-normal leading-[39.06px] text-[#4D6BDB] sm:text-[27px] md:text-[37px]">
-                78
-              </span>
-            </div>
-          </div>
-        </div> */
-}

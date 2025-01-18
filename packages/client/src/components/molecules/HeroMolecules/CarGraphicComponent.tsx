@@ -10,9 +10,11 @@ import type {
   IndicationLocations,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
+import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { calculateVehicleVelocity } from "@shared/helios-types";
 import * as TWEEN from "@tweenjs/tween.js";
 
 // type IndicationTriggerList = {
@@ -25,6 +27,7 @@ const duration = 500;
 
 const CarGraphicComponent = () => {
   const { currentPacket } = usePacket();
+  const { currentAppState } = useAppState();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
     battery: ISeverity.CLEAR,
@@ -95,9 +98,14 @@ const CarGraphicComponent = () => {
           warningMaterial={warningMaterial}
         />
         <RoadComponent
-          direction={currentPacket?.DriverControls}
+          direction={currentPacket?.B3.Reverse}
           size={20}
-          speed={(currentPacket?.KeyMotor[0]?.VehicleVelocity as number) * 0.5}
+          speed={
+            calculateVehicleVelocity(
+              currentPacket.MotorDetails0?.CurrentRpmValue,
+              currentPacket.MotorDetails1?.CurrentRpmValue,
+            ) * 0.5
+          }
         />
         <ContactShadows
           blur={2.5}

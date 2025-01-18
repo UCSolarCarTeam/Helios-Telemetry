@@ -6,406 +6,787 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 const Motor = (): I_PIS => {
   const { currentPacket } = usePacket();
   return {
-    Key_Left_Motor_Details: [
+    KeyLeftMotorDetails: [
       {
         data: [
           {
-            value: currentPacket?.KeyMotor[0]?.Alive,
+            value: currentPacket?.KeyMotor?.ControlMode,
           },
         ],
-        name: "Alive",
+        name: "Control Mode",
       },
       {
         data: [
           {
-            unit: "%",
-            value: currentPacket?.KeyMotor[0]?.SetCurrent,
+            value: currentPacket?.KeyMotor?.DebugMode,
           },
         ],
-        name: "Set Current",
+        name: "Debug Mode",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.KeyMotor?.MotorMode,
+          },
+        ],
+        name: "Motor Mode",
+      },
+      {
+        data: [
+          {
+            max: 100,
+            min: 20,
+            value: currentPacket?.KeyMotor?.MotorSetpoint,
+          },
+        ],
+        name: "Motor Setpoint",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.KeyMotor?.SoftwareEnable,
+          },
+        ],
+        name: "Software Enable",
+      },
+    ] as unknown as I_PISField[],
+    LeftMotorDetails: [
+      {
+        data: [
+          {
+            max: 360,
+            min: 0,
+            value: currentPacket?.MotorDetails0?.AbsoluteAngle,
+          },
+        ],
+        name: "Absolute Angle",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CanSendError,
+          },
+        ],
+        name: "Can Send Error",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CanSendWarning,
+          },
+        ],
+        name: "Can Send Warning",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.ControlMode,
+          },
+        ],
+        name: "Control Mode",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.ControlValue, // int
+          },
+        ],
+        name: "Control Value",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CpuOverload,
+          },
+        ],
+        name: "CPU Overload",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CpuTempTooHigh,
+          },
+        ],
+        name: "CPU Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CpuTemperatureVeryHigh,
+          },
+        ],
+        name: "CPU Temperature Very High",
+      },
+      {
+        data: [
+          {
+            unit: UnitType.WATT,
+            value: currentPacket?.MotorDetails0?.CurrentMotorPower, // short int
+          },
+        ],
+        name: "Current Motor Power",
+      },
+      {
+        data: [
+          {
+            unit: UnitType.NEWTONMETERS,
+            value: currentPacket?.MotorDetails0?.CurrentMotorTorque,
+          },
+        ],
+        name: "Current Motor Torque",
       },
       {
         data: [
           {
             unit: UnitType.RPM,
-            value: currentPacket?.KeyMotor[0]?.SetVelocity,
+            value: currentPacket?.MotorDetails0?.CurrentRpmValue,
           },
         ],
-        name: "Set Velocity",
+        name: "Current RPM Value",
       },
       {
         data: [
           {
-            unit: UnitType.AMPERAGE,
-            value: currentPacket?.KeyMotor[0]?.BusCurrent,
+            unit: "°C",
+            value: currentPacket?.MotorDetails0?.MotorTemperature,
           },
         ],
-        name: "Bus Current",
+        name: "Motor Temperature",
       },
       {
         data: [
           {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.KeyMotor[0]?.BusVoltage,
+            value: currentPacket?.MotorDetails0?.DclinkTempTooHigh,
           },
         ],
-        name: "Bus Voltage",
+        name: "DC Link Temp Too High",
       },
       {
         data: [
           {
-            unit: UnitType.SPEED,
-            value: currentPacket?.KeyMotor[0]?.VehicleVelocity,
+            value: currentPacket?.MotorDetails0?.DclinkTemperatureVeryHigh,
           },
         ],
-        name: "Vehicle Velocity",
+        name: "DC Link Temp Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.DebugMode,
+          },
+        ],
+        name: "Debug Mode",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.DelayInDclinkCommunication,
+          },
+        ],
+        name: "Delay in DC Link Communication",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.DelayInReadingTempSensor,
+          },
+        ],
+        name: "Delay in Reading Temp Sensor",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.DelayInReadingPosSensor,
+          },
+        ],
+        name: "Delay in Reading Pos Sensor",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.DoubleCanIdOnBus,
+          },
+        ],
+        name: "Double Can ID on Bus",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.HallTempTooHigh,
+          },
+        ],
+        name: "Hall Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.HallTemperatureVeryHigh,
+          },
+        ],
+        name: "Hall Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.HwEnableNotSet,
+          },
+        ],
+        name: "HW Enable Not Set",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.InitError,
+          },
+        ],
+        name: "Init Error",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.InvalidHallSector,
+          },
+        ],
+        name: "Invalid Hall Sector",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter1TempTooHigh,
+          },
+        ],
+        name: "Inverter 1 Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter1TempVeryHigh,
+          },
+        ],
+        name: "Inverter 1 Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter2TempTooHigh,
+          },
+        ],
+        name: "Inverter 2 Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter2TempVeryHigh,
+          },
+        ],
+        name: "Inverter 2 Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter3TempTooHigh,
+          },
+        ],
+        name: "Inverter 3 Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter3TempVeryHigh,
+          },
+        ],
+        name: "Inverter 3 Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter4TempTooHigh,
+          },
+        ],
+        name: "Inverter 4 Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter4TempVeryHigh,
+          },
+        ],
+        name: "Inverter 4 Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter5TempTooHigh,
+          },
+        ],
+        name: "Inverter 5 Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter5TempVeryHigh,
+          },
+        ],
+        name: "Inverter 5 Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter6TempTooHigh,
+          },
+        ],
+        name: "Inverter 6 Temp Too High",
+      },
+      {
+        data: [
+          {
+            units: UnitType.AMPERAGE,
+            value: currentPacket?.MotorDetails0?.InverterPeakCurrent,
+          },
+        ],
+        name: "Inverter Peak Current",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorAboutToStall,
+          },
+        ],
+        name: "Motor About to Stall",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorMode,
+          },
+        ],
+        name: "Motor Mode ",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorStalled,
+          },
+        ],
+        name: "Motor Stalled",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorTemperature,
+          },
+        ],
+        name: "Motor Temperature",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.SettingsNotFound,
+          },
+        ],
+        name: "Settings not Found",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.SoftwareEnable,
+          },
+        ],
+        name: "Software Enable",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.StartAtHighRpm,
+          },
+        ],
+        name: "Start at High RPM",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.TorqueLimited,
+          },
+        ],
+        name: "Torque Limited",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.ZeroPositionOffsetNotSet,
+          },
+        ],
+        name: "Zero Position Offset Not Set",
       },
     ] as unknown as I_PISField[],
-    Key_Right_Motor_Details: [
+
+    RightMotorDetails: [
       {
         data: [
           {
-            value: currentPacket?.KeyMotor[1]?.Alive,
+            max: 360,
+            min: 0,
+            value: currentPacket?.MotorDetails0?.AbsoluteAngle,
           },
         ],
-        name: "Alive",
+        name: "Absolute Angle",
       },
       {
         data: [
           {
-            unit: "%",
-            value: currentPacket?.KeyMotor[1]?.SetCurrent,
+            value: currentPacket?.MotorDetails0?.CanSendError,
           },
         ],
-        name: "Set Current",
+        name: "Can Send Error",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CanSendWarning,
+          },
+        ],
+        name: "Can Send Warning",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.ControlMode,
+          },
+        ],
+        name: "Control Mode",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.ControlValue, // int
+          },
+        ],
+        name: "Control Value",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CpuOverload,
+          },
+        ],
+        name: "CPU Overload",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CpuTempTooHigh,
+          },
+        ],
+        name: "CPU Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.CpuTemperatureVeryHigh,
+          },
+        ],
+        name: "CPU Temperature Very High",
+      },
+      {
+        data: [
+          {
+            unit: UnitType.WATT,
+            value: currentPacket?.MotorDetails0?.CurrentMotorPower, // short int
+          },
+        ],
+        name: "Current Motor Power",
+      },
+      {
+        data: [
+          {
+            unit: UnitType.NEWTONMETERS,
+            value: currentPacket?.MotorDetails0?.CurrentMotorTorque,
+          },
+        ],
+        name: "Current Motor Torque",
       },
       {
         data: [
           {
             unit: UnitType.RPM,
-            value: currentPacket?.KeyMotor[1]?.SetVelocity,
+            value: currentPacket?.MotorDetails0?.CurrentRpmValue,
           },
         ],
-        name: "Set Velocity",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.AMPERAGE,
-            value: currentPacket?.KeyMotor[1]?.BusCurrent,
-          },
-        ],
-        name: "Bus Current",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.AMPERAGE,
-            value: currentPacket?.KeyMotor[1]?.BusVoltage,
-          },
-        ],
-        name: "Bus Voltage",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.SPEED,
-            value: currentPacket?.KeyMotor[1]?.VehicleVelocity,
-          },
-        ],
-        name: "Vehicle Velocity",
-      },
-    ] as unknown as I_PISField[],
-    Left_Motor_Details: [
-      {
-        data: [
-          {
-            unit: UnitType.AMPRMS,
-            value: currentPacket?.MotorDetails[0]?.PhaseCCurrent,
-          },
-        ],
-        name: "Phase C Current",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.AMPRMS,
-            value: currentPacket?.MotorDetails[0]?.PhaseBCurrent,
-          },
-        ],
-        name: "Phase B Current",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[0]?.MotorVoltageReal,
-          },
-        ],
-        name: "Motor Voltage Real",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[0]?.MotorVoltageImaginary,
-          },
-        ],
-        name: "Motor Voltage Imaginary",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.AMPERAGE,
-            value: currentPacket?.MotorDetails[0]?.MotorCurrentReal,
-          },
-        ],
-        name: "Motor Current Real",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.AMPERAGE,
-            value: currentPacket?.MotorDetails[0]?.MotorVoltageImaginary,
-          },
-        ],
-        name: "Motor Current Imaginary",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[0]?.BackEmf,
-          },
-        ],
-        name: "Back EMF",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[0]?.VoltageRail15VSupply,
-          },
-        ],
-        name: "Voltage Rail 15V",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[0]?.VoltageRail3VSupply,
-          },
-        ],
-        name: "Voltage Rail 3V",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[0]?.VoltageRail1VSupply,
-          },
-        ],
-        name: "Voltage Rail 1V",
-      },
-      {
-        data: [
-          {
-            unit: UnitType.TEMP,
-            value: currentPacket?.MotorDetails[0]?.HeatSinkTemp,
-          },
-        ],
-        name: "Heat Sink Temp",
+        name: "Current RPM Value",
       },
       {
         data: [
           {
             unit: "°C",
-            value: currentPacket?.MotorDetails[0]?.MotorTemp,
+            value: currentPacket?.MotorDetails0?.MotorTemperature,
           },
         ],
-        name: "Motor Temp",
+        name: "Motor Temperature",
       },
       {
         data: [
           {
-            unit: "°C",
-            value: currentPacket?.MotorDetails[0]?.DspBoardTemp,
+            value: currentPacket?.MotorDetails0?.DclinkTempTooHigh,
           },
         ],
-        name: "DSP Board Temp",
+        name: "DC Link Temp Too High",
       },
       {
         data: [
           {
-            unit: "Ah",
-            value: currentPacket?.MotorDetails[0]?.DcBusAmpHours,
+            value: currentPacket?.MotorDetails0?.DclinkTemperatureVeryHigh,
           },
         ],
-        name: "Dc Bus Amp Hours",
+        name: "DC Link Temp Very High",
       },
       {
         data: [
           {
-            unit: "m",
-            value: currentPacket?.MotorDetails[0]?.Odometer,
+            value: currentPacket?.MotorDetails0?.DebugMode,
           },
         ],
-        name: "Odometer",
+        name: "Debug Mode",
       },
       {
         data: [
           {
-            unit: UnitType.HERTZ,
-            value: currentPacket?.MotorDetails[0]?.SlipSpeed,
+            value: currentPacket?.MotorDetails0?.DelayInDclinkCommunication,
           },
         ],
-        name: "Slip Speed",
-      },
-    ] as unknown as I_PISField[],
-    Right_Motor_Details: [
-      {
-        data: [
-          {
-            unit: UnitType.AMPRMS,
-            value: currentPacket?.MotorDetails[1]?.PhaseCCurrent,
-          },
-        ],
-        name: "Phase C Current",
+        name: "Delay in DC Link Communication",
       },
       {
         data: [
           {
-            unit: UnitType.AMPRMS,
-            value: currentPacket?.MotorDetails[1]?.PhaseBCurrent,
+            value: currentPacket?.MotorDetails0?.DelayInReadingTempSensor,
           },
         ],
-        name: "Phase B Current",
+        name: "Delay in Reading Temp Sensor",
       },
       {
         data: [
           {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[1]?.MotorVoltageReal,
+            value: currentPacket?.MotorDetails0?.DelayInReadingPosSensor,
           },
         ],
-        name: "Motor Voltage Real",
+        name: "Delay in Reading Pos Sensor",
       },
       {
         data: [
           {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[1]?.MotorVoltageImaginary,
+            value: currentPacket?.MotorDetails0?.DoubleCanIdOnBus,
           },
         ],
-        name: "Motor Voltage Imaginary",
+        name: "Double Can ID on Bus",
       },
       {
         data: [
           {
-            unit: UnitType.AMPERAGE,
-            value: currentPacket?.MotorDetails[1]?.MotorCurrentReal,
+            value: currentPacket?.MotorDetails0?.HallTempTooHigh,
           },
         ],
-        name: "Motor Current Real",
+        name: "Hall Temp Too High",
       },
       {
         data: [
           {
-            unit: UnitType.AMPERAGE,
-            value: currentPacket?.MotorDetails[1]?.MotorVoltageImaginary,
+            value: currentPacket?.MotorDetails0?.HallTemperatureVeryHigh,
           },
         ],
-        name: "Motor Current Imaginary",
+        name: "Hall Temperature Very High",
       },
       {
         data: [
           {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[1]?.BackEmf,
+            value: currentPacket?.MotorDetails0?.HwEnableNotSet,
           },
         ],
-        name: "Back EMF",
+        name: "HW Enable Not Set",
       },
       {
         data: [
           {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[1]?.VoltageRail15VSupply,
+            value: currentPacket?.MotorDetails0?.InitError,
           },
         ],
-        name: "Voltage Rail 15V",
+        name: "Init Error",
       },
       {
         data: [
           {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[1]?.VoltageRail3VSupply,
+            value: currentPacket?.MotorDetails0?.InvalidHallSector,
           },
         ],
-        name: "Voltage Rail 3V",
+        name: "Invalid Hall Sector",
       },
       {
         data: [
           {
-            unit: UnitType.VOLTAGE,
-            value: currentPacket?.MotorDetails[1]?.VoltageRail1VSupply,
+            value: currentPacket?.MotorDetails0?.Inverter1TempTooHigh,
           },
         ],
-        name: "Voltage Rail 1V",
+        name: "Inverter 1 Temp Too High",
       },
       {
         data: [
           {
-            unit: UnitType.TEMP,
-            value: currentPacket?.MotorDetails[1]?.HeatSinkTemp,
+            value: currentPacket?.MotorDetails0?.Inverter1TempVeryHigh,
           },
         ],
-        name: "Heat Sink Temp",
+        name: "Inverter 1 Temperature Very High",
       },
       {
         data: [
           {
-            unit: UnitType.TEMP,
-            value: currentPacket?.MotorDetails[1]?.MotorTemp,
+            value: currentPacket?.MotorDetails0?.Inverter2TempTooHigh,
           },
         ],
-        name: "Motor Temp",
+        name: "Inverter 2 Temp Too High",
       },
       {
         data: [
           {
-            unit: UnitType.TEMP,
-            value: currentPacket?.MotorDetails[1]?.DspBoardTemp,
+            value: currentPacket?.MotorDetails0?.Inverter2TempVeryHigh,
           },
         ],
-        name: "DSP Board Temp",
+        name: "Inverter 2 Temperature Very High",
       },
       {
         data: [
           {
-            unit: UnitType.AMPHOUR,
-            value: currentPacket?.MotorDetails[1]?.DcBusAmpHours,
+            value: currentPacket?.MotorDetails0?.Inverter3TempTooHigh,
           },
         ],
-        name: "Dc Bus Amp Hours",
+        name: "Inverter 3 Temp Too High",
       },
       {
         data: [
           {
-            unit: UnitType.DISTANCE,
-            value: currentPacket?.MotorDetails[1]?.Odometer,
+            value: currentPacket?.MotorDetails0?.Inverter3TempVeryHigh,
           },
         ],
-        name: "Odometer",
+        name: "Inverter 3 Temperature Very High",
       },
       {
         data: [
           {
-            unit: UnitType.HERTZ,
-            value: currentPacket?.MotorDetails[1]?.SlipSpeed,
+            value: currentPacket?.MotorDetails0?.Inverter4TempTooHigh,
           },
         ],
-        name: "Slip Speed",
+        name: "Inverter 4 Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter4TempVeryHigh,
+          },
+        ],
+        name: "Inverter 4 Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter5TempTooHigh,
+          },
+        ],
+        name: "Inverter 5 Temp Too High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter5TempVeryHigh,
+          },
+        ],
+        name: "Inverter 5 Temperature Very High",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.Inverter6TempTooHigh,
+          },
+        ],
+        name: "Inverter 6 Temp Too High",
+      },
+      {
+        data: [
+          {
+            units: UnitType.AMPERAGE,
+            value: currentPacket?.MotorDetails0?.InverterPeakCurrent,
+          },
+        ],
+        name: "Inverter Peak Current",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorAboutToStall,
+          },
+        ],
+        name: "Motor About to Stall",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorMode,
+          },
+        ],
+        name: "Motor Mode ",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorStalled,
+          },
+        ],
+        name: "Motor Stalled",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.MotorTemperature,
+          },
+        ],
+        name: "Motor Temperature",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.SettingsNotFound,
+          },
+        ],
+        name: "Settings not Found",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.SoftwareEnable,
+          },
+        ],
+        name: "Software Enable",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.StartAtHighRpm,
+          },
+        ],
+        name: "Start at High RPM",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.TorqueLimited,
+          },
+        ],
+        name: "Torque Limited",
+      },
+      {
+        data: [
+          {
+            value: currentPacket?.MotorDetails0?.ZeroPositionOffsetNotSet,
+          },
+        ],
+        name: "Zero Position Offset Not Set",
       },
     ] as unknown as I_PISField[],
   };

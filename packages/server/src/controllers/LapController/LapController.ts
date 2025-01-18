@@ -4,6 +4,7 @@ import { type LapControllerType } from "@/controllers/LapController/LapControlle
 import { convertToDecimalDegrees, getDistance } from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
+import { calculateVehicleVelocity } from "@shared/helios-types";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
@@ -62,7 +63,7 @@ export class LapController implements LapControllerType {
 
       // update last lap packet
       const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
-        ?.Battery.PackAmphours as number;
+        ?.Battery.BatteryPack.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
         this.lastLapPackets,
       );
@@ -77,9 +78,9 @@ export class LapController implements LapControllerType {
         ),
         distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
         lapTime: this.calculateLapTime(this.lastLapPackets),
-        netPowerOut: this.netPower(this.lastLapPackets),
+        netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
         timeStamp: packet.TimeStamp,
-        totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
+        totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
         totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
 
@@ -116,14 +117,16 @@ export class LapController implements LapControllerType {
     return lapHappened;
   }
 
+  // returns milliseconds between all packets in last lap
   public calculateLapTime(lastLapPackets: ITelemetryData[]) {
     if (lastLapPackets.length === 0) {
       return 0;
     }
-    return (
-      (lastLapPackets[lastLapPackets.length - 1]?.TimeStamp as number) -
-      (lastLapPackets[0]?.TimeStamp as number)
-    );
+    const startTime = new Date(lastLapPackets[0]?.TimeStamp).getTime();
+    const endTime = new Date(
+      lastLapPackets[lastLapPackets.length - 1]?.TimeStamp,
+    ).getTime();
+    return endTime - startTime;
   }
 
   public calculateAverageLapSpeed(lastLapPackets: ITelemetryData[]): number {
@@ -133,14 +136,11 @@ export class LapController implements LapControllerType {
 
     const sumAverageLapSpeed = lastLapPackets.reduce(
       (sum: number, packet: ITelemetryData) => {
-        const vehicleVelocityMotor0 = packet.KeyMotor[0]?.VehicleVelocity;
-        const vehicleVelocityMotor1 = packet.KeyMotor[1]?.VehicleVelocity;
-
-        return vehicleVelocityMotor0 !== undefined
-          ? vehicleVelocityMotor1 !== undefined
-            ? sum + (vehicleVelocityMotor0 + vehicleVelocityMotor1) / 2
-            : sum
-          : sum;
+        const vehicleVelocity = calculateVehicleVelocity(
+          packet.MotorDetails0.CurrentRpmValue as number,
+          packet.MotorDetails1.CurrentRpmValue as number,
+        );
+        return vehicleVelocity !== undefined ? sum + vehicleVelocity : sum;
       },
       0,
     );
@@ -154,56 +154,61 @@ export class LapController implements LapControllerType {
     }
 
     const sumAveragePack = lastLapPackets.reduce((sum, packet) => {
-      const packCurrent = packet.Battery?.PackCurrent;
+      const packCurrent = packet.Battery?.BatteryPack.PackCurrent;
       return packCurrent !== undefined ? sum + packCurrent : sum;
     }, 0);
 
     return sumAveragePack / lastLapPackets.length;
   }
 
-  public checkIfMotorReset(
-    motorOdometer: number,
-    motorDistanceTraveledSession: number,
-  ): boolean {
-    let motorReset = false;
-    if (
-      Math.round(motorOdometer) === 0 &&
-      Math.abs(motorOdometer - motorDistanceTraveledSession) > 1.0
-    ) {
-      motorReset = true;
-    }
+  // public checkIfMotorReset(
+  //   motorOdometer: number,
+  //   motorDistanceTraveledSession: number,
+  // ): boolean {
+  //   let motorReset = false;
+  //   if (
+  //     Math.round(motorOdometer) === 0 &&
+  //     Math.abs(motorOdometer - motorDistanceTraveledSession) > 1.0
+  //   ) {
+  //     motorReset = true;
+  //   }
 
-    return motorReset;
-  }
+  //   return motorReset;
+  // }
 
   public calculateMotorDistance(
     packetArray: ITelemetryData[],
-    odometerIndex: number,
+    motorIndex: number,
   ): number {
     // The Motor's Odometer resets every time a motor trips or the car power cycles
     let totalDistanceTraveled = 0;
-    let motorDistanceTraveledSession = 0;
 
     for (let i = 0; i < packetArray.length; i++) {
-      // Check if the motor had reset, keep a tally of the distance travelled
-      if (
-        this.checkIfMotorReset(
-          packetArray[i]?.MotorDetails[odometerIndex]?.Odometer as number,
-          motorDistanceTraveledSession,
-        )
-      ) {
-        totalDistanceTraveled += motorDistanceTraveledSession;
-      }
+      totalDistanceTraveled += (packetArray[i]?.[`MotorDetails${motorIndex}`]
+        ?.CurrentRpmValue *
+        0.15 *
+        0.5) as number;
 
-      motorDistanceTraveledSession = packetArray[i]?.MotorDetails[odometerIndex]
-        ?.Odometer as number;
+      // Check if the motor had reset, keep a tally of the distance travelled
+      // if (
+      //   this.checkIfMotorReset(
+      //     packetArray[i]?.[`MotorDetails${odometerIndex}`]?.Odometer as number,
+      //     motorDistanceTraveledSession,
+      //   )
+      // ) {
+      //   totalDistanceTraveled += motorDistanceTraveledSession;
+      // }
+
+      // motorDistanceTraveledSession = packetArray[i]?.[
+      //   `MotorDetails${odometerIndex}`
+      // ]?.Odometer as number;
     }
-    totalDistanceTraveled += motorDistanceTraveledSession;
-    // Remove the initial distance
-    totalDistanceTraveled -= packetArray[0]?.MotorDetails[odometerIndex]
-      ?.Odometer as number;
-    // Convert to kilometers (odometer reports as meters)
-    totalDistanceTraveled /= 1000;
+    // totalDistanceTraveled += motorDistanceTraveledSession;
+    // // Remove the initial distance
+    // totalDistanceTraveled -= packetArray[0]?.[`MotorDetails${odometerIndex}`]
+    //   ?.Odometer as number;
+    // // Convert to kilometers (odometer reports as meters)
+    // totalDistanceTraveled /= 1000;
 
     return totalDistanceTraveled;
   }
@@ -243,8 +248,17 @@ export class LapController implements LapControllerType {
           // arrayPower += packet['mppt' + mppt + 'arrayvoltage'] *
           //               packet['mppt' + mppt + 'arraycurrent'];
           arrayPower +=
-            (packet.MPPT[mppt]?.ArrayVoltage as number) *
-            (packet.MPPT[mppt]?.ArrayCurrent as number);
+            (packet.MPPT0?.ArrayVoltage as number) *
+            (packet.MPPT0?.ArrayCurrent as number);
+          arrayPower +=
+            (packet.MPPT1?.ArrayVoltage as number) *
+            (packet.MPPT1?.ArrayCurrent as number);
+          arrayPower +=
+            (packet.MPPT2?.ArrayVoltage as number) *
+            (packet.MPPT2?.ArrayCurrent as number);
+          arrayPower +=
+            (packet.MPPT3?.ArrayVoltage as number) *
+            (packet.MPPT3?.ArrayCurrent as number);
         }
         return arrayPower;
       })
@@ -283,7 +297,9 @@ export class LapController implements LapControllerType {
     return Math.abs(
       packetArray.reduce(
         (sum, curr) =>
-          sum + curr.Battery.PackCurrent * curr.Battery.PackVoltage,
+          sum +
+          curr.Battery.BatteryPack.PackCurrent *
+            curr.Battery.BatteryPack.PackVoltage,
         0,
       ) / packetArray.length,
     );

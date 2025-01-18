@@ -1,8 +1,10 @@
 {
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "paths": {
+      "@/contexts/*": ["../client/src/contexts/*"]
+    }
+  },
   "extends": "../../tsconfig.json",
-  "include": [
-    "src",
-    "index.ts",
-    ".eslintrc.cjs"
-  ],
+  "include": ["src", "index.ts", ".eslintrc.cjs"]
 }
