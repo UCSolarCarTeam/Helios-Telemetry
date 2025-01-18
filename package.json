@@ -18,9 +18,7 @@
     "test": "lerna run test"
   },
   "dependencies": {
-    "esbuild": "^0.23.0",
-    "fp-ts": "^2.16.9",
-    "io-ts": "^2.2.22"
+    "esbuild": "^0.23.0"
   },
   "devDependencies": {
     "@types/eslint": "^9.6.0",
