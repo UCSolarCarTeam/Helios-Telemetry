@@ -7703,6 +7703,8 @@ __metadata:
   dependencies:
     "@aws-sdk/client-secrets-manager": "npm:^3.658.1"
     "@faker-js/faker": "npm:^9.0.3"
+    fp-ts: "npm:^2.16.9"
+    io-ts: "npm:^2.2.22"
     typescript: "npm:^5.5.3"
   languageName: unknown
   linkType: soft
