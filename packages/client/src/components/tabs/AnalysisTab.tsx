@@ -299,7 +299,7 @@ function AnalysisTab() {
             <div className="flex items-center" key={filter}>
               <label className="flex cursor-pointer items-center gap-x-2">
                 <input
-                  className="peer size-4 cursor-pointer accent-helios"
+                  className="peer·size-4·cursor-pointer·accent-helios"
                   id={filter}
                   name={filter}
                   type="checkbox"
