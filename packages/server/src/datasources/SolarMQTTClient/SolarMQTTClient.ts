@@ -34,8 +34,6 @@ export class SolarMQTTClient implements SolarMQTTClientType {
 
   public async connectToAedes(options: IClientOptions) {
     try {
-      options.username = process.env.MQTT_USERNAME;
-      options.password = process.env.MQTT_PASSWORD;
       this.client = connect(options);
       this.initializeListeners();
     } catch (error) {

@@ -9,6 +9,8 @@ export const options: IClientOptions = {
   port: 1883,
   protocol: "tcp",
   protocolVersion: 3,
+  username: process.env.MQTT_USERNAME,
+  password: process.env.MQTT_PASSWORD,
 };
 
 export const topics = {
