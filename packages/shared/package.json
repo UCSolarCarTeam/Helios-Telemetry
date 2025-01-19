@@ -4,6 +4,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "dependencies": {
+    "fp-ts": "^2.16.9",
+    "io-ts": "^2.2.22",
     "@aws-sdk/client-secrets-manager": "^3.658.1",
     "typescript": "^5.5.3"
   },

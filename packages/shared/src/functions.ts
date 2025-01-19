@@ -1,5 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { ITelemetryData } from "./types";
+import { ITelemetryData, ITelemetryDataType } from "./types";
+import { PathReporter } from "io-ts/PathReporter";
+import { isRight } from "fp-ts/Either";
 
 export function generateFakeTelemetryData(): ITelemetryData {
   return {
@@ -520,4 +522,14 @@ export function generateFakeTelemetryData(): ITelemetryData {
     TimeStamp: faker.date.recent().getTime(),
     Title: faker.lorem.words(2),
   };
+}
+
+export function validateTelemetryData(packet: any) {
+  const validationResult = ITelemetryDataType.decode(packet);
+  if (isRight(validationResult)) {
+    return validationResult.right;
+  } else {
+    const errorMessages = PathReporter.report(validationResult).join(", ");
+    throw new Error(`Invalid packet format: ${errorMessages}`);
+  }
 }
