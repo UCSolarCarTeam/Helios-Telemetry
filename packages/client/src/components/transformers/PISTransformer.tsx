@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { type JSX, useCallback } from "react";
 
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import {
