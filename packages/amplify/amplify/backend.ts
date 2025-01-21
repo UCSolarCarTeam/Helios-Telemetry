@@ -134,6 +134,16 @@ const lapDataTable = new dynamodb.Table(
   },
 );
 
+const driverDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "driver_data_table",
+  {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    partitionKey: { name: "rfid", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
+  },
+);
+
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
@@ -141,6 +151,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   environment: {
+    DRIVER_TABLE_NAME: driverDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
     PACKET_TABLE_NAME: packetDataTable.tableName,
   },
@@ -294,7 +305,11 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
   ],
   effect: iam.Effect.ALLOW,
 
-  resources: [packetDataTable.tableArn, lapDataTable.tableArn],
+  resources: [
+    packetDataTable.tableArn,
+    lapDataTable.tableArn,
+    driverDataTable.tableArn,
+  ],
 });
 
 // Attach the policy to the ECS Task Role
