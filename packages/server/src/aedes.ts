@@ -22,7 +22,7 @@ class MqttError extends Error {
 
 const aedes: Aedes = new Aedes();
 // Authentication function
-aedes.authenticate = async function (
+aedes.authenticate = function (
   client: Client,
   username: string | undefined,
   password: Buffer | undefined,
@@ -30,14 +30,23 @@ aedes.authenticate = async function (
 ) {
   const validUsername = process.env.MQTT_USERNAME;
   const validPassword = process.env.MQTT_PASSWORD;
+  // Set Max connections to Aedes (Car Client and Solar MQTT client)
+  if (aedes.connectedClients >= 2) {
+    const error = new MqttError("Too many clients", 5);
+    done(error, false);
+    return;
+  }
+
   if (!username || !password) {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
     return;
   }
+
+  // User authentication
   if (username === validUsername && password.toString() === validPassword) {
     done(null, true); // Authentication successful
-    logger.info(`Solar MQTT Client ${client.id} successfully authenticated!`);
+    logger.info(`MQTT Client ${client.id} successfully authenticated!`);
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
@@ -46,7 +55,7 @@ aedes.authenticate = async function (
 
 export const startAedes = () => {
   return createServer(aedes.handle)
-    .listen(port, async () => {
+    .listen(port, () => {
       logger.info(`Aedes server started and listening on port ${port}`);
     })
     .on("error", (error: Error) => {
