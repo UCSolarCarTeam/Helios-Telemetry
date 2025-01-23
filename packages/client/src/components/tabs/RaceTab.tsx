@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { usePacket } from "@/contexts/PacketContext";
 import type { ILapData } from "@shared/helios-types";
-
 import {
   createColumnHelper,
   flexRender,
