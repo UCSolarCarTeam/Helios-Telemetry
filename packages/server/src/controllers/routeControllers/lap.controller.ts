@@ -13,10 +13,10 @@ export const getLapData = async (request: Request, response: Response) => {
     request,
     response,
   );
-
   try {
-    const timestamp = request.params.timestamp;
-    const lapData = await backendController.dynamoDB.getLapData(timestamp);
+    // const timestamp = request.params.timestamp;
+
+    const lapData = await backendController.dynamoDB.getLapData();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {

@@ -143,7 +143,9 @@ const exampleData: ILapData[] = [
 ];
 
 function RaceTab() {
-  const data = useMemo(() => exampleData, []);
+  const [lapData, setLapData] = useState<ILapData[]>([]);
+
+  const data = useMemo(() => lapData, [lapData]);
 
   const table = useReactTable({
     columns,
@@ -158,40 +160,43 @@ function RaceTab() {
     return result;
   }
 
-  const [lapData, setLapData] = useState<ILapData>({});
-
   const fetchLapData = async () => {
     try {
-      const timestamp = 1715859951742;
-      const response = await axios.get(
-        `https://aedes.calgarysolarcar.ca:3001/lap/${timestamp}`,
-      );
-      return response.data.data.Item.data.M;
-    } catch {
-      // console.error("Error fetching lap data", error);
+      const response = await axios.get(`http://localhost:3001/laps`);
+      return response.data; // Assuming the API returns an array of lap data
+    } catch (error) {
       return { error: "Error fetching lap data" };
     }
   };
 
   useEffect(() => {
     fetchLapData()
-      .then((data) => {
-        // console.log(data);
-        setLapData({
-          ampHours: parseInt(data.ampHours.N, 10),
-          averagePackCurrent: parseInt(data.averagePackCurrent.N, 10),
-          averageSpeed: parseFloat(data.averageSpeed.N),
-          batterySecondsRemaining: parseInt(data.batterySecondsRemaining.N, 10),
-          distance: parseFloat(data.distance.N),
-          lapTime: parseInt(data.lapTime.N, 10),
-          netPowerOut: parseInt(data.netPowerOut.N, 10),
-          timeStamp: parseInt(data.timeStamp.N, 10),
-          totalPowerIn: parseInt(data.totalPowerIn.N, 10),
-          totalPowerOut: parseInt(data.totalPowerOut.N, 10),
-        });
+      .then((response) => {
+        const formattedData = response.data.map(
+          (lapPacket: { data: ILapData }) => ({
+            ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
+            averagePackCurrent: parseFloat(
+              lapPacket.data.averagePackCurrent.toFixed(2),
+            ),
+            averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
+            batterySecondsRemaining: parseFloat(
+              lapPacket.data.batterySecondsRemaining.toFixed(2),
+            ),
+            distance: parseFloat(lapPacket.data.distance.toFixed(2)),
+            lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
+            netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
+            timeStamp: new Date(lapPacket.data.timeStamp).toLocaleDateString(
+              "en-US",
+            ),
+            totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
+            totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
+          }),
+        );
+
+        setLapData(formattedData);
       })
       .catch((error) => {
-        // console.error("Error fetching lap data", error);
+        throw new Error(error);
       });
   }, []);
 
@@ -211,13 +216,6 @@ function RaceTab() {
             </span>
           </label>
         ))}
-        <div>
-          {lapData && (
-            <div>
-              <pre>{JSON.stringify(lapData, null, 2)}</pre>
-            </div>
-          )}
-        </div>
       </div>
 
       <div className="w-3/4 overflow-x-auto">
@@ -247,7 +245,7 @@ function RaceTab() {
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
+                    className="text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm"
                     key={cell.id}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
