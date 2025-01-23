@@ -19,17 +19,22 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   client: MqttClient;
   backendController: BackendController;
   pingLastSent: number;
+  delay: number;
   constructor(options: IClientOptions, backendController: BackendController) {
     this.backendController = backendController;
     this.connectToAedes(options);
     this.pingLastSent = Date.now();
+    this.delay = 0;
   }
-  public pingTimer(miliseconds: number) {
-    const myMessage = "t";
+
+  public pingTimer(milliseconds: number) {
+    const myMessage = this.delay.toString();
     setInterval(() => {
       this.pingLastSent = Date.now();
       this.client.publish(pingTopic, myMessage);
-    }, miliseconds);
+      // logger.info("Car Latency: ", this.pingLastSent);
+      logger.info("Latency: " + this.delay);
+    }, milliseconds);
   }
 
   public async connectToAedes(options: IClientOptions) {
@@ -52,10 +57,14 @@ export class SolarMQTTClient implements SolarMQTTClientType {
       });
       this.pingTimer(5000);
     });
+
     this.client.on("message", (topic, message) => {
+      logger.info("recieved message");
       if (topic === pongTopic) {
         const carLatency = (Date.now() - this.pingLastSent) / 2;
-        this.backendController.socketIO.broadcastCarLatency(carLatency);
+        this.delay = carLatency;
+        // this.backendController.socketIO.broadcastCarLatency(carLatency);
+        this.backendController.handleCarLatency(carLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");
         const packet: ITelemetryData = JSON.parse(message.toString());

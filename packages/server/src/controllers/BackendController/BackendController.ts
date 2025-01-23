@@ -19,11 +19,12 @@ export class BackendController implements BackendControllerTypes {
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
   ) {
-    this.dynamoDB = new DynamoDB(this);
+    // this.dynamoDB = new DynamoDB(this);
     this.socketIO = new SocketIO(httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
     this.establishCarPinging();
+    // this.handleCarLatency();
   }
 
   public establishCarPinging() {
@@ -31,7 +32,6 @@ export class BackendController implements BackendControllerTypes {
     this.mqtt.pingTimer(5000);
   }
 
-  // This isn't being called anywhere?
   public handleCarLatency(carLatency: number) {
     // Broadcast the car latency to the frontend
     this.socketIO.broadcastCarLatency(carLatency);
@@ -40,7 +40,7 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    this.dynamoDB.insertPacketData(message);
+    // this.dynamoDB.insertPacketData(message);
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
