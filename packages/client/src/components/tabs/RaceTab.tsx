@@ -167,7 +167,9 @@ function RaceTab() {
 
   const fetchLapData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/laps`);
+      const response = await axios.get(
+        `http://aedes.calgarysolarcar.ca:3001/laps`,
+      );
       return response.data; // Assuming the API returns an array of lap data
     } catch (error) {
       return { error: "Error fetching lap data" };
