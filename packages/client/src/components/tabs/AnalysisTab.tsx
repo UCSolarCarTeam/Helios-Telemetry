@@ -42,7 +42,6 @@ export function TabContent({ children, index, value }: TabContentProps) {
     </div>
   );
 }
-//to do: move grey shapes to molecules tab: called analysis molecule, make shapes responsive, make text responsive too: dont use pixels, use this: h-20 w-20
 interface ShapeProps {
   infoNumber?: number;
   rectangleHeight?: string;
@@ -57,24 +56,24 @@ const GreyShapes: React.FC<ShapeProps> = ({
   return (
     <div className="flex flex-wrap justify-start gap-4">
       {/* First square */}
-      <div className="flex h-[270px] w-[300px] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
-        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
-          Optimal Driving speed at&nbsp;
-          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
+      <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
+        <p className="text-center text-base font-normal sm:text-lg md:text-lg lg:text-xl">
+          Optimal Driving Speed At&nbsp;
+          <span className="text-center text-lg font-normal text-[#9C0534] sm:text-lg md:text-lg lg:text-xl">
             {38}%
           </span>
         </p>
-        <p className="m-2 text-center text-[32px] font-normal leading-[39.06px] text-[#9C0534]">
+        <p className="m-2 text-center font-normal text-[#9C0534] sm:text-4xl md:text-[2.5rem]">
           50 km/h
         </p>
 
         {/* Container for numbers and line */}
         {/* Horizontal line */}
 
-        <div className="h-[13px] w-full rounded-full bg-[#3A3A3A]">
-          <div className="flex h-[13px] w-1/2 rounded-full bg-[#3A3A3A]">
-            <div className="ml-auto flex h-[13px] w-1/3 items-stretch bg-[#009F10] md:items-center"></div>
-            <div className="h-[18px] w-[4px] bg-[#3A3A3A]"></div>
+        <div className="h-3.5 w-full rounded-full bg-[#3A3A3A]">
+          <div className="flex h-3.5 w-1/2 rounded-full bg-[#3A3A3A]">
+            <div className="ml-auto flex h-3.5 w-1/3 items-stretch bg-[#009F10] md:items-center"></div>
+            <div className="h-5 w-1 bg-[#3A3A3A]"></div>
           </div>
         </div>
 
@@ -88,7 +87,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           </span>
 
           {/* Horizontal line */}
-          <div className="h-[13px] bg-[#BFBFBF]"></div>
+          <div className="h-3 bg-[#BFBFBF]"></div>
 
           {/* Right number */}
           <span className="text-sm text-[#9C0534] sm:text-base md:text-lg">
@@ -98,26 +97,26 @@ const GreyShapes: React.FC<ShapeProps> = ({
       </div>
 
       {/* Second square */}
-      <div className="flex h-[270px] w-[300px] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
-        <p className="decoration-skip-ink-none text-center text-[18px] font-normal leading-[21.97px] sm:text-[18px] md:text-[20px]">
+      <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
+        <p className="decoration-skip-ink-none text-center text-lg font-normal sm:text-lg md:text-xl">
           Motor Efficiency at&nbsp;
-          <span className="text-center text-[18px] font-normal leading-[39.06px] text-[#9C0534] sm:text-[18px] md:text-[20px]">
+          <span className="text-center text-lg font-normal leading-[2.4rem] text-[#9C0534] sm:text-lg md:text-xl">
             {infoNumber}%
           </span>
         </p>
 
         {/* Container for the doughnut chart */}
         <div
-          className="flex w-[245px] items-center justify-center"
+          className="flex w-[15rem] items-center justify-center"
           style={{ opacity: 1 }} // Adjust opacity if needed
         >
           {/* update the donut chart based on the number */}
-          <div className="h-10px">
+          <div className="h-0.6rem">
             <DonutChart
               chartColour="#65558F"
               chartHeight={100}
               chartWidth={100}
-              fontSize="32px"
+              fontSize="2rem"
               percentage={infoNumber}
               thickness="78%"
             />
@@ -134,20 +133,20 @@ const GreyShapes: React.FC<ShapeProps> = ({
           className="rounded-2xl bg-[#BFBFBF]"
           style={{ height: rectangleHeight, width: rectangleWidth }}
         >
-          <p className="mt-2 text-center text-[14px] font-normal leading-[22px] sm:text-[16px] md:text-[18px]">
+          <p className="mt-2 text-center text-sm font-normal leading-[1.3rem] sm:text-base md:text-lg">
             Driver Performance Score
           </p>
           {/* Container for the doughnut chart */}
           <div
-            className="mt-[-8px] flex w-[300px] items-center justify-center"
+            className="mt-[-0.5rem] flex w-[18.5rem] items-center justify-center"
             style={{ opacity: 1 }} // Adjust opacity if needed
           >
             {/* update the donut chart based on the number */}
-            <div className="h-10px">
+            <div className="h-0.5rem">
               <DonutChartRect
                 chartHeight={80}
                 chartWidth={80}
-                fontSize="22px"
+                fontSize="1.4rem"
                 percentage={83}
                 thickness="70%"
               />
@@ -158,14 +157,14 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
           <div className="flex justify-center">
             <div
-              className="mt-[-4px] flex w-[50px] items-center justify-between"
+              className="mt-[-0.25rem] flex w-[3.1rem] items-center justify-between"
               style={{ gap: "0px", opacity: 1 }}
             >
               {/* Left number */}
               <span className="text-left text-sm text-[#9C0534]">28</span>
 
               {/* Horizontal line */}
-              <div className="h-[13px] flex-1 bg-[#BFBFBF]"></div>
+              <div className="h-[0.8rem] flex-1 bg-[#BFBFBF]"></div>
 
               {/* Right number */}
               <span className="text-right text-sm text-[#369A34]">97</span>
@@ -176,71 +175,72 @@ const GreyShapes: React.FC<ShapeProps> = ({
         {/* Rectangle 2 */}
         <div
           className="flex flex-col items-center rounded-2xl bg-[#BFBFBF] p-4"
-          style={{ height: "133px", width: rectangleWidth }}
+          style={{ height: "8.5rem", width: rectangleWidth }}
         >
           {/* Title */}
-          <p className="mt-[-8px] text-center text-[14px] font-normal leading-[22px] sm:text-[16px] md:text-[18px]">
+          <p className="mt-[-0.5rem] text-center text-[0.875rem] font-normal leading-[1.35rem] sm:text-base md:text-lg">
             End of Day Predictors
           </p>
 
           {/* Circles container */}
           <div className="mt-0 flex items-center justify-center gap-8">
             {/* First circle with line below */}
-            <div className="ml-4 mt-[-8px] flex w-[100px] items-center justify-center">
+            <div className="ml-4 mt-[-0.5rem] flex w-[6.5rem] items-center justify-center">
               {/* Adjust ml-4 as needed */}
               {/* update the donut chart based on the number */}
               <div>
-                <div className="h-10px ml-2">
+                <div className="h-0.6 ml-2">
                   <DonutChartRect
                     chartHeight={65}
                     chartWidth={65}
-                    fontSize="18px"
+                    fontSize="1.4rem"
                     percentage={48}
                     thickness="70%"
                   />
                 </div>
                 <div>
                   {/* Horizontal line with numbers */}
-                  <div className="flex w-[80px] items-center justify-between">
+                  <div className="flex w-[5rem] items-center justify-between">
                     <span className="text-left text-xs text-[#9C0534]">
                       135
                     </span>
-                    <div className="mx-1 h-[2px] flex-1 bg-[#BFBFBF]"></div>
+                    <div className="mx-1 h-[0.1rem] flex-1 bg-[#BFBFBF]"></div>
                     <span className="text-right text-xs text-[#369A34]">
                       269
                     </span>
                   </div>
                   {/* Text below the circle */}
-                  <p className="text-center text-[10px] leading-[12px]">
+                  <p className="text-center text-[0.6rem] leading-[0.7rem]">
                     Laps Left on Battery [km] (FSGP)
                   </p>
                 </div>
               </div>
             </div>
             {/* Second circle with line below */}
-            <div className="mt-[-8px] flex w-[80px] items-center justify-center">
+            <div className="mt-[-0.5rem] flex w-[3.1rem] items-center justify-center">
               {/* update the donut chart based on the number */}
               <div>
-                <div className="h-10px ml-2">
+                <div className="h-0.6rem ml-2">
                   <DonutChartRect
                     chartHeight={65}
                     chartWidth={65}
-                    fontSize="18px"
+                    fontSize="1.1rem"
                     percentage={89}
                     thickness="70%"
                   />
                 </div>
                 <div>
                   {/* Horizontal line with numbers */}
-                  <div className="flex w-[80px] items-center justify-between">
+                  {/* Horizontal line with numbers */}
+                  <div className="flex w-[5rem] items-center justify-between">
                     <span className="text-left text-xs text-[#9C0534]">57</span>
-                    <div className="mx-1 h-[2px] flex-1 bg-[#BFBFBF]"></div>
+                    <div className="mx-1 h-[0.1rem] flex-1 bg-[#BFBFBF]"></div>
                     <span className="text-right text-xs text-[#369A34]">
                       104
                     </span>
                   </div>
                   {/* Text below the circle */}
-                  <p className="text-center text-[10px] leading-[12px]">
+                  <p className="text-center text-[0.6rem] leading-[0.7rem]">
                     Battery Time Remaining [min]
                   </p>
                 </div>
