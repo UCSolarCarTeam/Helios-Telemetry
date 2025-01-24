@@ -67,18 +67,7 @@ const exampleDriverData = [
     driver: `Adam`,
     rfid: 928374928,
   },
-  {
-    driver: `Charlie`,
-    rfid: 748392738,
-  },
-  {
-    driver: `David`,
-    rfid: 184930473,
-  },
-  {
-    driver: `Eve`,
-    rfid: 304850384,
-  },
+
   {
     driver: `Frank`,
     rfid: 740192843,
@@ -108,9 +97,9 @@ const exampleData: ILapData[] = [
     averageSpeed: 23,
     batterySecondsRemaining: 23,
     distance: 23,
-    driverRFID: 563234523,
     lapTime: 23423,
     netPowerOut: 13434,
+    rfid: 563234523,
     timeStamp: 324234,
     totalPowerIn: 1234,
     totalPowerOut: 123,
@@ -121,9 +110,9 @@ const exampleData: ILapData[] = [
     averageSpeed: 25,
     batterySecondsRemaining: 30,
     distance: 25,
-    driverRFID: 928374928,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 928374928,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -134,9 +123,9 @@ const exampleData: ILapData[] = [
     averageSpeed: 25,
     batterySecondsRemaining: 30,
     distance: 25,
-    driverRFID: 740192843,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 740192843,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -147,9 +136,9 @@ const exampleData: ILapData[] = [
     averageSpeed: 25,
     batterySecondsRemaining: 30,
     distance: 25,
-    driverRFID: 192384758,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 192384758,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -160,9 +149,9 @@ const exampleData: ILapData[] = [
     averageSpeed: 25,
     batterySecondsRemaining: 30,
     distance: 25,
-    driverRFID: 584930283,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 584930283,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -173,9 +162,9 @@ const exampleData: ILapData[] = [
     averageSpeed: 25,
     batterySecondsRemaining: 30,
     distance: 25,
-    driverRFID: 384923758,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 384923758,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -186,9 +175,9 @@ const exampleData: ILapData[] = [
     averageSpeed: 25,
     batterySecondsRemaining: 30,
     distance: 25,
-    driverRFID: 984753284,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 984753284,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -197,7 +186,7 @@ const exampleData: ILapData[] = [
 
 function RaceTab() {
   const [lapData, setLapData] = useState<ILapData[]>([]);
-  const [driverRFID, setDriverRFID] = useState<number | undefined>(undefined);
+  const [rfid, setDriverRFID] = useState<number | undefined>(undefined);
 
   const handleDriverRFID: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     setDriverRFID(Number(e.target.value));
@@ -206,8 +195,8 @@ function RaceTab() {
   const data = useMemo(() => exampleData, []);
 
   const filteredLapData = useMemo(
-    () => exampleData.filter((lap) => lap.driverRFID === driverRFID),
-    [driverRFID],
+    () => (rfid ? exampleData.filter((lap) => lap.rfid === rfid) : exampleData),
+    [rfid],
   );
 
   const { currentPacket } = usePacket();
@@ -266,12 +255,12 @@ function RaceTab() {
             width={50}
           />
           <select onChange={handleDriverRFID}>
-            <option>Select Driver</option>
+            <option value="all">Show all data</option>
             {exampleDriverData.map((driver) => (
               <option key={driver.rfid} value={driver.rfid}>
                 {driver.driver
                   ? `${driver.driver}: ${driver.rfid}`
-                  : `N/A: ${driver.rfid}`}
+                  : `NO NAME: ${driver.rfid}`}
               </option>
             ))}
           </select>
@@ -289,54 +278,34 @@ function RaceTab() {
             </span>
           </label>
         ))}
-        <div>
-          {Array.isArray(lapData) ? (
-            lapData.map((lap, index) => (
-              <div key={index}>
-                <h1>{`Lap ${index + 1}`}</h1>
-                <p>{`Amp Hours: ${lap.ampHours}`}</p>
-                <p>{`Average Pack Current: ${lap.averagePackCurrent}`}</p>
-                <p>{`Average Speed: ${lap.averageSpeed}`}</p>
-                <p>{`Battery Seconds Remaining: ${lap.batterySecondsRemaining}`}</p>
-                <p>{`Distance: ${lap.distance}`}</p>
-                <p>{`Lap Time: ${lap.lapTime}`}</p>
-                <p>{`Net Power Out: ${lap.netPowerOut}`}</p>
-                <p>{`Time Stamp: ${lap.timeStamp}`}</p>
-                <p>{`Total Power In: ${lap.totalPowerIn}`}</p>
-                <p>{`Total Power Out: ${lap.totalPowerOut}`}</p>
-              </div>
-            ))
-          ) : (
-            <p>No lap data available</p>
-          )}
-        </div>
       </div>
-      <div className="w-3/4 overflow-x-auto">
-        <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
-          <thead className="border-b-2 border-helios">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
-                    key={header.id}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          {filteredLapData.length === 0 ? (
-            <div className="text-center">
-              <p>No Lap Data</p>
-            </div>
-          ) : (
+      {filteredLapData.length === 0 ? (
+        <div className="w-3/4 overflow-x-auto">
+          <div className="pt-8 text-center">No Lap Data</div>
+        </div>
+      ) : (
+        <div className="w-3/4 overflow-x-auto">
+          <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
+            <thead className="border-b-2 border-helios">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
+                      key={header.id}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+
             <tbody className="divide-y divide-gray-200 bg-white">
               {table.getRowModel().rows.map((row) => (
                 <tr key={row.id}>
@@ -354,9 +323,9 @@ function RaceTab() {
                 </tr>
               ))}
             </tbody>
-          )}
-        </table>
-      </div>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

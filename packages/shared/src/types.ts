@@ -51,7 +51,7 @@ export interface ILapData {
   timeStamp: number;
   totalPowerIn: number;
   totalPowerOut: number;
-  driverRFID: number;
+  rfid: number;
 }
 
 export class LapData {
