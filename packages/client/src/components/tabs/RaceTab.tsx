@@ -1,4 +1,5 @@
 import Image from "next/image";
+import React, { useMemo } from "react";
 
 import { useLapData } from "@/contexts/LapDataContext";
 import { usePacket } from "@/contexts/PacketContext";
