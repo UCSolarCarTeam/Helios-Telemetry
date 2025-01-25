@@ -4,7 +4,7 @@ import type { IClientOptions } from "mqtt/*";
 export const options: IClientOptions = {
   host:
     process.env.NODE_ENV === "development"
-      ? "aedes.calgarysolarcar.ca"
+      ? "localhost"
       : "aedes.calgarysolarcar.ca",
   port: 1883,
   protocol: "tcp",
@@ -17,6 +17,7 @@ export const topics = {
   packetTopic: "packet",
   pingTopic: "ping",
   pongTopic: "pong",
+  telemetryToCarTopic: "telemetryToCar",
 };
 
 export interface SolarMQTTClientType {

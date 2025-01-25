@@ -12,28 +12,32 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { type ITelemetryData } from "@shared/helios-types";
 
-const { packetTopic, pingTopic, pongTopic } = topics;
+const { packetTopic, pingTopic, pongTopic, telemetryToCarTopic } = topics;
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
 
 export class SolarMQTTClient implements SolarMQTTClientType {
   client: MqttClient;
   backendController: BackendController;
   pingLastSent: number;
-  delay: number;
   constructor(options: IClientOptions, backendController: BackendController) {
     this.backendController = backendController;
     this.connectToAedes(options);
     this.pingLastSent = Date.now();
-    this.delay = 0;
   }
 
   public pingTimer(milliseconds: number) {
-    const myMessage = this.delay.toString();
+    const myMessage = "t";
     setInterval(() => {
       this.pingLastSent = Date.now();
       this.client.publish(pingTopic, myMessage);
-      // logger.info("Car Latency: ", this.pingLastSent);
-      logger.info("Latency: " + this.delay);
+    }, milliseconds);
+  }
+
+  public telemetryToCar(milliseconds: number) {
+    const myMessage = this.backendController?.carLatency?.toString();
+    setInterval(() => {
+      this.client.publish(telemetryToCarTopic, myMessage);
+      logger.info("Car Latency - sending: ", myMessage);
     }, milliseconds);
   }
 
@@ -55,16 +59,15 @@ export class SolarMQTTClient implements SolarMQTTClientType {
           logger.error("Subscription error: ", error);
         }
       });
-      this.pingTimer(5000);
     });
 
     this.client.on("message", (topic, message) => {
-      logger.info("recieved message");
       if (topic === pongTopic) {
-        const carLatency = (Date.now() - this.pingLastSent) / 2;
-        this.delay = carLatency;
-        // this.backendController.socketIO.broadcastCarLatency(carLatency);
-        this.backendController.handleCarLatency(carLatency);
+        logger.info("pong");
+        const carLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
+        logger.info(carLatency.toString());
+        this.backendController.carLatency = carLatency;
+        this.backendController.handleTelemetryToCar(carLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");
         const packet: ITelemetryData = JSON.parse(message.toString());
@@ -73,6 +76,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         logger.info("unknown topic: ", topic, "message: ", message.toString());
       }
     });
+
     this.client.on("error", (error) => {
       logger.error("MQTT Client error: ", error);
     });
