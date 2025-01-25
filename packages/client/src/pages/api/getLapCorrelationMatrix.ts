@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const API_ROUTE = process.env.GET_LAP_CORRELATION_MATRIX_URL;
+if (!API_ROUTE) {
+  throw new Error("GET_LAP_CORRELATION_MATRIX_URL is not defined");
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (!API_ROUTE) {
-    throw new Error("GET_LAP_CORRELATION_MATRIX_URL is not defined");
-  }
   try {
-    const result = await fetch(API_ROUTE);
+    const result = await fetch(API_ROUTE as string);
     const graph = await result.json();
     res.status(200).json(graph);
   } catch (err) {

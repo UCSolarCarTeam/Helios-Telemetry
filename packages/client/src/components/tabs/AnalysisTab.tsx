@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Image from "next/image";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -44,12 +45,7 @@ export function TabContent({
   value,
 }: TabContentProps) {
   return (
-    <div
-      className={twMerge(`${className}`)}
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      role="tabpanel"
-    >
+    <div className={twMerge(className)} hidden={value !== index}>
       {value === index && children}
     </div>
   );
@@ -126,7 +122,13 @@ function AnalysisTab() {
           <TabContent className="my-auto w-full" index={0} value={value}>
             <div
               className={twMerge(
-                `grid max-h-72 w-full flex-1 grid-flow-row items-center gap-4 ${width >= 1200 ? "grid-cols-2" : "grid-cols-1 overflow-y-auto"}`,
+                clsx(
+                  "grid max-h-72 w-full flex-1 grid-flow-row items-center gap-4",
+                  {
+                    "grid-cols-1 overflow-y-auto": width < 1200,
+                    "grid-cols-2": width >= 1200,
+                  },
+                ),
               )}
             >
               <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold dark:bg-[#BAB8B8] dark:text-black">
