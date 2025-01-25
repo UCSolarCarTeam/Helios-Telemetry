@@ -126,15 +126,13 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
 
   return (
     <div
+      className={`flex items-center justify-center`}
       style={{
-        alignItems: "center",
-        display: "flex",
         height: chartHeight,
-        justifyContent: "center",
         width: chartWidth,
       }}
     >
-      <canvas ref={chartRef} style={{ display: "block" }}></canvas>
+      <canvas className=".block" ref={chartRef}></canvas>
     </div>
   );
 };

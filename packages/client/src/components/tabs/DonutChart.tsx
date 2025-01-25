@@ -14,8 +14,6 @@ Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
 
 interface DonutChartProps {
   percentage: number;
-  chartHeight: number;
-  chartWidth: number;
   fontSize: string;
   chartColour: string;
   thickness: string;
@@ -23,8 +21,6 @@ interface DonutChartProps {
 
 const DonutChart: React.FC<DonutChartProps> = ({
   chartColour,
-  chartHeight,
-  chartWidth,
   fontSize,
   percentage,
   thickness,
@@ -69,7 +65,6 @@ const DonutChart: React.FC<DonutChartProps> = ({
             enabled: true, // Ensure tooltips still work
           },
         },
-
         responsive: true, // Ensure chart resizes
         rotation: 200,
       },
@@ -125,16 +120,8 @@ const DonutChart: React.FC<DonutChartProps> = ({
   }, [percentage, fontSize]); // Re-render chart if percentage changes
 
   return (
-    <div
-      style={{
-        alignItems: "center",
-        display: "flex",
-        height: chartHeight,
-        justifyContent: "center",
-        width: chartWidth,
-      }}
-    >
-      <canvas ref={chartRef} style={{ display: "block" }}></canvas>
+    <div className="flex h-[6.25rem] w-[6.25rem] items-center justify-center">
+      <canvas className=".block" ref={chartRef}></canvas>
     </div>
   );
 };

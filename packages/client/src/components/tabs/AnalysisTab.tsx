@@ -114,8 +114,6 @@ const GreyShapes: React.FC<ShapeProps> = ({
           <div className="h-0.6rem">
             <DonutChart
               chartColour="#65558F"
-              chartHeight={100}
-              chartWidth={100}
               fontSize="2rem"
               percentage={infoNumber}
               thickness="78%"
@@ -185,7 +183,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           {/* Circles container */}
           <div className="mt-0 flex items-center justify-center gap-8">
             {/* First circle with line below */}
-            <div className="ml-4 mt-[-0.5rem] flex w-[6.5rem] items-center justify-center">
+            <div className="mt-[-0.5rem] flex w-[6.5rem] items-center justify-center">
               {/* Adjust ml-4 as needed */}
               {/* update the donut chart based on the number */}
               <div>
@@ -193,7 +191,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
                   <DonutChartRect
                     chartHeight={65}
                     chartWidth={65}
-                    fontSize="1.4rem"
+                    fontSize="1.2rem"
                     percentage={48}
                     thickness="70%"
                   />
