@@ -1,6 +1,4 @@
-import axios from "axios";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
 
 import { useLapData } from "@/contexts/LapDataContext";
 import { usePacket } from "@/contexts/PacketContext";
