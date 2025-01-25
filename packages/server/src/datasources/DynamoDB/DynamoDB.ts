@@ -57,7 +57,6 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new GetItemCommand({
         Key: {
-          id: { S: "packet" },
           timestamp: { N: timestamp },
         },
         TableName: this.packetTableName,
@@ -77,7 +76,7 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const params: ScanCommandInput = {
         ScanFilter: {
-          Timestamp: {
+          timestamp: {
             AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
             ComparisonOperator: "BETWEEN",
           },
@@ -125,7 +124,6 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
-          id: "packet",
           timestamp: packet.TimeStamp,
         },
         TableName: this.packetTableName,
@@ -147,7 +145,6 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
-          id: "lap",
           timestamp: packet.timeStamp,
         },
         TableName: this.lapTableName,
