@@ -1,5 +1,3 @@
-import { start } from "repl";
-
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
 import {
@@ -105,19 +103,16 @@ export class DynamoDB implements DynamoDBtypes {
     }
   }
   // // Helper function to get lap table data
-  public async getLapData(timestamp: string) {
+  public async getLapData() {
     try {
-      const command = new GetItemCommand({
-        Key: {
-          id: { S: "lap" },
-          timestamp: { N: timestamp },
-        },
+      const command = new ScanCommand({
         TableName: this.lapTableName,
       });
+
       const response = await this.client.send(command);
-      return response;
+      return response.Items;
     } catch (error) {
-      logger.error("Error getting lap table data");
+      logger.error("Error getting all lap table data");
       throw new Error(error);
     }
   }

@@ -4,6 +4,6 @@ import * as controllers from "@/controllers/routeControllers/lap.controller";
 
 const lapRouter = express.Router();
 
-lapRouter.get("/lap/:timestamp", controllers.getLapData);
+lapRouter.get("/laps", controllers.getLapData);
 
 export default lapRouter;

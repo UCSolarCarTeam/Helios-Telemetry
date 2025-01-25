@@ -145,7 +145,9 @@ const exampleData: ILapData[] = [
 ];
 
 function RaceTab() {
-  const data = useMemo(() => exampleData, []);
+  const [lapData, setLapData] = useState<ILapData[]>([]);
+
+  const data = useMemo(() => lapData, [lapData]);
 
   const { currentPacket } = usePacket();
 
@@ -162,33 +164,45 @@ function RaceTab() {
     return result;
   }
 
-  // Function to fetch lap data
   const fetchLapData = async () => {
     try {
-      const timestamp = 1715859951742;
       const response = await axios.get(
-        `https://aedes.calgarysolarcar.ca:3001/lap/${timestamp}`,
+        `https://aedes.calgarysolarcar.ca:3001/laps`,
       );
-      return response.data;
-    } catch {
-      // console.error("Error fetching lap data", error);
+      return response.data; // Assuming the API returns an array of lap data
+    } catch (error) {
       return { error: "Error fetching lap data" };
     }
   };
-  const [lapData, setLapData] = useState<ILapData[]>([]);
 
-  // Fetch lap data on mount
   useEffect(() => {
     fetchLapData()
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setLapData(data); // Set the actual array of ILapData objects
-        } else {
-          // console.error("Unexpected API response structure", data);
-        }
+      .then((response) => {
+        const formattedData = response.data.map(
+          (lapPacket: { data: ILapData }) => ({
+            ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
+            averagePackCurrent: parseFloat(
+              lapPacket.data.averagePackCurrent.toFixed(2),
+            ),
+            averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
+            batterySecondsRemaining: parseFloat(
+              lapPacket.data.batterySecondsRemaining.toFixed(2),
+            ),
+            distance: parseFloat(lapPacket.data.distance.toFixed(2)),
+            lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
+            netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
+            timeStamp: new Date(lapPacket.data.timeStamp).toLocaleDateString(
+              "en-US",
+            ),
+            totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
+            totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
+          }),
+        );
+
+        setLapData(formattedData);
       })
       .catch((error) => {
-        // console.error("Error fetching lap data", error);
+        throw new Error(error);
       });
   }, []);
 
@@ -220,27 +234,6 @@ function RaceTab() {
             </span>
           </label>
         ))}
-        <div>
-          {Array.isArray(lapData) ? (
-            lapData.map((lap, index) => (
-              <div key={index}>
-                <h1>{`Lap ${index + 1}`}</h1>
-                <p>{`Amp Hours: ${lap.ampHours}`}</p>
-                <p>{`Average Pack Current: ${lap.averagePackCurrent}`}</p>
-                <p>{`Average Speed: ${lap.averageSpeed}`}</p>
-                <p>{`Battery Seconds Remaining: ${lap.batterySecondsRemaining}`}</p>
-                <p>{`Distance: ${lap.distance}`}</p>
-                <p>{`Lap Time: ${lap.lapTime}`}</p>
-                <p>{`Net Power Out: ${lap.netPowerOut}`}</p>
-                <p>{`Time Stamp: ${lap.timeStamp}`}</p>
-                <p>{`Total Power In: ${lap.totalPowerIn}`}</p>
-                <p>{`Total Power Out: ${lap.totalPowerOut}`}</p>
-              </div>
-            ))
-          ) : (
-            <p>No lap data available</p>
-          )}
-        </div>
       </div>
 
       <div className="w-3/4 overflow-x-auto">
@@ -270,7 +263,7 @@ function RaceTab() {
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
+                    className="text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm"
                     key={cell.id}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
