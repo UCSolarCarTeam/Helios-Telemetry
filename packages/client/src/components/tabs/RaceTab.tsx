@@ -2,6 +2,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
+import { useLapData } from "@/contexts/LapDataContext";
 import { usePacket } from "@/contexts/PacketContext";
 import type { ILapData } from "@shared/helios-types";
 import {
@@ -145,7 +146,7 @@ const exampleData: ILapData[] = [
 ];
 
 function RaceTab() {
-  const [lapData, setLapData] = useState<ILapData[]>([]);
+  const { lapData } = useLapData();
 
   const data = useMemo(() => lapData, [lapData]);
 
@@ -163,48 +164,6 @@ function RaceTab() {
 
     return result;
   }
-
-  const fetchLapData = async () => {
-    try {
-      const response = await axios.get(
-        `https://aedes.calgarysolarcar.ca:3001/laps`,
-      );
-      return response.data; // Assuming the API returns an array of lap data
-    } catch (error) {
-      return { error: "Error fetching lap data" };
-    }
-  };
-
-  useEffect(() => {
-    fetchLapData()
-      .then((response) => {
-        const formattedData = response.data.map(
-          (lapPacket: { data: ILapData }) => ({
-            ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
-            averagePackCurrent: parseFloat(
-              lapPacket.data.averagePackCurrent.toFixed(2),
-            ),
-            averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
-            batterySecondsRemaining: parseFloat(
-              lapPacket.data.batterySecondsRemaining.toFixed(2),
-            ),
-            distance: parseFloat(lapPacket.data.distance.toFixed(2)),
-            lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
-            netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
-            timeStamp: new Date(lapPacket.data.timeStamp).toLocaleDateString(
-              "en-US",
-            ),
-            totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
-            totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
-          }),
-        );
-
-        setLapData(formattedData);
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
-  }, []);
 
   return (
     <div className="m-4 flex justify-around">
