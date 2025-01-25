@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   type PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -25,11 +26,11 @@ export function LapDataContextProvider({
   const { currentAppState } = useAppState();
   const [lapData, setLapData] = useState<ILapData[]>([]);
 
-  const onLapData = (data: ILapData) => {
+  const onLapData = useCallback((data: ILapData) => {
     setLapData((prev) => [...prev, data]);
-  };
+  }, []);
 
-  const fetchLapData = async () => {
+  const fetchLapData = useCallback(async () => {
     try {
       const response = await axios.get(
         `https://aedes.calgarysolarcar.ca:3001/laps`,
@@ -38,7 +39,7 @@ export function LapDataContextProvider({
     } catch (error) {
       return { error: "Error fetching lap data" };
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchLapData()
