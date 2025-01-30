@@ -125,13 +125,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
   }, [percentage, fontSize]); // Re-render chart if percentage changes
 
   return (
-    <div
-      className={`flex items-center justify-center`}
-      style={{
-        height: chartHeight,
-        width: chartWidth,
-      }}
-    >
+    <div className="flex h-[4.4rem] w-[4.4rem] items-center justify-center">
       <canvas className=".block" ref={chartRef}></canvas>
     </div>
   );
