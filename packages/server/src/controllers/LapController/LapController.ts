@@ -90,6 +90,7 @@ export class LapController implements LapControllerType {
     this.lastLapPackets.push(packet);
   }
 
+ 
   public getLastPacket(): ITelemetryData[] {
     return this.lastLapPackets;
   }
