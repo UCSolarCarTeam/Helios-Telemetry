@@ -11,6 +11,7 @@ import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 import { logger } from "@/index";
 import { ILapData, type ITelemetryData } from "@shared/helios-types";
 
+//getDriverInfo
 export class BackendController implements BackendControllerTypes {
   public dynamoDB: DynamoDB;
   public socketIO: SocketIO;
