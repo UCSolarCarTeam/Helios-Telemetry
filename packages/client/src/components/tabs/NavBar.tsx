@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { type JSX, useEffect } from "react";
 
 import { type SolarCarRoutes, routes } from "@/objects/TabRoutes";
 import Tab from "@mui/material/Tab";
