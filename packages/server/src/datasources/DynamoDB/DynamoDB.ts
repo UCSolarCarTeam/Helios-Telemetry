@@ -31,6 +31,7 @@ if (!process.env.PACKET_TABLE_NAME) {
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
+const driverTableName = process.env.DRIVER_TABLE_NAME;
 
 const logger = createLightweightApplicationLogger("DynamoDB.ts");
 export class DynamoDB implements DynamoDBtypes {
@@ -38,6 +39,7 @@ export class DynamoDB implements DynamoDBtypes {
   backendController: BackendController;
   lapTableName: string;
   packetTableName: string;
+  driverTableName: string;
 
   constructor(backendController: BackendController) {
     try {
@@ -45,6 +47,7 @@ export class DynamoDB implements DynamoDBtypes {
       this.client = new DynamoDBClient({ region: "ca-central-1" });
       this.lapTableName = lapTableName;
       this.packetTableName = packetTableName;
+      this.driverTableName = driverTableName;
     } catch (error) {
       logger.error("Error connecting to dynamo client");
       throw new Error(error);
@@ -102,6 +105,37 @@ export class DynamoDB implements DynamoDBtypes {
       console.error(new Error(" Error Scanning Packets between Dates"));
     }
   }
+
+  public async getDrivers() {
+    try {
+      const command = new ScanCommand({
+        TableName: this.driverTableName,
+      });
+      const response = await this.client.send(command);
+      return response.Items;
+    } catch (error) {
+      logger.error("Error getting lap data for driver");
+      throw new Error(error);
+    }
+  }
+
+  public async getDriverLaps(rfid) {
+    try {
+      const command = new QueryCommand({
+        ExpressionAttributeValues: {
+          ":rfid": { N: rfid },
+        },
+        KeyConditionExpression: "rfid = :rfid",
+        TableName: this.driverTableName,
+      });
+      const response = await this.client.send(command);
+      return response.Items;
+    } catch (error) {
+      logger.error("Error getting lap data for driver");
+      throw new Error(error);
+    }
+  }
+
   // // Helper function to get lap table data
   public async getLapData() {
     try {

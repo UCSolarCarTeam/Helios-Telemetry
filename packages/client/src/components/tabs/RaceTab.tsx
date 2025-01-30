@@ -174,6 +174,24 @@ function RaceTab() {
       return { error: "Error fetching lap data" };
     }
   };
+  const fetchDriverNames = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3001/drivers`);
+      return response.data;
+    } catch (error) {
+      return { error: "Error fetching drivers" };
+    }
+  };
+
+  useEffect(() => {
+    fetchDriverNames()
+      .then((data) => {
+        // console.log("Driver Names:", data);
+      })
+      .catch((error) => {
+        // console.error("Error:", error);
+      });
+  });
 
   useEffect(() => {
     fetchLapData()
