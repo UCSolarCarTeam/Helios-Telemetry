@@ -524,12 +524,11 @@ export function generateFakeTelemetryData(): ITelemetryData {
   };
 }
 
-export function validateTelemetryData(packet: any) {
+export function validateTelemetryData(packet: unknown) {
   const validationResult = ITelemetryDataType.decode(packet);
   if (isRight(validationResult)) {
     return validationResult.right;
-  } else {
-    const errorMessages = PathReporter.report(validationResult).join(", ");
-    throw new Error(`Invalid packet format: ${errorMessages}`);
   }
+  const errorMessages = PathReporter.report(validationResult).join(", ");
+  throw new Error(`Invalid packet format: ${errorMessages}`);
 }

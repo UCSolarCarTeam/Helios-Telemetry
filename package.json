@@ -18,7 +18,8 @@
     "test": "lerna run test"
   },
   "dependencies": {
-    "esbuild": "^0.23.0"
+    "esbuild": "^0.23.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@types/eslint": "^9.6.0",
