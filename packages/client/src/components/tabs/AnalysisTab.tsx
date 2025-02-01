@@ -54,7 +54,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
   rectangleWidth = "285px",
 }) => {
   return (
-    <div className="flex flex-wrap justify-start gap-4">
+    <div className="flex flex-wrap items-center justify-center gap-4">
       {/* First square */}
       <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
         <p className="text-center text-base font-normal sm:text-lg md:text-lg lg:text-xl">
@@ -63,12 +63,12 @@ const GreyShapes: React.FC<ShapeProps> = ({
             {38}%
           </span>
         </p>
-        <p className="m-2 text-center font-normal text-[#9C0534] sm:text-4xl md:text-[2.5rem]">
+        <p className="m-2 text-center text-4xl font-normal text-[#9C0534] md:text-[2.5rem] lg:text-4xl">
           50 km/h
         </p>
 
         {/* Container for numbers and line */}
-        {/* Horizontal line */}
+        {/* horizontal line */}
 
         <div className="h-3.5 w-full rounded-full bg-[#3A3A3A]">
           <div className="flex h-3.5 w-1/2 rounded-full bg-[#3A3A3A]">
@@ -125,7 +125,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
       </div>
 
       {/* Container to stack rectangles vertically */}
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 sm:flex-col md:flex-row lg:flex-col">
         {/* Rectangle 1 */}
         <div
           className="rounded-2xl bg-[#BFBFBF]"

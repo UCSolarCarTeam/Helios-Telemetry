@@ -5,12 +5,13 @@ export const getChartConfig = (
   percentage: number,
   thickness: string,
   fontSize: string,
+  circumference: number,
 ) => {
   return {
     data: data,
     options: {
       borderColor: "#BFBFBF",
-      circumference: 310,
+      circumference: circumference,
       cutout: thickness, // Making it a doughnut chart (hole in the center)
       maintainAspectRatio: false, // Disable aspect ratio to allow custom size
       plugins: {

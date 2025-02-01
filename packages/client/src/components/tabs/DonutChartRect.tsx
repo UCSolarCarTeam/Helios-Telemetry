@@ -1,8 +1,6 @@
 import {
   ArcElement,
   Chart,
-  ChartOptions,
-  ChartType,
   DoughnutController,
   Legend,
   Tooltip,
@@ -55,7 +53,14 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
       ],
     };
 
-    const config = getChartConfig(data, percentage, thickness, fontSize);
+    const circumference = 310;
+    const config = getChartConfig(
+      data,
+      percentage,
+      thickness,
+      fontSize,
+      circumference,
+    );
 
     if (chartRef.current) {
       // Create a new chart instance
