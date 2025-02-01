@@ -13,7 +13,20 @@ import { socketIO } from "@/contexts/SocketContext";
 import { ILapData } from "@shared/helios-types";
 
 interface ILapDataContextReturn {
-  lapData: ILapData[];
+  lapData: IFormattedLapData[];
+}
+
+interface IFormattedLapData {
+  ampHours: number;
+  averagePackCurrent: number;
+  averageSpeed: number;
+  batterySecondsRemaining: number;
+  distance: number;
+  lapTime: number;
+  netPowerOut: number;
+  timeStamp: string;
+  totalPowerIn: number;
+  totalPowerOut: number;
 }
 
 const lapDataContext = createContext<ILapDataContextReturn>({
@@ -24,10 +37,25 @@ export function LapDataContextProvider({
   children,
 }: PropsWithChildren): JSX.Element {
   const { currentAppState } = useAppState();
-  const [lapData, setLapData] = useState<ILapData[]>([]);
+  const [lapData, setLapData] = useState<IFormattedLapData[]>([]);
 
   const onLapData = useCallback((data: ILapData) => {
-    setLapData((prev) => [...prev, data]);
+    const formattedData: IFormattedLapData = {
+      ampHours: parseFloat(data.ampHours.toFixed(2)),
+      averagePackCurrent: parseFloat(data.averagePackCurrent.toFixed(2)),
+      averageSpeed: parseFloat(data.averageSpeed.toFixed(2)),
+      batterySecondsRemaining: parseFloat(
+        data.batterySecondsRemaining.toFixed(2),
+      ),
+      distance: parseFloat(data.distance.toFixed(2)),
+      lapTime: parseFloat(data.lapTime.toFixed(2)),
+      netPowerOut: parseFloat(data.netPowerOut.toFixed(2)),
+      timeStamp: new Date(data.timeStamp).toLocaleDateString("en-US"),
+      totalPowerIn: parseFloat(data.totalPowerIn.toFixed(2)),
+      totalPowerOut: parseFloat(data.totalPowerOut.toFixed(2)),
+    };
+
+    setLapData((prev) => [...prev, formattedData]);
   }, []);
 
   const fetchLapData = useCallback(async () => {
