@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 
 import { useLapData } from "@/contexts/LapDataContext";
 import { usePacket } from "@/contexts/PacketContext";
-import type { ILapData } from "@shared/helios-types";
+import type { IFormattedLapData, ILapData } from "@shared/helios-types";
 import {
   createColumnHelper,
   flexRender,
@@ -11,7 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<ILapData>();
+const columnHelper = createColumnHelper<IFormattedLapData>();
 
 const columns = [
   columnHelper.accessor("ampHours", {

@@ -397,3 +397,15 @@ export interface ITelemetry {
   MpuRotationZ: number;
   MpuTemperature: number;
 }
+export interface IFormattedLapData {
+  ampHours: number;
+  averagePackCurrent: number;
+  averageSpeed: number;
+  batterySecondsRemaining: number;
+  distance: number;
+  lapTime: number;
+  netPowerOut: number;
+  timeStamp: string;
+  totalPowerIn: number;
+  totalPowerOut: number;
+}

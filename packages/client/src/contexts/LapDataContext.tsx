@@ -10,23 +10,10 @@ import {
 
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
-import { ILapData } from "@shared/helios-types";
+import { IFormattedLapData, ILapData } from "@shared/helios-types";
 
 interface ILapDataContextReturn {
   lapData: IFormattedLapData[];
-}
-
-interface IFormattedLapData {
-  ampHours: number;
-  averagePackCurrent: number;
-  averageSpeed: number;
-  batterySecondsRemaining: number;
-  distance: number;
-  lapTime: number;
-  netPowerOut: number;
-  timeStamp: string;
-  totalPowerIn: number;
-  totalPowerOut: number;
 }
 
 const lapDataContext = createContext<ILapDataContextReturn>({
