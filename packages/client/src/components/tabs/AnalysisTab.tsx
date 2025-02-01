@@ -61,7 +61,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
         <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
           <p className="text-center text-base font-normal sm:text-lg md:text-lg lg:text-xl">
             Optimal Driving Speed At&nbsp;
-            <span className="text-center text-lg font-normal text-[#9C0534] sm:text-lg md:text-lg lg:text-xl">
+            <span className="text-center text-base font-normal text-[#9C0534] sm:text-lg md:text-lg lg:text-xl">
               {38}%
             </span>
           </p>
@@ -127,7 +127,8 @@ const GreyShapes: React.FC<ShapeProps> = ({
         </div>
       </div>
       {/* Container to stack rectangles vertically */}
-      <div className="flex flex-col items-center gap-4 sm:flex-row md:flex-row lg:flex-col">
+
+      <div className="flex flex-col items-center gap-4 sm:flex-row md:flex-row lg:flex-row xl:flex-col">
         {/* Rectangle 1 */}
         <div
           className="rounded-2xl bg-[#BFBFBF]"
@@ -175,7 +176,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
         {/* Rectangle 2 */}
         <div
           className="flex flex-col items-center rounded-2xl bg-[#BFBFBF] p-4"
-          style={{ height: "8.5rem", width: rectangleWidth }}
+          style={{ height: "8.7rem", width: rectangleWidth }}
         >
           {/* Title */}
           <p className="mt-[-0.5rem] text-center text-[0.875rem] font-normal leading-[1.35rem] sm:text-base md:text-lg">
@@ -186,7 +187,6 @@ const GreyShapes: React.FC<ShapeProps> = ({
           <div className="mt-0 flex items-center justify-center gap-8">
             {/* First circle with line below */}
             <div className="mt-[-0.5rem] flex w-[6.5rem] items-center justify-center">
-              {/* Adjust ml-4 as needed */}
               {/* update the donut chart based on the number */}
               <div>
                 <div className="h-0.6 ml-2">
