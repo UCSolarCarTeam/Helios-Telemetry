@@ -1,12 +1,14 @@
-import { type JSX, useEffect, useState } from "react";
+import { type JSX, use, useEffect, useState } from "react";
 
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
 import { useAppState } from "@/contexts/AppStateContext";
+import { usePacket } from "@/contexts/PacketContext";
 import type { Coords } from "@shared/helios-types";
 
 function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
+  const { currentPacket } = usePacket();
   const [mapInputs, setMapInputs] = useState<{
     lapLocation: Coords;
     carLocation: Coords;
@@ -17,19 +19,19 @@ function MapContainer(): JSX.Element {
     },
     lapLocation: currentAppState.lapCoords,
   });
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMapInputs((prevState) => ({
-        ...prevState,
-        carLocation: {
-          lat: prevState.carLocation.lat + 0.0001,
-          long: prevState.carLocation.long,
-        },
-      }));
-    }, 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setMapInputs((prevState) => ({
+  //       ...prevState,
+  //       carLocation: {
+  //         lat: prevState.carLocation.lat + 0.0001,
+  //         long: prevState.carLocation.long,
+  //       },
+  //     }));
+  //   }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   useEffect(() => {
     setMapInputs((prevMapInputs) => ({
@@ -40,6 +42,16 @@ function MapContainer(): JSX.Element {
       },
     }));
   }, [currentAppState.lapCoords]);
+
+  useEffect(() => {
+    setMapInputs((prevMapInputs) => ({
+      ...prevMapInputs,
+      carLocation: {
+        lat: currentPacket.Telemetry.GpsLatitude,
+        long: currentPacket.Telemetry.GpsLongitude,
+      },
+    }));
+  }, [currentPacket]);
 
   return (
     <div className="size-full">
