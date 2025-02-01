@@ -101,7 +101,7 @@ export class DynamoDB implements DynamoDBtypes {
         }
       } while (lastEvaluatedKey);
     } catch (error) {
-      console.error(new Error(" Error Scanning Packets between Dates"));
+      // console.error(new Error(" Error Scanning Packets between Dates"));
     }
   }
 
@@ -179,7 +179,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
-          timestamp: packet.timeStamp,
+          timestamp: packet.data.timeStamp,
         },
         TableName: this.lapTableName,
       });

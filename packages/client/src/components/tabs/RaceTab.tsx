@@ -2,8 +2,8 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
-import { usePacket } from "@/contexts/PacketContext";
 import type { ILapData } from "@shared/helios-types";
+import { IDriverData } from "@shared/helios-types/src/types";
 import {
   createColumnHelper,
   flexRender,
@@ -14,192 +14,74 @@ import {
 const columnHelper = createColumnHelper<ILapData>();
 
 const columns = [
-  columnHelper.accessor("ampHours", {
+  columnHelper.accessor("rfid", {
+    cell: (info) => info.getValue(),
+    header: "RFID",
+  }),
+  columnHelper.accessor("data.ampHours", {
     cell: (info) => info.getValue(),
     header: "Amp Hours",
   }),
-  columnHelper.accessor("averagePackCurrent", {
+  columnHelper.accessor("data.averagePackCurrent", {
     cell: (info) => info.getValue(),
     header: "Average Pack Current",
   }),
-  columnHelper.accessor("averageSpeed", {
+  columnHelper.accessor("data.averageSpeed", {
     cell: (info) => info.getValue(),
     header: "Average Speed",
   }),
-  columnHelper.accessor("batterySecondsRemaining", {
+  columnHelper.accessor("data.batterySecondsRemaining", {
     cell: (info) => info.getValue(),
     header: "Battery Seconds Remaining",
   }),
-  columnHelper.accessor("distance", {
+  columnHelper.accessor("data.distance", {
     cell: (info) => info.getValue(),
     header: "Distance",
   }),
-  columnHelper.accessor("lapTime", {
+  columnHelper.accessor("data.lapTime", {
     cell: (info) => info.getValue(),
     header: "Lap Time",
   }),
-  columnHelper.accessor("netPowerOut", {
+  columnHelper.accessor("data.netPowerOut", {
     cell: (info) => info.getValue(),
     header: "Net Power Out",
   }),
-  columnHelper.accessor("timeStamp", {
+  columnHelper.accessor("data.timeStamp", {
     cell: (info) => info.getValue(),
     header: "Time Stamp",
   }),
-  columnHelper.accessor("totalPowerIn", {
+  columnHelper.accessor("data.totalPowerIn", {
     cell: (info) => info.getValue(),
     header: "Total Power In",
   }),
-  columnHelper.accessor("totalPowerOut", {
+  columnHelper.accessor("data.totalPowerOut", {
     cell: (info) => info.getValue(),
     header: "Total Power Out",
   }),
 ];
 
-// example driver table
-
-const exampleDriverData = [
-  {
-    driver: `Alice`,
-    rfid: 563234523,
-  },
-  {
-    driver: `Adam`,
-    rfid: 928374928,
-  },
-
-  {
-    driver: `Frank`,
-    rfid: 740192843,
-  },
-  {
-    rfid: 192384758,
-  },
-  {
-    driver: `Hannah`,
-    rfid: 584930283,
-  },
-  {
-    driver: `Ivy`,
-    rfid: 384923758,
-  },
-  {
-    driver: `Jack`,
-    rfid: 984753284,
-  },
-];
-
-// sample data
-const exampleData: ILapData[] = [
-  {
-    ampHours: 10,
-    averagePackCurrent: 11,
-    averageSpeed: 23,
-    batterySecondsRemaining: 23,
-    distance: 23,
-    lapTime: 23423,
-    netPowerOut: 13434,
-    rfid: 563234523,
-    timeStamp: 324234,
-    totalPowerIn: 1234,
-    totalPowerOut: 123,
-  },
-  {
-    ampHours: 15,
-    averagePackCurrent: 12,
-    averageSpeed: 25,
-    batterySecondsRemaining: 30,
-    distance: 25,
-    lapTime: 25000,
-    netPowerOut: 15000,
-    rfid: 928374928,
-    timeStamp: 324234,
-    totalPowerIn: 1500,
-    totalPowerOut: 150,
-  },
-  {
-    ampHours: 15,
-    averagePackCurrent: 12,
-    averageSpeed: 25,
-    batterySecondsRemaining: 30,
-    distance: 25,
-    lapTime: 25000,
-    netPowerOut: 15000,
-    rfid: 740192843,
-    timeStamp: 324234,
-    totalPowerIn: 1500,
-    totalPowerOut: 150,
-  },
-  {
-    ampHours: 15,
-    averagePackCurrent: 12,
-    averageSpeed: 25,
-    batterySecondsRemaining: 30,
-    distance: 25,
-    lapTime: 25000,
-    netPowerOut: 15000,
-    rfid: 192384758,
-    timeStamp: 324234,
-    totalPowerIn: 1500,
-    totalPowerOut: 150,
-  },
-  {
-    ampHours: 15,
-    averagePackCurrent: 12,
-    averageSpeed: 25,
-    batterySecondsRemaining: 30,
-    distance: 25,
-    lapTime: 25000,
-    netPowerOut: 15000,
-    rfid: 584930283,
-    timeStamp: 324234,
-    totalPowerIn: 1500,
-    totalPowerOut: 150,
-  },
-  {
-    ampHours: 15,
-    averagePackCurrent: 12,
-    averageSpeed: 25,
-    batterySecondsRemaining: 30,
-    distance: 25,
-    lapTime: 25000,
-    netPowerOut: 15000,
-    rfid: 384923758,
-    timeStamp: 324234,
-    totalPowerIn: 1500,
-    totalPowerOut: 150,
-  },
-  {
-    ampHours: 1234,
-    averagePackCurrent: 12,
-    averageSpeed: 25,
-    batterySecondsRemaining: 30,
-    distance: 25,
-    lapTime: 25000,
-    netPowerOut: 15000,
-    rfid: 984753284,
-    timeStamp: 324234,
-    totalPowerIn: 1500,
-    totalPowerOut: 150,
-  },
-];
-
 function RaceTab() {
   const [lapData, setLapData] = useState<ILapData[]>([]);
   const [rfid, setDriverRFID] = useState<number | undefined>(undefined);
+  const [driverData, setDriverData] = useState<IDriverData[]>([]);
 
   const handleDriverRFID: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     setDriverRFID(Number(e.target.value));
   };
 
-  const data = useMemo(() => exampleData, []);
+  // const filteredLapData = useMemo(
+  //   () => (rfid ? lapData.filter((lap) => lap.rfid === rfid) : lapData),
+  //   [lapData, rfid],
+  // );
 
-  const filteredLapData = useMemo(
-    () => (rfid ? exampleData.filter((lap) => lap.rfid === rfid) : exampleData),
-    [rfid],
-  );
-
-  const { currentPacket } = usePacket();
+  const filteredLapData = useMemo(() => {
+    const res = rfid
+      ? lapData.filter((lap) => {
+          return Number(lap.rfid) === rfid;
+        })
+      : lapData;
+    return res;
+  }, [lapData, rfid]);
 
   const table = useReactTable({
     columns,
@@ -235,19 +117,23 @@ function RaceTab() {
 
   useEffect(() => {
     fetchDriverNames()
-      .then((data) => {
-        // console.log("Driver Names:", data);
+      .then((response) => {
+        const formattedData = response.data.map((driver: IDriverData) => ({
+          driver: driver.driver,
+          rfid: driver.rfid,
+        }));
+        setDriverData(formattedData);
       })
       .catch((error) => {
-        // console.error("Error:", error);
+        throw new Error(error);
       });
-  });
+  }, []);
 
   useEffect(() => {
     fetchLapData()
       .then((response) => {
-        const formattedData = response.data.map(
-          (lapPacket: { data: ILapData }) => ({
+        const formattedData = response.data.map((lapPacket: ILapData) => ({
+          data: {
             ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
             averagePackCurrent: parseFloat(
               lapPacket.data.averagePackCurrent.toFixed(2),
@@ -259,14 +145,15 @@ function RaceTab() {
             distance: parseFloat(lapPacket.data.distance.toFixed(2)),
             lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
             netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
+
             timeStamp: new Date(lapPacket.data.timeStamp).toLocaleDateString(
               "en-US",
             ),
             totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
             totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
-          }),
-        );
-
+          },
+          rfid: lapPacket.rfid,
+        }));
         setLapData(formattedData);
       })
       .catch((error) => {
@@ -285,9 +172,9 @@ function RaceTab() {
             src="/assets/HeliosSideview.png"
             width={50}
           />
-          <select onChange={handleDriverRFID}>
+          <select className="w-64" onChange={handleDriverRFID}>
             <option value="all">Show all data</option>
-            {exampleDriverData.map((driver) => (
+            {driverData.map((driver) => (
               <option key={driver.rfid} value={driver.rfid}>
                 {driver.driver
                   ? `${driver.driver}: ${driver.rfid}`
@@ -336,25 +223,28 @@ function RaceTab() {
                 </tr>
               ))}
             </thead>
-
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
-                      key={cell.id}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
           </table>
+          <div style={{ height: "350px", overflow: "auto" }}>
+            <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
+                        key={cell.id}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

@@ -69,20 +69,24 @@ export class LapController implements LapControllerType {
       );
 
       const lapData: ILapData = {
-        ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
-        averagePackCurrent: averagePackCurrent,
-        averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
-        batterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
-          amphoursValue,
-          averagePackCurrent,
-        ),
-        distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
-        lapTime: this.calculateLapTime(this.lastLapPackets),
-        netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
+        data: {
+          ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
+          averagePackCurrent: averagePackCurrent,
+          averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
+          batterySecondsRemaining:
+            this.getSecondsRemainingUntilChargedOrDepleted(
+              amphoursValue,
+              averagePackCurrent,
+            ),
+          distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+          lapTime: this.calculateLapTime(this.lastLapPackets),
+          netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
+
+          timeStamp: packet.TimeStamp,
+          totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
+          totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
+        },
         rfid: packet.Pi.rfid,
-        timeStamp: packet.TimeStamp,
-        totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
-        totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
 
       await this.backendController.dynamoDB.insertLapData(lapData);
@@ -91,7 +95,6 @@ export class LapController implements LapControllerType {
     this.lastLapPackets.push(packet);
   }
 
- 
   public getLastPacket(): ITelemetryData[] {
     return this.lastLapPackets;
   }

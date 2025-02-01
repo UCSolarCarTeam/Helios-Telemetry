@@ -21,6 +21,12 @@ enum Motor {
   LeftMotor = 0,
 }
 
+export interface IDriverData {
+  driver: {
+    driver: string;
+    rfid: number;
+  };
+}
 export interface ITelemetryData {
   B3: IB3;
   Battery: IBattery;
@@ -41,16 +47,18 @@ export interface ITelemetryData {
 }
 
 export interface ILapData {
-  ampHours: number;
-  averagePackCurrent: number;
-  averageSpeed: number;
-  batterySecondsRemaining: number;
-  distance: number;
-  lapTime: number;
-  netPowerOut: number;
-  timeStamp: number;
-  totalPowerIn: number;
-  totalPowerOut: number;
+  data: {
+    ampHours: number;
+    averagePackCurrent: number;
+    averageSpeed: number;
+    batterySecondsRemaining: number;
+    distance: number;
+    lapTime: number;
+    netPowerOut: number;
+    timeStamp: number;
+    totalPowerIn: number;
+    totalPowerOut: number;
+  };
   rfid: number;
 }
 
