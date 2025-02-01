@@ -1,4 +1,4 @@
-import { type JSX, use, useEffect, useState } from "react";
+import { type JSX, useEffect, useState } from "react";
 
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
@@ -9,48 +9,55 @@ import type { Coords } from "@shared/helios-types";
 function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
   const { currentPacket } = usePacket();
+
+  const isDemo = currentAppState.connectionType === "DEMO";
+
   const [mapInputs, setMapInputs] = useState<{
     lapLocation: Coords;
     carLocation: Coords;
-  }>({
-    carLocation: {
-      lat: currentAppState.lapCoords.lat,
-      long: currentAppState.lapCoords.long,
-    },
+  }>(() => ({
+    carLocation: currentAppState.lapCoords,
     lapLocation: currentAppState.lapCoords,
-  });
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setMapInputs((prevState) => ({
-  //       ...prevState,
-  //       carLocation: {
-  //         lat: prevState.carLocation.lat + 0.0001,
-  //         long: prevState.carLocation.long,
-  //       },
-  //     }));
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
+  }));
 
   useEffect(() => {
     setMapInputs((prevMapInputs) => ({
       ...prevMapInputs,
-      lapLocation: {
-        lat: currentAppState.lapCoords.lat,
-        long: currentAppState.lapCoords.long,
-      },
+      lapLocation: currentAppState.lapCoords,
     }));
   }, [currentAppState.lapCoords]);
 
   useEffect(() => {
-    setMapInputs((prevMapInputs) => ({
-      ...prevMapInputs,
-      carLocation: {
-        lat: currentPacket.Telemetry.GpsLatitude,
-        long: currentPacket.Telemetry.GpsLongitude,
-      },
-    }));
+    if (isDemo) {
+      setMapInputs((prevMapInputs) => ({
+        ...prevMapInputs,
+        carLocation: currentAppState.lapCoords,
+      }));
+
+      const interval = setInterval(() => {
+        setMapInputs((prevState) => ({
+          ...prevState,
+          carLocation: {
+            lat: prevState.carLocation.lat + 0.0001,
+            long: prevState.carLocation.long,
+          },
+        }));
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isDemo]);
+
+  useEffect(() => {
+    if (!isDemo) {
+      setMapInputs((prevMapInputs) => ({
+        ...prevMapInputs,
+        carLocation: {
+          lat: currentPacket.Telemetry.GpsLatitude,
+          long: currentPacket.Telemetry.GpsLongitude,
+        },
+      }));
+    }
   }, [currentPacket]);
 
   return (
@@ -58,7 +65,7 @@ function MapContainer(): JSX.Element {
       <div className="grid h-[90%]">
         <Map
           carLocation={mapInputs.carLocation}
-          lapLocation={currentAppState.lapCoords}
+          lapLocation={mapInputs.lapLocation}
           mapLocation={mapInputs.carLocation}
         />
       </div>
