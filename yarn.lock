@@ -11525,6 +11525,7 @@ __metadata:
     next: "npm:15.1.4"
     prettier: "npm:^3.3.2"
     prettier-plugin-tailwindcss: "npm:^0.6.6"
+    rc-slider: "npm:^11.1.7"
     react: "npm:19.0.0"
     react-chartjs-2: "npm:^5.2.0"
     react-dom: "npm:19.0.0"
