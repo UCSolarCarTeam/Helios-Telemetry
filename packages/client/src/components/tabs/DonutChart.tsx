@@ -1,6 +1,7 @@
 import {
   ArcElement,
   Chart,
+  ChartData,
   ChartOptions,
   ChartType,
   DoughnutController,
@@ -9,9 +10,10 @@ import {
 } from "chart.js";
 import React, { useEffect, useRef } from "react";
 
+import { getChartConfig } from "./chartConfig";
+
 // Register the required elements, controllers, and plugins for the doughnut chart
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
-
 interface DonutChartProps {
   percentage: number;
   fontSize: string;
@@ -35,7 +37,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
     }
 
     // Doughnut chart configuration
-    const data = {
+    const data: ChartData<"doughnut"> = {
       datasets: [
         {
           backgroundColor: [
@@ -48,63 +50,9 @@ const DonutChart: React.FC<DonutChartProps> = ({
         },
       ],
     };
+    //typeof(data);
 
-    const config = {
-      data: data,
-      options: {
-        borderColor: "#BFBFBF",
-        circumference: 310,
-        cutout: thickness, // Making it a doughnut chart (hole in the center)
-        maintainAspectRatio: false, // Disable aspect ratio to allow custom size
-        plugins: {
-          // Add custom text plugin
-          centerText: {
-            text: percentage, // Text to display in the center
-          },
-          tooltip: {
-            enabled: true, // Ensure tooltips still work
-          },
-        },
-        responsive: true, // Ensure chart resizes
-        rotation: 200,
-      },
-      plugins: [
-        {
-          beforeDraw(chart: {
-            ctx: CanvasRenderingContext2D;
-            chartArea: {
-              top: number;
-              bottom: number;
-            };
-            options: ChartOptions;
-            width: number;
-          }) {
-            const { width } = chart;
-            const ctx = chart.ctx;
-
-            // get the coordinates of the center
-            const centerX = width / 2;
-            const centerY =
-              chart.chartArea.top +
-              (chart.chartArea.bottom - chart.chartArea.top) / 2;
-
-            //get the text to display from options
-            //const text = chart.options.plugins.centerText?.text || ""; // if theres no text, display nothing
-
-            ctx.save();
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.font = `${fontSize} Arial`;
-            ctx.fillStyle = "#4D6BDB"; // Text color
-            ctx.fillText(percentage.toString(), centerX, centerY);
-            ctx.restore();
-          },
-          id: "centerText",
-        },
-      ],
-
-      type: "doughnut" as ChartType, // Explicitly casting to ChartType
-    };
+    const config = getChartConfig(data, percentage, thickness, fontSize);
 
     if (chartRef.current) {
       // Create a new chart instance
