@@ -56,6 +56,39 @@ const columns = [
   }),
 ];
 
+// example driver table
+
+const exampleDriverData = [
+  {
+    driver: `Alice`,
+    rfid: 563234523,
+  },
+  {
+    driver: `Adam`,
+    rfid: 928374928,
+  },
+
+  {
+    driver: `Frank`,
+    rfid: 740192843,
+  },
+  {
+    rfid: 192384758,
+  },
+  {
+    driver: `Hannah`,
+    rfid: 584930283,
+  },
+  {
+    driver: `Ivy`,
+    rfid: 384923758,
+  },
+  {
+    driver: `Jack`,
+    rfid: 984753284,
+  },
+];
+
 // sample data
 const exampleData: ILapData[] = [
   {
@@ -66,6 +99,7 @@ const exampleData: ILapData[] = [
     distance: 23,
     lapTime: 23423,
     netPowerOut: 13434,
+    rfid: 563234523,
     timeStamp: 324234,
     totalPowerIn: 1234,
     totalPowerOut: 123,
@@ -78,6 +112,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 928374928,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -90,6 +125,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 740192843,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -102,6 +138,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 192384758,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -114,6 +151,7 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 584930283,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -126,18 +164,20 @@ const exampleData: ILapData[] = [
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 384923758,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
   },
   {
-    ampHours: 15,
+    ampHours: 1234,
     averagePackCurrent: 12,
     averageSpeed: 25,
     batterySecondsRemaining: 30,
     distance: 25,
     lapTime: 25000,
     netPowerOut: 15000,
+    rfid: 984753284,
     timeStamp: 324234,
     totalPowerIn: 1500,
     totalPowerOut: 150,
@@ -146,14 +186,24 @@ const exampleData: ILapData[] = [
 
 function RaceTab() {
   const [lapData, setLapData] = useState<ILapData[]>([]);
+  const [rfid, setDriverRFID] = useState<number | undefined>(undefined);
 
-  const data = useMemo(() => lapData, [lapData]);
+  const handleDriverRFID: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setDriverRFID(Number(e.target.value));
+  };
+
+  const data = useMemo(() => exampleData, []);
+
+  const filteredLapData = useMemo(
+    () => (rfid ? exampleData.filter((lap) => lap.rfid === rfid) : exampleData),
+    [rfid],
+  );
 
   const { currentPacket } = usePacket();
 
   const table = useReactTable({
     columns,
-    data,
+    data: filteredLapData,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -235,9 +285,16 @@ function RaceTab() {
             src="/assets/HeliosSideview.png"
             width={50}
           />
-          <span className="text-sm">
-            Current Driver: {currentPacket.Pi.rfid}
-          </span>
+          <select onChange={handleDriverRFID}>
+            <option value="all">Show all data</option>
+            {exampleDriverData.map((driver) => (
+              <option key={driver.rfid} value={driver.rfid}>
+                {driver.driver
+                  ? `${driver.driver}: ${driver.rfid}`
+                  : `NO NAME: ${driver.rfid}`}
+              </option>
+            ))}
+          </select>
         </div>
         {table.getAllLeafColumns().map((column) => (
           <label className="flex items-center gap-1 text-sm" key={column.id}>
@@ -253,45 +310,53 @@ function RaceTab() {
           </label>
         ))}
       </div>
+      {filteredLapData.length === 0 ? (
+        <div className="w-3/4 overflow-x-auto">
+          <div className="pt-8 text-center">No Lap Data</div>
+        </div>
+      ) : (
+        <div className="w-3/4 overflow-x-auto">
+          <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
+            <thead className="border-b-2 border-helios">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
+                      key={header.id}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
 
-      <div className="w-3/4 overflow-x-auto">
-        <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
-          <thead className="border-b-2 border-helios">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
-                    key={header.id}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    className="text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm"
-                    key={cell.id}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
+                      key={cell.id}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
