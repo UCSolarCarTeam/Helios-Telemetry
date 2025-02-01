@@ -24,6 +24,7 @@
     "lodash": "^4.17.21",
     "mapbox-gl": "^3.5.1",
     "next": "15.1.4",
+    "rc-slider": "^11.1.8",
     "react": "19.0.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "19.0.0",
