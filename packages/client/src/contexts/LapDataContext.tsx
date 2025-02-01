@@ -73,7 +73,10 @@ export function LapDataContextProvider({
   }, []);
 
   useEffect(() => {
-    if (currentAppState.connectionType === CONNECTIONTYPES.NETWORK) {
+    if (
+      currentAppState.connectionType === CONNECTIONTYPES.NETWORK &&
+      !currentAppState.playbackSwitch
+    ) {
       socketIO.on("lapData", onLapData);
       return () => {
         socketIO.off("lapData", onLapData);
