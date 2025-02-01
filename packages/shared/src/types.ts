@@ -22,10 +22,8 @@ enum Motor {
 }
 
 export interface IDriverData {
-  driver: {
-    driver: string;
-    rfid: number;
-  };
+  driver: string;
+  rfid: string;
 }
 export interface ITelemetryData {
   B3: IB3;
