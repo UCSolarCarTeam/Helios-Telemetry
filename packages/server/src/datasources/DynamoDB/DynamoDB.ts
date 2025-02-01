@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
 import {
@@ -60,6 +62,7 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new GetItemCommand({
         Key: {
+          id: { S: "packet" },
           timestamp: { N: timestamp },
         },
         TableName: this.packetTableName,
@@ -158,6 +161,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
+          id: uuidv4(),
           timestamp: packet.TimeStamp,
         },
         TableName: this.packetTableName,
@@ -179,6 +183,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
+          id: uuidv4(),
           timestamp: packet.timeStamp,
         },
         TableName: this.lapTableName,
