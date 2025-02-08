@@ -1,4 +1,5 @@
 import axios from "axios";
+import axios from "axios";
 import React, { useState } from "react";
 
 import { Button, TextField } from "@mui/material";
@@ -47,7 +48,7 @@ export default function DriverUpdate() {
     e.preventDefault();
     if (validateInputs()) {
       axios
-        .post("/updatedriverinfo", {
+        .post("http://localhost:3001/updatedriverinfo", {
           name: driverDetails.name,
           rfid: Number(driverDetails.rfid),
         })
