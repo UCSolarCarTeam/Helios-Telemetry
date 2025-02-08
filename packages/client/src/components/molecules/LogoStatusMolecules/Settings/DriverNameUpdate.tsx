@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 import { Button, TextField } from "@mui/material";
@@ -45,8 +46,18 @@ export default function DriverUpdate() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateInputs()) {
-      // Handle valid form submission
-      //   console.log("Form submitted successfully", driverDetails);
+      axios
+        .post("/updatedriverinfo", {
+          name: driverDetails.name,
+          rfid: Number(driverDetails.rfid),
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            setErrorMessage("Driver info updated successfully");
+          } else {
+            setErrorMessage("Error updating driver info");
+          }
+        });
     }
   };
 

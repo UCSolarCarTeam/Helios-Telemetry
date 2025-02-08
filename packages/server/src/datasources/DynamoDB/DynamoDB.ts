@@ -242,6 +242,23 @@ export class DynamoDB implements DynamoDBtypes {
       resolve();
     });
   }
+
+  public async updateDriverInfo(rfid: string, name: string) {
+    try {
+      const command = new PutCommand({
+        Item: {
+          name: { S: name },
+          rfid: { N: rfid },
+        },
+        TableName: this.driverTableName,
+      });
+      const response = await this.client.send(command);
+      return response;
+    } catch (error) {
+      logger.error("Error updating driver info");
+      throw new Error(error);
+    }
+  }
 }
 
 export default DynamoDB;
