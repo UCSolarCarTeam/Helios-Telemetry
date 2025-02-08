@@ -104,12 +104,52 @@ function SettingsComponent() {
     },
     [setCurrentAppState],
   );
+  const [showModal, setShowModal] = useState(false);
+
+  const [dateAndTime, setDateAndTime] = useState<Date | undefined>(undefined);
+
+  const onDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateAndTime(e.target.value ? new Date(e.target.value) : undefined);
+
+    // make api call to see if that date exists in the table
+
+    // if that date doesnt exist then show the modal
+
+    // if it does exist then set the current packet, or create a playbackcontext
+  };
   return (
     <div className="grid">
+      {currentAppState.playbackSwitch && (
+        <>
+          <div className="flex flex-col gap-2 py-1">
+            <input
+              className="max-w-32 rounded-md bg-[#BCBCBC] p-1 text-pink shadow-sm transition-all focus:outline-none"
+              id="playbackDate"
+              onChange={onDateChange}
+              required
+              step="900"
+              type="date"
+            />
+          </div>
+          <Modal
+            aria-describedby="modal-modal-description"
+            aria-labelledby="modal-modal-title"
+            className="flex flex-grow items-center justify-center"
+            onClose={() => setShowModal(false)}
+            open={showModal}
+          >
+            <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none sm:max-w-[75%]">
+              <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
+                There is no data for this date
+              </h5>{" "}
+            </div>
+          </Modal>
+        </>
+      )}
+
       <h2 className="text-text-gray dark:text-text-gray-dark w-fit cursor-pointer text-sm font-black">
         <SettingsIcon onClick={() => setOpen(true)} />
       </h2>
-
       <Modal
         aria-describedby="modal-modal-description"
         aria-labelledby="modal-modal-title"

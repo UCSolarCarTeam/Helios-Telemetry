@@ -30,7 +30,6 @@ export default function Home() {
             </div>
           </div>
           <div className="grid">
-            <BottomInformationContainer />
             {currentAppState.playbackSwitch ? (
               <PlaybackSlider />
             ) : (
