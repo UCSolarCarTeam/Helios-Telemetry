@@ -58,11 +58,8 @@ function SettingsComponent() {
   );
   return (
     <div className="grid">
-      <h2
-        className="text-text-gray dark:text-text-gray-dark cursor-pointer text-sm font-black"
-        onClick={() => setOpen(true)}
-      >
-        <SettingsIcon />
+      <h2 className="text-text-gray dark:text-text-gray-dark w-fit cursor-pointer text-sm font-black">
+        <SettingsIcon onClick={() => setOpen(true)} />
       </h2>
 
       <Modal

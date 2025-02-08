@@ -1,15 +1,20 @@
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import AWSIcon from "@/components/atoms/AWSIcon";
+import CalendarIcon from "@/components/atoms/CalendarIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
+import DatePicker from "@/components/molecules/PlaybackMolecules/DatePicker";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { Modal } from "@mui/material";
 
 function StatusComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
+  const [showModal, setShowModal] = useState(false);
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
   const carConnection = currentAppState.socketConnected;
@@ -81,6 +86,26 @@ function StatusComponent() {
             className={`absolute left-1 top-1/2 size-4 -translate-y-1/2 translate-x-0 rounded-full bg-white transition-transform ${currentAppState.playbackSwitch ? "translate-x-6" : "translate-x-0"}`}
           ></div>
         </button>
+        {currentAppState.playbackSwitch && (
+          <>
+            <CalendarIcon
+              color={colorTheme}
+              height={"25px"}
+              setShowModal={setShowModal}
+              width={"25px"}
+            />
+
+            <Modal
+              aria-describedby="modal-modal-description"
+              aria-labelledby="modal-modal-title"
+              className="flex flex-grow items-center justify-center"
+              onClose={() => setShowModal(false)}
+              open={showModal}
+            >
+              <DatePicker />
+            </Modal>
+          </>
+        )}
       </div>
     </div>
   );
