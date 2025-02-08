@@ -71,7 +71,6 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
           {/* Container for numbers and line */}
           {/* horizontal line */}
-
           <div className="h-3.5 w-full rounded-full bg-[#3A3A3A]">
             <div className="flex h-3.5 w-1/2 rounded-full bg-[#3A3A3A]">
               <div className="ml-auto flex h-3.5 w-1/3 items-stretch bg-[#009F10] md:items-center"></div>
@@ -126,8 +125,8 @@ const GreyShapes: React.FC<ShapeProps> = ({
           </div>
         </div>
       </div>
-      {/* Container to stack rectangles vertically */}
 
+      {/* Container to stack rectangles vertically */}
       <div className="flex flex-col items-center gap-4 sm:flex-row xl:flex-col">
         {/* Rectangle 1 */}
         <div
