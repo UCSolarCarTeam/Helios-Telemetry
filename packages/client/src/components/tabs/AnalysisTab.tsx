@@ -56,12 +56,12 @@ const GreyShapes: React.FC<ShapeProps> = ({
   return (
     <div className="flex flex-wrap items-center justify-center gap-4">
       {/* Container to wrap the squares */}
-      <div className="flex flex-col items-center gap-4 sm:flex-row md:flex-row lg:flex-row">
+      <div className="flex flex-col items-center gap-4 sm:flex-row">
         {/* First square */}
         <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
-          <p className="text-center text-base font-normal sm:text-lg md:text-lg lg:text-xl">
+          <p className="text-center text-base font-normal sm:text-lg lg:text-xl">
             Optimal Driving Speed At&nbsp;
-            <span className="text-center text-base font-normal text-[#9C0534] sm:text-lg md:text-lg lg:text-xl">
+            <span className="text-center text-base font-normal text-[#9C0534] sm:text-lg lg:text-xl">
               {38}%
             </span>
           </p>
@@ -81,7 +81,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
           <div
             className="flex w-full items-center justify-between"
-            style={{ gap: "0px", opacity: 1 }} // Adjust opacity if needed
+            style={{ gap: "0px", opacity: 1 }}
           >
             {/* Left number */}
             <span className="text-sm text-[#9C0534] sm:text-base md:text-lg">
@@ -110,7 +110,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
           {/* Container for the doughnut chart */}
           <div
             className="flex w-[15rem] items-center justify-center"
-            style={{ opacity: 1 }} // Adjust opacity if needed
+            style={{ opacity: 1 }}
           >
             {/* update the donut chart based on the number */}
             <div className="h-0.6rem">
@@ -230,7 +230,6 @@ const GreyShapes: React.FC<ShapeProps> = ({
                   />
                 </div>
                 <div>
-                  {/* Horizontal line with numbers */}
                   {/* Horizontal line with numbers */}
                   <div className="flex w-[5rem] items-center justify-between">
                     <span className="text-left text-xs text-[#9C0534]">57</span>
