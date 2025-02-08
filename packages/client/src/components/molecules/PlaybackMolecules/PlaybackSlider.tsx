@@ -1,57 +1,105 @@
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import PauseIcon from "@/components/atoms/PauseIcon";
 import PlayIcon from "@/components/atoms/PlayIcon";
 import { usePacket } from "@/contexts/PacketContext";
 
+import { fakeData } from "./fakedata";
+
 export default function PlaybackSlider() {
-  const { currentPacket } = usePacket();
-
   const [isPlaying, setIsPlaying] = useState(false);
-  const [sliderValue, setSliderValue] = useState(1);
-  const intervalRef = useRef<NodeJS.Timeout | number | null>(null);
+  const [sliderValue, setSliderValue] = useState(0);
+  const animationRef = useRef<number>(null);
+  const playStartTime = useRef<number>(null);
+  const playStartSlider = useRef<number>(0);
 
-  const parseDate = (date: number) => {
-    const d = new Date(date);
-    return `${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+  const { setCurrentPacket } = usePacket();
+
+  const { sortedData } = useMemo(() => {
+    const sorted = [...fakeData].sort((a, b) => a.TimeStamp - b.TimeStamp);
+    return {
+      sortedData: sorted,
+    };
+  }, []);
+
+  // dynamic playback duration based on the length of how many packets were fetched
+  const PLAYBACK_DURATION = sortedData.length * 1000;
+
+  const stepSize = useMemo(
+    () => (sortedData.length > 0 ? 100 / (sortedData.length - 1) : 0),
+    [sortedData.length], // Only recalculate when data length changes
+  );
+
+  const currentIndex = useMemo(
+    () => Math.round(sliderValue / stepSize),
+    [sliderValue, stepSize], // Only recalculate when these change
+  );
+
+  useEffect(() => {
+    if (sortedData[currentIndex]) {
+      setCurrentPacket(sortedData[currentIndex]);
+    }
+  }, [currentIndex, setCurrentPacket, sortedData]);
+
+  const handlePlayPause = () => {
+    setIsPlaying((prev) => {
+      if (!prev) {
+        playStartTime.current = Date.now();
+        playStartSlider.current = sliderValue;
+      } else {
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+        }
+      }
+      return !prev;
+    });
   };
 
   useEffect(() => {
-    if (isPlaying) {
-      intervalRef.current = setInterval(() => {
-        setSliderValue((prevValue) => {
-          if (prevValue >= 100) {
-            return 1; // Reset to start
-          }
-          return prevValue + 1; // Increment the slider value
-        });
-      }, 500); // Adjust the interval timing as needed
-    } else {
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current);
+    const animate = () => {
+      if (!playStartTime.current || !sortedData.length) return;
+
+      const elapsed = Date.now() - playStartTime.current;
+      const progressPercentage = (elapsed / PLAYBACK_DURATION) * 100;
+      const newValue = Math.min(
+        playStartSlider.current + progressPercentage,
+        100,
+      );
+
+      setSliderValue(newValue);
+
+      if (newValue < 100) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        setIsPlaying(false);
+        setSliderValue(0);
       }
+    };
+
+    if (isPlaying) {
+      animationRef.current = requestAnimationFrame(animate);
     }
 
     return () => {
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current); // Cleanup on unmount
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [PLAYBACK_DURATION, isPlaying, sortedData.length]);
 
-  const handleSliderChange = (e: number) => {
-    setSliderValue(e);
-  };
+  const handleSliderChange = useCallback((value: number | number[]) => {
+    if (typeof value === "number") {
+      setSliderValue(value);
+    }
+  }, []);
 
   return (
     <div className="flex flex-row items-center justify-center gap-2 py-1">
       <button
         className="focus:none rounded-md bg-helios p-1"
-        onClick={() => {
-          setIsPlaying((prev) => !prev);
-        }}
+        onClick={handlePlayPause}
       >
         {isPlaying ? (
           <PauseIcon color="white" height="25" width="25" />
@@ -61,12 +109,9 @@ export default function PlaybackSlider() {
       </button>
       <div className="w-full rounded-md bg-helios p-2">
         <Slider
-          handleStyle={{
-            backgroundColor: "red",
-            borderColor: "white",
-          }}
-          onChange={(value) => handleSliderChange(value as number)}
-          trackStyle={{ backgroundColor: "#fff" }}
+          max={100}
+          min={0}
+          onChange={handleSliderChange}
           value={sliderValue}
         />
       </div>
