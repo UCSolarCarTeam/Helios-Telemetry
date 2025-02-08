@@ -3,51 +3,42 @@ import { type JSX, useEffect, useState } from "react";
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
 import { useAppState } from "@/contexts/AppStateContext";
-import type { Coords } from "@shared/helios-types";
+import { usePacket } from "@/contexts/PacketContext";
 
 function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
-  const [mapInputs, setMapInputs] = useState<{
-    lapLocation: Coords;
-    carLocation: Coords;
-  }>({
-    carLocation: {
-      lat: currentAppState.lapCoords.lat,
-      long: currentAppState.lapCoords.long,
-    },
-    lapLocation: currentAppState.lapCoords,
-  });
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMapInputs((prevState) => ({
-        ...prevState,
-        carLocation: {
-          lat: prevState.carLocation.lat + 0.0001,
-          long: prevState.carLocation.long,
-        },
-      }));
-    }, 1000);
+  const { currentPacket } = usePacket();
 
-    return () => clearInterval(interval);
-  }, []);
+  const isDemo = currentAppState.connectionType === "DEMO";
+  const [carLocation, setCarLocation] = useState(currentAppState.lapCoords);
+  useEffect(() => {
+    if (isDemo) {
+      const interval = setInterval(() => {
+        setCarLocation((prevState) => ({
+          lat: prevState.lat + 0.0001,
+          long: prevState.long,
+        }));
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isDemo]);
 
   useEffect(() => {
-    setMapInputs((prevMapInputs) => ({
-      ...prevMapInputs,
-      lapLocation: {
-        lat: currentAppState.lapCoords.lat,
-        long: currentAppState.lapCoords.long,
-      },
-    }));
-  }, [currentAppState.lapCoords]);
+    if (!isDemo) {
+      setCarLocation({
+        lat: currentPacket.Telemetry.GpsLatitude,
+        long: currentPacket.Telemetry.GpsLongitude,
+      });
+    }
+  }, [currentPacket, isDemo]);
 
   return (
     <div className="size-full">
       <div className="grid h-[90%]">
         <Map
-          carLocation={mapInputs.carLocation}
+          carLocation={carLocation}
           lapLocation={currentAppState.lapCoords}
-          mapLocation={mapInputs.carLocation}
         />
       </div>
       <div className="grid h-[10%]">
