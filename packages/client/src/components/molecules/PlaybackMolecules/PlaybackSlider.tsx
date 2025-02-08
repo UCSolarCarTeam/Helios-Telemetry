@@ -29,12 +29,12 @@ export default function PlaybackSlider() {
 
   const stepSize = useMemo(
     () => (sortedData.length > 0 ? 100 / (sortedData.length - 1) : 0),
-    [sortedData.length], // Only recalculate when data length changes
+    [sortedData.length],
   );
 
   const currentIndex = useMemo(
     () => Math.round(sliderValue / stepSize),
-    [sliderValue, stepSize], // Only recalculate when these change
+    [sliderValue, stepSize],
   );
 
   useEffect(() => {
