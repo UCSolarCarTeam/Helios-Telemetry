@@ -10,6 +10,7 @@ import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
+import DriverNameUpdate from "./Settings/DriverNameUpdate";
 import FlagCoordinates from "./Settings/FlagCoordinates";
 
 function SettingsComponent() {
@@ -203,6 +204,7 @@ function SettingsComponent() {
             </div>
           </div>
           <FlagCoordinates />
+          <DriverNameUpdate />
         </div>
       </Modal>
     </div>
