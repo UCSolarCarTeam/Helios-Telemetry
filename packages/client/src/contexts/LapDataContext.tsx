@@ -11,6 +11,7 @@ import {
 
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
+import { prodURL } from "@shared/helios-types";
 import { IFormattedLapData, ILapData } from "@shared/helios-types";
 
 const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
@@ -55,10 +56,8 @@ export function LapDataContextProvider({
 
   const fetchLapData = useCallback(async () => {
     try {
-      const response = await axios.get(
-        `https://aedes.calgarysolarcar.ca:3001/laps`,
-      );
-      return response.data.data; // Assuming the API returns an array of lap data
+      const response = await axios.get(`${prodURL}/laps`);
+      return response.data; // Assuming the API returns an array of lap data
     } catch (error) {
       return { error: "Error fetching lap data" };
     }
