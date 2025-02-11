@@ -10,6 +10,7 @@ import {
 import { type Socket, io } from "socket.io-client";
 
 import { useAppState } from "@/contexts/AppStateContext";
+import { prodFlag } from "@shared/helios-types";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
@@ -30,14 +31,9 @@ interface ServerToClientEvents {
   lapData: (value: ILapData) => void;
 }
 
-const URL =
-  process.env.NODE_ENV === "production"
-    ? "aedes.calgarysolarcar.ca:3001"
-    : "http://localhost:3001";
-
 // Defaults to using client fakerJS, change Data to Network in site settings to connect to server
 export const socketIO: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  URL,
+  prodFlag,
   { autoConnect: false },
 );
 
