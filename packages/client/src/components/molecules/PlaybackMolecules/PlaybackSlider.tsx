@@ -89,11 +89,19 @@ export default function PlaybackSlider() {
     };
   }, [PLAYBACK_DURATION, isPlaying, sortedData.length]);
 
-  const handleSliderChange = useCallback((value: number | number[]) => {
-    if (typeof value === "number") {
-      setSliderValue(value);
-    }
-  }, []);
+  const handleSliderChange = useCallback(
+    (value: number | number[]) => {
+      if (typeof value === "number") {
+        setSliderValue(value);
+
+        if (isPlaying) {
+          playStartTime.current = Date.now();
+          playStartSlider.current = value;
+        }
+      }
+    },
+    [isPlaying],
+  );
 
   return (
     <div className="flex flex-row items-center justify-center gap-2 py-1">
