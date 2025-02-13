@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { type SvgProps } from "@/components/atoms/SVGProps";
 
 const PlayIcon = (props: SvgProps) => {
@@ -19,4 +21,4 @@ const PlayIcon = (props: SvgProps) => {
   );
 };
 
-export default PlayIcon;
+export default memo(PlayIcon);
