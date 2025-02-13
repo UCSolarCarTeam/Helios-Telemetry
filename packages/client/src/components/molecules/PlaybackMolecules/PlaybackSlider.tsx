@@ -17,15 +17,16 @@ export default function PlaybackSlider() {
 
   const { setCurrentPacket } = usePacket();
 
-  const { sortedData } = useMemo(() => {
-    const sorted = [...fakeData].sort((a, b) => a.TimeStamp - b.TimeStamp);
-    return {
-      sortedData: sorted,
-    };
-  }, []);
+  const sortedData = useMemo(
+    () => [...fakeData].sort((a, b) => a.TimeStamp - b.TimeStamp),
+    [],
+  );
 
   // dynamic playback duration based on the length of how many packets were fetched
-  const PLAYBACK_DURATION = sortedData.length * 1000;
+  const PLAYBACK_DURATION = useMemo(
+    () => sortedData.length * 1000,
+    [sortedData.length],
+  );
 
   const stepSize = useMemo(
     () => (sortedData.length > 0 ? 100 / (sortedData.length - 1) : 0),
@@ -33,7 +34,7 @@ export default function PlaybackSlider() {
   );
 
   const currentIndex = useMemo(
-    () => Math.round(sliderValue / stepSize),
+    () => (stepSize > 0 ? Math.round(sliderValue / stepSize) : 0),
     [sliderValue, stepSize],
   );
 
