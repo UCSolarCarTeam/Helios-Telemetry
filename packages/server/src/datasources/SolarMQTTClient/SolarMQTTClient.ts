@@ -33,11 +33,10 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     }, milliseconds);
   }
 
-  public telemetryToCar(milliseconds: number) {
-    const myMessage = this.backendController?.carLatency?.toString();
+  public telemetryToCar(milliseconds: number, message: string) {
     setInterval(() => {
-      this.client.publish(telemetryToCarTopic, myMessage);
-      logger.info("Car Latency - sending: ", myMessage);
+      this.client.publish(telemetryToCarTopic, message);
+      logger.info("Car Latency - sending: ", message);
     }, milliseconds);
   }
 
@@ -64,10 +63,10 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     this.client.on("message", (topic, message) => {
       if (topic === pongTopic) {
         logger.info("pong");
-        const carLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
-        logger.info(carLatency.toString());
-        this.backendController.carLatency = carLatency;
-        this.backendController.handleTelemetryToCar(carLatency);
+        const serverToCarLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
+        logger.info(serverToCarLatency.toString());
+        this.backendController.carLatency = serverToCarLatency;
+        this.backendController.handleTelemetryToCar(serverToCarLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");
         const packet = JSON.parse(message.toString());
