@@ -10,7 +10,7 @@ import {
 import { getSecrets } from "@/utils/getSecrets";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { type ITelemetryData } from "@shared/helios-types";
+import { validateTelemetryData } from "@shared/helios-types";
 
 const { packetTopic, pingTopic, pongTopic, telemetryToCarTopic } = topics;
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
@@ -70,8 +70,13 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         this.backendController.handleTelemetryToCar(carLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");
-        const packet: ITelemetryData = JSON.parse(message.toString());
-        this.backendController.handlePacketReceive(packet);
+        const packet = JSON.parse(message.toString());
+        try {
+          const validPacket = validateTelemetryData(packet);
+          this.backendController.handlePacketReceive(validPacket);
+        } catch (error) {
+          logger.error(`Invalid packet format: ${error.message}`);
+        }
       } else {
         logger.info("unknown topic: ", topic, "message: ", message.toString());
       }

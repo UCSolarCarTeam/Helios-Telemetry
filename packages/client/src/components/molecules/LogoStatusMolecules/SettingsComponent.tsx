@@ -1,68 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import {
   APPUNITS,
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
-import { socketIO } from "@/contexts/SocketContext";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Button, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { CoordInfoUpdate, CoordUpdateResponse } from "@shared/helios-types";
 
-const coordsFieldText: CoordInfoUpdate = {
-  lat: "Latitude",
-  long: "Longitude",
-  password: "Password",
-};
+import FlagCoordinates from "./Settings/FlagCoordinates";
+
 function SettingsComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState<CoordInfoUpdate>({
-    lat: currentAppState.lapCoords.lat.toString(),
-    long: currentAppState.lapCoords.long.toString(),
-    password: "",
-  });
-  const [errors, setErrors] = useState<Set<keyof CoordInfoUpdate>>(new Set());
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const onLapCoords = useCallback((coords: CoordUpdateResponse) => {
-    if ("invalidFields" in coords && coords.invalidFields) {
-      const errorSet: Set<keyof CoordInfoUpdate> = new Set(
-        coords.invalidFields,
-      );
-      setErrors(errorSet);
-      setErrorMessage(coords.error ?? "");
-    } else {
-      setErrors(new Set());
-    }
-  }, []);
-  useEffect(() => {
-    socketIO.on("lapCoords", onLapCoords);
-    return () => {
-      socketIO.off("lapCoords");
-    };
-  }, [onLapCoords]);
-  const handleCoordsSubmit = useCallback(() => {
-    const newCoordInfo = {
-      lat: coords.lat,
-      long: coords.long,
-      password: coords.password,
-    };
-    socketIO.emit("setLapCoords", newCoordInfo);
-  }, [coords]);
-  const handleCoordsChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      setCoords((prev) => ({
-        ...prev,
-        [name]: value ? value : prev[name as keyof CoordInfoUpdate],
-      }));
-    },
-    [],
-  );
   const handleDarkChange = useCallback(
     (
       event: React.MouseEvent<HTMLElement>,
@@ -173,7 +125,6 @@ function SettingsComponent() {
               </ToggleButtonGroup>
             </div>
           </div>
-
           <div
             className="grid-cols-[40% 60%] items-top mb-2 grid justify-between"
             style={{ gridTemplateColumns: "40% 60%" }}
@@ -251,41 +202,7 @@ function SettingsComponent() {
               </div>
             </div>
           </div>
-
-          <div className="mb-4 grid grid-cols-2 items-center justify-between">
-            <div className="col-span-1">
-              <label className="mr-2">Update Flag Coordinates:</label>
-            </div>
-            <form
-              className="col-span-1 flex flex-col"
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
-              {Object.keys(coordsFieldText).map((key) => (
-                <TextField
-                  error={errors.has(key as keyof CoordInfoUpdate)}
-                  helperText={
-                    errors.has(key as keyof CoordInfoUpdate) ? errorMessage : ""
-                  }
-                  key={key}
-                  label={coordsFieldText[key as keyof CoordInfoUpdate]}
-                  name={key}
-                  onChange={handleCoordsChange}
-                  placeholder={
-                    key !== "password"
-                      ? coords[key as keyof CoordInfoUpdate]
-                      : ""
-                  }
-                  type={key === "password" ? "password" : undefined}
-                  variant="filled"
-                />
-              ))}
-              <Button onClick={handleCoordsSubmit} type="submit">
-                Submit
-              </Button>
-            </form>
-          </div>
+          <FlagCoordinates />
         </div>
       </Modal>
     </div>

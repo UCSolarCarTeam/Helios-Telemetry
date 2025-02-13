@@ -5,7 +5,7 @@ import type {
 } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { type JSX, useEffect, useRef, useState } from "react";
 import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
 
@@ -18,7 +18,6 @@ type MapLibType = MapLib<mapboxgl.Map>;
 
 type IMapProps = {
   carLocation: Coords;
-  mapLocation: Coords;
   lapLocation: Coords;
 };
 
@@ -50,7 +49,7 @@ const lerp = (
 
 function Map(props: IMapProps): JSX.Element {
   const { currentAppState } = useAppState();
-  const { carLocation, lapLocation, mapLocation } = props;
+  const { carLocation, lapLocation } = props;
   const mapRef = useRef<MapboxMap | null>(null);
   const [mapStates, setMapStates] = useState({
     centered: false,
@@ -83,7 +82,7 @@ function Map(props: IMapProps): JSX.Element {
       }
       return false;
     };
-    const coordinates: Coords[] = [carLocation, mapLocation, lapLocation];
+    const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
     if (isOutsideBounds(coordinates) && mapRef.current && !mapStates.centered) {
       fitToBounds(mapRef.current, carLocation, lapLocation);
     } else if (mapStates.centered && mapRef.current) {
@@ -95,7 +94,7 @@ function Map(props: IMapProps): JSX.Element {
         zoom: 16,
       });
     }
-  }, [carLocation, lapLocation, mapStates.centered, mapLocation]);
+  }, [carLocation, lapLocation, mapStates.centered]);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -172,8 +171,8 @@ function Map(props: IMapProps): JSX.Element {
           dragPan={true}
           dragRotate={true}
           initialViewState={{
-            latitude: mapLocation.lat,
-            longitude: mapLocation.long,
+            latitude: carLocation.lat,
+            longitude: carLocation.long,
             zoom: 14,
           }}
           keyboard={false}

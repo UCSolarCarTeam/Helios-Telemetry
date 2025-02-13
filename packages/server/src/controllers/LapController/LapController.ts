@@ -56,6 +56,11 @@ export class LapController implements LapControllerType {
     }
   }
 
+  public async handleLapData(lapData: ILapData) {
+    await this.backendController.socketIO.broadcastLapData(lapData);
+    await this.backendController.dynamoDB.insertLapData(lapData);
+  }
+
   public async handlePacket(packet: ITelemetryData) {
     if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
       // mark lap, calculate lap, and add to lap table in database
@@ -83,13 +88,13 @@ export class LapController implements LapControllerType {
         totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
         totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
-
-      await this.backendController.dynamoDB.insertLapData(lapData);
+      this.handleLapData(lapData);
       this.lastLapPackets = [];
     }
     this.lastLapPackets.push(packet);
   }
 
+ 
   public getLastPacket(): ITelemetryData[] {
     return this.lastLapPackets;
   }

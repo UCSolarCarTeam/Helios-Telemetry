@@ -1,4 +1,4 @@
-import { start } from "repl";
+import { v4 as uuidv4 } from "uuid";
 
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 
@@ -33,6 +33,7 @@ if (!process.env.PACKET_TABLE_NAME) {
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
+const driverTableName = process.env.DRIVER_TABLE_NAME;
 
 const logger = createLightweightApplicationLogger("DynamoDB.ts");
 export class DynamoDB implements DynamoDBtypes {
@@ -40,6 +41,7 @@ export class DynamoDB implements DynamoDBtypes {
   backendController: BackendController;
   lapTableName: string;
   packetTableName: string;
+  driverTableName: string;
 
   constructor(backendController: BackendController) {
     try {
@@ -47,6 +49,7 @@ export class DynamoDB implements DynamoDBtypes {
       this.client = new DynamoDBClient({ region: "ca-central-1" });
       this.lapTableName = lapTableName;
       this.packetTableName = packetTableName;
+      this.driverTableName = driverTableName;
     } catch (error) {
       logger.error("Error connecting to dynamo client");
       throw new Error(error);
@@ -79,7 +82,7 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const params: ScanCommandInput = {
         ScanFilter: {
-          Timestamp: {
+          timestamp: {
             AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
             ComparisonOperator: "BETWEEN",
           },
@@ -104,20 +107,48 @@ export class DynamoDB implements DynamoDBtypes {
       console.error(new Error(" Error Scanning Packets between Dates"));
     }
   }
-  // // Helper function to get lap table data
-  public async getLapData(timestamp: string) {
+
+  public async getDrivers() {
     try {
-      const command = new GetItemCommand({
-        Key: {
-          id: { S: "lap" },
-          timestamp: { N: timestamp },
-        },
-        TableName: this.lapTableName,
+      const command = new ScanCommand({
+        TableName: this.driverTableName,
       });
       const response = await this.client.send(command);
-      return response;
+      return response.Items;
     } catch (error) {
-      logger.error("Error getting lap table data");
+      logger.error("Error getting lap data for driver");
+      throw new Error(error);
+    }
+  }
+
+  public async getDriverLaps(rfid) {
+    try {
+      const command = new QueryCommand({
+        ExpressionAttributeValues: {
+          ":rfid": { N: rfid },
+        },
+        KeyConditionExpression: "rfid = :rfid",
+        TableName: this.driverTableName,
+      });
+      const response = await this.client.send(command);
+      return response.Items;
+    } catch (error) {
+      logger.error("Error getting lap data for driver");
+      throw new Error(error);
+    }
+  }
+
+  // // Helper function to get lap table data
+  public async getLapData() {
+    try {
+      const command = new ScanCommand({
+        TableName: this.lapTableName,
+      });
+
+      const response = await this.client.send(command);
+      return response.Items;
+    } catch (error) {
+      logger.error("Error getting all lap table data");
       throw new Error(error);
     }
   }
@@ -130,7 +161,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
-          id: "packet",
+          id: uuidv4(),
           timestamp: packet.TimeStamp,
         },
         TableName: this.packetTableName,
@@ -152,7 +183,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
-          id: "lap",
+          id: uuidv4(),
           timestamp: packet.timeStamp,
         },
         TableName: this.lapTableName,

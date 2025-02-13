@@ -18,12 +18,14 @@
     "test": "lerna run test"
   },
   "dependencies": {
-    "esbuild": "^0.23.0"
+    "esbuild": "^0.23.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@types/eslint": "^9.6.0",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
+    "clsx": "^2.1.1",
     "eslint": "8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "latest",
@@ -53,5 +55,5 @@
       "pre-commit": "lint-staged"
     }
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.6.0"
 }
