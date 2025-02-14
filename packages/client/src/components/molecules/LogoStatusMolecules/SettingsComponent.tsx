@@ -56,15 +56,49 @@ function SettingsComponent() {
     },
     [setCurrentAppState],
   );
+  const [showModal, setShowModal] = useState(false);
+
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+
+  const onDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(event.target.value);
+
+    // youll have to see if there are any available data for the date, if not
+    // show the modal that there is no data for this date
+  };
+
   return (
     <div className="grid">
-      <h2
-        className="text-text-gray dark:text-text-gray-dark cursor-pointer text-sm font-black"
-        onClick={() => setOpen(true)}
-      >
-        <SettingsIcon />
-      </h2>
+      {currentAppState.playbackSwitch && (
+        <>
+          <div className="flex flex-col gap-2 py-1">
+            <input
+              className="max-w-32 rounded-md bg-[#BCBCBC] p-1 text-pink shadow-sm transition-all focus:outline-none"
+              id="playbackDate"
+              onChange={onDateChange}
+              type="date"
+              value={date}
+            />
+          </div>
+          <Modal
+            aria-describedby="modal-modal-description"
+            aria-labelledby="modal-modal-title"
+            className="flex flex-grow items-center justify-center"
+            onClose={() => setShowModal(false)}
+            open={showModal}
+          >
+            <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none sm:max-w-[75%]">
+              <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
+                There is no data for this date
+              </h5>{" "}
+            </div>
+          </Modal>
+        </>
+      )}
 
+      <h2 className="text-text-gray dark:text-text-gray-dark w-fit cursor-pointer text-sm font-black">
+        <SettingsIcon onClick={() => setOpen(true)} />
+      </h2>
       <Modal
         aria-describedby="modal-modal-description"
         aria-labelledby="modal-modal-title"
