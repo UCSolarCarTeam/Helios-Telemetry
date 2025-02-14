@@ -73,7 +73,6 @@ function Map(props: IMapProps): JSX.Element {
     currentCarLocation: carLocation,
     satelliteMode: false,
   });
-  const [bearing, setBearing] = useState(0);
   const buttonRef = useRef(null);
 
   useEffect(() => {
@@ -129,11 +128,6 @@ function Map(props: IMapProps): JSX.Element {
           carLocation.long,
           t,
         );
-        const newBearing = calculateBearing(prevMapStates.currentCarLocation, {
-          lat: newLat,
-          long: newLng,
-        });
-        setBearing(newBearing);
         return {
           ...prevMapStates,
           currentCarLocation: { lat: newLat, long: newLng },
@@ -228,7 +222,9 @@ function Map(props: IMapProps): JSX.Element {
               alt="map-pin"
               height={50}
               src="/assets/HeliosBirdseye.png"
-              style={{ transform: `rotate(${bearing}deg)` }}
+              style={{
+                transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
+              }}
               width={20}
             />
           </Marker>
