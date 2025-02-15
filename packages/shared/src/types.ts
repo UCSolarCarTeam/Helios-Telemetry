@@ -221,7 +221,7 @@ const IMPPTType = t.exact(
     ArrayVoltage: t.number,
     BatteryVoltage: t.number,
     ChannelNumber: t.number,
-    IsAlive: t.number,
+    IsAlive: t.boolean,
     Temperature: t.number,
   }),
 );
