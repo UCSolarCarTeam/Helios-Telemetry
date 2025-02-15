@@ -64,6 +64,10 @@ const config: Config = {
           "100%": { transform: "translateX(0vh)" },
         },
       },
+      screens: { // made custom breakpoints to align rectangles properly at specific pixel sies
+        'custom-sm': '1279px',
+        'custom-lg': '1315px',
+      },
     },
   },
   plugins: [
@@ -85,4 +89,6 @@ const config: Config = {
     },
   ],
 };
+
+
 export default config;
