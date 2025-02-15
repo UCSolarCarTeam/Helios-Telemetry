@@ -1,4 +1,5 @@
 import {
+  type JSX,
   type PropsWithChildren,
   createContext,
   useCallback,
@@ -13,6 +14,7 @@ import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
   Coords,
+  ILapData,
   ITelemetryData,
 } from "@shared/helios-types";
 
@@ -25,6 +27,7 @@ interface ServerToClientEvents {
   packet: (value: ITelemetryData) => void;
   lapCoords: (coords: CoordUpdateResponse) => void;
   carLatency: (value: number) => void;
+  lapData: (value: ILapData) => void;
 }
 
 const URL =

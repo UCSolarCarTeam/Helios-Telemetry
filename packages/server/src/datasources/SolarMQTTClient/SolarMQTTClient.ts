@@ -7,9 +7,10 @@ import {
   topics,
 } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
+import { getSecrets } from "@/utils/getSecrets";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { type ITelemetryData } from "@shared/helios-types";
+import { validateTelemetryData } from "@shared/helios-types";
 
 const { packetTopic, pingTopic, pongTopic } = topics;
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
@@ -19,9 +20,8 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   backendController: BackendController;
   pingLastSent: number;
   constructor(options: IClientOptions, backendController: BackendController) {
-    this.client = connect(options);
     this.backendController = backendController;
-    this.initializeListeners();
+    this.connectToAedes(options);
     this.pingLastSent = Date.now();
   }
   public pingTimer(miliseconds: number) {
@@ -32,6 +32,14 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     }, miliseconds);
   }
 
+  public async connectToAedes(options: IClientOptions) {
+    try {
+      this.client = connect(options);
+      this.initializeListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
   public initializeListeners() {
     this.client.on("connect", () => {
       logger.info("MQTT Client connected");
@@ -50,8 +58,13 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         this.backendController.socketIO.broadcastCarLatency(carLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");
-        const packet: ITelemetryData = JSON.parse(message.toString());
-        this.backendController.handlePacketReceive(packet);
+        const packet = JSON.parse(message.toString());
+        try {
+          const validPacket = validateTelemetryData(packet);
+          this.backendController.handlePacketReceive(validPacket);
+        } catch (error) {
+          logger.error(`Invalid packet format: ${error.message}`);
+        }
       } else {
         logger.info("unknown topic: ", topic, "message: ", message.toString());
       }

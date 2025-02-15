@@ -40,6 +40,18 @@ const TelemetryBackendSecretsManagerCertificate = new secretsmanager.Secret(
   },
 );
 
+const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
+  TelemetryBackendStack,
+  "HeliosTelemetryMQTTCredentials",
+  {
+    secretName: "HeliosTelemetryMQTTCredentials" + backend.stack.stackName,
+    secretObjectValue: {
+      password: cdk.SecretValue.unsafePlainText(""),
+      username: cdk.SecretValue.unsafePlainText(""),
+    },
+  },
+);
+
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
   "TelemetryBackendImageRepository",
@@ -106,7 +118,7 @@ const packetDataTable = new dynamodb.Table(
   {
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
     sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
   },
 );
@@ -117,8 +129,18 @@ const lapDataTable = new dynamodb.Table(
   {
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.DESTROY,
+    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
     sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
+  },
+);
+
+const driverDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "driver_data_table",
+  {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    partitionKey: { name: "rfid", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
   },
 );
 
@@ -129,6 +151,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   environment: {
+    DRIVER_TABLE_NAME: driverDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
     PACKET_TABLE_NAME: packetDataTable.tableName,
   },
@@ -157,6 +180,14 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerCertificate,
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
+    MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "password",
+    ),
+    MQTT_USERNAME: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsManagerMQTTCredentials,
+      "username",
+    ),
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
@@ -171,6 +202,9 @@ TelemetryBackendSecretsManagerChain.grantRead(
   TelemetryECSTaskDefintion.taskRole,
 );
 TelemetryBackendSecretsManagerCertificate.grantRead(
+  TelemetryECSTaskDefintion.taskRole,
+);
+TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefintion.taskRole,
 );
 
@@ -271,7 +305,11 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
   ],
   effect: iam.Effect.ALLOW,
 
-  resources: [packetDataTable.tableArn, lapDataTable.tableArn],
+  resources: [
+    packetDataTable.tableArn,
+    lapDataTable.tableArn,
+    driverDataTable.tableArn,
+  ],
 });
 
 // Attach the policy to the ECS Task Role
