@@ -8,7 +8,7 @@ import {
 } from "chart.js";
 import React, { useEffect, useRef } from "react";
 
-import { getChartConfig } from "../config/chartConfig";
+import { getChartConfig } from "../../config/chartConfig";
 
 // Register the required elements, controllers, and plugins for the doughnut chart
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);

@@ -5,8 +5,8 @@ import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
-import DonutChart from "./DonutChart";
-import DonutChartRect from "./DonutChartRect";
+import DonutChart from "../molecules/AnalysisMolecules/DonutChart";
+import DonutChartRect from "../molecules/AnalysisMolecules/DonutChartRect";
 
 type TabContentProps = React.PropsWithChildren<{
   index: number;
