@@ -127,7 +127,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
       </div>
 
       {/* Container to stack rectangles vertically */}
-      <div className="flex flex-col items-center gap-4 sm:flex-row xl:flex-col">
+      <div className="flex flex-col items-center gap-4 sm:flex-row md-[1300px]:flex-row xl:flex-row">
         {/* Rectangle 1 */}
         <div
           className="rounded-2xl bg-[#BFBFBF]"
