@@ -14,9 +14,9 @@ import {
 const columnHelper = createColumnHelper<ILapData>();
 
 const columns = [
-  columnHelper.accessor("rfid", {
+  columnHelper.accessor("data.timeStamp", {
     cell: (info) => info.getValue(),
-    header: "RFID",
+    header: "Time Stamp",
   }),
   columnHelper.accessor("data.ampHours", {
     cell: (info) => info.getValue(),
@@ -46,10 +46,7 @@ const columns = [
     cell: (info) => info.getValue(),
     header: "Net Power Out",
   }),
-  columnHelper.accessor("data.timeStamp", {
-    cell: (info) => info.getValue(),
-    header: "Time Stamp",
-  }),
+
   columnHelper.accessor("data.totalPowerIn", {
     cell: (info) => info.getValue(),
     header: "Total Power In",
@@ -162,9 +159,9 @@ function RaceTab() {
   }, []);
 
   return (
-    <div className="m-4 flex justify-around">
-      <div className="mb-4 flex flex-col flex-wrap justify-end gap-2">
-        <div className="justify-left flex items-center gap-x-2 pb-2 pr-2">
+    <div className="m-4 flex flex-col justify-between gap-4 md:flex-row">
+      <div className="flex flex-col gap-2 md:w-1/3 lg:w-1/4">
+        <div className="flex items-center gap-x-2 pb-2 pr-2">
           <Image
             alt="pfp"
             className="rounded-full border-2 border-helios object-cover p-2"
@@ -172,7 +169,7 @@ function RaceTab() {
             src="/assets/HeliosSideview.png"
             width={50}
           />
-          <select className="w-64" onChange={handleDriverRFID}>
+          <select className="w-32" onChange={handleDriverRFID}>
             <option value="all">Show all data</option>
             {driverData.map((driver) => (
               <option key={driver.rfid} value={driver.rfid}>
@@ -197,19 +194,16 @@ function RaceTab() {
           </label>
         ))}
       </div>
-      {filteredLapData.length === 0 ? (
-        <div className="w-3/4 overflow-x-auto">
-          <div className="pt-8 text-center">No Lap Data</div>
-        </div>
-      ) : (
-        <div className="w-3/4 overflow-x-auto">
-          <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
-            <thead className="border-b-2 border-helios">
+
+      <div className="overflow-x-auto md:w-2/3 lg:w-3/4">
+        <div style={{ height: "350px", overflow: "auto" }}>
+          <table className="border-seperate w-full border-spacing-0 divide-gray-200">
+            <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
-                      className="text-gray-500 overflow-x-hidden px-4 py-2 text-center text-xs font-medium uppercase text-helios"
+                      className={`sticky top-0 z-10 w-24 border-2 border-helios bg-white px-4 py-2 text-center text-xs font-medium uppercase text-helios ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
                       key={header.id}
                     >
                       {header.isPlaceholder
@@ -223,30 +217,26 @@ function RaceTab() {
                 </tr>
               ))}
             </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      className={`text-gray-900 sticky w-24 w-full border-2 border-helios px-4 py-2 text-center text-sm ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
+                      key={cell.id}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
           </table>
-          <div style={{ height: "350px", overflow: "auto" }}>
-            <table className="w-full table-fixed divide-gray-200 border-b-2 border-helios">
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        className={`text-gray-900 border-x-2 border-helios px-4 py-2 text-center text-sm`}
-                        key={cell.id}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
