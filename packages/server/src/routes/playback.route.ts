@@ -6,5 +6,7 @@ const playbackRouter = express.Router();
 
 playbackRouter.get("/playbackData", controllers.getPlaybackData);
 playbackRouter.get("/firstAndLastPacket", controllers.getFirstAndLastPacket);
+playbackRouter.get("playback/health", controllers.getHealthPlayback);
+
 
 export default playbackRouter;

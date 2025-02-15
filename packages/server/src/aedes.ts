@@ -1,3 +1,5 @@
+import { getSecrets } from "./utils/getSecrets";
+
 import Aedes, { type AuthenticateError, type Client } from "aedes";
 import { createServer } from "net";
 
@@ -5,8 +7,6 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 
 const logger = createLightweightApplicationLogger("aedes.ts");
 const port = process.env.MQTT_SERVER_PORT || 1883;
-
-const aedes: Aedes = new Aedes();
 
 class MqttError extends Error {
   returnCode: number;
@@ -20,6 +20,7 @@ class MqttError extends Error {
   }
 }
 
+const aedes: Aedes = new Aedes();
 // Authentication function
 aedes.authenticate = function (
   client: Client,
@@ -27,16 +28,25 @@ aedes.authenticate = function (
   password: Buffer | undefined,
   done: (error: AuthenticateError | null, success: boolean) => void,
 ) {
-  // TO DO: Convert to ENV VARS
-  const validUsername = "urMom"; // Replace with your valid username
-  const validPassword = "hasAedes"; // Replace with your valid password
+  const validUsername = process.env.MQTT_USERNAME;
+  const validPassword = process.env.MQTT_PASSWORD;
+  // Set Max connections to Aedes (Car Client and Solar MQTT client)
+  if (aedes.connectedClients >= 2) {
+    const error = new MqttError("Too many clients", 5);
+    done(error, false);
+    return;
+  }
+
   if (!username || !password) {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
     return;
   }
+
+  // User authentication
   if (username === validUsername && password.toString() === validPassword) {
     done(null, true); // Authentication successful
+    logger.info(`MQTT Client ${client.id} successfully authenticated!`);
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed

@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "dependencies": {
     "@aws-sdk/client-route-53": "^3.658.1",
-    "@aws-sdk/client-secrets-manager": "^3.658.1",
+    "@shared/helios-types": "*",
     "acme-client": "^5.4.0",
     "aws-amplify": "^6.4.0",
     "aws-cdk-lib": "^2.149.0",

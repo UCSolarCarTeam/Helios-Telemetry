@@ -5,7 +5,7 @@ import type {
 } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { type JSX, useEffect, useRef, useState } from "react";
 import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
 
@@ -18,7 +18,6 @@ type MapLibType = MapLib<mapboxgl.Map>;
 
 type IMapProps = {
   carLocation: Coords;
-  mapLocation: Coords;
   lapLocation: Coords;
 };
 
@@ -48,9 +47,26 @@ const lerp = (
   return startPosition * (1 - timeOfAnimation) + endPosition * timeOfAnimation;
 };
 
+const calculateBearing = (start: Coords, end: Coords): number => {
+  //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
+  const startLat = (start.lat * Math.PI) / 180; //convert to radians
+  const startLng = (start.long * Math.PI) / 180;
+  const endLat = (end.lat * Math.PI) / 180;
+  const endLng = (end.long * Math.PI) / 180;
+
+  const deltaLng = endLng - startLng;
+  const x = Math.sin(deltaLng) * Math.cos(endLat);
+  const y =
+    Math.cos(startLat) * Math.sin(endLat) -
+    Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
+
+  const bearing = (Math.atan2(x, y) * 180) / Math.PI;
+  return (bearing + 360) % 360; // Normalize to 0-360 degrees
+};
+
 function Map(props: IMapProps): JSX.Element {
   const { currentAppState } = useAppState();
-  const { carLocation, lapLocation, mapLocation } = props;
+  const { carLocation, lapLocation } = props;
   const mapRef = useRef<MapboxMap | null>(null);
   const [mapStates, setMapStates] = useState({
     centered: false,
@@ -83,7 +99,7 @@ function Map(props: IMapProps): JSX.Element {
       }
       return false;
     };
-    const coordinates: Coords[] = [carLocation, mapLocation, lapLocation];
+    const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
     if (isOutsideBounds(coordinates) && mapRef.current && !mapStates.centered) {
       fitToBounds(mapRef.current, carLocation, lapLocation);
     } else if (mapStates.centered && mapRef.current) {
@@ -95,7 +111,7 @@ function Map(props: IMapProps): JSX.Element {
         zoom: 16,
       });
     }
-  }, [carLocation, lapLocation, mapStates.centered, mapLocation]);
+  }, [carLocation, lapLocation, mapStates.centered]);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -172,8 +188,8 @@ function Map(props: IMapProps): JSX.Element {
           dragPan={true}
           dragRotate={true}
           initialViewState={{
-            latitude: mapLocation.lat,
-            longitude: mapLocation.long,
+            latitude: carLocation.lat,
+            longitude: carLocation.long,
             zoom: 14,
           }}
           keyboard={false}
@@ -206,6 +222,9 @@ function Map(props: IMapProps): JSX.Element {
               alt="map-pin"
               height={50}
               src="/assets/HeliosBirdseye.png"
+              style={{
+                transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
+              }}
               width={20}
             />
           </Marker>

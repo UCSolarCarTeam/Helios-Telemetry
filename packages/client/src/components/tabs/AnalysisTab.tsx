@@ -1,6 +1,9 @@
+import clsx from "clsx";
 import Image from "next/image";
 import React, { useState } from "react";
+import { twMerge } from "tailwind-merge";
 
+import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
 import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
@@ -11,6 +14,7 @@ import DonutChartRect from "../molecules/AnalysisMolecules/DonutChartRect";
 type TabContentProps = React.PropsWithChildren<{
   index: number;
   value: number;
+  className?: string;
 }>;
 
 const filters: string[] = [
@@ -21,7 +25,7 @@ const filters: string[] = [
   "Power Out",
   "Battery Voltage",
   "Battery Current",
-];
+] as const;
 
 const theme = createTheme({
   palette: {
@@ -35,9 +39,14 @@ const theme = createTheme({
   },
 });
 
-export function TabContent({ children, index, value }: TabContentProps) {
+export function TabContent({
+  children,
+  className,
+  index,
+  value,
+}: TabContentProps) {
   return (
-    <div hidden={value !== index} id={`tabpanel-${index}`} role="tabpanel">
+    <div className={twMerge(className)} hidden={value !== index}>
       {value === index && children}
     </div>
   );
@@ -254,6 +263,7 @@ const GreyShapes: React.FC<ShapeProps> = ({
 
 function AnalysisTab() {
   const [value, setValue] = useState<number>(0);
+  const { width } = useWindowDimensions();
 
   return (
     <div className="flex flex-col gap-y-4 px-4">
@@ -292,8 +302,8 @@ function AnalysisTab() {
       </div>
 
       {/* MAIN */}
-      <div className="flex size-full flex-col justify-between gap-x-2 gap-y-6 md:flex-row">
-        <div className="flex max-w-44 flex-col gap-y-1">
+      <div className="flex flex-col justify-between gap-4 md:flex-row">
+        <div className="flex max-w-44 flex-col gap-1 md:w-auto">
           {filters.map((filter) => (
             <div className="flex items-center" key={filter}>
               <label className="flex cursor-pointer items-center gap-x-2">
@@ -312,10 +322,29 @@ function AnalysisTab() {
         </div>
 
         <div
-          className="flex flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-4"
+          className="flex w-full flex-1 flex-col justify-center gap-4 md:flex-row md:gap-x-4 lg:w-auto lg:flex-nowrap"
           id="main-content"
         >
-          <TabContent index={0} value={value}></TabContent>
+          <TabContent className="my-auto w-full" index={0} value={value}>
+            <div
+              className={twMerge(
+                clsx(
+                  "grid max-h-72 w-full flex-1 grid-flow-row items-center gap-4",
+                  {
+                    "grid-cols-1 overflow-y-auto": width < 1200,
+                    "grid-cols-2": width >= 1200,
+                  },
+                ),
+              )}
+            >
+              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold dark:bg-[#BAB8B8] dark:text-black">
+                <MLContainer plotType="/api/getLapCorrelationMatrix" />
+              </div>
+              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold dark:bg-[#BAB8B8] dark:text-black">
+                <MLContainer plotType="/api/getPacketCorrelationMatrix" />
+              </div>
+            </div>
+          </TabContent>
           <TabContent index={1} value={value}>
             {/* Display GreyShapes component here */}
             <GreyShapes
