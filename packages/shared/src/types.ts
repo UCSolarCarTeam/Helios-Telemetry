@@ -392,24 +392,6 @@ export interface IDriverData {
   driver: string;
   rfid: string;
 }
-export interface ITelemetryData {
-  B3: IB3;
-  Battery: IBattery;
-  BatteryFaults: IBatteryFaults;
-  KeyMotor: IKeyMotor;
-  MBMS: IMbms;
-  MPPT0: IMPPT;
-  MPPT1: IMPPT;
-  MPPT2: IMPPT;
-  MPPT3: IMPPT;
-  MotorDetails0: IMotorDetails;
-  MotorDetails1: IMotorDetails;
-  Pi: IPi;
-  ProximitySensors: IProximitySensors;
-  Telemetry: ITelemetry;
-  TimeStamp: number;
-  Title: string;
-}
 
 export interface ILapData {
   data: {
@@ -772,14 +754,17 @@ export interface ITelemetry {
   MpuTemperature: number;
 }
 export interface IFormattedLapData {
-  ampHours: number;
-  averagePackCurrent: number;
-  averageSpeed: number;
-  batterySecondsRemaining: number;
-  distance: number;
-  lapTime: number;
-  netPowerOut: number;
-  timeStamp: string;
-  totalPowerIn: number;
-  totalPowerOut: number;
+  data: {
+    ampHours: number;
+    averagePackCurrent: number;
+    averageSpeed: number;
+    batterySecondsRemaining: number;
+    distance: number;
+    lapTime: number;
+    netPowerOut: number;
+    timeStamp: number;
+    totalPowerIn: number;
+    totalPowerOut: number;
+  };
+  rfid: number;
 }

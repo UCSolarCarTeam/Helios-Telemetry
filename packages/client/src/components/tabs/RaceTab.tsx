@@ -1,13 +1,14 @@
+import axios from "axios";
 import Image from "next/image";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
-import { useLapData } from "@/contexts/LapDataContext";
 import type { IFormattedLapData, ILapData } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -17,6 +18,18 @@ const columns = [
   columnHelper.accessor("data.timeStamp", {
     cell: (info) => info.getValue(),
     header: "Time Stamp",
+    sortingFn: (rowA, rowB, columnId) => {
+      const parseDate = (dateString: string) => {
+        const parts = dateString.split("/");
+        const month = Number(parts[0]);
+        const day = Number(parts[1]);
+        const year = Number(parts[2]);
+        return new Date(year, month - 1, day).getTime();
+      };
+      const dateA = parseDate(rowA.getValue(columnId));
+      const dateB = parseDate(rowB.getValue(columnId));
+      return dateB - dateA;
+    },
   }),
   columnHelper.accessor("data.ampHours", {
     cell: (info) => info.getValue(),
@@ -79,6 +92,12 @@ function RaceTab() {
     columns,
     data: filteredLapData,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      sorting: [
+        { desc: false, id: "data_timeStamp" }, // Initial sort by 'name' column in ascending order
+      ],
+    },
   });
 
   function checkBoxFormatting(text: string) {
@@ -101,7 +120,9 @@ function RaceTab() {
   };
   const fetchDriverNames = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/drivers`);
+      const response = await axios.get(
+        `https://aedes.calgarysolarcar.ca:3001/drivers`,
+      );
       return response.data;
     } catch (error) {
       return { error: "Error fetching drivers" };
@@ -219,7 +240,7 @@ function RaceTab() {
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td
-                      className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
+                      className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${typeof cell.id} ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
                       key={cell.id}
                     >
                       {flexRender(
