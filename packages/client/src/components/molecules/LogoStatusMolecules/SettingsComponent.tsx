@@ -10,7 +10,7 @@ import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-import FlagCoordinates from "./Settings/FlagCoordinates";
+import DriverNameUpdate from "./Settings/DriverNameUpdate";
 
 function SettingsComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
@@ -236,7 +236,7 @@ function SettingsComponent() {
               </div>
             </div>
           </div>
-          <FlagCoordinates />
+          <DriverNameUpdate />
         </div>
       </Modal>
     </div>
