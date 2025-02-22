@@ -67,7 +67,7 @@ export default function DriverUpdate() {
             setStatusMessage("Error updating driver info");
           }
         })
-        .catch((err) => {
+        .catch(() => {
           setStatusMessage("Error updating driver info");
         });
     }
