@@ -66,11 +66,6 @@ function RaceTab() {
     setDriverRFID(Number(e.target.value));
   };
 
-  // const filteredLapData = useMemo(
-  //   () => (rfid ? lapData.filter((lap) => lap.rfid === rfid) : lapData),
-  //   [lapData, rfid],
-  // );
-
   const filteredLapData = useMemo(() => {
     const res = rfid
       ? lapData.filter((lap) => {
@@ -87,10 +82,11 @@ function RaceTab() {
   });
 
   function checkBoxFormatting(text: string) {
-    const spaced: string = text.replace(/([A-Z])/g, " $1");
-    const result: string = spaced.charAt(0).toUpperCase() + spaced.slice(1);
-
-    return result;
+    return text
+      .replace(/^.*?_/g, "")
+      .replace(/_/g, " ")
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/^\w/, (c) => c.toUpperCase());
   }
 
   const fetchLapData = async () => {
@@ -160,8 +156,8 @@ function RaceTab() {
 
   return (
     <div className="m-4 flex flex-col justify-between gap-4 md:flex-row">
-      <div className="flex flex-col gap-2 md:w-1/3 lg:w-1/4">
-        <div className="flex items-center gap-x-2 pb-2 pr-2">
+      <div className="flex flex-wrap gap-2 md:w-1/3 lg:w-1/4">
+        <div className="flex w-full items-center gap-x-2 pb-2 pr-2">
           <Image
             alt="pfp"
             className="rounded-full border-2 border-helios object-cover p-2"
@@ -180,6 +176,7 @@ function RaceTab() {
             ))}
           </select>
         </div>
+
         {table.getAllLeafColumns().map((column) => (
           <label className="flex items-center gap-1 text-sm" key={column.id}>
             <input
