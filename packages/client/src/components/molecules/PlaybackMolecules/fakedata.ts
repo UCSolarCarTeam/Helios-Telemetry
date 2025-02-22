@@ -160,7 +160,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT1: {
@@ -168,7 +168,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT2: {
@@ -176,7 +176,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT3: {
@@ -184,7 +184,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MotorDetails0: {
@@ -559,7 +559,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT1: {
@@ -567,7 +567,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT2: {
@@ -575,7 +575,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT3: {
@@ -583,7 +583,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MotorDetails0: {
@@ -958,7 +958,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT1: {
@@ -966,7 +966,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT2: {
@@ -974,7 +974,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT3: {
@@ -982,7 +982,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MotorDetails0: {
@@ -1357,7 +1357,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT1: {
@@ -1365,7 +1365,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT2: {
@@ -1373,7 +1373,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MPPT3: {
@@ -1381,7 +1381,7 @@ export const fakeData: ITelemetryData[] = [
       ArrayVoltage: faker.number.int({ max: 100, min: 0 }),
       BatteryVoltage: faker.number.int({ max: 100, min: 0 }),
       ChannelNumber: faker.number.int({ max: 100, min: 0 }),
-      IsAlive: faker.number.int({ max: 100, min: 0 }),
+      IsAlive: faker.datatype.boolean(),
       Temperature: faker.number.int({ max: 100, min: 0 }),
     },
     MotorDetails0: {

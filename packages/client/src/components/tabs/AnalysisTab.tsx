@@ -8,6 +8,7 @@ import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
+import MLContainer from "../containers/MLContainer";
 import DonutChart from "../molecules/AnalysisMolecules/DonutChart";
 import DonutChartRect from "../molecules/AnalysisMolecules/DonutChartRect";
 
@@ -136,7 +137,8 @@ const GreyShapes: React.FC<ShapeProps> = ({
       </div>
 
       {/* Container to stack rectangles vertically */}
-      <div className="flex flex-col items-center gap-4 sm:flex-row custom-sm:flex-row custom-lg:flex-col">
+      {/* eslint-disable-next-line prettier/prettier */}
+      <div className="flex flex-col items-center gap-4 custom-sm:flex-row custom-lg:flex-col">
         {/* added custom pixel widths to solve the rectangle alignment error*/}
         {/* Rectangle 1 */}
         <div

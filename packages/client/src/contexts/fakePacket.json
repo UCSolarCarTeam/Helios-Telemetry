@@ -159,7 +159,7 @@
     "ArrayVoltage": 0,
     "BatteryVoltage": 0,
     "ChannelNumber": 0,
-    "IsAlive": 0,
+    "IsAlive": false,
     "Temperature": 0
   },
   "MPPT1": {
@@ -167,7 +167,7 @@
     "ArrayVoltage": 0,
     "BatteryVoltage": 0,
     "ChannelNumber": 0,
-    "IsAlive": 0,
+    "IsAlive": false,
     "Temperature": 0
   },
   "MPPT2": {
@@ -175,7 +175,7 @@
     "ArrayVoltage": 0,
     "BatteryVoltage": 0,
     "ChannelNumber": 0,
-    "IsAlive": 0,
+    "IsAlive": false,
     "Temperature": 0
   },
   "MPPT3": {
@@ -183,7 +183,7 @@
     "ArrayVoltage": 0,
     "BatteryVoltage": 0,
     "ChannelNumber": 0,
-    "IsAlive": 0,
+    "IsAlive": false,
     "Temperature": 0
   },
   "MotorDetails0": {

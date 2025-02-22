@@ -618,7 +618,7 @@ export interface IMPPT {
   ArrayVoltage: number;
   BatteryVoltage: number;
   ChannelNumber: number;
-  IsAlive: number;
+  IsAlive: boolean;
   Temperature: number;
 }
 
