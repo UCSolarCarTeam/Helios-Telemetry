@@ -297,7 +297,11 @@ function AnalysisTab() {
             value={value}
           >
             {tabs.map((tab) => (
-              <Tab key={tab.id} label={tab.name.toUpperCase()} value={tab.id} />
+              <Tab
+                key={tab.id}
+                label={tab.name.toUpperCase()}
+                value={tab.id}
+              ></Tab>
             ))}
           </Tabs>
         </ThemeProvider>
@@ -310,7 +314,7 @@ function AnalysisTab() {
             <div className="flex items-center" key={filter}>
               <label className="flex cursor-pointer items-center gap-x-2">
                 <input
-                  className="peer·size-4·cursor-pointer·accent-helios"
+                  className="peer size-4 cursor-pointer accent-helios"
                   id={filter}
                   name={filter}
                   type="checkbox"
@@ -348,12 +352,7 @@ function AnalysisTab() {
             </div>
           </TabContent>
           <TabContent index={1} value={value}>
-            {/* Display GreyShapes component here */}
-            <GreyShapes
-              infoNumber={78}
-              rectangleHeight="120px"
-              rectangleWidth="300px"
-            />
+            Stats
           </TabContent>
         </div>
       </div>
