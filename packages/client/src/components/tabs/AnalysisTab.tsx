@@ -58,7 +58,7 @@ interface ShapeProps {
   rectangleWidth?: string;
 }
 
-const GreyShapes: React.FC<ShapeProps> = ({
+const StatsContainer: React.FC<ShapeProps> = ({
   infoNumber = 78,
   rectangleHeight = "107px",
   rectangleWidth = "285px",
@@ -352,7 +352,7 @@ function AnalysisTab() {
             </div>
           </TabContent>
           <TabContent index={1} value={value}>
-            Stats
+            <StatsContainer />
           </TabContent>
         </div>
       </div>
