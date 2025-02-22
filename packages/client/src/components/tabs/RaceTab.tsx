@@ -194,13 +194,13 @@ function RaceTab() {
 
       <div className="overflow-x-auto md:w-2/3 lg:w-3/4">
         <div style={{ height: "350px", overflow: "auto" }}>
-          <table className="border-seperate w-full border-spacing-0 divide-gray-200">
+          <table className="w-full border-separate border-spacing-0 divide-gray-200">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
-                      className={`sticky top-0 z-10 w-24 border-2 border-helios bg-white px-4 py-2 text-center text-xs font-medium uppercase text-helios ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
+                      className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios bg-white px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
                       key={header.id}
                     >
                       {header.isPlaceholder
@@ -219,7 +219,7 @@ function RaceTab() {
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td
-                      className={`text-gray-900 sticky w-24 w-full border-2 border-helios px-4 py-2 text-center text-sm ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
+                      className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
                       key={cell.id}
                     >
                       {flexRender(
