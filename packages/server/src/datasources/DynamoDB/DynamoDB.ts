@@ -9,14 +9,11 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
-  DynamoDBClient,
-  GetItemCommand,
-  QueryCommand,
-} from "@aws-sdk/client-dynamodb";
-import {
+  GetCommand,
   PutCommand,
-  QueryCommandInput,
+  QueryCommand,
   ScanCommand,
   ScanCommandInput,
   UpdateCommand,
@@ -63,20 +60,20 @@ export class DynamoDB implements DynamoDBtypes {
 
   // Helper function to get playback table data
   public async getPacketData(timestamp: string) {
-    //  add type to return
     try {
-      const command = new GetItemCommand({
+      const command = new GetCommand({
         Key: {
-          id: { S: "packet" },
-          timestamp: { N: timestamp },
+          id: "packet", // Directly set as a string, no need for `{ S: "value" }`
+          timestamp: Number(timestamp), // Ensure `timestamp` is converted to a number
         },
         TableName: this.packetTableName,
       });
+
       const response = await this.client.send(command);
-      return response;
+      return response.Item; // lib-dynamodb automatically unmarshals the data
     } catch (error) {
-      logger.error("Error getting playback table data");
-      throw new Error(error);
+      logger.error("Error getting playback table data: " + error.message);
+      throw new Error(error.message);
     }
   }
 
@@ -130,11 +127,12 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new QueryCommand({
         ExpressionAttributeValues: {
-          ":rfid": { N: rfid },
+          ":rfid": rfid,
         },
         KeyConditionExpression: "rfid = :rfid",
         TableName: this.driverTableName,
       });
+
       const response = await this.client.send(command);
       return response.Items;
     } catch (error) {
@@ -212,25 +210,31 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const firstCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": { S: "packet" },
+          ":id": "packet",
         },
         KeyConditionExpression: "id = :id",
         Limit: 1,
-        ScanIndexForward: true,
+        ScanIndexForward: true, // Ascending order → earliest timestamp
         TableName: this.packetTableName,
       });
+
       const lastCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": { S: "packet" },
+          ":id": "packet",
         },
         KeyConditionExpression: "id = :id",
         Limit: 1,
-        ScanIndexForward: false,
+        ScanIndexForward: false, // Descending order → latest timestamp
         TableName: this.packetTableName,
       });
 
       const firstResponse = await this.client.send(firstCommand);
       const lastResponse = await this.client.send(lastCommand);
+
+      if (!firstResponse.Items?.length || !lastResponse.Items?.length) {
+        throw new Error("No packet data found");
+      }
+
       const firstDateUTC = Number(firstResponse.Items[0].timestamp);
       const lastDateUTC = Number(lastResponse.Items[0].timestamp);
 
@@ -256,15 +260,15 @@ export class DynamoDB implements DynamoDBtypes {
       }
 
       // Check if the RFID exists in the driver table
-      const getCommand = new GetItemCommand({
+      const getCommand = new GetCommand({
         Key: {
-          rfid: { S: rfid }, // ✅ Ensure it's a string
+          rfid: rfid,
         },
         TableName: this.driverTableName,
       });
-      const getResponse = await this.client.send(getCommand);
+      const rfidCheckReposonse = await this.client.send(getCommand);
 
-      if (!getResponse.Item) {
+      if (!rfidCheckReposonse.Item) {
         return { message: "RFID not found in driver table" };
       }
 
