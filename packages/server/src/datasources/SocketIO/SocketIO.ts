@@ -11,6 +11,7 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
+  ILapData,
   ITelemetryData,
 } from "@shared/helios-types";
 
@@ -39,6 +40,9 @@ export class SocketIO implements SocketIOType {
 
   public broadcastPacket(packet: ITelemetryData) {
     this.io.emit("packet", packet);
+  }
+  public broadcastLapData(lapData: ILapData) {
+    this.io.emit("lapData", lapData);
   }
   public broadcastCarLatency(latency: number) {
     this.io.emit("carLatency", latency);

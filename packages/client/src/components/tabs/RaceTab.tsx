@@ -1,8 +1,8 @@
-import axios from "axios";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
-import type { ILapData } from "@shared/helios-types";
+import { useLapData } from "@/contexts/LapDataContext";
+import type { IFormattedLapData, ILapData } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
   createColumnHelper,
@@ -11,7 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<ILapData>();
+const columnHelper = createColumnHelper<IFormattedLapData>();
 
 const columns = [
   columnHelper.accessor("data.timeStamp", {

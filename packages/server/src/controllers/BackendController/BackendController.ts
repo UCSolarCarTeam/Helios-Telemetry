@@ -9,7 +9,7 @@ import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
 import { logger } from "@/index";
-import { type ITelemetryData } from "@shared/helios-types";
+import { ILapData, type ITelemetryData } from "@shared/helios-types";
 
 //getDriverInfo
 export class BackendController implements BackendControllerTypes {
@@ -45,7 +45,6 @@ export class BackendController implements BackendControllerTypes {
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
-    this.socketIO.broadcastLapCoords(this.lapController.finishLineLocation);
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);
