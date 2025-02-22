@@ -388,17 +388,25 @@ export const ITelemetryDataType = t.exact(
 export type ITelemetryData = t.TypeOf<typeof ITelemetryDataType>;
 
 //old data type definitions
+export interface IDriverData {
+  driver: string;
+  rfid: string;
+}
+
 export interface ILapData {
-  ampHours: number;
-  averagePackCurrent: number;
-  averageSpeed: number;
-  batterySecondsRemaining: number;
-  distance: number;
-  lapTime: number;
-  netPowerOut: number;
-  timeStamp: number;
-  totalPowerIn: number;
-  totalPowerOut: number;
+  data: {
+    ampHours: number;
+    averagePackCurrent: number;
+    averageSpeed: number;
+    batterySecondsRemaining: number;
+    distance: number;
+    lapTime: number;
+    netPowerOut: number;
+    timeStamp: number;
+    totalPowerIn: number;
+    totalPowerOut: number;
+  };
+  rfid: number;
 }
 
 export class LapData {
@@ -746,14 +754,17 @@ export interface ITelemetry {
   MpuTemperature: number;
 }
 export interface IFormattedLapData {
-  ampHours: number;
-  averagePackCurrent: number;
-  averageSpeed: number;
-  batterySecondsRemaining: number;
-  distance: number;
-  lapTime: number;
-  netPowerOut: number;
-  timeStamp: string;
-  totalPowerIn: number;
-  totalPowerOut: number;
+  data: {
+    ampHours: number;
+    averagePackCurrent: number;
+    averageSpeed: number;
+    batterySecondsRemaining: number;
+    distance: number;
+    lapTime: number;
+    netPowerOut: number;
+    timeStamp: number;
+    totalPowerIn: number;
+    totalPowerOut: number;
+  };
+  rfid: number;
 }

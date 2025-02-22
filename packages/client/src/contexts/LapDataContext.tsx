@@ -27,20 +27,27 @@ export function LapDataContextProvider({
   const { currentAppState } = useAppState();
   const [lapData, setLapData] = useState<IFormattedLapData[]>([]);
 
-  const onLapData = useCallback((data: ILapData) => {
+  const onLapData = useCallback((lapData: ILapData) => {
     const formattedData: IFormattedLapData = {
-      ampHours: parseFloat(data.ampHours.toFixed(2)),
-      averagePackCurrent: parseFloat(data.averagePackCurrent.toFixed(2)),
-      averageSpeed: parseFloat(data.averageSpeed.toFixed(2)),
-      batterySecondsRemaining: parseFloat(
-        data.batterySecondsRemaining.toFixed(2),
-      ),
-      distance: parseFloat(data.distance.toFixed(2)),
-      lapTime: parseFloat(data.lapTime.toFixed(2)),
-      netPowerOut: parseFloat(data.netPowerOut.toFixed(2)),
-      timeStamp: new Date(data.timeStamp).toLocaleDateString("en-US"),
-      totalPowerIn: parseFloat(data.totalPowerIn.toFixed(2)),
-      totalPowerOut: parseFloat(data.totalPowerOut.toFixed(2)),
+      data: {
+        ampHours: parseFloat(lapData.data.ampHours.toFixed(2)),
+        averagePackCurrent: parseFloat(
+          lapData.data.averagePackCurrent.toFixed(2),
+        ),
+        averageSpeed: parseFloat(lapData.data.averageSpeed.toFixed(2)),
+        batterySecondsRemaining: parseFloat(
+          lapData.data.batterySecondsRemaining.toFixed(2),
+        ),
+        distance: parseFloat(lapData.data.distance.toFixed(2)),
+        lapTime: parseFloat(lapData.data.lapTime.toFixed(2)),
+        netPowerOut: parseFloat(lapData.data.netPowerOut.toFixed(2)),
+        timeStamp: Number(
+          new Date(lapData.data.timeStamp).toLocaleDateString("en-US"),
+        ),
+        totalPowerIn: parseFloat(lapData.data.totalPowerIn.toFixed(2)),
+        totalPowerOut: parseFloat(lapData.data.totalPowerOut.toFixed(2)),
+      },
+      rfid: lapData.rfid,
     };
 
     setLapData((prev) => [...prev, formattedData]);
@@ -61,23 +68,34 @@ export function LapDataContextProvider({
     fetchLapData()
       .then((response) => {
         const formattedData = response.data.map(
-          (lapPacket: { data: ILapData }) => ({
-            ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
-            averagePackCurrent: parseFloat(
-              lapPacket.data.averagePackCurrent.toFixed(2),
-            ),
-            averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
-            batterySecondsRemaining: parseFloat(
-              lapPacket.data.batterySecondsRemaining.toFixed(2),
-            ),
-            distance: parseFloat(lapPacket.data.distance.toFixed(2)),
-            lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
-            netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
-            timeStamp: new Date(lapPacket.data.timeStamp).toLocaleDateString(
-              "en-US",
-            ),
-            totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
-            totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
+          (lapPacket: { lapData: ILapData }) => ({
+            data: {
+              ampHours: parseFloat(lapPacket.lapData.data.ampHours.toFixed(2)),
+              averagePackCurrent: parseFloat(
+                lapPacket.lapData.data.averagePackCurrent.toFixed(2),
+              ),
+              averageSpeed: parseFloat(
+                lapPacket.lapData.data.averageSpeed.toFixed(2),
+              ),
+              batterySecondsRemaining: parseFloat(
+                lapPacket.lapData.data.batterySecondsRemaining.toFixed(2),
+              ),
+              distance: parseFloat(lapPacket.lapData.data.distance.toFixed(2)),
+              lapTime: parseFloat(lapPacket.lapData.data.lapTime.toFixed(2)),
+              netPowerOut: parseFloat(
+                lapPacket.lapData.data.netPowerOut.toFixed(2),
+              ),
+              timeStamp: new Date(
+                lapPacket.lapData.data.timeStamp,
+              ).toLocaleDateString("en-US"),
+              totalPowerIn: parseFloat(
+                lapPacket.lapData.data.totalPowerIn.toFixed(2),
+              ),
+              totalPowerOut: parseFloat(
+                lapPacket.lapData.data.totalPowerOut.toFixed(2),
+              ),
+            },
+            rfid: lapPacket.lapData.rfid,
           }),
         );
 
