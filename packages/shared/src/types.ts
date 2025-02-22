@@ -84,10 +84,10 @@ const IBatteryPackType = t.exact(
 
 const IBatteryTemperatureType = t.exact(
   t.type({
-    LowTemperature: t.number,
     AverageTemperature: t.number,
-    InternalTemperature: t.number,
     HighTemperature: t.number,
+    InternalTemperature: t.number,
+    LowTemperature: t.number,
   }),
 );
 
@@ -158,8 +158,8 @@ const IBatteryType = t.exact(
 
 const IBatteryFaultsType = t.exact(
   t.type({
-    Warnings: IBatteryFaultsWarningsType,
     Errors: IBatteryFaultsErrorsType,
+    Warnings: IBatteryFaultsWarningsType,
   }),
 );
 
@@ -231,10 +231,10 @@ const IMotorErrorsType = t.exact(
     CanCommsTimeoutError: t.boolean,
     ControllerDataReadingTimeout: t.boolean,
     DcOvervoltageError: t.boolean,
+    DcUndervoltageError: t.boolean,
     ErrorInDclinkCommunication: t.boolean,
     ErrorReadingEncoder: t.boolean,
     ErrorReadingTempSensor: t.boolean,
-    DcUndervoltageError: t.boolean,
     InvalidHallSensorSequence: t.boolean,
     Inverter1FaultError: t.boolean,
     Inverter1OvercurrentError: t.boolean,
@@ -259,8 +259,8 @@ const IMotorWarningsType = t.exact(
     CanCommsTimeoutWarning: t.boolean,
     DcOvervoltageWarning: t.boolean,
     DcUndervoltageWarning: t.boolean,
-    Inverter1OverCurrentWarning: t.boolean,
     Inverter1FaultWarning: t.boolean,
+    Inverter1OverCurrentWarning: t.boolean,
     Inverter2FaultWarning: t.boolean,
     Inverter2OverCurrentWarning: t.boolean,
     Inverter3FaultWarning: t.boolean,
@@ -268,8 +268,8 @@ const IMotorWarningsType = t.exact(
     Inverter4FaultWarning: t.boolean,
     Inverter4OverCurrentWarning: t.boolean,
     Inverter5FaultWarning: t.boolean,
-    Inverter6FaultWarning: t.boolean,
     Inverter5OverCurrentWarning: t.boolean,
+    Inverter6FaultWarning: t.boolean,
     Inverter6OverCurrentWarning: t.boolean,
     LostFramesOnCanBusWarning: t.boolean,
     OverspeedWarning: t.boolean,
@@ -316,10 +316,10 @@ const IMotorDetailsType = t.exact(
     InverterPeakCurrent: t.number,
     MotorAboutToStall: t.boolean,
     MotorErrors: IMotorErrorsType,
-    MotorWarnings: IMotorWarningsType,
     MotorMode: t.boolean,
     MotorStalled: t.boolean,
     MotorTemperature: t.number,
+    MotorWarnings: IMotorWarningsType,
     SettingsNotFound: t.boolean,
     SoftwareEnable: t.boolean,
     StartAtHighRpm: t.boolean,
@@ -644,7 +644,7 @@ export interface IMPPT {
   ArrayVoltage: number;
   BatteryVoltage: number;
   ChannelNumber: number;
-  IsAlive: number;
+  IsAlive: boolean;
   Temperature: number;
 }
 

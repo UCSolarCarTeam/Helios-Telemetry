@@ -17,6 +17,7 @@ export class BackendController implements BackendControllerTypes {
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
+  public carLatency: number;
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
   ) {
@@ -25,18 +26,23 @@ export class BackendController implements BackendControllerTypes {
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
     this.establishCarPinging();
+    this.carLatency = 0;
+    // this.handleCarLatency();
   }
 
   public establishCarPinging() {
     // Ping the car every 5 seconds
     this.mqtt.pingTimer(5000);
+
+    // send data to car every 5 seconds
+    const myMessage = this.carLatency?.toString();
+    this.mqtt.telemetryToCar(5000, myMessage);
   }
 
-  // This isn't being called anywhere?
-  public handleCarLatency(carLatency: number) {
+  public handleTelemetryToCar(carLatency: number) {
     // Broadcast the car latency to the frontend
     this.socketIO.broadcastCarLatency(carLatency);
-    logger.info("Car Latency: ", carLatency.toString());
+    logger.info("Car Latency - receiving: ", carLatency.toString());
   }
 
   public async handlePacketReceive(message: ITelemetryData) {
