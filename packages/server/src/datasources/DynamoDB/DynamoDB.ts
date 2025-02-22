@@ -19,6 +19,7 @@ import {
   QueryCommandInput,
   ScanCommand,
   ScanCommandInput,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import type { ILapData, ITelemetryData } from "@shared/helios-types";
@@ -28,7 +29,11 @@ if (!process.env.LAP_TABLE_NAME) {
 }
 
 if (!process.env.PACKET_TABLE_NAME) {
-  throw new Error("Lap table name not defined");
+  throw new Error("Packet table name not defined");
+}
+
+if (!process.env.DRIVER_TABLE_NAME) {
+  throw new Error("Driver table name not defined");
 }
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
@@ -245,18 +250,39 @@ export class DynamoDB implements DynamoDBtypes {
 
   public async updateDriverInfo(rfid: string, name: string) {
     try {
-      const command = new PutCommand({
-        Item: {
-          name: { S: name },
-          rfid: { N: rfid },
+      // Ensure rfid is a string (DynamoDB is type-sensitive)
+      if (typeof rfid !== "string") {
+        throw new Error("RFID must be a string");
+      }
+
+      // Check if the RFID exists in the driver table
+      const getCommand = new GetItemCommand({
+        Key: {
+          rfid: { S: rfid }, // ✅ Ensure it's a string
         },
         TableName: this.driverTableName,
       });
-      const response = await this.client.send(command);
-      return response;
+      const getResponse = await this.client.send(getCommand);
+
+      if (!getResponse.Item) {
+        return { message: "RFID not found in driver table" };
+      }
+
+      // Update only the 'driver' field, keeping the existing RFID
+      const updateCommand = new UpdateCommand({
+        ExpressionAttributeValues: {
+          ":name": name,
+        },
+        Key: { rfid: rfid },
+        TableName: this.driverTableName,
+        UpdateExpression: "SET driver = :name",
+      });
+
+      await this.client.send(updateCommand);
+      return { message: "Driver info updated successfully" };
     } catch (error) {
-      logger.error("Error updating driver info");
-      throw new Error(error);
+      logger.error("Error updating driver info: " + error.message);
+      throw new Error(error.message);
     }
   }
 }

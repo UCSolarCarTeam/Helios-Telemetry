@@ -16,11 +16,14 @@ export default function DriverUpdate() {
   });
 
   const [errors, setErrors] = useState(new Set<keyof IDriverNameUpdate>());
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState<
+    Partial<IDriverNameUpdate>
+  >({});
+  const [statusMessage, setStatusMessage] = useState("");
 
   const validateInputs = () => {
     const newErrors = new Set<keyof IDriverNameUpdate>();
-    let message = "";
+    const newErrorMessages: Partial<IDriverNameUpdate> = {};
 
     if (
       typeof driverDetails.name !== "string" ||
@@ -28,35 +31,44 @@ export default function DriverUpdate() {
       /\d/.test(driverDetails.name)
     ) {
       newErrors.add("name");
-      message =
+      newErrorMessages.name =
         "Name must be a non-empty string and should not contain digits.";
     }
 
-    if (isNaN(Number(driverDetails.rfid))) {
+    if (
+      typeof driverDetails.rfid !== "string" ||
+      driverDetails.rfid.trim() === "" ||
+      isNaN(Number(driverDetails.rfid))
+    ) {
       newErrors.add("rfid");
-      message = "RFID must be a number.";
+      newErrorMessages.rfid = "RFID must not be empty and must be a number.";
     }
 
     setErrors(newErrors);
-    setErrorMessage(message);
+    setErrorMessages(newErrorMessages);
 
     return newErrors.size === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessages({});
+    setStatusMessage("");
     if (validateInputs()) {
       axios
         .post("http://localhost:3001/updatedriverinfo", {
           name: driverDetails.name,
-          rfid: Number(driverDetails.rfid),
+          rfid: driverDetails.rfid,
         })
         .then((res) => {
           if (res.status === 200) {
-            setErrorMessage("Driver info updated successfully");
+            setStatusMessage(res.data.message);
           } else {
-            setErrorMessage("Error updating driver info");
+            setStatusMessage("Error updating driver info");
           }
+        })
+        .catch((err) => {
+          setStatusMessage("Error updating driver info");
         });
     }
   };
@@ -70,9 +82,7 @@ export default function DriverUpdate() {
         {Object.keys(driverDetailsText).map((key) => (
           <TextField
             error={errors.has(key as keyof IDriverNameUpdate)}
-            helperText={
-              errors.has(key as keyof IDriverNameUpdate) ? errorMessage : ""
-            }
+            helperText={errorMessages[key as keyof IDriverNameUpdate] || ""}
             key={key}
             label={driverDetailsText[key as keyof IDriverNameUpdate]}
             name={key}
@@ -86,6 +96,9 @@ export default function DriverUpdate() {
           />
         ))}
         <Button type="submit">Submit</Button>
+        {statusMessage && (
+          <div className="text-green-500 mt-2 text-center">{statusMessage}</div>
+        )}
       </form>
     </div>
   );

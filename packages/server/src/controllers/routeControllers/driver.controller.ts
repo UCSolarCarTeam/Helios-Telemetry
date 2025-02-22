@@ -100,11 +100,14 @@ export const updateDriverInfo = async (
   );
 
   try {
-    await backendController.dynamoDB.updateDriverInfo(name, rfid);
+    const responseMessage = await backendController.dynamoDB.updateDriverInfo(
+      rfid,
+      name,
+    );
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
-      message: "Driver info updated successfully",
+      message: responseMessage.message,
       uptime: process.uptime() + " seconds",
     };
     logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
