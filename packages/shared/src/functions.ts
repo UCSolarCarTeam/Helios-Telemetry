@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { ITelemetryData, ITelemetryDataType } from "./types";
-import { PathReporter } from "io-ts/PathReporter";
 import { isRight } from "fp-ts/Either";
+import { type ValidationError } from "io-ts";
 
 export function generateFakeTelemetryData(): ITelemetryData {
   return {
@@ -524,11 +524,27 @@ export function generateFakeTelemetryData(): ITelemetryData {
   };
 }
 
+function formatValidationErrors(errors: ValidationError[]): string {
+  return errors
+    .map((error) => {
+      const path = error.context
+        .map(({ key }) => key)
+        .filter(Boolean)
+        .join(".");
+      const expectedType =
+        error.context[error.context.length - 1]?.type.name ??
+        "error getting expected type";
+      const actualValue = JSON.stringify(error.value);
+      return `An invalid value of ${actualValue} was supplied to ${path} (expected type: ${expectedType}). Hint: if you received a value of undefined, it is likely the field is missing from the packet`;
+    })
+    .join(", ");
+}
+
 export function validateTelemetryData(packet: unknown) {
   const validationResult = ITelemetryDataType.decode(packet);
   if (isRight(validationResult)) {
     return validationResult.right;
   }
-  const errorMessages = PathReporter.report(validationResult).join(", ");
-  throw new Error(`Invalid packet format: ${errorMessages}`);
+  const errorMessages = formatValidationErrors(validationResult.left);
+  throw new Error(errorMessages);
 }
