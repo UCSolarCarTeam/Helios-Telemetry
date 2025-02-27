@@ -31,7 +31,7 @@ aedes.authenticate = function (
   const validUsername = process.env.MQTT_USERNAME;
   const validPassword = process.env.MQTT_PASSWORD;
   // Set Max connections to Aedes (Car Client and Solar MQTT client)
-  if (aedes.connectedClients >= 2) {
+  if (aedes.connectedClients >= 3) {
     const error = new MqttError("Too many clients", 5);
     done(error, false);
     return;

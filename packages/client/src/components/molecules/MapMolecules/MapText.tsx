@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
 
 import { usePacket } from "@/contexts/PacketContext";
+import { calculateVehicleVelocity } from "@shared/helios-types";
 
 function MapText() {
   const lapsLeft = 100;
   const totalTime = 3600 * 1000 * 8; // 1000 ms * 3600 sec/hr * 8 hr
 
   const { currentPacket } = usePacket();
-  const [timeLeft, setTimeLeft] = useState<number>(totalTime);
+  const [timeLeft, setTimeLeft] = useState(totalTime);
   const [intervalCount, setIntervalCount] = useState(0);
   const raceMode = currentPacket?.B3?.RaceMode;
+  const motorDetails0 = currentPacket?.MotorDetails0?.CurrentRpmValue;
+  const motorDetails1 = currentPacket?.MotorDetails1?.CurrentRpmValue;
 
   useEffect(() => {
+    const vehicleVelocity = calculateVehicleVelocity(
+      motorDetails0,
+      motorDetails1,
+    );
+
+    if (vehicleVelocity === 0) return;
+
     if (!raceMode) return;
 
     if (intervalCount >= 3) {
@@ -32,7 +42,7 @@ function MapText() {
 
     // clean-up function
     return () => clearInterval(interval);
-  }, [raceMode, timeLeft]);
+  }, [raceMode, timeLeft, motorDetails0, motorDetails1]);
 
   // format time for display
   const hour = Math.floor(timeLeft / (1000 * 3600));
@@ -42,12 +52,10 @@ function MapText() {
   return (
     <>
       <div className="mt-1 w-full text-center">
-        <div className="grid grid-cols-2">
-          <div className="col-span-1 grid">
+        <div className="grid">
+          <div className="flex justify-evenly">
             <p>Laps Left: {lapsLeft}</p>
             <p>Interval Count: {intervalCount}</p>
-          </div>
-          <div className="col-span-1 grid">
             <p>
               Time Left: {hour}:{minutes}:{seconds}
             </p>

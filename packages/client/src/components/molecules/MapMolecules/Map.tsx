@@ -47,6 +47,23 @@ const lerp = (
   return startPosition * (1 - timeOfAnimation) + endPosition * timeOfAnimation;
 };
 
+const calculateBearing = (start: Coords, end: Coords): number => {
+  //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
+  const startLat = (start.lat * Math.PI) / 180; //convert to radians
+  const startLng = (start.long * Math.PI) / 180;
+  const endLat = (end.lat * Math.PI) / 180;
+  const endLng = (end.long * Math.PI) / 180;
+
+  const deltaLng = endLng - startLng;
+  const x = Math.sin(deltaLng) * Math.cos(endLat);
+  const y =
+    Math.cos(startLat) * Math.sin(endLat) -
+    Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
+
+  const bearing = (Math.atan2(x, y) * 180) / Math.PI;
+  return (bearing + 360) % 360; // Normalize to 0-360 degrees
+};
+
 function Map(props: IMapProps): JSX.Element {
   const { currentAppState } = useAppState();
   const { carLocation, lapLocation } = props;
@@ -205,6 +222,9 @@ function Map(props: IMapProps): JSX.Element {
               alt="map-pin"
               height={50}
               src="/assets/HeliosBirdseye.png"
+              style={{
+                transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
+              }}
               width={20}
             />
           </Marker>
