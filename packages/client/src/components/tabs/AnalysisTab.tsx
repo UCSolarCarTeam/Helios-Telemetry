@@ -149,27 +149,23 @@ const StatsContainer: React.FC<ShapeProps> = ({
             Driver Performance Score
           </p>
           {/* Container for the doughnut chart */}
-          <div
-            className="mt-[-0.5rem] flex w-[18.5rem] items-center justify-center"
-            style={{ opacity: 1 }} // Adjust opacity if needed
-          >
+          <div className="ml-[-0.5rem] mt-[-0.75rem] flex w-[18.5rem] items-center justify-center opacity-100">
             {/* update the donut chart based on the number */}
-            <div className="h-0.5rem">
-              <DonutChartRect
-                chartHeight={80}
-                chartWidth={80}
-                fontSize="1.4rem"
-                percentage={83}
-                thickness="70%"
-              />
-            </div>
+
+            <DonutChartRect
+              chartHeight={80}
+              chartWidth={80}
+              fontSize="1.4rem"
+              percentage={83}
+              thickness="70%"
+            />
 
             <div></div>
           </div>
 
           <div className="flex justify-center">
             <div
-              className="mt-[-0.25rem] flex w-[3.1rem] items-center justify-between"
+              className="mt-[-0.25rem] flex w-[4.1rem] items-center justify-between"
               style={{ gap: "0px", opacity: 1 }}
             >
               {/* Left number */}
