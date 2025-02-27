@@ -54,15 +54,9 @@ export function TabContent({
 }
 interface ShapeProps {
   infoNumber?: number;
-  rectangleHeight?: string;
-  rectangleWidth?: string;
 }
 
-const StatsContainer: React.FC<ShapeProps> = ({
-  infoNumber = 78,
-  rectangleHeight = "107px",
-  rectangleWidth = "285px",
-}) => {
+const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
   return (
     <div className="flex flex-wrap items-center justify-center gap-4">
       {/* Container to wrap the squares */}
