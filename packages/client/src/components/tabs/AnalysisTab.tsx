@@ -88,10 +88,7 @@ const StatsContainer: React.FC<ShapeProps> = ({
             </div>
           </div>
 
-          <div
-            className="flex w-full items-center justify-between"
-            style={{ gap: "0px", opacity: 1 }}
-          >
+          <div className="opacity-1 flex w-full items-center justify-between gap-0">
             {/* Left number */}
             <span className="text-sm text-[#9C0534] sm:text-base md:text-lg">
               46
@@ -117,10 +114,7 @@ const StatsContainer: React.FC<ShapeProps> = ({
           </p>
 
           {/* Container for the doughnut chart */}
-          <div
-            className="flex w-[15rem] items-center justify-center"
-            style={{ opacity: 1 }}
-          >
+          <div className="opacity-1 flex w-[15rem] items-center justify-center">
             {/* update the donut chart based on the number */}
             <div className="h-0.6rem">
               <DonutChart
@@ -141,10 +135,7 @@ const StatsContainer: React.FC<ShapeProps> = ({
       <div className="flex flex-col items-center gap-4 custom-sm:flex-row custom-lg:flex-col">
         {/* added custom pixel widths to solve the rectangle alignment error*/}
         {/* Rectangle 1 */}
-        <div
-          className="rounded-2xl bg-[#BFBFBF]"
-          style={{ height: rectangleHeight, width: rectangleWidth }}
-        >
+        <div className="h-[6.68 rem] w-[17.81rem] rounded-2xl bg-[#BFBFBF]">
           <p className="mt-2 text-center text-sm font-normal leading-[1.3rem] sm:text-base md:text-lg">
             Driver Performance Score
           </p>
@@ -164,10 +155,7 @@ const StatsContainer: React.FC<ShapeProps> = ({
           </div>
 
           <div className="flex justify-center">
-            <div
-              className="mt-[-0.25rem] flex w-[4.1rem] items-center justify-between"
-              style={{ gap: "0px", opacity: 1 }}
-            >
+            <div className="opacity-1 mt-[-0.25rem] flex w-[4.1rem] items-center justify-between gap-0">
               {/* Left number */}
               <span className="text-left text-sm text-[#9C0534]">28</span>
 
@@ -182,8 +170,7 @@ const StatsContainer: React.FC<ShapeProps> = ({
 
         {/* Rectangle 2 */}
         <div
-          className="flex flex-col items-center rounded-2xl bg-[#BFBFBF] p-4"
-          style={{ height: "8.7rem", width: rectangleWidth }}
+          className={`flex h-[8.7rem] w-[17.8rem] flex-col items-center rounded-2xl bg-[#BFBFBF] p-4`}
         >
           {/* Title */}
           <p className="mt-[-0.5rem] text-center text-[0.875rem] font-normal leading-[1.35rem] sm:text-base md:text-lg">
