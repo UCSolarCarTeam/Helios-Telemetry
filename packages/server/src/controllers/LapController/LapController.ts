@@ -92,6 +92,7 @@ export class LapController implements LapControllerType {
           totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
         },
         rfid: packet.Pi.rfid,
+        timestamp: packet.TimeStamp,
       };
       this.handleLapData(lapData);
       this.lastLapPackets = [];
