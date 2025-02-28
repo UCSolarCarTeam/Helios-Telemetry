@@ -407,6 +407,7 @@ export interface ILapData {
     totalPowerOut: number;
   };
   rfid: number;
+  timestamp: number;
 }
 
 export class LapData {
@@ -762,9 +763,10 @@ export interface IFormattedLapData {
     distance: number;
     lapTime: number;
     netPowerOut: number;
-    timeStamp: number;
+    timeStamp: string;
     totalPowerIn: number;
     totalPowerOut: number;
   };
+  timestamp: number;
   rfid: number;
 }

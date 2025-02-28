@@ -2,7 +2,8 @@ import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 
-import type { IFormattedLapData, ILapData } from "@shared/helios-types";
+import { useLapData } from "@/contexts/LapDataContext";
+import type { IFormattedLapData } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
   createColumnHelper,
@@ -71,9 +72,9 @@ const columns = [
 ];
 
 function RaceTab() {
-  const [lapData, setLapData] = useState<ILapData[]>([]);
   const [rfid, setDriverRFID] = useState<number | undefined>(undefined);
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
+  const { lapData } = useLapData();
 
   const handleDriverRFID: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     setDriverRFID(Number(e.target.value));
@@ -94,9 +95,7 @@ function RaceTab() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      sorting: [
-        { desc: false, id: "data_timeStamp" }, // Initial sort by 'name' column in ascending order
-      ],
+      sorting: [{ desc: false, id: "data_timeStamp" }],
     },
   });
 
@@ -108,16 +107,6 @@ function RaceTab() {
       .replace(/^\w/, (c) => c.toUpperCase());
   }
 
-  const fetchLapData = async () => {
-    try {
-      const response = await axios.get(
-        `https://aedes.calgarysolarcar.ca:3001/laps`,
-      );
-      return response.data; // Assuming the API returns an array of lap data
-    } catch (error) {
-      return { error: "Error fetching lap data" };
-    }
-  };
   const fetchDriverNames = async () => {
     try {
       const response = await axios.get(
@@ -132,43 +121,11 @@ function RaceTab() {
   useEffect(() => {
     fetchDriverNames()
       .then((response) => {
-        const formattedData = response.data.map((driver: IDriverData) => ({
+        const driverData = response.data.map((driver: IDriverData) => ({
           driver: driver.driver,
           rfid: driver.rfid,
         }));
-        setDriverData(formattedData);
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetchLapData()
-      .then((response) => {
-        const formattedData = response.data.map((lapPacket: ILapData) => ({
-          data: {
-            ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
-            averagePackCurrent: parseFloat(
-              lapPacket.data.averagePackCurrent.toFixed(2),
-            ),
-            averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
-            batterySecondsRemaining: parseFloat(
-              lapPacket.data.batterySecondsRemaining.toFixed(2),
-            ),
-            distance: parseFloat(lapPacket.data.distance.toFixed(2)),
-            lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
-            netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
-
-            timeStamp: new Date(lapPacket.data.timeStamp).toLocaleDateString(
-              "en-US",
-            ),
-            totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
-            totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
-          },
-          rfid: lapPacket.rfid,
-        }));
-        setLapData(formattedData);
+        setDriverData(driverData);
       })
       .catch((error) => {
         throw new Error(error);
