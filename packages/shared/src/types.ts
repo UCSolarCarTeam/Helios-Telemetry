@@ -18,6 +18,11 @@ export interface CoordInfoUpdate {
   password: string;
 }
 
+export interface IDriverNameUpdate {
+  name: string;
+  rfid: string;
+}
+
 enum Motor {
   RightMotor = 1,
   LeftMotor = 0,
