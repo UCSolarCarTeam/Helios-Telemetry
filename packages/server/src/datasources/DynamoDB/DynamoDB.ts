@@ -104,7 +104,7 @@ export class DynamoDB implements DynamoDBtypes {
         }
       } while (lastEvaluatedKey);
     } catch (error) {
-      // console.error(new Error(" Error Scanning Packets between Dates"));
+      logger.error(" Error Scanning Packets between Dates");
     }
   }
 
