@@ -620,7 +620,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter1FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails0?.MotorErrors.Inverter1FaultError,
               },
             ],
             isFault: true,
@@ -633,7 +633,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter1OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter1OvercurrentError,
               },
             ],
             isFault: true,
@@ -658,7 +658,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter2FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails0?.MotorErrors.Inverter2FaultError,
               },
             ],
             isFault: true,
@@ -671,7 +671,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter2OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter2OvercurrentError,
               },
             ],
             isFault: true,
@@ -696,7 +696,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter3FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails0?.MotorErrors.Inverter3FaultError,
               },
             ],
             isFault: true,
@@ -709,7 +709,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter3OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter3OvercurrentError,
               },
             ],
             isFault: true,
@@ -734,7 +734,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter4FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails0?.MotorErrors.Inverter4FaultError,
               },
             ],
             isFault: true,
@@ -747,7 +747,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter4OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter4OvercurrentError,
               },
             ],
             isFault: true,
@@ -772,7 +772,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter5FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails0?.MotorErrors.Inverter5FaultError,
               },
             ],
             isFault: true,
@@ -785,7 +785,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter5OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter5OvercurrentError,
               },
             ],
             isFault: true,
@@ -810,7 +810,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.LEFTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter6FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails0?.MotorErrors.Inverter6FaultError,
               },
             ],
             isFault: true,
@@ -823,7 +823,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter6OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter6OvercurrentError,
               },
             ],
             isFault: true,
@@ -909,7 +909,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .InvalidHallSensorSequence, // this doesn't exist in the packet anymore I think
+                    .InvalidHallSensorSequence,
               },
             ],
             isFault: true,
@@ -922,7 +922,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails0?.MotorErrors
-                    .PositionSensorReadingError, // this doesn't exist in the packet anymore I think
+                    .PositionSensorReadingError,
               },
             ],
             isFault: true,
@@ -1089,7 +1089,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter1FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter1FaultWarning,
               },
             ],
             isFault: true,
@@ -1102,7 +1102,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter1OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter1OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -1128,7 +1128,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter2FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter2FaultWarning,
               },
             ],
             isFault: true,
@@ -1141,7 +1141,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter2OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter2OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -1167,7 +1167,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter3FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter3FaultWarning,
               },
             ],
             isFault: true,
@@ -1180,7 +1180,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter3OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter3OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -1206,7 +1206,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter4FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter4FaultWarning,
               },
             ],
             isFault: true,
@@ -1219,7 +1219,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter4OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter4OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -1245,7 +1245,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter5FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter5FaultWarning,
               },
             ],
             isFault: true,
@@ -1258,7 +1258,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter5OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter5OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -1284,7 +1284,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter6FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter6FaultWarning,
               },
             ],
             isFault: true,
@@ -1297,7 +1297,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter6OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter6OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -1566,7 +1566,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter1FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter1FaultError,
               },
             ],
             isFault: true,
@@ -1579,7 +1579,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter1OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter1OvercurrentError,
               },
             ],
             isFault: true,
@@ -1604,7 +1604,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter2FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter2FaultError,
               },
             ],
             isFault: true,
@@ -1617,7 +1617,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter2OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter2OvercurrentError,
               },
             ],
             isFault: true,
@@ -1642,7 +1642,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter3FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter3FaultError,
               },
             ],
             isFault: true,
@@ -1655,7 +1655,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter3OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter3OvercurrentError,
               },
             ],
             isFault: true,
@@ -1680,7 +1680,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter4FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter4FaultError,
               },
             ],
             isFault: true,
@@ -1693,7 +1693,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter4OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter4OvercurrentError,
               },
             ],
             isFault: true,
@@ -1718,7 +1718,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter5FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter5FaultError,
               },
             ],
             isFault: true,
@@ -1731,7 +1731,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter5OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter5OvercurrentError,
               },
             ],
             isFault: true,
@@ -1756,7 +1756,7 @@ const Faults = (): I_PIS => {
                 indicationLocation: FaultLocations.RIGHTMOTOR,
                 severity: ISeverity.ERROR,
                 value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter6FaultError, // this doesn't exist in the packet anymore I think
+                  currentPacket?.MotorDetails1?.MotorErrors.Inverter6FaultError,
               },
             ],
             isFault: true,
@@ -1769,7 +1769,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter6OvercurrentError, // this doesn't exist in the packet anymore I think
+                    .Inverter6OvercurrentError,
               },
             ],
             isFault: true,
@@ -1855,7 +1855,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .InvalidHallSensorSequence, // this doesn't exist in the packet anymore I think
+                    .InvalidHallSensorSequence,
               },
             ],
             isFault: true,
@@ -1868,7 +1868,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.ERROR,
                 value:
                   currentPacket?.MotorDetails1?.MotorErrors
-                    .PositionSensorReadingError, // this doesn't exist in the packet anymore I think
+                    .PositionSensorReadingError,
               },
             ],
             isFault: true,
@@ -2035,7 +2035,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter1FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter1FaultWarning,
               },
             ],
             isFault: true,
@@ -2048,7 +2048,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter1OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter1OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -2074,7 +2074,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter2FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter2FaultWarning,
               },
             ],
             isFault: true,
@@ -2087,7 +2087,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter2OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter2OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -2113,7 +2113,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter3FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter3FaultWarning,
               },
             ],
             isFault: true,
@@ -2126,7 +2126,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter3OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter3OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -2152,7 +2152,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter4FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter4FaultWarning,
               },
             ],
             isFault: true,
@@ -2165,7 +2165,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter4OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter4OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -2191,7 +2191,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter5FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter5FaultWarning,
               },
             ],
             isFault: true,
@@ -2204,7 +2204,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter5OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter5OverCurrentWarning,
               },
             ],
             isFault: true,
@@ -2230,7 +2230,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter6FaultWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter6FaultWarning,
               },
             ],
             isFault: true,
@@ -2243,7 +2243,7 @@ const Faults = (): I_PIS => {
                 severity: ISeverity.WARNING,
                 value:
                   currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter6OverCurrentWarning, // this doesn't exist in the packet anymore I think
+                    .Inverter6OverCurrentWarning,
               },
             ],
             isFault: true,
