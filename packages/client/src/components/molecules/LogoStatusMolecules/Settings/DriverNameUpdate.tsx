@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 import { Button, TextField } from "@mui/material";
-import { IDriverNameUpdate } from "@shared/helios-types";
+import { IDriverNameUpdate, prodURL } from "@shared/helios-types";
 
 const driverDetailsText: IDriverNameUpdate = {
   name: "Name",
@@ -56,7 +56,7 @@ export default function DriverUpdate() {
     setStatusMessage("");
     if (validateInputs()) {
       axios
-        .post("http://localhost:3001/updatedriverinfo", {
+        .post(`${prodURL}/updatedriverinfo`, {
           name: driverDetails.name,
           rfid: driverDetails.rfid,
         })
