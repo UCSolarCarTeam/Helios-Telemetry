@@ -1,8 +1,10 @@
 import axios from "axios";
+import { COMPILER_INDEXES } from "next/dist/shared/lib/constants";
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { useLapData } from "@/contexts/LapDataContext";
+import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import type { IFormattedLapData } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
@@ -21,14 +23,25 @@ const columns = [
     header: "Time Stamp",
     sortingFn: (rowA, rowB, columnId) => {
       const parseDate = (dateString: string) => {
-        const parts = dateString.split("/");
-        const month = Number(parts[0]);
-        const day = Number(parts[1]);
-        const year = Number(parts[2]);
-        return new Date(year, month - 1, day).getTime();
+        const parts = dateString.split(" ");
+
+        const dateParts = parts[0]?.split("/");
+        const timeParts = parts[1]?.split(":");
+
+        if (!dateParts || !timeParts) {
+          throw new Error("Invalid Time");
+        }
+        const hour = Number(timeParts[0]);
+        const minute = Number(timeParts[1]);
+
+        const day = Number(dateParts[1]);
+        const month = Number(dateParts[0]);
+        const year = Number(dateParts[2]);
+        return new Date(year, month - 1, day, hour, minute).getTime();
       };
       const dateA = parseDate(rowA.getValue(columnId));
       const dateB = parseDate(rowB.getValue(columnId));
+
       return dateB - dateA;
     },
   }),
@@ -72,12 +85,19 @@ const columns = [
 ];
 
 function RaceTab() {
-  const [rfid, setDriverRFID] = useState<number | undefined>(undefined);
+  const [rfid, setDriverRFID] = useState<number | null>(null);
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
+  const [copy, setCopy] = useState<string>("Copy");
   const { lapData } = useLapData();
 
   const handleDriverRFID: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     setDriverRFID(Number(e.target.value));
+    setCopy("Copy");
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(String(rfid));
+    setCopy("Copied");
   };
 
   const filteredLapData = useMemo(() => {
@@ -133,9 +153,9 @@ function RaceTab() {
   }, []);
 
   return (
-    <div className="m-4 flex flex-col justify-between gap-4 md:flex-row">
-      <div className="flex flex-wrap gap-2 md:w-1/3 lg:w-1/4">
-        <div className="flex w-full items-center gap-x-2 pb-2 pr-2">
+    <div className="m-4 flex flex-col justify-center gap-4 md:flex-row">
+      <div className="flex flex-wrap">
+        <div className="flex w-full flex-row items-center gap-2 pb-2 pr-2">
           <Image
             alt="pfp"
             className="rounded-full border-2 border-helios object-cover p-2"
@@ -143,7 +163,7 @@ function RaceTab() {
             src="/assets/HeliosSideview.png"
             width={50}
           />
-          <select className="w-32" onChange={handleDriverRFID}>
+          <select className="max-w-24" onChange={handleDriverRFID}>
             <option value="all">Show all data</option>
             {driverData.map((driver) => (
               <option key={driver.rfid} value={driver.rfid}>
@@ -153,24 +173,36 @@ function RaceTab() {
               </option>
             ))}
           </select>
+
+          {rfid ? rfid : ""}
+          {rfid ? (
+            <button className="items-center" onClick={handleCopy}>
+              {copy === "Copy" ? <ContentCopy /> : <ContentCopyTwoTone />}
+              {rfid ? ` ${copy}` : ""}
+            </button>
+          ) : (
+            <div></div>
+          )}
         </div>
 
-        {table.getAllLeafColumns().map((column) => (
-          <label className="flex items-center gap-1 text-sm" key={column.id}>
-            <input
-              checked={column.getIsVisible()}
-              className="peer size-4 cursor-pointer accent-helios"
-              onChange={column.getToggleVisibilityHandler()}
-              type="checkbox"
-            />
-            <span className="min-w-44 select-none text-sm peer-hover:font-bold">
-              {checkBoxFormatting(column.id)}
-            </span>
-          </label>
-        ))}
+        <div className="grid grid-cols-2 flex-wrap gap-2 md:grid-cols-1">
+          {table.getAllLeafColumns().map((column) => (
+            <label className="flex items-center gap-1 text-sm" key={column.id}>
+              <input
+                checked={column.getIsVisible()}
+                className="peer size-4 cursor-pointer accent-helios"
+                onChange={column.getToggleVisibilityHandler()}
+                type="checkbox"
+              />
+              <span className="min-w-44 select-none text-sm peer-hover:font-bold">
+                {checkBoxFormatting(column.id)}
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
 
-      <div className="overflow-x-auto md:w-2/3 lg:w-3/4">
+      <div className="grid w-full grid-cols-1 overflow-x-auto md:pl-4">
         <div style={{ height: "350px", overflow: "auto" }}>
           <table className="w-full border-separate border-spacing-0 divide-gray-200">
             <thead>
