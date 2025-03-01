@@ -20,12 +20,19 @@ const RoadComponent = (props: roadComponentProps) => {
     <>
       <mesh
         geometry={geometry}
-        position={[2.5, -0.01, -3]}
+        position={[-5.5, -0.01, -3]}
         rotation={[Math.PI / 2, 0, 0]}
       >
         <meshBasicMaterial color="white" side={THREE.DoubleSide} />
       </mesh>
       <RoadStripGroup {...props} />
+      <mesh
+        geometry={geometry}
+        position={[10.5, -0.01, -6]}
+        rotation={[Math.PI / 2, 0, 0]}
+      >
+        <meshBasicMaterial color="white" side={THREE.DoubleSide} />
+      </mesh>
     </>
   );
 };
@@ -94,7 +101,7 @@ function RoadStripGroup(props: roadComponentProps) {
         <RoadStripComponent
           direction={props.direction}
           key={i}
-          position={[-5.5, -0.1, z]}
+          position={[2.5, -0.1, z]}
           size={props.size}
           speed={props.speed}
         />
