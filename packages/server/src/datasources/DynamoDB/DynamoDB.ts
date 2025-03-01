@@ -188,7 +188,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           data: packet,
-          rfid: uuidv4(),
+          rfid: packet.rfid,
           timestamp: packet.data.timeStamp,
         },
         TableName: this.lapTableName,

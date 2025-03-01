@@ -190,7 +190,7 @@ function RaceTab() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 overflow-x-auto p-4">
+      <div className="grid w-full grid-cols-1 overflow-x-auto md:pl-4">
         <div style={{ height: "350px", overflow: "auto" }}>
           <table className="w-full border-separate border-spacing-0 divide-gray-200">
             <thead>
