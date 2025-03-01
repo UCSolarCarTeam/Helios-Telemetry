@@ -128,7 +128,7 @@ const lapDataTable = new dynamodb.Table(
   "lap_data_table",
   {
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    partitionKey: { name: "rfid", type: dynamodb.AttributeType.STRING },
     removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
     sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
   },
