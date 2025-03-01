@@ -6,7 +6,7 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 const Motor = (): I_PIS => {
   const { currentPacket } = usePacket();
   return {
-    KeyLeftMotorDetails: [
+    KeyMotorDetails: [
       {
         data: [
           {
@@ -64,14 +64,6 @@ const Motor = (): I_PIS => {
       {
         data: [
           {
-            value: currentPacket?.MotorDetails0?.ControlMode,
-          },
-        ],
-        name: "Control Mode",
-      },
-      {
-        data: [
-          {
             value: currentPacket?.MotorDetails0?.ControlValue, // int
           },
         ],
@@ -116,14 +108,6 @@ const Motor = (): I_PIS => {
       {
         data: [
           {
-            value: currentPacket?.MotorDetails0?.DebugMode,
-          },
-        ],
-        name: "Debug Mode",
-      },
-      {
-        data: [
-          {
             units: UnitType.AMPERAGE,
             value: currentPacket?.MotorDetails0?.InverterPeakCurrent,
           },
@@ -133,26 +117,10 @@ const Motor = (): I_PIS => {
       {
         data: [
           {
-            value: currentPacket?.MotorDetails0?.MotorMode,
-          },
-        ],
-        name: "Motor Mode ",
-      },
-      {
-        data: [
-          {
             value: currentPacket?.MotorDetails0?.MotorTemperature,
           },
         ],
         name: "Motor Temperature",
-      },
-      {
-        data: [
-          {
-            value: currentPacket?.MotorDetails0?.SoftwareEnable,
-          },
-        ],
-        name: "Software Enable",
       },
     ] as unknown as I_PISField[],
 
@@ -162,7 +130,7 @@ const Motor = (): I_PIS => {
           {
             max: 360,
             min: 0,
-            value: currentPacket?.MotorDetails0?.AbsoluteAngle,
+            value: currentPacket?.MotorDetails1?.AbsoluteAngle,
           },
         ],
         name: "Absolute Angle",
@@ -170,15 +138,7 @@ const Motor = (): I_PIS => {
       {
         data: [
           {
-            value: currentPacket?.MotorDetails0?.ControlMode,
-          },
-        ],
-        name: "Control Mode",
-      },
-      {
-        data: [
-          {
-            value: currentPacket?.MotorDetails0?.ControlValue, // int
+            value: currentPacket?.MotorDetails1?.ControlValue, // int
           },
         ],
         name: "Control Value",
@@ -187,7 +147,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             unit: UnitType.WATT,
-            value: currentPacket?.MotorDetails0?.CurrentMotorPower, // short int
+            value: currentPacket?.MotorDetails1?.CurrentMotorPower, // short int
           },
         ],
         name: "Current Motor Power",
@@ -196,7 +156,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             unit: UnitType.NEWTONMETERS,
-            value: currentPacket?.MotorDetails0?.CurrentMotorTorque,
+            value: currentPacket?.MotorDetails1?.CurrentMotorTorque,
           },
         ],
         name: "Current Motor Torque",
@@ -205,7 +165,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             unit: UnitType.RPM,
-            value: currentPacket?.MotorDetails0?.CurrentRpmValue,
+            value: currentPacket?.MotorDetails1?.CurrentRpmValue,
           },
         ],
         name: "Current RPM Value",
@@ -214,7 +174,7 @@ const Motor = (): I_PIS => {
         data: [
           {
             unit: "°C",
-            value: currentPacket?.MotorDetails0?.MotorTemperature,
+            value: currentPacket?.MotorDetails1?.MotorTemperature,
           },
         ],
         name: "Motor Temperature",
@@ -222,16 +182,8 @@ const Motor = (): I_PIS => {
       {
         data: [
           {
-            value: currentPacket?.MotorDetails0?.DebugMode,
-          },
-        ],
-        name: "Debug Mode",
-      },
-      {
-        data: [
-          {
             units: UnitType.AMPERAGE,
-            value: currentPacket?.MotorDetails0?.InverterPeakCurrent,
+            value: currentPacket?.MotorDetails1?.InverterPeakCurrent,
           },
         ],
         name: "Inverter Peak Current",
@@ -239,26 +191,10 @@ const Motor = (): I_PIS => {
       {
         data: [
           {
-            value: currentPacket?.MotorDetails0?.MotorMode,
-          },
-        ],
-        name: "Motor Mode ",
-      },
-      {
-        data: [
-          {
-            value: currentPacket?.MotorDetails0?.MotorTemperature,
+            value: currentPacket?.MotorDetails1?.MotorTemperature,
           },
         ],
         name: "Motor Temperature",
-      },
-      {
-        data: [
-          {
-            value: currentPacket?.MotorDetails0?.SoftwareEnable,
-          },
-        ],
-        name: "Software Enable",
       },
     ] as unknown as I_PISField[],
   };
