@@ -24,14 +24,25 @@ const columns = [
     header: "Time Stamp",
     sortingFn: (rowA, rowB, columnId) => {
       const parseDate = (dateString: string) => {
-        const parts = dateString.split("/");
-        const month = Number(parts[0]);
-        const day = Number(parts[1]);
-        const year = Number(parts[2]);
-        return new Date(year, month - 1, day).getTime();
+        const parts = dateString.split(" ");
+
+        const dateParts = parts[0]?.split("/");
+        const timeParts = parts[1]?.split(":");
+
+        if (!dateParts || !timeParts) {
+          throw new Error("Invalid Time");
+        }
+        const hour = Number(timeParts[0]);
+        const minute = Number(timeParts[1]);
+
+        const day = Number(dateParts[1]);
+        const month = Number(dateParts[0]);
+        const year = Number(dateParts[2]);
+        return new Date(year, month - 1, day, hour, minute).getTime();
       };
       const dateA = parseDate(rowA.getValue(columnId));
       const dateB = parseDate(rowB.getValue(columnId));
+
       return dateB - dateA;
     },
   }),
