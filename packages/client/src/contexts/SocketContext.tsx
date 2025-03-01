@@ -10,7 +10,7 @@ import {
 import { type Socket, io } from "socket.io-client";
 
 import { useAppState } from "@/contexts/AppStateContext";
-import { prodFlag } from "@shared/helios-types";
+import { prodURL } from "@shared/helios-types";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
@@ -33,7 +33,7 @@ interface ServerToClientEvents {
 
 // Defaults to using client fakerJS, change Data to Network in site settings to connect to server
 export const socketIO: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  prodFlag,
+  prodURL,
   { autoConnect: false },
 );
 

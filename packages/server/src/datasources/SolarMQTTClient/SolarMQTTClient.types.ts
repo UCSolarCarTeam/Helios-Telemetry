@@ -1,10 +1,10 @@
 import type { MqttClient } from "mqtt";
 import type { IClientOptions } from "mqtt/*";
 
-import { prodFlag } from "@shared/helios-types";
+import { prodURL } from "@shared/helios-types";
 
 export const options: IClientOptions = {
-  host: prodFlag,
+  host: prodURL,
   password: process.env.MQTT_PASSWORD,
   port: 1883,
   protocol: "tcp",
