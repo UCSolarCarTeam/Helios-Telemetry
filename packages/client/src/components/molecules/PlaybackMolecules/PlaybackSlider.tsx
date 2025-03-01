@@ -1,5 +1,7 @@
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import Tooltip from "rc-tooltip";
+import "rc-tooltip/assets/bootstrap.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import PauseIcon from "@/components/atoms/PauseIcon";
@@ -11,6 +13,7 @@ import { fakeData } from "./fakedata";
 export default function PlaybackSlider() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
+  const [hoverValue, setHoverValue] = useState<number | null>(null);
   const animationRef = useRef<number>(null);
   const playStartTime = useRef<number>(null);
   const playStartSlider = useRef<number>(0);
@@ -104,6 +107,25 @@ export default function PlaybackSlider() {
     [isPlaying],
   );
 
+  const getTooltipContent = useCallback(
+    (value: number) => {
+      const index = Math.round(value / stepSize);
+      if (sortedData[index]) {
+        return `Packet: ${index + 1}, Timestamp: ${new Date(
+          sortedData[index].TimeStamp,
+        ).toLocaleString()}`;
+      }
+      return "";
+    },
+    [sortedData, stepSize],
+  );
+
+  const handleSliderHover = useCallback((value: number | number[]) => {
+    if (typeof value === "number") {
+      setHoverValue(value);
+    }
+  }, []);
+
   return (
     <div className="flex flex-row items-center justify-center gap-2 py-1">
       <button
@@ -118,8 +140,18 @@ export default function PlaybackSlider() {
       </button>
       <div className="w-full rounded-md bg-helios p-2">
         <Slider
+          handleRender={(node, props) => (
+            <Tooltip
+              overlay={getTooltipContent(props.value)}
+              placement="top"
+              visible={hoverValue !== null}
+            >
+              {node}
+            </Tooltip>
+          )}
           max={100}
           min={0}
+          onBeforeChange={handleSliderHover}
           onChange={handleSliderChange}
           value={sliderValue}
         />
