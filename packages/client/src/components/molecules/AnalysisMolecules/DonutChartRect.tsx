@@ -53,7 +53,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
       <Doughnut
         data={config.data}
         options={config.options}
-        plugins={[plugins]}
+        plugins={config.plugins}
       />
     </div>
   );

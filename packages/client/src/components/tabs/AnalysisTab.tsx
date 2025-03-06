@@ -142,7 +142,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
               chartWidth={80}
               fontSize="1.4rem"
               percentage={83}
-              thickness="70%"
+              thickness="78%"
             />
 
             <div></div>
@@ -183,7 +183,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
                     chartWidth={65}
                     fontSize="1.2rem"
                     percentage={48}
-                    thickness="70%"
+                    thickness="78%"
                   />
                 </div>
                 <div>
@@ -214,7 +214,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
                     chartWidth={65}
                     fontSize="1.1rem"
                     percentage={89}
-                    thickness="70%"
+                    thickness="78%"
                   />
                 </div>
                 <div>
