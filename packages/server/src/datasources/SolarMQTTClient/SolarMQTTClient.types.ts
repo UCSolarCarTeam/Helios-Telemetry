@@ -1,16 +1,15 @@
 import type { MqttClient } from "mqtt";
 import type { IClientOptions } from "mqtt/*";
 
+import { MqttURL } from "@shared/helios-types";
+
 export const options: IClientOptions = {
-  host:
-    process.env.NODE_ENV === "development"
-      ? "localhost"
-      : "aedes.calgarysolarcar.ca",
+  host: MqttURL,
+  password: process.env.MQTT_PASSWORD,
   port: 1883,
   protocol: "tcp",
   protocolVersion: 3,
   username: process.env.MQTT_USERNAME,
-  password: process.env.MQTT_PASSWORD,
 };
 
 export const topics = {
