@@ -1,85 +1,61 @@
 import {
   ArcElement,
-  Chart,
+  Chart as ChartJS,
   DoughnutController,
   Legend,
   Tooltip,
 } from "chart.js";
-import React, { useEffect, useRef } from "react";
+import React from "react";
+import { Doughnut } from "react-chartjs-2";
 
 import { getChartConfig } from "../../config/chartConfig";
 
-// Register the required elements, controllers, and plugins for the doughnut chart
-Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
+// Register the required elements, controllers, and plugins
+ChartJS.register(ArcElement, DoughnutController, Tooltip, Legend);
 
 interface DonutChartProps {
   percentage: number;
   chartHeight: number;
   chartWidth: number;
   fontSize: string;
-  //chartColour: string;
   thickness: string;
 }
 
 const DonutChartRect: React.FC<DonutChartProps> = ({
-  //chartColour,
-  chartHeight,
-  chartWidth,
   fontSize,
   percentage,
   thickness,
 }) => {
-  const chartRef = useRef<HTMLCanvasElement | null>(null);
-  const chartInstance = useRef<Chart | null>(null); // Track the chart instance
+  const circumference = 310;
 
-  useEffect(() => {
-    // Destroy the previous chart instance if it exists
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
+  // Doughnut chart configuration
+  const data = {
+    datasets: [
+      {
+        backgroundColor: ["#CF4242", "#e0daf0"], // Colors for filled and remaining parts
+        borderWidth: 0, // Remove border
+        dataToDisplay: [percentage, 100 - percentage], // Data for the percentage and remaining
+        hoverOffset: 4,
+      },
+    ],
+  };
 
-    // Doughnut chart configuration
-    const data = {
-      datasets: [
-        {
-          backgroundColor: [
-            "#CF4242", // dark red color for the percentage
-            "#e0daf0", // white color for the remaining part
-          ],
-          data: [percentage, 100 - percentage], // Data for the percentage and remaining
-
-          hoverOffset: 4,
-        },
-      ],
-    };
-
-    const circumference = 310;
-    const config = getChartConfig(
-      data,
-      percentage,
-      thickness,
-      fontSize,
-      circumference,
-    );
-
-    if (chartRef.current) {
-      // Create a new chart instance
-      chartInstance.current = new Chart(chartRef.current, config);
-    }
-
-    return () => {
-      // Cleanup the chart instance on unmount
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-    };
-  }, [percentage, fontSize]); // Re-render chart if percentage changes
+  const config = getChartConfig(
+    data,
+    percentage,
+    thickness,
+    fontSize,
+    circumference,
+  );
 
   return (
     <div className="flex h-[4.4rem] w-[4.4rem] items-center justify-center">
-      <canvas className=".block" ref={chartRef}></canvas>
+      <Doughnut
+        data={data.datasets[0]?.dataToDisplay}
+        options={config.options}
+      />
     </div>
   );
 };
-
+//{data?.datasets[0].data[0]}
 export default DonutChartRect;
