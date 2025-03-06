@@ -34,7 +34,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
       {
         backgroundColor: ["#CF4242", "#e0daf0"], // Colors for filled and remaining parts
         borderWidth: 0, // Remove border
-        dataToDisplay: [percentage, 100 - percentage], // Data for the percentage and remaining
+        data: [percentage, 100 - percentage], // Data for the percentage and remaining
         hoverOffset: 4,
       },
     ],
@@ -51,11 +51,11 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
   return (
     <div className="flex h-[4.4rem] w-[4.4rem] items-center justify-center">
       <Doughnut
-        data={data.datasets[0]?.dataToDisplay}
+        data={config.data}
         options={config.options}
+        plugins={[plugins]}
       />
     </div>
   );
 };
-//{data?.datasets[0].data[0]}
 export default DonutChartRect;

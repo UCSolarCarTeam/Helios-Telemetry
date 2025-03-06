@@ -1,14 +1,14 @@
 import { ChartData, ChartOptions, ChartType } from "chart.js";
 
 export const getChartConfig = (
-  data: ChartData<"doughnut">,
+  dataTodISPLAY: ChartData<"doughnut">,
   percentage: number,
   thickness: string,
   fontSize: string,
   circumference: number,
 ) => {
   return {
-    data: data,
+    data: dataTodISPLAY,
     options: {
       borderColor: "#BFBFBF",
       circumference: circumference,
