@@ -20,10 +20,10 @@ export const getChartConfig = (
           text: percentage, // Text to display in the center
         },
         tooltip: {
-          enabled: true, // Ensure tooltips still work
+          enabled: true,
         },
       },
-      responsive: true, // Ensure chart resizes
+      responsive: true, // for chart resizing
       rotation: 200,
     },
     plugins: [
@@ -46,13 +46,10 @@ export const getChartConfig = (
             chart.chartArea.top +
             (chart.chartArea.bottom - chart.chartArea.top) / 2;
 
-          //get the text to display from options
-          //const text = chart.options.plugins.centerText?.text || ""; // if theres no text, display nothing
-
-          ctx.save();
-          ctx.textAlign = "center";
+          ctx.save(); // save the chart
+          ctx.textAlign = "center"; // align text in middle
           ctx.textBaseline = "middle";
-          ctx.font = `${fontSize} Arial`;
+          ctx.font = `${fontSize} Arial`; // font for number
           ctx.fillStyle = "#4D6BDB"; // Text color
           ctx.fillText(percentage.toString(), centerX, centerY);
           ctx.restore();
