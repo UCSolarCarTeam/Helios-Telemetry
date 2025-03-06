@@ -9,16 +9,14 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
-  DynamoDBClient,
-  GetItemCommand,
-  QueryCommand,
-} from "@aws-sdk/client-dynamodb";
-import {
+  GetCommand,
   PutCommand,
-  QueryCommandInput,
+  QueryCommand,
   ScanCommand,
   ScanCommandInput,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import type { ILapData, ITelemetryData } from "@shared/helios-types";
@@ -28,7 +26,11 @@ if (!process.env.LAP_TABLE_NAME) {
 }
 
 if (!process.env.PACKET_TABLE_NAME) {
-  throw new Error("Lap table name not defined");
+  throw new Error("Packet table name not defined");
+}
+
+if (!process.env.DRIVER_TABLE_NAME) {
+  throw new Error("Driver table name not defined");
 }
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
@@ -58,20 +60,22 @@ export class DynamoDB implements DynamoDBtypes {
 
   // Helper function to get playback table data
   public async getPacketData(timestamp: string) {
-    //  add type to return
     try {
-      const command = new GetItemCommand({
+      const command = new GetCommand({
         Key: {
-          id: { S: "packet" },
-          timestamp: { N: timestamp },
+          id: "packet",
+          timestamp: Number(timestamp), // Ensure `timestamp` is converted to a number
         },
         TableName: this.packetTableName,
       });
+
       const response = await this.client.send(command);
-      return response;
+      return response.Item;
     } catch (error) {
-      logger.error("Error getting playback table data");
-      throw new Error(error);
+      logger.error("Error getting playback table data: " + error.message);
+      throw new Error(error.message);
+      logger.error("Error getting playback table data: " + error.message);
+      throw new Error(error.message);
     }
   }
 
@@ -87,7 +91,7 @@ export class DynamoDB implements DynamoDBtypes {
             ComparisonOperator: "BETWEEN",
           },
         },
-        TableName: this.packetTableName, // Replace with your table name
+        TableName: this.packetTableName,
       };
 
       let lastEvaluatedKey;
@@ -104,7 +108,7 @@ export class DynamoDB implements DynamoDBtypes {
         }
       } while (lastEvaluatedKey);
     } catch (error) {
-      console.error(new Error(" Error Scanning Packets between Dates"));
+      logger.error(" Error Scanning Packets between Dates");
     }
   }
 
@@ -125,11 +129,12 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new QueryCommand({
         ExpressionAttributeValues: {
-          ":rfid": { N: rfid },
+          ":rfid": rfid,
         },
         KeyConditionExpression: "rfid = :rfid",
         TableName: this.driverTableName,
       });
+
       const response = await this.client.send(command);
       return response.Items;
     } catch (error) {
@@ -184,7 +189,7 @@ export class DynamoDB implements DynamoDBtypes {
         Item: {
           data: packet,
           id: uuidv4(),
-          timestamp: packet.timeStamp,
+          timestamp: packet.data.timeStamp,
         },
         TableName: this.lapTableName,
       });
@@ -207,25 +212,31 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const firstCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": { S: "packet" },
+          ":id": "packet",
         },
         KeyConditionExpression: "id = :id",
         Limit: 1,
-        ScanIndexForward: true,
+        ScanIndexForward: true, // Ascending order → earliest timestamp
         TableName: this.packetTableName,
       });
+
       const lastCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": { S: "packet" },
+          ":id": "packet",
         },
         KeyConditionExpression: "id = :id",
         Limit: 1,
-        ScanIndexForward: false,
+        ScanIndexForward: false, // Descending order → latest timestamp
         TableName: this.packetTableName,
       });
 
       const firstResponse = await this.client.send(firstCommand);
       const lastResponse = await this.client.send(lastCommand);
+
+      if (!firstResponse.Items?.length || !lastResponse.Items?.length) {
+        throw new Error("No packet data found");
+      }
+
       const firstDateUTC = Number(firstResponse.Items[0].timestamp);
       const lastDateUTC = Number(lastResponse.Items[0].timestamp);
 
@@ -241,6 +252,44 @@ export class DynamoDB implements DynamoDBtypes {
       this.client = null;
       resolve();
     });
+  }
+
+  public async updateDriverInfo(rfid: string, name: string) {
+    try {
+      // Ensure rfid is a string (DynamoDB is type-sensitive)
+      if (typeof rfid !== "string") {
+        throw new Error("RFID must be a string");
+      }
+
+      // Check if the RFID exists in the driver table
+      const getCommand = new GetCommand({
+        Key: {
+          rfid: rfid,
+        },
+        TableName: this.driverTableName,
+      });
+      const rfidCheckReposonse = await this.client.send(getCommand);
+
+      if (!rfidCheckReposonse.Item) {
+        return { message: "RFID not found in driver table" };
+      }
+
+      // Update only the 'driver' field, keeping the existing RFID
+      const updateCommand = new UpdateCommand({
+        ExpressionAttributeValues: {
+          ":name": name,
+        },
+        Key: { rfid: rfid },
+        TableName: this.driverTableName,
+        UpdateExpression: "SET driver = :name",
+      });
+
+      await this.client.send(updateCommand);
+      return { message: "Driver info updated successfully" };
+    } catch (error) {
+      logger.error("Error updating driver info: " + error.message);
+      throw new Error(error.message);
+    }
   }
 }
 
