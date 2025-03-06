@@ -111,7 +111,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
           <div className="opacity-1 flex w-[15rem] items-center justify-center">
             {/* update the donut chart based on the number */}
             <div className="h-0.6rem">
-              <DonutChart fontSize="2rem" percentage={83} thickness="78%" />
+              <DonutChart fontSize="2rem" percentage={78} thickness="80%" />
             </div>
 
             <div></div>
@@ -120,9 +120,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
       </div>
 
       {/* Container to stack rectangles vertically */}
-      {/* eslint-disable-next-line prettier/prettier */}
       <div className="flex flex-col items-center gap-4 custom-sm:flex-row custom-lg:flex-col">
-        {/* added custom pixel widths to solve the rectangle alignment error*/}
         {/* Rectangle 1 */}
         <div className="h-[6.68 rem] w-[17.81rem] rounded-2xl bg-[#BFBFBF]">
           <p className="mt-2 text-center text-sm font-normal leading-[1.3rem] sm:text-base md:text-lg">
@@ -131,7 +129,6 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
           {/* Container for the doughnut chart */}
           <div className="ml-[-0.5rem] mt-[-0.75rem] flex w-[18.5rem] items-center justify-center opacity-100">
             {/* update the donut chart based on the number */}
-
             <DonutChartRect fontSize="1.4rem" percentage={83} thickness="78%" />
 
             <div></div>
@@ -162,19 +159,19 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
 
           {/* Circles container */}
           <div className="mt-0 flex items-center justify-center gap-8">
-            {/* First circle with line below */}
+            {/* First circle with text below */}
             <div className="mt-[-0.5rem] flex w-[6.5rem] items-center justify-center">
               {/* update the donut chart based on the number */}
               <div>
                 <div className="h-0.6 ml-2">
                   <DonutChartRect
-                    fontSize="1.2rem"
+                    fontSize="1.4rem"
                     percentage={48}
                     thickness="78%"
                   />
                 </div>
                 <div>
-                  {/* Horizontal line with numbers */}
+                  {/* Horizontal line for number alignment */}
                   <div className="flex w-[5rem] items-center justify-between">
                     <span className="text-left text-xs text-[#9C0534]">
                       135
@@ -191,19 +188,19 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
                 </div>
               </div>
             </div>
-            {/* Second circle with line below */}
+            {/* Second circle with text below */}
             <div className="mt-[-0.5rem] flex w-[3.1rem] items-center justify-center">
               {/* update the donut chart based on the number */}
               <div>
                 <div className="h-0.6rem ml-2">
                   <DonutChartRect
-                    fontSize="1.1rem"
+                    fontSize="1.4rem"
                     percentage={89}
                     thickness="78%"
                   />
                 </div>
                 <div>
-                  {/* Horizontal line with numbers */}
+                  {/* Horizontal line for number alignment*/}
                   <div className="flex w-[5rem] items-center justify-between">
                     <span className="ml-2 text-xs text-[#9C0534]">57</span>
                     <div className="mx-1 h-[0.1rem] flex-1 bg-[#BFBFBF]"></div>

@@ -38,7 +38,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
     ],
   };
 
-  const config = getChartConfig(
+  const config = getChartConfig( //pass data to config
     data,
     percentage,
     thickness,
@@ -47,7 +47,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
   );
 
   return (
-    <div className="flex h-[5.4rem] w-[5.4rem] items-center justify-center">
+    <div className="flex h-[6.4rem] w-[6.4rem] items-center justify-center">
       <Doughnut
         data={config.data}
         options={config.options}
