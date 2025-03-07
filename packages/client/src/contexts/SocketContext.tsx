@@ -29,6 +29,7 @@ interface ServerToClientEvents {
   lapCoords: (coords: CoordUpdateResponse) => void;
   carLatency: (value: number) => void;
   lapData: (value: ILapData) => void;
+  lapNumber: (value: number) => void;
   lapComplete: () => void;
 }
 
@@ -62,6 +63,16 @@ export function SocketContextProvider({
     [setCurrentAppState],
   );
 
+  const onLapNumber = useCallback(
+    (lap: number) => {
+      setCurrentAppState((prev) => ({
+        ...prev,
+        lapNumber: lap,
+      }));
+    },
+    [setCurrentAppState],
+  );
+
   useEffect(() => {
     // Connect to the socket
     socketIO.connect();
@@ -79,13 +90,15 @@ export function SocketContextProvider({
     // Register event listeners
     socketIO.on("carLatency", onCarLatency);
     socketIO.on("lapCoords", onLapCoords);
+    socketIO.on("lapNumber", onLapNumber);
     return () => {
       socketIO.disconnect();
       clearInterval(id);
       socketIO.off("carLatency", onCarLatency);
       socketIO.off("lapCoords", onLapCoords);
+      socketIO.off("lapNumber", onLapNumber);
     };
-  }, [onCarLatency, onLapCoords, setCurrentAppState]);
+  }, [onCarLatency, onLapCoords, onLapNumber, setCurrentAppState]);
 
   // Socket connection status listeners
   socketIO.on("connect", () => {
