@@ -95,6 +95,7 @@ export class LapController implements LapControllerType {
         timestamp: packet.TimeStamp,
       };
       this.handleLapData(lapData);
+      this.backendController.socketIO.broadcastLapNumber(this.lapNumber);
       this.lastLapPackets = [];
     }
     this.lastLapPackets.push(packet);
@@ -104,7 +105,7 @@ export class LapController implements LapControllerType {
     return this.lastLapPackets;
   }
 
-  //checks if lap has been acheived
+  //checks if lap has been acheived (using geofencing)
   private checkLap(packet: ITelemetryData) {
     const carLocation = {
       lat: 51.081021,
@@ -118,9 +119,13 @@ export class LapController implements LapControllerType {
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
       ) <= 0.01;
+
     let lapHappened = false;
+
+    // if lap completed
     if (!this.previouslyInFinishLineProximity && inProximity) {
       lapHappened = true;
+      this.lapNumber += 1;
     }
 
     this.previouslyInFinishLineProximity = inProximity;
