@@ -53,6 +53,10 @@ export class SocketIO implements SocketIOType {
   public broadcastLapCoords(response: CoordUpdateResponse) {
     this.io.emit("lapCoords", response);
   }
+  public broadcastLapNumber(lapNumber: number) {
+    this.io.emit("lapNumber", lapNumber);
+  }
+
   public initializeSocketListeners(socket: Socket) {
     socket.on("ping", (callback: () => void) => {
       callback();
