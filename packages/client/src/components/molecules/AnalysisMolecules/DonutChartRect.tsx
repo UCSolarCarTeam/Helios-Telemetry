@@ -1,0 +1,59 @@
+import {
+  ArcElement,
+  Chart,
+  DoughnutController,
+  Legend,
+  Tooltip,
+} from "chart.js";
+import React from "react";
+import { Doughnut } from "react-chartjs-2";
+
+import { getChartConfig } from "../../config/chartConfig";
+
+// Register the required elements, controllers, and plugins
+Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
+
+interface DonutChartProps {
+  percentage: number;
+  fontSize: string;
+  thickness: string;
+}
+
+const DonutChartRect: React.FC<DonutChartProps> = ({
+  fontSize,
+  percentage,
+  thickness,
+}) => {
+  const circumference = 310;
+
+  // Doughnut chart configuration
+  const data = {
+    datasets: [
+      {
+        backgroundColor: ["#CF4242", "#FFFFFF"], // Colors for filled and remaining parts
+        borderWidth: 0, // Remove border
+        data: [percentage, 100 - percentage], // Data for the percentage and remaining
+        hoverOffset: 4,
+      },
+    ],
+  };
+
+  const config = getChartConfig(
+    data,
+    percentage,
+    thickness,
+    fontSize,
+    circumference,
+  );
+
+  return (
+    <div className="flex h-[4.4rem] w-[4.4rem] items-center justify-center">
+      <Doughnut
+        data={config.data}
+        options={config.options}
+        plugins={config.plugins}
+      />
+    </div>
+  );
+};
+export default DonutChartRect;

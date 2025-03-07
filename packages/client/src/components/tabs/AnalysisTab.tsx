@@ -9,6 +9,8 @@ import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
 import MLContainer from "../containers/MLContainer";
+import DonutChart from "../molecules/AnalysisMolecules/DonutChart";
+import DonutChartRect from "../molecules/AnalysisMolecules/DonutChartRect";
 
 type TabContentProps = React.PropsWithChildren<{
   index: number;
@@ -50,6 +52,175 @@ export function TabContent({
     </div>
   );
 }
+interface ShapeProps {
+  infoNumber?: number;
+}
+
+const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-4">
+      {/* Container to wrap the squares */}
+      <div className="flex flex-col items-center gap-4 sm:flex-row">
+        {/* First square */}
+        <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
+          <p className="text-center text-base font-normal sm:text-lg lg:text-xl">
+            Optimal Driving Speed At&nbsp;
+            <span className="text-center text-base font-normal text-[#9C0534] sm:text-lg lg:text-xl">
+              {38}%
+            </span>
+          </p>
+          <p className="m-2 text-center text-4xl font-normal text-[#9C0534] md:text-[2.5rem] lg:text-4xl">
+            50 km/h
+          </p>
+
+          {/* Container for numbers and line */}
+          {/* horizontal line */}
+          <div className="h-3.5 w-full rounded-full bg-[#3A3A3A]">
+            <div className="flex h-3.5 w-1/2 rounded-full bg-[#3A3A3A]">
+              <div className="ml-auto flex h-3.5 w-1/3 items-stretch bg-[#009F10] md:items-center"></div>
+              <div className="h-5 w-1 bg-[#3A3A3A]"></div>
+            </div>
+          </div>
+
+          <div className="opacity-1 flex w-full items-center justify-between gap-0">
+            {/* Left number */}
+            <span className="text-sm text-[#9C0534] sm:text-base md:text-lg">
+              46
+            </span>
+
+            {/* Horizontal line */}
+            <div className="h-3 bg-[#BFBFBF]"></div>
+
+            {/* Right number */}
+            <span className="text-sm text-[#9C0534] sm:text-base md:text-lg">
+              55
+            </span>
+          </div>
+        </div>
+
+        {/* Second square */}
+        <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
+          <p className="decoration-skip-ink-none text-center text-lg font-normal sm:text-lg md:text-xl">
+            Motor Efficiency at&nbsp;
+            <span className="text-center text-lg font-normal leading-[2.4rem] text-[#9C0534] sm:text-lg md:text-xl">
+              {infoNumber}%
+            </span>
+          </p>
+
+          {/* Container for the doughnut chart */}
+          <div className="opacity-1 flex w-[15rem] items-center justify-center">
+            {/* update the donut chart based on the number */}
+            <div className="h-0.6rem">
+              <DonutChart fontSize="2rem" percentage={78} thickness="80%" />
+            </div>
+
+            <div></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Container to stack rectangles vertically */}
+      <div className="custom-sm:flex-row custom-lg:flex-col flex flex-col items-center gap-4">
+        {/* Rectangle 1 */}
+        <div className="h-[6.68 rem] w-[17.81rem] rounded-2xl bg-[#BFBFBF]">
+          <p className="mt-2 text-center text-sm font-normal leading-[1.3rem] sm:text-base md:text-lg">
+            Driver Performance Score
+          </p>
+          {/* Container for the doughnut chart */}
+          <div className="ml-[-0.5rem] mt-[-0.75rem] flex w-[18.5rem] items-center justify-center opacity-100">
+            {/* update the donut chart based on the number */}
+            <DonutChartRect fontSize="1.4rem" percentage={83} thickness="78%" />
+
+            <div></div>
+          </div>
+
+          <div className="flex justify-center">
+            <div className="opacity-1 mt-[-0.25rem] flex w-[4.1rem] items-center justify-between gap-0">
+              {/* Left number */}
+              <span className="text-left text-sm text-[#9C0534]">28</span>
+
+              {/* Horizontal line */}
+              <div className="h-[0.8rem] flex-1 bg-[#BFBFBF]"></div>
+
+              {/* Right number */}
+              <span className="text-right text-sm text-[#369A34]">97</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Rectangle 2 */}
+        <div
+          className={`flex h-[8.7rem] w-[17.8rem] flex-col items-center rounded-2xl bg-[#BFBFBF] p-4`}
+        >
+          {/* Title */}
+          <p className="mt-[-0.5rem] text-center text-[0.875rem] font-normal leading-[1.35rem] sm:text-base md:text-lg">
+            End of Day Predictors
+          </p>
+
+          {/* Circles container */}
+          <div className="mt-0 flex items-center justify-center gap-8">
+            {/* First circle with text below */}
+            <div className="mt-[-0.5rem] flex w-[6.5rem] items-center justify-center">
+              {/* update the donut chart based on the number */}
+              <div>
+                <div className="h-0.6 ml-2">
+                  <DonutChartRect
+                    fontSize="1.4rem"
+                    percentage={48}
+                    thickness="78%"
+                  />
+                </div>
+                <div>
+                  {/* Horizontal line for number alignment */}
+                  <div className="flex w-[5rem] items-center justify-between">
+                    <span className="text-left text-xs text-[#9C0534]">
+                      135
+                    </span>
+                    <div className="mx-1 h-[0.1rem] flex-1 bg-[#BFBFBF]"></div>
+                    <span className="text-right text-xs text-[#369A34]">
+                      269
+                    </span>
+                  </div>
+                  {/* Text below the circle */}
+                  <p className="ml-[-1rem] text-center text-[0.6rem] leading-[0.7rem]">
+                    Laps Left on Battery [km] (FSGP)
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* Second circle with text below */}
+            <div className="mt-[-0.5rem] flex w-[3.1rem] items-center justify-center">
+              {/* update the donut chart based on the number */}
+              <div>
+                <div className="h-0.6rem ml-2">
+                  <DonutChartRect
+                    fontSize="1.4rem"
+                    percentage={89}
+                    thickness="78%"
+                  />
+                </div>
+                <div>
+                  {/* Horizontal line for number alignment*/}
+                  <div className="flex w-[5rem] items-center justify-between">
+                    <span className="ml-2 text-xs text-[#9C0534]">57</span>
+                    <div className="mx-1 h-[0.1rem] flex-1 bg-[#BFBFBF]"></div>
+                    <span className="text-right text-xs text-[#369A34]">
+                      104
+                    </span>
+                  </div>
+                  {/* Text below the circle */}
+                  <p className="text-center text-[0.6rem] leading-[0.7rem]">
+                    Battery Time Remaining [min]
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 function AnalysisTab() {
   const [value, setValue] = useState<number>(0);
@@ -140,7 +311,7 @@ function AnalysisTab() {
             </div>
           </TabContent>
           <TabContent index={1} value={value}>
-            Stats
+            <StatsContainer />
           </TabContent>
         </div>
       </div>
