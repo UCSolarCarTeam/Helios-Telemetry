@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-import { Button, TextField } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import { IDriverNameUpdate } from "@shared/helios-types";
 import { prodURL } from "@shared/helios-types";
 
@@ -15,7 +16,8 @@ export default function DriverUpdate() {
     name: "",
     rfid: "",
   });
-
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState(new Set<keyof IDriverNameUpdate>());
   const [errorMessages, setErrorMessages] = useState<
     Partial<IDriverNameUpdate>
@@ -51,26 +53,42 @@ export default function DriverUpdate() {
     return newErrors.size === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const checkMQTTPassword = async () => {
+    try {
+      const res = await axios.post("/api/checkMQTTPassword", { password });
+      if (res.status === 200) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      setStatusMessage("Error checking password");
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessages({});
     setStatusMessage("");
     if (validateInputs()) {
-      axios
-        .post(`${prodURL}/updatedriverinfo`, {
-          name: driverDetails.name,
-          rfid: driverDetails.rfid,
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            setStatusMessage(res.data.message);
-          } else {
+      if (await checkMQTTPassword()) {
+        axios
+          .post(`${prodURL}/updatedriverinfo`, {
+            name: driverDetails.name,
+            rfid: driverDetails.rfid,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              setStatusMessage(res.data.message);
+            } else {
+              setStatusMessage("Error updating driver info");
+            }
+          })
+          .catch(() => {
             setStatusMessage("Error updating driver info");
-          }
-        })
-        .catch(() => {
-          setStatusMessage("Error updating driver info");
-        });
+          });
+      } else {
+        setStatusMessage("Incorrect password, please try again.");
+      }
     }
   };
 
@@ -96,6 +114,22 @@ export default function DriverUpdate() {
             variant="filled"
           />
         ))}
+        <TextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowPassword((prev) => !prev)}>
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          label="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          type={showPassword ? "text" : "password"}
+          value={password}
+          variant="filled"
+        />
         <Button type="submit">Submit</Button>
         {statusMessage && (
           <div className="text-green-500 mt-2 text-center">{statusMessage}</div>
