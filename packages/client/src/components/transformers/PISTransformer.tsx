@@ -250,14 +250,20 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
       .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2") // Add space between consecutive uppercase followed by lowercase
       .replace(/([a-zA-Z])(\d)/g, "$1 $2"); // Add space between letters and numbers
   };
+  let batteryFlag = false;
 
+  if (root.Cell) batteryFlag = true;
   return (
     root && (
-      <div className="flex w-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[330px]">
+      <div className="flex w-full flex-col gap-x-1 lg:h-[375px] lg:flex-wrap xl:h-[330px]">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
-            <div className={`flex min-w-[330px] flex-col`} id={key} key={index}>
+            <div
+              className={batteryFlag ? `lg:w-1/4` : `` + `flex flex-col`}
+              id={key}
+              key={index}
+            >
               <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
                 <p
                   className={`pt-3 font-bold text-helios ${

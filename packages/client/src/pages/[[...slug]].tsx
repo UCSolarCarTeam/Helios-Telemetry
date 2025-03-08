@@ -13,7 +13,7 @@ export default function Home() {
     <div className={currentAppState.darkMode ? "dark" : ""}>
       <div className="h-full w-screen overflow-x-hidden bg-light p-4 text-light dark:bg-dark dark:text-dark lg:h-screen">
         <div className="flex h-full flex-col gap-y-2">
-          <div className="flex h-full flex-wrap gap-2">
+          <div className="flex h-full flex-wrap gap-1">
             <div className="mx-auto w-36">
               <LogoStatusContainer />
             </div>
