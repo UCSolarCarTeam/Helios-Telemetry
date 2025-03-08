@@ -5,9 +5,9 @@ import { usePacket } from "@/contexts/PacketContext";
 import { calculateVehicleVelocity } from "@shared/helios-types";
 
 function MapText() {
-  const totalTime = 3600 * 1000 * 8; // 1000 ms * 3600 sec/hr * 8 hr
+  const totalTime = 3600 * 1000 * 8; // 1000 ms/sec * 3600 sec/hr * 8 hr
 
-  const { currentAppState } = useAppState();
+  const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
 
   const [timeLeft, setTimeLeft] = useState(totalTime);
@@ -39,6 +39,10 @@ function MapText() {
     if (timeLeft <= 0) {
       setIntervalCount((prev) => prev + 1); // increase interval after timer runs out
       setTimeLeft(totalTime); // reset time if timer runs out
+      setCurrentAppState((prev) => ({
+        ...prev,
+        lapNumber: 0,
+      }));
       return;
     }
 
@@ -61,7 +65,7 @@ function MapText() {
       <div className="mt-1 w-full text-center">
         <div className="grid">
           <div className="flex justify-between">
-            <p>Laps Completed: {currentAppState.lapNumber}</p>
+            <p>Laps Completed: {currentAppState?.lapNumber}</p>
             <p>Interval Count: {intervalCount}</p>
             <p>
               Time Left: {hour}:{minutes}:{seconds}
