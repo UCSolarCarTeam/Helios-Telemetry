@@ -9,7 +9,6 @@ import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
 import MLContainer from "../containers/MLContainer";
-import DonutChart from "../molecules/AnalysisMolecules/DonutChart";
 import DonutChartRect from "../molecules/AnalysisMolecules/DonutChartRect";
 
 type TabContentProps = React.PropsWithChildren<{
@@ -111,7 +110,15 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
           <div className="opacity-1 flex w-[15rem] items-center justify-center">
             {/* update the donut chart based on the number */}
             <div className="h-0.6rem">
-              <DonutChart fontSize="2rem" percentage={78} thickness="80%" />
+              <DonutChartRect
+                fontSize="2rem"
+                height="h-[6.4rem]"
+                leftoverColour="#e0daf0"
+                numColour="#65558F"
+                percentage={78}
+                thickness="80%"
+                width="w-[6.4rem]"
+              />
             </div>
 
             <div></div>
@@ -129,7 +136,15 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
           {/* Container for the doughnut chart */}
           <div className="ml-[-0.5rem] mt-[-0.75rem] flex w-[18.5rem] items-center justify-center opacity-100">
             {/* update the donut chart based on the number */}
-            <DonutChartRect fontSize="1.4rem" percentage={83} thickness="78%" />
+            <DonutChartRect
+              fontSize="1.4rem"
+              height="h-[4.4rem]"
+              leftoverColour="#FFFFFF"
+              numColour="#CF4242"
+              percentage={83}
+              thickness="78%"
+              width="w-[4.4rem]"
+            />
 
             <div></div>
           </div>
@@ -166,8 +181,12 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
                 <div className="h-0.6 ml-2">
                   <DonutChartRect
                     fontSize="1.4rem"
-                    percentage={48}
+                    height="h-[4.4rem]"
+                    leftoverColour="#FFFFFF"
+                    numColour="#CF4242"
+                    percentage={83}
                     thickness="78%"
+                    width="w-[4.4rem]"
                   />
                 </div>
                 <div>
@@ -195,8 +214,12 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
                 <div className="h-0.6rem ml-2">
                   <DonutChartRect
                     fontSize="1.4rem"
+                    height="h-[4.4rem]"
+                    leftoverColour="#FFFFFF"
+                    numColour="#CF4242"
                     percentage={89}
                     thickness="78%"
+                    width="w-[4.4rem]"
                   />
                 </div>
                 <div>

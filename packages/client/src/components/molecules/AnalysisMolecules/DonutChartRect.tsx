@@ -17,12 +17,20 @@ interface DonutChartProps {
   percentage: number;
   fontSize: string;
   thickness: string;
+  height: string;
+  width: string;
+  numColour: string;
+  leftoverColour: string;
 }
 
 const DonutChartRect: React.FC<DonutChartProps> = ({
   fontSize,
+  height,
+  leftoverColour,
+  numColour,
   percentage,
   thickness,
+  width,
 }) => {
   const circumference = 310;
 
@@ -30,7 +38,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
   const data = {
     datasets: [
       {
-        backgroundColor: ["#CF4242", "#FFFFFF"], // Colors for filled and remaining parts
+        backgroundColor: [numColour, leftoverColour], // Colors for filled and remaining parts
         borderWidth: 0, // Remove border
         data: [percentage, 100 - percentage], // Data for the percentage and remaining
         hoverOffset: 4,
@@ -47,7 +55,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
   );
 
   return (
-    <div className="flex h-[4.4rem] w-[4.4rem] items-center justify-center">
+    <div className={`flex items-center justify-center ${height} ${width}`}>
       <Doughnut
         data={config.data}
         options={config.options}
