@@ -111,6 +111,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
             {/* update the donut chart based on the number */}
             <div className="h-0.6rem">
               <DonutChartRect
+                circ={360}
                 fontSize="2rem"
                 height="h-[6.4rem]"
                 leftoverColour="#e0daf0"
@@ -127,7 +128,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
       </div>
 
       {/* Container to stack rectangles vertically */}
-      <div className="custom-sm:flex-row custom-lg:flex-col flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 sm:flex-row xl:flex-col custom:flex-row">
         {/* Rectangle 1 */}
         <div className="h-[6.68 rem] w-[17.81rem] rounded-2xl bg-[#BFBFBF]">
           <p className="mt-2 text-center text-sm font-normal leading-[1.3rem] sm:text-base md:text-lg">
@@ -137,6 +138,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
           <div className="ml-[-0.5rem] mt-[-0.75rem] flex w-[18.5rem] items-center justify-center opacity-100">
             {/* update the donut chart based on the number */}
             <DonutChartRect
+              circ={310}
               fontSize="1.4rem"
               height="h-[4.4rem]"
               leftoverColour="#FFFFFF"
@@ -180,6 +182,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
               <div>
                 <div className="h-0.6 ml-2">
                   <DonutChartRect
+                    circ={310}
                     fontSize="1.4rem"
                     height="h-[4.4rem]"
                     leftoverColour="#FFFFFF"
@@ -213,6 +216,7 @@ const StatsContainer: React.FC<ShapeProps> = ({ infoNumber = 78 }) => {
               <div>
                 <div className="h-0.6rem ml-2">
                   <DonutChartRect
+                    circ={310}
                     fontSize="1.4rem"
                     height="h-[4.4rem]"
                     leftoverColour="#FFFFFF"

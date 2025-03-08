@@ -21,9 +21,11 @@ interface DonutChartProps {
   width: string;
   numColour: string;
   leftoverColour: string;
+  circ: number;
 }
 
 const DonutChartRect: React.FC<DonutChartProps> = ({
+  circ,
   fontSize,
   height,
   leftoverColour,
@@ -32,7 +34,7 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
   thickness,
   width,
 }) => {
-  const circumference = 310;
+  const circumference = circ;
 
   // Doughnut chart configuration
   const data = {
