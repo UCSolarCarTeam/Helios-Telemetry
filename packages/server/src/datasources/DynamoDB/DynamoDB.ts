@@ -125,21 +125,19 @@ export class DynamoDB implements DynamoDBtypes {
     }
   }
 
-  public async getDriverLaps(rfid) {
+  public async getDriverLaps(rfid: string) {
     try {
-      const command = new QueryCommand({
-        ExpressionAttributeValues: {
-          ":rfid": rfid,
-        },
-        KeyConditionExpression: "rfid = :rfid",
-        TableName: this.driverTableName,
+      const lapCommand = new QueryCommand({
+        ExpressionAttributeValues: { ":id": rfid },
+        KeyConditionExpression: "id = :id",
+        TableName: this.lapTableName,
       });
 
-      const response = await this.client.send(command);
-      return response.Items;
+      const lapResponse = await this.client.send(lapCommand);
+      return lapResponse.Items || [];
     } catch (error) {
-      logger.error("Error getting lap data for driver");
-      throw new Error(error);
+      logger.error("Error getting lap data for driver", error);
+      throw new Error(error.message || "Failed to fetch driver laps");
     }
   }
 
