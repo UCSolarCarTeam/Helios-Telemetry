@@ -79,6 +79,7 @@ export class DynamoDB implements DynamoDBtypes {
     startUTCDate: number,
     endUTCDate: number,
   ) {
+    console.log("Scanning Packets between Dates", startUTCDate, endUTCDate);
     try {
       const params: ScanCommandInput = {
         ScanFilter: {
@@ -163,6 +164,7 @@ export class DynamoDB implements DynamoDBtypes {
           data: packet,
           id: uuidv4(),
           timestamp: packet.TimeStamp,
+          type: "packet",
         },
         TableName: this.packetTableName,
       });
@@ -185,6 +187,7 @@ export class DynamoDB implements DynamoDBtypes {
           data: packet,
           id: uuidv4(),
           timestamp: packet.timeStamp,
+          type: "lap",
         },
         TableName: this.lapTableName,
       });
@@ -207,18 +210,18 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const firstCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": { S: "packet" },
+          ":type": { S: "packet" },
         },
-        KeyConditionExpression: "id = :id",
+        KeyConditionExpression: "type = :type",
         Limit: 1,
         ScanIndexForward: true,
         TableName: this.packetTableName,
       });
       const lastCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": { S: "packet" },
+          ":type": { S: "packet" },
         },
-        KeyConditionExpression: "id = :id",
+        KeyConditionExpression: "type = :type",
         Limit: 1,
         ScanIndexForward: false,
         TableName: this.packetTableName,
