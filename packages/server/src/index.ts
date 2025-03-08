@@ -10,6 +10,7 @@ import http from "http";
 import https from "https";
 import "module-alias";
 
+import driverRouter from "@/routes/driver.route";
 import healthRouter from "@/routes/health.route";
 import playbackRouter from "@/routes/playback.route";
 
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 app.use("/", healthRouter);
 app.use("/", playbackRouter);
 app.use("/", lapRouter);
+app.use("/", driverRouter);
 
 export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {

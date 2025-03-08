@@ -1,4 +1,5 @@
 import {
+  type JSX,
   type PropsWithChildren,
   createContext,
   useContext,
@@ -8,7 +9,6 @@ import {
 
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
-import fakeData from "@/contexts/fakePacket.json";
 import { generateFakeTelemetryData } from "@shared/helios-types";
 import type { ITelemetryData } from "@shared/helios-types";
 
@@ -27,7 +27,7 @@ export function PacketContextProvider({
   const { currentAppState } = useAppState();
 
   const [currentPacket, setCurrentPacket] = useState<ITelemetryData>(
-    fakeData as ITelemetryData,
+    generateFakeTelemetryData() as ITelemetryData,
   );
 
   // Generate random data for local dev mode

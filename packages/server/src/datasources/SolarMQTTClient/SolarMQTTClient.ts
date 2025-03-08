@@ -10,9 +10,9 @@ import {
 import { getSecrets } from "@/utils/getSecrets";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { type ITelemetryData } from "@shared/helios-types";
+import { validateTelemetryData } from "@shared/helios-types";
 
-const { packetTopic, pingTopic, pongTopic } = topics;
+const { packetTopic, pingTopic, pongTopic, telemetryToCarTopic } = topics;
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
 
 export class SolarMQTTClient implements SolarMQTTClientType {
@@ -24,12 +24,20 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     this.connectToAedes(options);
     this.pingLastSent = Date.now();
   }
-  public pingTimer(miliseconds: number) {
+
+  public pingTimer(milliseconds: number) {
     const myMessage = "t";
     setInterval(() => {
       this.pingLastSent = Date.now();
       this.client.publish(pingTopic, myMessage);
-    }, miliseconds);
+    }, milliseconds);
+  }
+
+  public telemetryToCar(milliseconds: number, message: string) {
+    setInterval(() => {
+      this.client.publish(telemetryToCarTopic, message);
+      logger.info("Car Latency - sending: ", message);
+    }, milliseconds);
   }
 
   public async connectToAedes(options: IClientOptions) {
@@ -50,20 +58,29 @@ export class SolarMQTTClient implements SolarMQTTClientType {
           logger.error("Subscription error: ", error);
         }
       });
-      this.pingTimer(5000);
     });
+
     this.client.on("message", (topic, message) => {
       if (topic === pongTopic) {
-        const carLatency = (Date.now() - this.pingLastSent) / 2;
-        this.backendController.socketIO.broadcastCarLatency(carLatency);
+        logger.info("pong");
+        const serverToCarLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
+        logger.info(serverToCarLatency.toString());
+        this.backendController.carLatency = serverToCarLatency;
+        this.backendController.handleTelemetryToCar(serverToCarLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");
-        const packet: ITelemetryData = JSON.parse(message.toString());
-        this.backendController.handlePacketReceive(packet);
+        const packet = JSON.parse(message.toString());
+        try {
+          const validPacket = validateTelemetryData(packet);
+          this.backendController.handlePacketReceive(validPacket);
+        } catch (error) {
+          logger.error(`Invalid packet format: ${error.message}`);
+        }
       } else {
         logger.info("unknown topic: ", topic, "message: ", message.toString());
       }
     });
+
     this.client.on("error", (error) => {
       logger.error("MQTT Client error: ", error);
     });

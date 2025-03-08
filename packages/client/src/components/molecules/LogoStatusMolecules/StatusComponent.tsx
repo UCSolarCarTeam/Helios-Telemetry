@@ -10,6 +10,7 @@ import { usePacket } from "@/contexts/PacketContext";
 function StatusComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
+
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
   const carConnection = currentAppState.socketConnected;
@@ -67,7 +68,7 @@ function StatusComponent() {
         )}
       </div>
       <div className="flex items-center gap-x-1">
-        <span>Playback: </span>
+        <span className="pr-3">Playback: </span>
         <button
           className={`bordertransition-colors relative h-6 w-12 cursor-pointer rounded-full ${currentAppState.playbackSwitch ? "bg-helios" : "bg-gray-400"}`}
           onClick={() =>
