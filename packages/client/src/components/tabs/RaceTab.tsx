@@ -1,12 +1,17 @@
 import axios from "axios";
-import { COMPILER_INDEXES } from "next/dist/shared/lib/constants";
-import Image from "next/image";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useLapData } from "@/contexts/LapDataContext";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
-import { type IFormattedLapData, prodURL } from "@shared/helios-types";
+import { type IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
   createColumnHelper,
@@ -17,6 +22,27 @@ import {
 } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<IFormattedLapData>();
+
+const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
+  data: {
+    ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
+    averagePackCurrent: parseFloat(
+      lapPacket.data.averagePackCurrent.toFixed(2),
+    ),
+    averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
+    batterySecondsRemaining: parseFloat(
+      lapPacket.data.batterySecondsRemaining.toFixed(2),
+    ),
+    distance: parseFloat(lapPacket.data.distance.toFixed(2)),
+    lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
+    netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
+    timeStamp: new Date(lapPacket.data.timeStamp).toLocaleString("en-US"),
+    totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
+    totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
+  },
+  rfid: lapPacket.rfid,
+  timestamp: lapPacket.timestamp,
+});
 
 const columns = [
   columnHelper.accessor("data.timeStamp", {
@@ -88,31 +114,49 @@ const columns = [
 function RaceTab() {
   const [rfid, setDriverRFID] = useState<number | null>(null);
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
-  const [copy, setCopy] = useState<string>("Copy");
+  const [copy, setCopy] = useState<number>(0);
   const { lapData } = useLapData();
+  const [filteredLaps, setFilteredLaps] =
+    useState<IFormattedLapData[]>(lapData);
+  const [columnName, setColumnName] = React.useState<string[]>([]);
 
-  const handleDriverRFID: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    setDriverRFID(Number(e.target.value));
-    setCopy("Copy");
+  const handleChange = (event: SelectChangeEvent<typeof columnName>) => {
+    const {
+      target: { value },
+    } = event;
+    setColumnName(typeof value === "string" ? value.split(",") : value);
+
+    table.getAllLeafColumns().forEach((col) => {
+      const columnInstance = table.getColumn(col.id);
+      if (columnInstance) {
+        columnInstance.toggleVisibility(!value.includes(col.id));
+      }
+    });
   };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(String(rfid));
-    setCopy("Copied");
+    setCopy(1);
   };
 
-  const filteredLapData = useMemo(() => {
-    const res = rfid
-      ? lapData.filter((lap) => {
-          return Number(lap.rfid) === rfid;
-        })
-      : lapData;
-    return res;
-  }, [lapData, rfid]);
+  const handleDropdown = async (event: SelectChangeEvent<number | null>) => {
+    const newRFID = Number(event.target.value);
+    setDriverRFID(newRFID);
+    setCopy(0);
+
+    if (rfid == null || Number.isNaN(newRFID)) {
+      setFilteredLaps(lapData);
+    } else {
+      await fetchFilteredLaps(newRFID).then((response) => {
+        const formattedData = response.data.map(formatLapData);
+        setFilteredLaps(formattedData);
+      });
+    }
+  };
 
   const table = useReactTable({
     columns,
-    data: filteredLapData,
+    data: filteredLaps,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
@@ -152,96 +196,167 @@ function RaceTab() {
   }, []);
 
   return (
-    <div className="m-4 flex flex-col justify-center gap-4 md:flex-row">
-      <div className="flex flex-wrap">
-        <div className="flex w-full flex-row items-center gap-2 pb-2 pr-2">
-          <Image
-            alt="pfp"
-            className="rounded-full border-2 border-helios object-cover p-2"
-            height={50}
-            src="/assets/HeliosSideview.png"
-            width={50}
-          />
-          <select className="max-w-24" onChange={handleDriverRFID}>
-            <option value="all">Show all data</option>
-            {driverData.map((driver) => (
-              <option key={driver.rfid} value={driver.rfid}>
-                {driver.driver
-                  ? `${driver.driver}: ${driver.rfid}`
-                  : `NO NAME: ${driver.rfid}`}
-              </option>
-            ))}
-          </select>
-
+    <div className="m-4 flex flex-col justify-center gap-4">
+      <div className="flex w-full flex-col items-center sm:flex-row">
+        <div className="flex flex-row items-center gap-2">
+          <Box className="min-w-[120px]" component="div">
+            <FormControl fullWidth>
+              <InputLabel
+                id="driver-select-label"
+                sx={{
+                  "&.Mui-focused": {
+                    color: "#963A56",
+                  },
+                  "&.MuiInputLabel-shrink": {
+                    color: "#963A56",
+                  },
+                  color: "#963A56",
+                }}
+              >
+                Driver
+              </InputLabel>
+              <Select
+                id="driver-select"
+                label="Driver"
+                labelId="driver-select-label"
+                onChange={handleDropdown}
+                sx={{
+                  "& .MuiMenuItem-root": {
+                    "&:hover": {
+                      backgroundColor: "#963A56",
+                    },
+                    backgroundColor: "#B94A6C",
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#B94A6C",
+                  },
+                  "& .MuiSelect-icon": {
+                    color: "#963A56",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#963A56",
+                  },
+                }}
+                value={rfid}
+              >
+                <MenuItem value={NaN}>Show all data</MenuItem>
+                {driverData.map((driver) => (
+                  <MenuItem key={driver.rfid} value={driver.rfid}>
+                    {driver.driver ? `${driver.driver}` : `NO NAME`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
           {rfid ? rfid : ""}
           {rfid ? (
             <button className="items-center" onClick={handleCopy}>
-              {copy === "Copy" ? <ContentCopy /> : <ContentCopyTwoTone />}
-              {rfid ? ` ${copy}` : ""}
+              {copy === 0 ? <ContentCopy /> : <ContentCopyTwoTone />}
             </button>
           ) : (
             <div></div>
           )}
+          <div></div>
         </div>
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel
+            id="column-toggle-label"
+            sx={{
+              "&.Mui-focused": {
+                color: "#963A56",
+              },
+              "&.MuiInputLabel-shrink": {
+                color: "#963A56",
+              },
+              color: "#963A56",
+            }}
+          >
+            Column
+          </InputLabel>
 
-        <div className="grid grid-cols-2 flex-wrap gap-2 md:grid-cols-1">
-          {table.getAllLeafColumns().map((column) => (
-            <label className="flex items-center gap-1 text-sm" key={column.id}>
-              <input
-                checked={column.getIsVisible()}
-                className="peer size-4 cursor-pointer accent-helios"
-                onChange={column.getToggleVisibilityHandler()}
-                type="checkbox"
-              />
-              <span className="min-w-44 select-none text-sm peer-hover:font-bold">
-                {checkBoxFormatting(column.id)}
-              </span>
-            </label>
-          ))}
-        </div>
+          <Select
+            id="column-toggle"
+            input={<OutlinedInput id="select-multiple-chip" label="Column" />}
+            labelId="column-toggle-label"
+            multiple
+            onChange={handleChange}
+            renderValue={(selected) => (
+              <Box className="flex flex-wrap gap-2" component="div">
+                {selected.map((value) => (
+                  <Chip key={value} label={checkBoxFormatting(value)} />
+                ))}
+              </Box>
+            )}
+            sx={{
+              "& .MuiMenuItem-root": {
+                "&:hover": {
+                  backgroundColor: "#963A56",
+                },
+                backgroundColor: "#B94A6C",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#B94A6C",
+              },
+              "& .MuiSelect-icon": {
+                color: "#963A56",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#963A56",
+              },
+            }}
+            value={columnName}
+          >
+            {table.getAllLeafColumns().map(
+              (column, index) =>
+                index !== 0 && (
+                  <MenuItem
+                    key={checkBoxFormatting(column.id)}
+                    value={column.id}
+                  >
+                    {checkBoxFormatting(column.id)}
+                  </MenuItem>
+                ),
+            )}
+          </Select>
+        </FormControl>
       </div>
 
-      <div className="grid w-full grid-cols-1 overflow-x-auto md:pl-4">
-        <div style={{ height: "350px", overflow: "auto" }}>
-          <table className="w-full border-separate border-spacing-0 divide-gray-200">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios bg-white px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
-                      key={header.id}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${typeof cell.id} ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
-                      key={cell.id}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="grid max-h-[218px] w-full grid-cols-1 overflow-auto overflow-x-auto">
+        <table className="w-full border-separate border-spacing-0 divide-gray-200">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios bg-white px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
+                    key={header.id}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${typeof cell.id} ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
+                    key={cell.id}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
