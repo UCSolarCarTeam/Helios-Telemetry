@@ -6181,6 +6181,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kurkle/color@npm:^0.3.0":
+  version: 0.3.4
+  resolution: "@kurkle/color@npm:0.3.4"
+  checksum: 10c0/0e9fd55c614b005c5f0c4c755bca19ec0293bc7513b4ea3ec1725234f9c2fa81afbc78156baf555c8b9cb0d305619253c3f5bca016067daeebb3d00ebb4ea683
+  languageName: node
+  linkType: hard
+
 "@lerna/create@npm:8.1.9":
   version: 8.1.9
   resolution: "@lerna/create@npm:8.1.9"
@@ -11389,6 +11396,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chart.js@npm:^4.4.8":
+  version: 4.4.8
+  resolution: "chart.js@npm:4.4.8"
+  dependencies:
+    "@kurkle/color": "npm:^0.3.0"
+  checksum: 10c0/4777e3fef7ccfb664c02b79f90e53fb0e46c01293bc56af5ab81aa8ffef4b1ccc675bef948b7efd071a5dd0ebd59c0e95c42ef606f728da8e3ff1741fc2d1df0
+  languageName: node
+  linkType: hard
+
 "cheap-ruler@npm:^4.0.0":
   version: 4.0.0
   resolution: "cheap-ruler@npm:4.0.0"
@@ -11549,6 +11565,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^7.16.0"
     "@typescript-eslint/parser": "npm:^7.16.0"
     autoprefixer: "npm:^10.4.19"
+    chart.js: "npm:^4.4.8"
     eslint: "npm:8.57.0"
     eslint-config-next: "npm:15.1.4"
     eslint-config-prettier: "npm:^9.1.0"
@@ -11565,13 +11582,13 @@ __metadata:
     prettier-plugin-tailwindcss: "npm:^0.6.6"
     rc-slider: "npm:^11.1.8"
     react: "npm:19.0.0"
-    react-chartjs-2: "npm:^5.2.0"
+    react-chartjs-2: "npm:^5.3.0"
     react-dom: "npm:19.0.0"
     react-icons: "npm:^5.0.1"
     react-indiana-drag-scroll: "npm:^2.2.0"
     react-map-gl: "npm:^7.1.7"
     socket.io-client: "npm:^4.7.5"
-    tailwind-merge: "npm:^2.3.0"
+    tailwind-merge: "npm:^3.0.2"
     tailwindcss: "npm:^3.4.4"
     three: "npm:^0.161.0"
   languageName: unknown
@@ -19535,13 +19552,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-chartjs-2@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "react-chartjs-2@npm:5.2.0"
+"react-chartjs-2@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "react-chartjs-2@npm:5.3.0"
   peerDependencies:
     chart.js: ^4.1.1
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/437e443a268b7eebab3f1a6f0f5d936e58caf650fca55f568a612a46c563d22af683a64185eac8005aa644e4960a5a72cc1075a2574b89ec46c7653aaf4025e2
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/4415d40217c084a49f9a936fbd30f67e0e705148e6f8359bec65601033d1076f31085c45793839fc29ec833e6c427b0bf9861a0c54c432c08d35bc9590ffa41a
   languageName: node
   linkType: hard
 
@@ -21429,10 +21446,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^2.3.0":
-  version: 2.5.4
-  resolution: "tailwind-merge@npm:2.5.4"
-  checksum: 10c0/6c3d2a1d44344f373859f005e6366f0dbd7f66131d330a51dbe823dab08f71c388b2efcbb2b6a2170ca469581d27079c25cd40c234ca1356c4893ae99c2febb3
+"tailwind-merge@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "tailwind-merge@npm:3.0.2"
+  checksum: 10c0/73f528345e5130e7690c5c57701155849ae4f0834e0a4bf56bc03e25d4563d45d4905ff9c487a7dce9efdfa18689a223e78365962105ad0e2f2d1226216c66ef
   languageName: node
   linkType: hard
 
