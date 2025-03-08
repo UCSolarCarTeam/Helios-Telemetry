@@ -127,35 +127,15 @@ type FieldDataFormatterProps = {
 
 function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
   const { data, fstring } = props;
-
-  // commenting out because its unused anyways
-  // const formatString = (string: string, params: I_PISFieldData[]) => {
-  //   // %s •C (%s) - %s •C (%s)
-  //   // console.log("TEST", string.split("%s"));
-  //   return string
-  //     .split("%s")
-  //     .map((part, index) => {
-  //       typeof params[index] === "undefined" ? (
-  //         ""
-  //       ) : (
-  //         <>
-  //           <RangeCheckedFieldData
-  //             fieldData={params[index]}
-  //           />
-  //           {part}
-  //         </>
-  //       );
-  //     })
-  //     .join("");
-  // };
-
-  return fstring === undefined ? (
-    <div>
-      <RangeCheckedFieldData fieldData={data[0] as I_PISFieldData} />
-    </div>
-  ) : (
-    <div>
-      <FormatString data={data} fstring={fstring} />
+  return (
+    <div className="relative flex-1 items-center">
+      <div className="absolute -top-1.5 line-clamp-1 w-full pr-2 text-end">
+        {fstring ? (
+          <FormatString data={data} fstring={fstring} />
+        ) : (
+          <RangeCheckedFieldData fieldData={data[0] as I_PISFieldData} />
+        )}
+      </div>
     </div>
   );
 }
@@ -204,18 +184,20 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
     <div className="group mt-1 flex items-center justify-between text-xs">
       {!field.isFault && (
         <span
-          className="mt-1 hidden cursor-pointer items-center text-xs font-bold text-helios group-hover:flex"
+          className="mt-1 hidden cursor-pointer items-center whitespace-nowrap text-xs font-bold text-helios group-hover:flex"
           onClick={handleAddToFavourites}
         >
           Add to Favourites
         </span>
       )}
-      <div
-        className={`mt-1 flex items-center justify-between text-xs ${field.isFault ? "" : "group-hover:hidden"}`}
-      >
-        {field.name}
+      <div className="flex w-full items-center justify-between gap-2">
+        <p
+          className={`mt-1 flex items-center justify-between text-xs ${field.isFault ? "" : "group-hover:hidden"}`}
+        >
+          {field.name}
+        </p>
+        <FieldDataFormatter data={field.data} fstring={field.fstring} />
       </div>
-      <FieldDataFormatter data={field.data} fstring={field.fstring} />
     </div>
   );
 }
