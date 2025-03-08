@@ -1,12 +1,11 @@
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import Tooltip from "rc-tooltip";
-import "rc-tooltip/assets/bootstrap.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import PauseIcon from "@/components/atoms/PauseIcon";
 import PlayIcon from "@/components/atoms/PlayIcon";
 import { usePacket } from "@/contexts/PacketContext";
+import Tooltip from "@mui/material/Tooltip";
 
 import { fakeData } from "./fakedata";
 
@@ -17,6 +16,7 @@ export default function PlaybackSlider() {
   const animationRef = useRef<number>(null);
   const playStartTime = useRef<number>(null);
   const playStartSlider = useRef<number>(0);
+  const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
 
   const { setCurrentPacket } = usePacket();
 
@@ -97,7 +97,6 @@ export default function PlaybackSlider() {
     (value: number | number[]) => {
       if (typeof value === "number") {
         setSliderValue(value);
-        setHoverValue(value);
 
         if (isPlaying) {
           playStartTime.current = Date.now();
@@ -121,6 +120,18 @@ export default function PlaybackSlider() {
     [sortedData, stepSize],
   );
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const hoverPercentage = (x / rect.width) * 100; // calculate the percentage of the hover position relative to slider, set tooltip to this packet
+    setHoverValue(hoverPercentage);
+    setTooltipPosition({ left: x, top: rect.top });
+  };
+
+  const handleMouseLeave = () => {
+    setHoverValue(null);
+  };
+
   return (
     <div className="flex flex-row items-center justify-center gap-2 py-1">
       <button
@@ -134,22 +145,30 @@ export default function PlaybackSlider() {
         )}
       </button>
       <div className="w-full rounded-md bg-helios p-2">
-        <Slider
-          handleRender={(node, props) => (
-            <Tooltip
-              classNames={{ root: "width: max-content" }}
-              overlay={getTooltipContent(props.value)}
-              placement="top"
-              visible={hoverValue !== null}
-            >
-              {node}
-            </Tooltip>
-          )}
-          max={100}
-          min={0}
-          onChange={handleSliderChange}
-          value={sliderValue}
-        />
+        <Tooltip
+          PopperProps={{
+            anchorEl: {
+              getBoundingClientRect: () =>
+                new DOMRect(tooltipPosition.left, tooltipPosition.top, 0, 0),
+            },
+          }}
+          open={hoverValue !== null}
+          placement="top-start"
+          title={hoverValue !== null ? getTooltipContent(hoverValue) : ""}
+        >
+          <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
+            <Slider
+              max={100}
+              min={0}
+              onChange={(value) => {
+                setHoverValue(null);
+                handleSliderChange(value);
+              }}
+              onChangeComplete={() => setHoverValue(null)}
+              value={sliderValue}
+            />
+          </div>
+        </Tooltip>
       </div>
     </div>
   );
