@@ -2,7 +2,13 @@ import axios from "axios";
 import React, { useState } from "react";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import { IDriverNameUpdate } from "@shared/helios-types";
 import { prodURL } from "@shared/helios-types";
 
@@ -23,6 +29,7 @@ export default function DriverUpdate() {
     Partial<IDriverNameUpdate>
   >({});
   const [statusMessage, setStatusMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const validateInputs = () => {
     const newErrors = new Set<keyof IDriverNameUpdate>();
@@ -67,6 +74,7 @@ export default function DriverUpdate() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     setErrorMessages({});
     setStatusMessage("");
     if (validateInputs()) {
@@ -79,15 +87,19 @@ export default function DriverUpdate() {
           .then((res) => {
             if (res.status === 200) {
               setStatusMessage(res.data.message);
+              setLoading(false);
             } else {
-              setStatusMessage("Error updating driver info");
+              setStatusMessage("Error updating driver info 1");
+              setLoading(false);
             }
           })
           .catch(() => {
-            setStatusMessage("Error updating driver info");
+            setStatusMessage("Error updating driver info 2");
+            setLoading(false);
           });
       } else {
         setStatusMessage("Incorrect password, please try again.");
+        setLoading(false);
       }
     }
   };
@@ -131,6 +143,11 @@ export default function DriverUpdate() {
           variant="filled"
         />
         <Button type="submit">Submit</Button>
+        {loading && (
+          <div className="flex justify-center">
+            <CircularProgress size="2rem" />
+          </div>
+        )}
         {statusMessage && (
           <div className="text-green-500 mt-2 text-center">{statusMessage}</div>
         )}

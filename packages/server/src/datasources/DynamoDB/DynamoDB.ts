@@ -271,7 +271,7 @@ export class DynamoDB implements DynamoDBtypes {
       const rfidCheckReposonse = await this.client.send(getCommand);
 
       if (!rfidCheckReposonse.Item) {
-        return { message: "RFID not found in driver table" };
+        return { message: "Driver RFID not found in driver table" };
       }
 
       // Update only the 'driver' field, keeping the existing RFID
@@ -285,7 +285,9 @@ export class DynamoDB implements DynamoDBtypes {
       });
 
       await this.client.send(updateCommand);
-      return { message: "Driver info updated successfully" };
+      return {
+        message: `Driver name updated from ${rfidCheckReposonse.Item.driver} to ${name}`,
+      };
     } catch (error) {
       logger.error("Error updating driver info: " + error.message);
       throw new Error(error.message);
