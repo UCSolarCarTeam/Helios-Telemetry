@@ -10,8 +10,11 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
-import { type IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
+import {
+  type IFormattedLapData,
+  ILapData,
+  prodURL,
+} from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
   createColumnHelper,
@@ -175,6 +178,15 @@ function RaceTab() {
   const fetchDriverNames = async () => {
     try {
       const response = await axios.get(`${prodURL}/drivers`);
+      return response.data;
+    } catch (error) {
+      return { error: "Error fetching drivers" };
+    }
+  };
+
+  const fetchFilteredLaps = async (rfid: number) => {
+    try {
+      const response = await axios.get(`${prodURL}/driver/${rfid}`);
       return response.data;
     } catch (error) {
       return { error: "Error fetching drivers" };
