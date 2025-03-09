@@ -2,7 +2,7 @@ import type { FeatureCollection, LineString } from "geojson";
 import { LineLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
-import { type JSX, useEffect, useRef, useState } from "react";
+import { type JSX, useCallback, useEffect, useRef, useState } from "react";
 import ReactMapGL, {
   Layer,
   LayerProps,
@@ -18,13 +18,15 @@ import ReactMapGL, {
 import HeliosModel from "@/assets/HeliosBirdseye.png";
 import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
-import type { Coords } from "@shared/helios-types";
+import type { Coords, ITelemetryData } from "@shared/helios-types";
 
+import { fakeData } from "../PlaybackMolecules/fakedata";
 import { GEO_DATA } from "./ExampleCoordinates";
 import { mapCameraControls } from "./MapControls";
 import MapControls from "./MapControls";
+import PacketMarker from "./PacketMarker";
 
-const { calculateBearing, fitBounds, isOutsideBounds, lerp } =
+const { calculateBearing, distance, fitBounds, isOutsideBounds, lerp } =
   mapCameraControls;
 // @ts-expect-error:next-line
 type MapLibType = MapLib<mapboxgl.Map>;
@@ -97,6 +99,14 @@ const trackList: TrackList[] = [
     trackName: "Grand Max Straight",
   },
 ] as const;
+export type PacketMarker = {
+  data: ITelemetryData;
+  markerCoords: {
+    latitude: number;
+    longitude: number;
+  };
+  open: boolean;
+};
 export default function Map({
   carLocation,
   lapLocation,
@@ -119,6 +129,16 @@ export default function Map({
   });
   const [popupOpen, setPopupOpen] = useState(true);
   const [viewTracks, setViewTracks] = useState(trackList.map(() => true));
+  const [dataPoints, setDataPoints] = useState<PacketMarker[]>(
+    fakeData.map((data) => ({
+      data,
+      markerCoords: {
+        latitude: data.Telemetry.GpsLatitude,
+        longitude: data.Telemetry.GpsLongitude,
+      },
+      open: false,
+    })),
+  );
   const mapRef = useRef<MapRef | undefined>(undefined);
   useEffect(() => {
     let animationFrameId: number;
@@ -153,23 +173,51 @@ export default function Map({
     if (isOutsideBounds(map, coordinates) && !mapStates.centered) {
       fitBounds(map, carLocation, lapLocation);
     } else if (mapStates.centered) {
+      const dist = distance(
+        carLocation.lat,
+        carLocation.long,
+        map.getCenter().lat,
+        map.getCenter().lng,
+      );
+      const speedFactor = 80;
       map.flyTo({
         center: [carLocation.long, carLocation.lat],
         curve: 1, // Adjust the curve of the animation
         easing: (t) => t, // Easing function for the animation
-        speed: 1.5, // Adjust the speed of the animation
+        speed: speedFactor * dist,
         zoom: 16,
       });
     }
   }, [carLocation, lapLocation, mapStates.centered]);
 
-  const toggleMapStyle = () => {
+  const toggleMapStyle = useCallback(() => {
     setMapStates((prev) => ({ ...prev, satelliteMode: !prev.satelliteMode }));
-  };
+  }, [setMapStates]);
 
-  const toggleCentred = () => {
+  const toggleCentred = useCallback(() => {
     setMapStates((prev) => ({ ...prev, centered: !prev.centered }));
-  };
+  }, [setMapStates]);
+  const onMouseEnterDataPoint = useCallback(
+    (index: number) => {
+      setDataPoints((prevDataPoints) =>
+        prevDataPoints.map((point, i) =>
+          i === index ? { ...point, open: true } : point,
+        ),
+      );
+    },
+    [setDataPoints],
+  );
+  const onMouseLeaveDataPoint = useCallback(
+    (index: number) => {
+      setDataPoints((prevDataPoints) =>
+        prevDataPoints.map((point, i) =>
+          i === index ? { ...point, open: false } : point,
+        ),
+      );
+    },
+    [setDataPoints],
+  );
+
   return (
     <div className="relative size-full">
       <ReactMapGL
@@ -216,7 +264,6 @@ export default function Map({
         >
           <Image
             alt="map-pin"
-            className="cursor-pointer hover:scale-125"
             height={50}
             onMouseEnter={() => setPopupOpen(true)}
             onMouseLeave={() => setPopupOpen(false)}
@@ -240,6 +287,16 @@ export default function Map({
         >
           <SportsScoreIcon />
         </Marker>
+        {dataPoints.map((packetMarker, index) => (
+          <PacketMarker
+            index={index}
+            key={packetMarker.data.TimeStamp}
+            onMouseEnterDataPoint={onMouseEnterDataPoint}
+            onMouseLeaveDataPoint={onMouseLeaveDataPoint}
+            packetMarker={packetMarker}
+            setDataPoints={setDataPoints}
+          />
+        ))}
         {trackList.map(({ layerProps, sourceProps }, index) => {
           if (!viewTracks[index]) return null;
           return (
