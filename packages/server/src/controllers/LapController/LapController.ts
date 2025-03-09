@@ -17,10 +17,16 @@ const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
+  public passedDebouncedCheckpoint: boolean = false;
   public lapNumber: number = 0;
   public finishLineLocation: Coords = {
     lat: 51.081021,
     long: -114.136084,
+  };
+  public lapDebounceLocation: Coords = {
+    // enter actual debounce coords
+    lat: 51.181021,
+    long: -114.236184,
   };
   backendController: BackendController;
 
@@ -95,6 +101,7 @@ export class LapController implements LapControllerType {
         timestamp: packet.TimeStamp,
       };
       this.handleLapData(lapData);
+      this.backendController.socketIO.broadcastLapNumber(this.lapNumber);
       this.lastLapPackets = [];
     }
     this.lastLapPackets.push(packet);
@@ -104,7 +111,27 @@ export class LapController implements LapControllerType {
     return this.lastLapPackets;
   }
 
-  //checks if lap has been acheived
+  // check debouncing
+  private checkDebounce() {
+    // input actual car location
+    const carLocation = {
+      lat: 51.081021,
+      long: -114.136084,
+    };
+
+    const inProximity =
+      getDistance(
+        carLocation.lat,
+        carLocation.long,
+        this.lapDebounceLocation.lat,
+        this.lapDebounceLocation.long,
+      ) <= 0.01;
+
+    if (inProximity) this.passedDebouncedCheckpoint = true;
+    this.passedDebouncedCheckpoint = false;
+  }
+
+  //checks if lap has been acheived (using geofencing)
   private checkLap(packet: ITelemetryData) {
     const carLocation = {
       lat: 51.081021,
@@ -118,10 +145,20 @@ export class LapController implements LapControllerType {
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
       ) <= 0.01;
+
     let lapHappened = false;
-    if (!this.previouslyInFinishLineProximity && inProximity) {
-      lapHappened = true;
-    }
+    const checkDebounce = this.checkDebounce();
+
+    // if lap completed
+    // if (
+    //   this.passedDebouncedCheckpoint &&
+    //   !this.previouslyInFinishLineProximity &&
+    //   inProximity
+    // ) {
+    //   lapHappened = true;
+    //   this.lapNumber += 1;
+    //   this.passedDebouncedCheckpoint = false;
+    // }
 
     this.previouslyInFinishLineProximity = inProximity;
     return lapHappened;
