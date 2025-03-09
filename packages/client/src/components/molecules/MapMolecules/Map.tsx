@@ -1,3 +1,5 @@
+import type { FeatureCollection, LineString } from "geojson";
+import { LineLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
 import { type JSX, useEffect, useRef, useState } from "react";
@@ -7,16 +9,23 @@ import ReactMapGL, {
   type MapLib,
   MapRef,
   Marker,
+  Popup,
   Source,
+  SourceProps,
+  ViewState,
 } from "react-map-gl";
 
+import HeliosModel from "@/assets/HeliosBirdseye.png";
 import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import type { Coords } from "@shared/helios-types";
 
 import { GEO_DATA } from "./ExampleCoordinates";
+import { mapCameraControls } from "./MapControls";
 import MapControls from "./MapControls";
 
+const { calculateBearing, fitBounds, isOutsideBounds, lerp } =
+  mapCameraControls;
 // @ts-expect-error:next-line
 type MapLibType = MapLib<mapboxgl.Map>;
 export type MapStates = {
@@ -24,9 +33,20 @@ export type MapStates = {
   currentCarLocation: Coords;
   satelliteMode: boolean;
 };
+export type TrackList = {
+  layerProps: LayerProps & Partial<LineLayerSpecification>;
+  sourceProps: SourceProps & {
+    data: FeatureCollection<LineString>;
+  };
+  trackName: string;
+};
 if (!process.env.NEXT_PUBLIC_MAPSAPIKEY)
   throw new Error("Missing NEXT_PUBLIC_MAPSAPIKEY ");
-const { raceTrackGeoJSON, raceTrackGeoJSON2 } = GEO_DATA;
+const {
+  raceTrackGeoJSON_CORVETTE_RACE_LOOP,
+  raceTrackGeoJSON_GRAND_FULL_COURSE,
+  raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
+} = GEO_DATA;
 const trackLayerStyle: LayerProps = {
   layout: {
     "line-cap": "round",
@@ -38,69 +58,45 @@ const trackLayerStyle: LayerProps = {
   },
   type: "line",
 };
-const lerp = (
-  startPosition: number,
-  endPosition: number,
-  timeOfAnimation: number,
-) => {
-  return startPosition * (1 - timeOfAnimation) + endPosition * timeOfAnimation;
-};
-const calculateBearing = (start: Coords, end: Coords): number => {
-  //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
-  const startLat = (start.lat * Math.PI) / 180; //convert to radians
-  const startLng = (start.long * Math.PI) / 180;
-  const endLat = (end.lat * Math.PI) / 180;
-  const endLng = (end.long * Math.PI) / 180;
 
-  const deltaLng = endLng - startLng;
-  const x = Math.sin(deltaLng) * Math.cos(endLat);
-  const y =
-    Math.cos(startLat) * Math.sin(endLat) -
-    Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
-
-  const bearing = (Math.atan2(x, y) * 180) / Math.PI;
-  return (bearing + 360) % 360; // Normalize to 0-360 degrees
-};
-
-const fitBounds = (
-  mapRef: MapRef | undefined,
-  coordsA: Coords,
-  coordsB: Coords,
-) => {
-  if (!mapRef) return;
-  mapRef.fitBounds(
-    [
-      [coordsA.long, coordsA.lat],
-      [coordsB.long, coordsB.lat],
-    ],
-    {
-      linear: true,
-      maxZoom: 16,
-      padding: { bottom: 35, left: 35, right: 35, top: 35 },
+const trackList: TrackList[] = [
+  {
+    layerProps: {
+      ...trackLayerStyle,
+      paint: { ...trackLayerStyle.paint, "line-color": "#ff0000" },
     },
-  );
-};
-const isOutsideBounds = (
-  mapRef: MapRef | undefined,
-  coordinates: Coords[],
-): boolean => {
-  if (!mapRef || !coordinates) return false;
-  const bounds = mapRef.getBounds();
-  if (!bounds) return false;
-  const { lat: northLat, lng: eastLng } = bounds.getNorthEast();
-  const { lat: southLat, lng: westLng } = bounds.getSouthWest();
-  coordinates.forEach((coord) => {
-    if (
-      coord.long < westLng ||
-      coord.long > eastLng ||
-      coord.lat < southLat ||
-      coord.lat > northLat
-    ) {
-      return true;
-    }
-  });
-  return false;
-};
+    sourceProps: {
+      data: raceTrackGeoJSON_CORVETTE_RACE_LOOP,
+      id: "layer1",
+      type: "geojson",
+    },
+    trackName: "Corvette Race Loop",
+  },
+  {
+    layerProps: {
+      ...trackLayerStyle,
+      paint: { ...trackLayerStyle.paint, "line-color": "#0f00ff" },
+    },
+    sourceProps: {
+      data: raceTrackGeoJSON_GRAND_FULL_COURSE,
+      id: "layer2",
+      type: "geojson",
+    },
+    trackName: "Grand Full Course",
+  },
+  {
+    layerProps: {
+      ...trackLayerStyle,
+      paint: { ...trackLayerStyle.paint, "line-color": "#ff00ff" },
+    },
+    sourceProps: {
+      data: raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
+      id: "layer3",
+      type: "geojson",
+    },
+    trackName: "Grand Max Straight",
+  },
+] as const;
 export default function Map({
   carLocation,
   lapLocation,
@@ -111,7 +107,7 @@ export default function Map({
   const {
     currentAppState: { darkMode },
   } = useAppState();
-  const [viewState, setViewState] = useState({
+  const [viewState, setViewState] = useState<Partial<ViewState>>({
     latitude: carLocation.lat,
     longitude: carLocation.long,
     zoom: 14,
@@ -121,21 +117,23 @@ export default function Map({
     currentCarLocation: carLocation,
     satelliteMode: false,
   });
+  const [popupOpen, setPopupOpen] = useState(true);
+  const [viewTracks, setViewTracks] = useState(trackList.map(() => true));
   const mapRef = useRef<MapRef | undefined>(undefined);
   useEffect(() => {
     let animationFrameId: number;
     const animateCarMarker = () => {
       setMapStates((prevMapStates) => {
-        const t = 0.01;
+        const time = 0.01;
         const newLat = lerp(
           prevMapStates.currentCarLocation.lat,
           carLocation.lat,
-          t,
+          time,
         );
         const newLng = lerp(
           prevMapStates.currentCarLocation.long,
           carLocation.long,
-          t,
+          time,
         );
         return {
           ...prevMapStates,
@@ -203,14 +201,26 @@ export default function Map({
         {...viewState}
         style={{ height: "100%", width: "100%" }}
       >
+        {popupOpen && (
+          <Popup
+            latitude={mapStates.currentCarLocation.lat}
+            longitude={mapStates.currentCarLocation.long}
+          >
+            You are here
+          </Popup>
+        )}
         <Marker
           latitude={mapStates.currentCarLocation.lat}
           longitude={mapStates.currentCarLocation.long}
+          onClick={(e) => e.originalEvent.stopPropagation()}
         >
           <Image
             alt="map-pin"
+            className="cursor-pointer hover:scale-125"
             height={50}
-            src="/assets/HeliosBirdseye.png"
+            onMouseEnter={() => setPopupOpen(true)}
+            onMouseLeave={() => setPopupOpen(false)}
+            src={HeliosModel}
             style={{
               transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
             }}
@@ -230,17 +240,22 @@ export default function Map({
         >
           <SportsScoreIcon />
         </Marker>
-        <Source data={raceTrackGeoJSON} id="layer1-source" type="geojson">
-          <Layer {...trackLayerStyle} id="layer1" />
-        </Source>
-        <Source data={raceTrackGeoJSON2} id="layer2-source" type="geojson">
-          <Layer {...trackLayerStyle} id="layer2" />
-        </Source>
+        {trackList.map(({ layerProps, sourceProps }, index) => {
+          if (!viewTracks[index]) return null;
+          return (
+            <Source {...sourceProps} key={sourceProps.id}>
+              <Layer {...layerProps} />
+            </Source>
+          );
+        })}
       </ReactMapGL>
       <MapControls
         mapStates={mapStates}
+        setViewTracks={setViewTracks}
         toggleCentred={toggleCentred}
         toggleMapStyle={toggleMapStyle}
+        trackList={trackList}
+        viewTracks={viewTracks}
       />
     </div>
   );
