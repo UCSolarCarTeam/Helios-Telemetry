@@ -42,7 +42,10 @@ export default function MapControls({
           <FaLayerGroup className={iconClasses} />
         )}
       </button>
-      <button className={buttonClasses} onClick={toggleCentred}>
+      <button
+        className={twMerge(buttonClasses, mapStates.centered && "outline")}
+        onClick={toggleCentred}
+      >
         <FaLocationArrow className={iconClasses} />
       </button>
       <div
@@ -70,7 +73,7 @@ export default function MapControls({
                 }}
               >
                 <div
-                  className="size-2 rounded-xl outline outline-1 outline-gray-500"
+                  className={`size-2 rounded-xl outline outline-1 outline-gray-500 ${darkMode && "invert"}`}
                   style={{
                     backgroundColor:
                       typeof track.layerProps.paint?.["line-color"] ===
@@ -79,7 +82,7 @@ export default function MapControls({
                         : "transparent",
                   }}
                 />
-                <p className="select-none text-xxs font-semibold">
+                <p className="hidden select-none text-xxs font-semibold group-hover:block">
                   {track.trackName}
                 </p>
               </button>
@@ -155,8 +158,13 @@ const isOutsideBounds = (
   return false;
 };
 
+const distance = (x1: number, y1: number, x2: number, y2: number): number => {
+  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+};
+
 export const mapCameraControls = {
   calculateBearing,
+  distance,
   fitBounds,
   isOutsideBounds,
   lerp,
