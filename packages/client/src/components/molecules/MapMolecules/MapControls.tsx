@@ -34,7 +34,7 @@ export default function MapControls({
   );
   const iconClasses = useMemo(() => `h-6 text-xl`, []);
   return (
-    <div className="absolute top-0 flex flex-col gap-2 p-2">
+    <div className="absolute top-0 flex flex-col gap-4 p-2">
       <button className={buttonClasses} onClick={toggleMapStyle}>
         {mapStates.satelliteMode ? (
           <FaSatellite className={iconClasses} />

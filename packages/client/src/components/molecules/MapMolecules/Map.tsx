@@ -20,11 +20,11 @@ import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import type { Coords, ITelemetryData } from "@shared/helios-types";
 
-import { fakeData } from "../PlaybackMolecules/fakedata";
 import { GEO_DATA } from "./ExampleCoordinates";
 import { mapCameraControls } from "./MapControls";
 import MapControls from "./MapControls";
 import PacketMarker from "./PacketMarker";
+import { Hydrated_Grand_Full_course } from "./test";
 
 const { calculateBearing, distance, fitBounds, isOutsideBounds, lerp } =
   mapCameraControls;
@@ -123,21 +123,14 @@ export default function Map({
     zoom: 14,
   });
   const [mapStates, setMapStates] = useState({
-    centered: false,
+    centered: true,
     currentCarLocation: carLocation,
     satelliteMode: false,
   });
   const [popupOpen, setPopupOpen] = useState(true);
   const [viewTracks, setViewTracks] = useState(trackList.map(() => true));
   const [dataPoints, setDataPoints] = useState<PacketMarker[]>(
-    fakeData.map((data) => ({
-      data,
-      markerCoords: {
-        latitude: data.Telemetry.GpsLatitude,
-        longitude: data.Telemetry.GpsLongitude,
-      },
-      open: false,
-    })),
+    Hydrated_Grand_Full_course,
   );
   const mapRef = useRef<MapRef | undefined>(undefined);
   useEffect(() => {
