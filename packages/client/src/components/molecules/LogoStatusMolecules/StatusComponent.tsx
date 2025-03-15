@@ -10,15 +10,9 @@ import { usePacket } from "@/contexts/PacketContext";
 import { Switch } from "@mantine/core";
 import { DateInput, DatePickerInput, TimeInput } from "@mantine/dates";
 
-export type IPlaybackDateTime = { date: Date; startTime: Date; endTime: Date };
-
 function PlaybackPickerComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
-  const [playbackDateTime, setPlaybackDateTime] = useState<IPlaybackDateTime>({
-    date: new Date(),
-    endTime: new Date(),
-    startTime: new Date(),
-  });
+
   return (
     <div className="flex w-full flex-col items-start gap-2">
       <div className="flex items-center justify-center gap-2">
@@ -37,71 +31,6 @@ function PlaybackPickerComponent() {
 
       {currentAppState.playbackSwitch && (
         <>
-          <div className="flex flex-col gap-2 py-1">
-            {/* <input
-                className="max-w-32 rounded-md bg-[#BCBCBC] p-1 text-pink shadow-sm transition-all focus:outline-none"
-                id="playbackDate"
-                onChange={onDateChange}
-                type="date"
-                value={date}
-              /> */}
-            <div className="flex flex-col gap-2">
-              <DatePickerInput
-                onChange={(value) => {
-                  setPlaybackDateTime((prev) => ({
-                    ...prev,
-                    startTime:
-                      new Date(
-                        value +
-                          "T" +
-                          prev.startTime.toISOString().split("T")[1],
-                      ) ?? new Date(),
-                  }));
-                }}
-                placeholder="Pick date"
-                value={playbackDateTime.startTime}
-                valueFormat="MMM DD, YYYY"
-              />
-
-              <div className="flex flex-row items-center gap-2">
-                <TimeInput
-                  onChange={(event) => {
-                    setPlaybackDateTime((prev: IPlaybackDateTime) => ({
-                      ...prev,
-                      startTime: new Date(
-                        Date.parse(
-                          new Date(prev.startTime)
-                            .toDateString()
-                            .split("T")[0] +
-                            "T" +
-                            event.target.value,
-                        ),
-                      ),
-                    }));
-                  }}
-                  value={
-                    playbackDateTime.startTime.toTimeString().split(" ")[0]
-                  } // Only time part (HH:mm:ss)
-                />
-                -
-                <TimeInput
-                  onChange={(event) => {
-                    setPlaybackDateTime((prev) => ({
-                      ...prev,
-                      endTime: new Date(
-                        new Date(prev.startTime).toISOString().split("T")[0] +
-                          "T" +
-                          event.target.value,
-                      ),
-                    }));
-                  }}
-                  value={playbackDateTime.endTime.toTimeString().split(" ")[0]} // Only time part (HH:mm:ss)
-                />
-              </div>
-
-              {playbackDateTime.endTime.toISOString()}
-            </div>
-          </div>
           {/* <Modal
               aria-describedby="modal-modal-description"
               aria-labelledby="modal-modal-title"
