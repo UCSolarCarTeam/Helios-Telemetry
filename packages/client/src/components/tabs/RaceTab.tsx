@@ -3,7 +3,8 @@ import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { useLapData } from "@/contexts/LapDataContext";
-import type { IFormattedLapData } from "@shared/helios-types";
+import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
+import { type IFormattedLapData, prodURL } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
   createColumnHelper,
@@ -109,9 +110,7 @@ function RaceTab() {
 
   const fetchDriverNames = async () => {
     try {
-      const response = await axios.get(
-        `https://aedes.calgarysolarcar.ca:3001/drivers`,
-      );
+      const response = await axios.get(`${prodURL}/drivers`);
       return response.data;
     } catch (error) {
       return { error: "Error fetching drivers" };
