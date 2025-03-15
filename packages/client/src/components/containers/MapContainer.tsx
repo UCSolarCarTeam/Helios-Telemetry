@@ -11,27 +11,34 @@ function MapContainer(): JSX.Element {
 
   const isDemo = currentAppState.connectionType === "DEMO";
   const [carLocation, setCarLocation] = useState(currentAppState.lapCoords);
-  useEffect(() => {
-    if (isDemo) {
-      const interval = setInterval(() => {
-        setCarLocation((prevState) => ({
-          lat: prevState.lat + 0.0001,
-          long: prevState.long,
-        }));
-      }, 1000);
+  // useEffect(() => {
+  //   if (isDemo) {
+  //     const interval = setInterval(() => {
+  //       setCarLocation((prevState) => ({
+  //         lat: prevState.lat + 0.0001,
+  //         long: prevState.long,
+  //       }));
+  //     }, 1000);
 
-      return () => clearInterval(interval);
-    }
-  }, [isDemo]);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [isDemo]);
+
+  // useEffect(() => {
+  //   if (!isDemo) {
+  //     setCarLocation({
+  //       lat: currentPacket.Telemetry.GpsLatitude,
+  //       long: currentPacket.Telemetry.GpsLongitude,
+  //     });
+  //   }
+  // }, [currentPacket, isDemo]);
 
   useEffect(() => {
-    if (!isDemo) {
-      setCarLocation({
-        lat: currentPacket.Telemetry.GpsLatitude,
-        long: currentPacket.Telemetry.GpsLongitude,
-      });
-    }
-  }, [currentPacket, isDemo]);
+    setCarLocation({
+      lat: currentPacket.Telemetry.GpsLatitude,
+      long: currentPacket.Telemetry.GpsLongitude,
+    });
+  }, [currentPacket]);
 
   return (
     <div className="size-full">
