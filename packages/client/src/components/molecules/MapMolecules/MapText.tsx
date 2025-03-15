@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
+import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { socketIO } from "@/contexts/SocketContext";
 import { calculateVehicleVelocity } from "@shared/helios-types";
 
 function MapText() {
@@ -11,11 +12,37 @@ function MapText() {
   const { currentPacket } = usePacket();
 
   const [timeLeft, setTimeLeft] = useState(totalTime);
-  const [intervalCount, setIntervalCount] = useState(0);
+  const [prevTime, setPrevTime] = useState(0);
+  const [raceDay, setRaceDay] = useState(0);
+  const [distance, setDistance] = useState(0);
+  const [lapNumber, setLapNumber] = useState(0);
+
+  const distanceUnit = useRef("km");
+  const totalDistance = useRef(0);
+  const totalLaps = useRef(0);
 
   const motorDetails0 = currentPacket?.MotorDetails0?.CurrentRpmValue;
   const motorDetails1 = currentPacket?.MotorDetails1?.CurrentRpmValue;
   const raceMode = currentPacket?.B3?.RaceMode;
+
+  const distanceWithUnitsValue = useMemo(() => {
+    if (currentAppState.appUnits === APPUNITS.IMPERIAL) {
+      distanceUnit.current = "miles";
+      return distance * 0.621371;
+    }
+    distanceUnit.current = "km";
+    return distance;
+  }, [currentAppState.appUnits, distance]);
+
+  const onLapNumber = useCallback((lap: number) => setLapNumber(lap), []);
+
+  useEffect(() => {
+    socketIO.on("lapNumber", onLapNumber);
+
+    return () => {
+      socketIO.off("lapNumber", onLapNumber);
+    };
+  }, [onLapNumber]);
 
   useEffect(() => {
     const vehicleVelocity = calculateVehicleVelocity(
@@ -23,36 +50,42 @@ function MapText() {
       motorDetails1,
     );
 
-    // if car not moving
-    if (vehicleVelocity === 0) return;
-
-    // if not in race mode
-    if (!raceMode) return;
+    if (vehicleVelocity === 0 || !raceMode) return;
 
     // if more than 3 intervals, reset
-    if (intervalCount >= 3) {
+    if (raceDay >= 3) {
       setTimeLeft(0);
       return;
     }
 
     // if timer is at 0, reset
     if (timeLeft <= 0) {
-      setIntervalCount((prev) => prev + 1); // increase interval after timer runs out
+      setRaceDay((prev) => prev + 1); // increase interval after timer runs out
+      totalLaps.current += lapNumber;
+      totalDistance.current += distance;
+
+      // reset
       setTimeLeft(totalTime); // reset time if timer runs out
-      setCurrentAppState((prev) => ({
-        ...prev,
-        lapNumber: 0,
-      }));
+      setLapNumber(0);
+      setDistance(0);
       return;
     }
 
+    // calculate distance
+    const currTime = Date.now();
+    if (prevTime !== 0) {
+      const dTime = (currTime - prevTime) / (3600 * 1000); // convert ms to hr
+      setDistance((prev) => prev + vehicleVelocity * dTime);
+    }
+    setPrevTime(currTime);
+
     // run each second
-    const interval = setInterval(() => {
+    const timerInterval = setInterval(() => {
       setTimeLeft((prev: number) => prev - 1000);
     }, 1000);
 
     // clean-up function
-    return () => clearInterval(interval);
+    return () => clearInterval(timerInterval);
   }, [raceMode, timeLeft, motorDetails0, motorDetails1]);
 
   // format time for display
@@ -62,15 +95,19 @@ function MapText() {
 
   return (
     <>
-      <div className="mt-1 w-full text-center">
-        <div className="grid">
-          <div className="flex justify-between">
-            <p>Laps Completed: {currentAppState?.lapNumber}</p>
-            <p>Interval Count: {intervalCount}</p>
-            <p>
-              Time Left: {hour}:{minutes}:{seconds}
-            </p>
-          </div>
+      <div className="grid w-full gap-2 text-center">
+        <div className="flex flex-wrap justify-between gap-2">
+          <p>Laps Completed: {lapNumber}</p>
+          <p>Race Day: {raceDay}</p>
+          <p>
+            Time Left: {String(hour).padStart(2, "0")}:
+            {String(minutes).padStart(2, "0")}:
+            {String(seconds).padStart(2, "0")}
+          </p>
+          <p>
+            Distance: {distanceWithUnitsValue.toFixed(2)}{" "}
+            {distanceUnit.current.toString()}
+          </p>
         </div>
       </div>
     </>
