@@ -152,9 +152,9 @@ export default function PlaybackSlider() {
                 new DOMRect(tooltipPosition.left, tooltipPosition.top, 0, 0),
             },
           }}
-          open={hoverValue !== null}
+          open={!!hoverValue}
           placement="top-start"
-          title={hoverValue !== null ? getTooltipContent(hoverValue) : ""}
+          title={hoverValue ? getTooltipContent(hoverValue) : ""}
         >
           <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
             <Slider
