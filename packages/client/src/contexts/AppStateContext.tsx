@@ -41,7 +41,6 @@ interface IAppState {
   userLatency: number;
   carLatency: number;
   lapCoords: Coords;
-  lapNumber: number;
   playbackSwitch: boolean;
   playbackDateTime: IPlaybackDateTime;
 }
@@ -75,7 +74,6 @@ export function AppStateContextProvider({ children }: Props) {
     error: false,
     favourites: [],
     lapCoords: { lat: 37.001949324, long: -86.366554059 },
-    lapNumber: 0,
     loading: true,
     playbackDateTime: {
       date: null,
