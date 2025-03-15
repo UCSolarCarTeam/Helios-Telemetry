@@ -66,13 +66,17 @@ function PlaybackPickerComponent() {
               <div className="flex flex-row items-center gap-2">
                 <TimeInput
                   onChange={(event) => {
-                    setPlaybackDateTime((prev) => ({
+                    setPlaybackDateTime((prev: IPlaybackDateTime) => ({
                       ...prev,
-                      startTime: Date.parse(
-                        new Date(prev.startTime).toDateString().split("T")[0] +
-                          "T" +
-                          event.target.value,
-                      , "YYYY-MM-DDTHH:mm:ss"),
+                      startTime: new Date(
+                        Date.parse(
+                          new Date(prev.startTime)
+                            .toDateString()
+                            .split("T")[0] +
+                            "T" +
+                            event.target.value,
+                        ),
+                      ),
                     }));
                   }}
                   value={

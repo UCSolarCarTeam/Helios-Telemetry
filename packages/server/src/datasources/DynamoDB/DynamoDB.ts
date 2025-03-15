@@ -191,7 +191,7 @@ export class DynamoDB implements DynamoDBtypes {
         Item: {
           data: packet,
           id: uuidv4(),
-          timestamp: packet.timeStamp,
+          timestamp: packet.timestamp,
           type: "lap",
         },
         TableName: this.lapTableName,
