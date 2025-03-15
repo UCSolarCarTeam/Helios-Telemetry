@@ -5,7 +5,7 @@ import MapText from "@/components/molecules/MapMolecules/MapText";
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
 
-import { GEO_DATA } from "../molecules/MapMolecules/ExampleCoordinates";
+import { GEO_DATA } from "../molecules/MapMolecules/MapSetup";
 
 const {
   raceTrackGeoJSON_GRAND_FULL_COURSE: { features },

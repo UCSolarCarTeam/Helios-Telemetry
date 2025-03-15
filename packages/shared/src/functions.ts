@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { ITelemetryData, ITelemetryDataType } from "./types";
+import { Coords, ITelemetryData, ITelemetryDataType } from "./types";
 import { isRight } from "fp-ts/Either";
 import { type ValidationError } from "io-ts";
 
@@ -550,3 +550,20 @@ export function validateTelemetryData(packet: unknown) {
   const errorMessages = formatValidationErrors(validationResult.left);
   throw new Error(errorMessages);
 }
+
+export const calculateBearing = (start: Coords, end: Coords): number => {
+  //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
+  const startLat = (start.lat * Math.PI) / 180; //convert to radians
+  const startLng = (start.long * Math.PI) / 180;
+  const endLat = (end.lat * Math.PI) / 180;
+  const endLng = (end.long * Math.PI) / 180;
+
+  const deltaLng = endLng - startLng;
+  const x = Math.sin(deltaLng) * Math.cos(endLat);
+  const y =
+    Math.cos(startLat) * Math.sin(endLat) -
+    Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
+
+  const bearing = (Math.atan2(x, y) * 180) / Math.PI;
+  return (bearing + 360) % 360; // Normalize to 0-360 degrees
+};
