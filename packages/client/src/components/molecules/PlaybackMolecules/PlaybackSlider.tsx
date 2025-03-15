@@ -111,9 +111,14 @@ export default function PlaybackSlider() {
     (value: number) => {
       const index = Math.round(value / stepSize);
       if (sortedData[index]) {
-        return `Packet: ${index + 1}, Timestamp: ${new Date(
-          sortedData[index].TimeStamp,
-        ).toLocaleString()}`;
+        return (
+          <div className="flex flex-col items-center gap-1">
+            <p>Packet: {index + 1}</p>
+            {`Timestamp: ${new Date(
+              sortedData[index].TimeStamp,
+            ).toLocaleString()}`}
+          </div>
+        );
       }
       return "";
     },
@@ -125,7 +130,7 @@ export default function PlaybackSlider() {
     const x = e.clientX - rect.left;
     const hoverPercentage = (x / rect.width) * 100; // calculate the percentage of the hover position relative to slider, set tooltip to this packet
     setHoverValue(hoverPercentage);
-    setTooltipPosition({ left: x, top: rect.top });
+    setTooltipPosition({ left: x + rect.left, top: rect.top });
   };
 
   const handleMouseLeave = () => {
@@ -152,8 +157,9 @@ export default function PlaybackSlider() {
                 new DOMRect(tooltipPosition.left, tooltipPosition.top, 0, 0),
             },
           }}
+          arrow
           open={!!hoverValue}
-          placement="top-start"
+          placement="top"
           title={hoverValue ? getTooltipContent(hoverValue) : ""}
         >
           <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
