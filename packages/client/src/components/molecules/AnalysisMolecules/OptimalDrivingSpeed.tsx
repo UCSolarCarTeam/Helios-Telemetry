@@ -15,7 +15,7 @@ const OptimalSpeedSquare: React.FC<OptimalSpeedSquareProps> = ({
   percent,
   rightNumber,
 }) => (
-  <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
+  <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-background-stats-tab px-4">
     <p className="text-center text-base font-normal sm:text-lg lg:text-xl">
       Optimal Driving Speed At&nbsp;
       <span className="text-primary">{percent}%</span>

@@ -9,12 +9,12 @@ interface MotorEfficiencySquareProps {
 const MotorEfficiencySquare: React.FC<MotorEfficiencySquareProps> = ({
   infoNumber,
 }) => (
-  <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-[#BFBFBF] px-4">
+  <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-background-stats-tab px-4">
     <p className="text-center text-lg font-normal">
       Motor Efficiency at&nbsp;
       <span className="text-primary">{infoNumber}%</span>
     </p>
-    <div className="flex w-[15rem] items-center justify-center">
+    <div className="flex w-60 items-center justify-center">
       <DonutChartRect
         circ={360}
         fontSize="2rem"

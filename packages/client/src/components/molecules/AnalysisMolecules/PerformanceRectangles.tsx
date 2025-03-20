@@ -26,7 +26,7 @@ const PerformanceRectangles: React.FC<PerformanceRectanglesProps> = ({
   epRight,
 }) => (
   <div className="flex flex-col items-center gap-4 sm:flex-row xl:flex-col custom:flex-row">
-    <div className="h-[6.68rem] w-[17.81rem] rounded-2xl bg-[#BFBFBF]">
+    <div className="h-[6.68rem] w-[17.81rem] rounded-2xl bg-background-stats-tab">
       <p className="mt-2 text-center text-sm font-normal leading-[1.3rem] sm:text-base md:text-lg">
         Driver Performance Score
       </p>

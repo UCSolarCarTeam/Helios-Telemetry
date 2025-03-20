@@ -71,47 +71,49 @@ interface ShapeProps {
   linePercentage: number;
 }
 
-const StatsContainer: React.FC<ShapeProps> = ({
-  OptimalDrivingSpeed,
-  dpsLeft,
-  dpsRight,
-  driverPerfScore,
-  eodPredictor1,
-  eodPredictor2,
-  ep2Left,
-  ep2Right,
-  epLeft,
-  epRight,
-  infoNumber,
-  leftNumber,
-  linePercentage,
-  percent,
-  rightNumber,
-}) => {
+const statsProps: ShapeProps = {
+  OptimalDrivingSpeed: 50,
+  dpsLeft: 28,
+  dpsRight: 97,
+  driverPerfScore: 83,
+  eodPredictor1: 74,
+  eodPredictor2: 89,
+  ep2Left: 57,
+  ep2Right: 104,
+  epLeft: 135,
+  epRight: 269,
+  infoNumber: 78,
+  leftNumber: 46,
+  linePercentage: 40,
+  percent: 38,
+  rightNumber: 55,
+};
+
+const StatsContainer: React.FC<ShapeProps> = ({ ...statsProps }) => {
   return (
     <div className="flex flex-wrap items-center justify-center gap-4">
       <div className="flex flex-col items-center gap-4 sm:flex-row">
         <OptimalSpeedSquare
-          OptimalDrivingSpeed={OptimalDrivingSpeed}
-          leftNumber={leftNumber}
-          linePercentage={linePercentage}
-          percent={percent}
-          rightNumber={rightNumber}
+          OptimalDrivingSpeed={statsProps.OptimalDrivingSpeed}
+          leftNumber={statsProps.leftNumber}
+          linePercentage={statsProps.linePercentage}
+          percent={statsProps.percent}
+          rightNumber={statsProps.rightNumber}
         />
 
-        <MotorEfficiencySquare infoNumber={infoNumber} />
+        <MotorEfficiencySquare infoNumber={statsProps.infoNumber} />
       </div>
 
       <PerformanceRectangles
-        dpsLeft={dpsLeft}
-        dpsRight={dpsRight}
-        driverPerfScore={driverPerfScore}
-        eodPredictor1={eodPredictor1}
-        eodPredictor2={eodPredictor2}
-        ep2Left={ep2Left}
-        ep2Right={ep2Right}
-        epLeft={epLeft}
-        epRight={epRight}
+        dpsLeft={statsProps.dpsLeft}
+        dpsRight={statsProps.dpsRight}
+        driverPerfScore={statsProps.driverPerfScore}
+        eodPredictor1={statsProps.eodPredictor1}
+        eodPredictor2={statsProps.eodPredictor2}
+        ep2Left={statsProps.ep2Left}
+        ep2Right={statsProps.ep2Right}
+        epLeft={statsProps.epLeft}
+        epRight={statsProps.epRight}
       />
     </div>
   );
@@ -206,23 +208,7 @@ function AnalysisTab() {
             </div>
           </TabContent>
           <TabContent index={1} value={value}>
-            <StatsContainer
-              OptimalDrivingSpeed={50}
-              dpsLeft={28}
-              dpsRight={97}
-              driverPerfScore={83}
-              eodPredictor1={74}
-              eodPredictor2={89}
-              ep2Left={57}
-              ep2Right={104}
-              epLeft={135}
-              epRight={269}
-              infoNumber={78}
-              leftNumber={46}
-              linePercentage={40}
-              percent={38}
-              rightNumber={55}
-            />
+            <StatsContainer {...statsProps} />
           </TabContent>
         </div>
       </div>
