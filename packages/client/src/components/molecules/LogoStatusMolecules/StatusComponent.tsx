@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import AWSIcon from "@/components/atoms/AWSIcon";
@@ -6,7 +7,48 @@ import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { Switch } from "@mantine/core";
+import { DateInput, DatePickerInput, TimeInput } from "@mantine/dates";
 
+function PlaybackPickerComponent() {
+  const { currentAppState, setCurrentAppState } = useAppState();
+
+  return (
+    <div className="flex w-full flex-col items-start gap-2">
+      <div className="flex items-center justify-center gap-2">
+        <span className="pr-3">Playback: </span>
+        <Switch
+          checked={currentAppState.playbackSwitch}
+          color="red"
+          onClick={() =>
+            setCurrentAppState((prevState) => ({
+              ...prevState,
+              playbackSwitch: !prevState.playbackSwitch,
+            }))
+          }
+        />
+      </div>
+
+      {currentAppState.playbackSwitch && (
+        <>
+          {/* <Modal
+              aria-describedby="modal-modal-description"
+              aria-labelledby="modal-modal-title"
+              className="flex flex-grow items-center justify-center"
+              onClose={() => setShowModal(false)}
+              open={showModal}
+            >
+              <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none sm:max-w-[75%]">
+                <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
+                  There is no data for this date
+                </h5>{" "}
+              </div>
+            </Modal> */}
+        </>
+      )}
+    </div>
+  );
+}
 function StatusComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
@@ -67,22 +109,7 @@ function StatusComponent() {
           </h5>
         )}
       </div>
-      <div className="flex items-center gap-x-1">
-        <span className="pr-3">Playback: </span>
-        <button
-          className={`bordertransition-colors relative h-6 w-12 cursor-pointer rounded-full ${currentAppState.playbackSwitch ? "bg-helios" : "bg-gray-400"}`}
-          onClick={() =>
-            setCurrentAppState((prevState) => ({
-              ...prevState,
-              playbackSwitch: !prevState.playbackSwitch,
-            }))
-          }
-        >
-          <div
-            className={`absolute left-1 top-1/2 size-4 -translate-y-1/2 translate-x-0 rounded-full bg-white transition-transform ${currentAppState.playbackSwitch ? "translate-x-6" : "translate-x-0"}`}
-          ></div>
-        </button>
-      </div>
+      <PlaybackPickerComponent />
     </div>
   );
 }

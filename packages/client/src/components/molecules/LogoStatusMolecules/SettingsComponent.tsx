@@ -5,6 +5,7 @@ import {
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
+import { TimeInput } from "@mantine/dates";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -21,10 +22,7 @@ function SettingsComponent() {
       inputMode: (typeof currentAppState)["darkMode"],
     ) => {
       if (inputMode !== null) {
-        setCurrentAppState((prev) => ({
-          ...prev,
-          darkMode: inputMode,
-        }));
+        setCurrentAppState((prev) => ({ ...prev, darkMode: inputMode }));
       }
     },
     [setCurrentAppState],
@@ -36,10 +34,7 @@ function SettingsComponent() {
       inputMode: (typeof currentAppState)["appUnits"],
     ) => {
       if (inputMode !== null) {
-        setCurrentAppState((prev) => ({
-          ...prev,
-          appUnits: inputMode,
-        }));
+        setCurrentAppState((prev) => ({ ...prev, appUnits: inputMode }));
       }
     },
     [setCurrentAppState],
@@ -48,10 +43,7 @@ function SettingsComponent() {
   const handleConnectionChange = useCallback(
     (event: React.MouseEvent<HTMLElement>, inputMode: CONNECTIONTYPES) => {
       if (inputMode !== null) {
-        setCurrentAppState((prev) => ({
-          ...prev,
-          connectionType: inputMode,
-        }));
+        setCurrentAppState((prev) => ({ ...prev, connectionType: inputMode }));
       }
     },
     [setCurrentAppState],
@@ -69,33 +61,6 @@ function SettingsComponent() {
 
   return (
     <div className="grid">
-      {currentAppState.playbackSwitch && (
-        <>
-          <div className="flex flex-col gap-2 py-1">
-            <input
-              className="max-w-32 rounded-md bg-[#BCBCBC] p-1 text-pink shadow-sm transition-all focus:outline-none"
-              id="playbackDate"
-              onChange={onDateChange}
-              type="date"
-              value={date}
-            />
-          </div>
-          <Modal
-            aria-describedby="modal-modal-description"
-            aria-labelledby="modal-modal-title"
-            className="flex flex-grow items-center justify-center"
-            onClose={() => setShowModal(false)}
-            open={showModal}
-          >
-            <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none sm:max-w-[75%]">
-              <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
-                There is no data for this date
-              </h5>{" "}
-            </div>
-          </Modal>
-        </>
-      )}
-
       <h2 className="text-text-gray dark:text-text-gray-dark w-fit cursor-pointer text-sm font-black">
         <SettingsIcon onClick={() => setOpen(true)} />
       </h2>
