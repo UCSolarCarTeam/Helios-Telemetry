@@ -300,6 +300,7 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
   actions: [
     "dynamodb:PutItem",
     "dynamodb:GetItem",
+    "dynamodb:UpdateItem",
     "dynamodb:Scan",
     "dynamodb:Query",
   ],
