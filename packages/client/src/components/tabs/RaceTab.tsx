@@ -27,6 +27,7 @@ import {
 const columnHelper = createColumnHelper<IFormattedLapData>();
 
 const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
+  Rfid: lapPacket.Rfid,
   data: {
     ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
     averagePackCurrent: parseFloat(
@@ -43,7 +44,6 @@ const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
     totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
     totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
   },
-  rfid: lapPacket.rfid,
   timestamp: lapPacket.timestamp,
 });
 
@@ -115,7 +115,7 @@ const columns = [
 ];
 
 function RaceTab() {
-  const [rfid, setDriverRFID] = useState<number | null>(null);
+  const [Rfid, setDriverRFID] = useState<number | null>(null);
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
   const { lapData } = useLapData();
@@ -138,7 +138,7 @@ function RaceTab() {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(String(rfid));
+    navigator.clipboard.writeText(String(Rfid));
     setCopy(1);
   };
 
@@ -147,7 +147,7 @@ function RaceTab() {
     setDriverRFID(newRFID);
     setCopy(0);
 
-    if (rfid == null || Number.isNaN(newRFID)) {
+    if (newRFID === null || Number.isNaN(newRFID)) {
       setFilteredLaps(lapData);
     } else {
       await fetchFilteredLaps(newRFID).then((response) => {
@@ -184,12 +184,13 @@ function RaceTab() {
     }
   };
 
-  const fetchFilteredLaps = async (rfid: number) => {
+  const fetchFilteredLaps = async (Rfid: number) => {
     try {
-      const response = await axios.get(`${prodURL}/driver/${rfid}`);
+      const response = await axios.get(`${prodURL}/driver/${Rfid}`);
       return response.data;
     } catch (error) {
-      return { error: "Error fetching drivers" };
+      setFilteredLaps([]);
+      return { error: "Error fetching driver laps" };
     }
   };
 
@@ -197,8 +198,8 @@ function RaceTab() {
     fetchDriverNames()
       .then((response) => {
         const driverData = response.data.map((driver: IDriverData) => ({
+          Rfid: driver.Rfid,
           driver: driver.driver,
-          rfid: driver.rfid,
         }));
         setDriverData(driverData);
       })
@@ -208,7 +209,9 @@ function RaceTab() {
   }, []);
 
   return (
-    <div className="m-4 flex flex-col justify-center gap-4">
+    <div className="m-3 flex flex-col justify-center gap-4">
+      <p className="-mb-2 font-bold text-helios">Lap Data</p>
+      <hr className="border-[1.4px] border-helios" />
       <div className="flex w-full flex-col items-center sm:flex-row">
         <div className="flex flex-row items-center gap-2">
           <Box className="min-w-[120px]" component="div">
@@ -249,19 +252,19 @@ function RaceTab() {
                     borderColor: "#963A56",
                   },
                 }}
-                value={rfid}
+                value={Rfid}
               >
                 <MenuItem value={NaN}>Show all data</MenuItem>
                 {driverData.map((driver) => (
-                  <MenuItem key={driver.rfid} value={driver.rfid}>
+                  <MenuItem key={driver.Rfid} value={driver.Rfid}>
                     {driver.driver ? `${driver.driver}` : `NO NAME`}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Box>
-          {rfid ? rfid : ""}
-          {rfid ? (
+          {Rfid ? Rfid : ""}
+          {Rfid ? (
             <button className="items-center" onClick={handleCopy}>
               {copy === 0 ? <ContentCopy /> : <ContentCopyTwoTone />}
             </button>
@@ -270,7 +273,13 @@ function RaceTab() {
           )}
           <div></div>
         </div>
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl
+          sx={{
+            display: "flex",
+            maxWidth: "100%",
+            minWidth: "16rem",
+          }}
+        >
           <InputLabel
             id="column-toggle-label"
             sx={{
@@ -281,6 +290,9 @@ function RaceTab() {
                 color: "#963A56",
               },
               color: "#963A56",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
             }}
           >
             Column
@@ -293,7 +305,7 @@ function RaceTab() {
             multiple
             onChange={handleChange}
             renderValue={(selected) => (
-              <Box className="flex flex-wrap gap-2" component="div">
+              <Box component="div">
                 {selected.map((value) => (
                   <Chip key={value} label={checkBoxFormatting(value)} />
                 ))}
@@ -333,7 +345,7 @@ function RaceTab() {
         </FormControl>
       </div>
 
-      <div className="grid max-h-[218px] w-full grid-cols-1 overflow-auto overflow-x-auto">
+      <div className="grid max-h-[200px] w-full grid-cols-1 overflow-auto overflow-x-auto">
         <table className="w-full border-separate border-spacing-0 divide-gray-200">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
