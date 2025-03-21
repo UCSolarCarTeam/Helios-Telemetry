@@ -1,132 +1,99 @@
-import type {
-  LngLatBounds,
-  LngLatBoundsLike,
-  Map as MapboxMap,
-} from "mapbox-gl";
+import type { FeatureCollection, LineString } from "geojson";
+import { LineLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
-import { type JSX, useEffect, useRef, useState } from "react";
-import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
-import ReactMapGL, { type MapLib, Marker } from "react-map-gl";
+import { type JSX, useCallback, useEffect, useRef, useState } from "react";
+import ReactMapGL, {
+  Layer,
+  LayerProps,
+  type MapLib,
+  MapRef,
+  Marker,
+  Popup,
+  Source,
+  SourceProps,
+  ViewState,
+} from "react-map-gl";
 
+import HeliosModel from "@/assets/HeliosBirdseye.png";
 import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
-import type { Coords } from "@shared/helios-types";
+import {
+  type Coords,
+  ITelemetryData,
+  calculateBearing,
+} from "@shared/helios-types";
 
+import MapControls from "./MapControls";
+import {
+  Hydrated_Grand_Full_course,
+  TRACK_LIST,
+  mapCameraControls,
+} from "./MapSetup";
+import PacketMarker from "./PacketMarker";
+
+const { distance, fitBounds, isOutsideBounds, lerp } = mapCameraControls;
 // @ts-expect-error:next-line
 type MapLibType = MapLib<mapboxgl.Map>;
 
-type IMapProps = {
+export type PacketMarkerData = {
+  data: ITelemetryData;
+  markerCoords: {
+    latitude: number;
+    longitude: number;
+  };
+  open: boolean;
+};
+export type TrackList = {
+  layerProps: LayerProps & Partial<LineLayerSpecification>;
+  sourceProps: SourceProps & {
+    data: FeatureCollection<LineString>;
+  };
+  trackName: string;
+};
+if (!process.env.NEXT_PUBLIC_MAPSAPIKEY)
+  throw new Error("Missing NEXT_PUBLIC_MAPSAPIKEY ");
+
+export default function Map({
+  carLocation,
+  lapLocation,
+}: {
   carLocation: Coords;
   lapLocation: Coords;
-};
-
-const fitToBounds = (
-  map: mapboxgl.Map,
-  carLocation: Coords,
-  lapLocation: Coords,
-) => {
-  if (!map) return;
-  const bounds: LngLatBoundsLike = [
-    [carLocation.long, carLocation.lat],
-    [lapLocation.long, lapLocation.lat],
-  ];
-
-  map.fitBounds(bounds, {
-    linear: true,
-    maxZoom: 16,
-    padding: { bottom: 35, left: 35, right: 35, top: 35 },
+}): JSX.Element {
+  const {
+    currentAppState: { darkMode },
+  } = useAppState();
+  const [viewState, setViewState] = useState<Partial<ViewState>>({
+    latitude: carLocation.lat,
+    longitude: carLocation.long,
+    zoom: 14,
   });
-};
-// linear interpolation for the animation for the car to catch up
-const lerp = (
-  startPosition: number,
-  endPosition: number,
-  timeOfAnimation: number,
-) => {
-  return startPosition * (1 - timeOfAnimation) + endPosition * timeOfAnimation;
-};
-
-const calculateBearing = (start: Coords, end: Coords): number => {
-  //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
-  const startLat = (start.lat * Math.PI) / 180; //convert to radians
-  const startLng = (start.long * Math.PI) / 180;
-  const endLat = (end.lat * Math.PI) / 180;
-  const endLng = (end.long * Math.PI) / 180;
-
-  const deltaLng = endLng - startLng;
-  const x = Math.sin(deltaLng) * Math.cos(endLat);
-  const y =
-    Math.cos(startLat) * Math.sin(endLat) -
-    Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
-
-  const bearing = (Math.atan2(x, y) * 180) / Math.PI;
-  return (bearing + 360) % 360; // Normalize to 0-360 degrees
-};
-
-function Map(props: IMapProps): JSX.Element {
-  const { currentAppState } = useAppState();
-  const { carLocation, lapLocation } = props;
-  const mapRef = useRef<MapboxMap | null>(null);
   const [mapStates, setMapStates] = useState({
-    centered: false,
+    centered: true,
     currentCarLocation: carLocation,
     satelliteMode: false,
   });
-  const buttonRef = useRef(null);
-
+  const [popupOpen, setPopupOpen] = useState(true);
+  const [viewTracks, setViewTracks] = useState(TRACK_LIST.map(() => true));
+  const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
+    Hydrated_Grand_Full_course,
+  );
+  const mapRef = useRef<MapRef | undefined>(undefined);
   useEffect(() => {
-    const isOutsideBounds = (coordinates: Coords[]): boolean => {
-      if (!mapRef.current) return false;
-      const bounds = mapRef.current?.getBounds() as LngLatBounds | undefined;
-      const { lat, lng } = bounds?.getNorthEast() || { lat: 0, lng: 0 };
-      const { lat: southLat, lng: westLng } = bounds?.getSouthWest() || {
-        lat: 0,
-        lng: 0,
-      };
-      if (coordinates === undefined) return false;
-      for (let i = 0; i < coordinates.length; i++) {
-        const coord = coordinates[i];
-        if (
-          coord &&
-          (coord.long < westLng ||
-            coord.long > lng ||
-            coord.lat < southLat ||
-            coord.lat > lat)
-        ) {
-          return true;
-        }
-      }
-      return false;
-    };
-    const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
-    if (isOutsideBounds(coordinates) && mapRef.current && !mapStates.centered) {
-      fitToBounds(mapRef.current, carLocation, lapLocation);
-    } else if (mapStates.centered && mapRef.current) {
-      mapRef.current.flyTo({
-        center: [carLocation.long, carLocation.lat],
-        curve: 1, // Adjust the curve of the animation
-        easing: (t) => t, // Easing function for the animation
-        speed: 1.5, // Adjust the speed of the animation
-        zoom: 16,
-      });
-    }
-  }, [carLocation, lapLocation, mapStates.centered]);
-
-  useEffect(() => {
+    const time = 1 / 60; // run at 60fps
     let animationFrameId: number;
     const animateCarMarker = () => {
       setMapStates((prevMapStates) => {
-        const t = 0.01;
         const newLat = lerp(
           prevMapStates.currentCarLocation.lat,
           carLocation.lat,
-          t,
+          time,
         );
         const newLng = lerp(
           prevMapStates.currentCarLocation.long,
           carLocation.long,
-          t,
+          time,
         );
         return {
           ...prevMapStates,
@@ -139,113 +106,154 @@ function Map(props: IMapProps): JSX.Element {
     return () => cancelAnimationFrame(animationFrameId);
   }, [carLocation]);
 
-  if (!process.env.NEXT_PUBLIC_MAPSAPIKEY) return <></>;
+  useEffect(() => {
+    const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
+    if (!mapRef.current) return;
+    const map = mapRef.current;
+    if (isOutsideBounds(map, coordinates) && !mapStates.centered) {
+      fitBounds(map, carLocation, lapLocation);
+    } else if (mapStates.centered) {
+      const dist = distance(
+        carLocation.lat,
+        carLocation.long,
+        map.getCenter().lat,
+        map.getCenter().lng,
+      );
+      const speedFactor = 80;
+      map.flyTo({
+        center: [carLocation.long, carLocation.lat],
+        curve: 1, // Adjust the curve of the animation
+        easing: (t) => t, // Easing function for the animation
+        speed: speedFactor * dist,
+        zoom: 16,
+      });
+    }
+  }, [carLocation, lapLocation, mapStates.centered]);
 
-  const toggleMapStyle = () => {
+  const toggleMapStyle = useCallback(() => {
     setMapStates((prev) => ({ ...prev, satelliteMode: !prev.satelliteMode }));
-  };
+  }, [setMapStates]);
 
-  const toggleCentred = () => {
+  const toggleCentred = useCallback(() => {
     setMapStates((prev) => ({ ...prev, centered: !prev.centered }));
-  };
+  }, [setMapStates]);
+  const onMouseEnterDataPoint = useCallback(
+    (index: number) => {
+      setDataPoints((prevDataPoints) =>
+        prevDataPoints.map((point, i) =>
+          i === index ? { ...point, open: true } : point,
+        ),
+      );
+    },
+    [setDataPoints],
+  );
+  const onMouseLeaveDataPoint = useCallback(
+    (index: number) => {
+      setDataPoints((prevDataPoints) =>
+        prevDataPoints.map((point, i) =>
+          i === index ? { ...point, open: false } : point,
+        ),
+      );
+    },
+    [setDataPoints],
+  );
 
   return (
-    <>
-      <div className="relative size-full">
-        <div className="absolute z-10 flex flex-col space-x-14 space-y-0 p-2">
-          <button
-            className={`absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border-none ${currentAppState.darkMode === true ? "bg-dark text-dark" : "bg-light text-light"}`}
-            onClick={() => {
-              toggleMapStyle();
-            }}
-            ref={buttonRef}
-          >
-            {mapStates.satelliteMode === true ? (
-              <FaSatellite
-                className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"} h-6 text-[1rem] leading-[0.3rem]`}
-              />
-            ) : (
-              <FaLayerGroup
-                className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"} h-6 text-[1rem] leading-[0.3rem]`}
-              />
-            )}
-          </button>
-
-          <button
-            className={`absolute z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border-none ${currentAppState.darkMode === true ? "bg-dark text-dark" : "bg-light text-light"}`}
-            onClick={() => {
-              toggleCentred();
-            }}
-          >
-            <FaLocationArrow
-              className={`text-xl ${currentAppState.darkMode === true ? "text-dark" : "text-light"} h-6 text-[1rem] leading-[0.3rem]`}
-            />
-          </button>
-        </div>
-        <ReactMapGL
-          boxZoom={false}
-          doubleClickZoom={false}
-          dragPan={true}
-          dragRotate={true}
-          initialViewState={{
-            latitude: carLocation.lat,
-            longitude: carLocation.long,
-            zoom: 14,
-          }}
-          keyboard={false}
-          mapLib={import("mapbox-gl") as Promise<MapLibType>}
-          mapStyle={
-            mapStates.satelliteMode
-              ? "mapbox://styles/mapbox/satellite-streets-v12"
-              : currentAppState.darkMode
-                ? "mapbox://styles/mapbox/dark-v11"
-                : "mapbox://styles/mapbox/light-v11"
+    <div className="relative size-full">
+      <ReactMapGL
+        boxZoom={false}
+        doubleClickZoom={false}
+        dragPan
+        dragRotate
+        keyboard={false}
+        mapLib={import("mapbox-gl") as Promise<MapLibType>}
+        mapStyle={
+          mapStates.satelliteMode
+            ? "mapbox://styles/mapbox/satellite-streets-v12"
+            : darkMode
+              ? "mapbox://styles/mapbox/dark-v11"
+              : "mapbox://styles/mapbox/light-v11"
+        }
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
+        onLoad={() => {
+          if (!mapRef.current) return;
+          fitBounds(mapRef.current, carLocation, lapLocation);
+        }}
+        onMove={(evt) => setViewState(evt.viewState)}
+        ref={(instance) => {
+          if (instance) {
+            mapRef.current = instance;
           }
-          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPSAPIKEY}
-          onLoad={(e) => {
-            const mapInstance = e.target;
-            fitToBounds(mapInstance as mapboxgl.Map, carLocation, lapLocation);
-          }}
-          ref={(instance) => {
-            if (instance) {
-              mapRef.current = instance.getMap();
-            }
-          }}
-          scrollZoom={true}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <Marker
+        }}
+        scrollZoom
+        {...viewState}
+        style={{ height: "100%", width: "100%" }}
+      >
+        {popupOpen && (
+          <Popup
             latitude={mapStates.currentCarLocation.lat}
             longitude={mapStates.currentCarLocation.long}
           >
-            <Image
-              alt="map-pin"
-              height={50}
-              src="/assets/HeliosBirdseye.png"
-              style={{
-                transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
-              }}
-              width={20}
-            />
-          </Marker>
-          <Marker
-            latitude={lapLocation.lat}
-            longitude={lapLocation.long}
+            You are here
+          </Popup>
+        )}
+        <Marker
+          latitude={mapStates.currentCarLocation.lat}
+          longitude={mapStates.currentCarLocation.long}
+          onClick={(e) => e.originalEvent.stopPropagation()}
+        >
+          <Image
+            alt="map-pin"
+            height={50}
+            onMouseEnter={() => setPopupOpen(true)}
+            onMouseLeave={() => setPopupOpen(false)}
+            src={HeliosModel}
             style={{
-              color:
-                mapStates.satelliteMode === true
-                  ? "white"
-                  : currentAppState.darkMode === true
-                    ? "white"
-                    : "black",
+              transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
             }}
-          >
-            <SportsScoreIcon />
-          </Marker>
-        </ReactMapGL>
-      </div>
-    </>
+            width={20}
+          />
+        </Marker>
+        <Marker
+          latitude={lapLocation.lat}
+          longitude={lapLocation.long}
+          style={{
+            color: mapStates.satelliteMode
+              ? "white"
+              : darkMode
+                ? "white"
+                : "black",
+          }}
+        >
+          <SportsScoreIcon />
+        </Marker>
+        {dataPoints.map((packetMarker, index) => (
+          <PacketMarker
+            index={index}
+            key={packetMarker.data.TimeStamp}
+            onMouseEnterDataPoint={onMouseEnterDataPoint}
+            onMouseLeaveDataPoint={onMouseLeaveDataPoint}
+            packetMarker={packetMarker}
+            setDataPoints={setDataPoints}
+          />
+        ))}
+        {TRACK_LIST.map(({ layerProps, sourceProps }, index) => {
+          if (!viewTracks[index]) return null;
+          return (
+            <Source {...sourceProps} key={sourceProps.id}>
+              <Layer {...layerProps} />
+            </Source>
+          );
+        })}
+      </ReactMapGL>
+      <MapControls
+        mapStates={mapStates}
+        setViewTracks={setViewTracks}
+        toggleCentred={toggleCentred}
+        toggleMapStyle={toggleMapStyle}
+        trackList={TRACK_LIST}
+        viewTracks={viewTracks}
+      />
+    </div>
   );
 }
-
-export default Map;
