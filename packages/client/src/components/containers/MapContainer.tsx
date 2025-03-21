@@ -4,19 +4,26 @@ import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { Coords } from "@shared/helios-types";
 
-import { GEO_DATA } from "../molecules/MapMolecules/ExampleCoordinates";
+import { GEO_DATA } from "../molecules/MapMolecules/MapSetup";
 
 const {
   raceTrackGeoJSON_GRAND_FULL_COURSE: { features },
 } = GEO_DATA;
 const TRACK_COORDINATES = features[0].geometry.coordinates;
+const startingLocation: Coords = {
+  lat: TRACK_COORDINATES[0]![1]!,
+  long: TRACK_COORDINATES[0]![0]!,
+};
 function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
   const { currentPacket } = usePacket();
 
   const isDemo = currentAppState.connectionType === "DEMO";
-  const [carLocation, setCarLocation] = useState(currentAppState.lapCoords);
+  const [carLocation, setCarLocation] = useState(
+    isDemo ? startingLocation : currentAppState.lapCoords,
+  );
   useEffect(() => {
     if (isDemo) {
       let positionPacket = 0;

@@ -2,12 +2,12 @@ import { Marker, Popup } from "react-map-gl";
 
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 
-import type { PacketMarker } from "./Map";
+import type { PacketMarkerData } from "./Map";
 
 export default function PacketMarker(props: {
-  packetMarker: PacketMarker;
+  packetMarker: PacketMarkerData;
   index: number;
-  setDataPoints: React.Dispatch<React.SetStateAction<PacketMarker[]>>;
+  setDataPoints: React.Dispatch<React.SetStateAction<PacketMarkerData[]>>;
   onMouseEnterDataPoint: (index: number) => void;
   onMouseLeaveDataPoint: (index: number) => void;
 }): JSX.Element {

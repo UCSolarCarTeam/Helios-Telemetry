@@ -18,22 +18,31 @@ import ReactMapGL, {
 import HeliosModel from "@/assets/HeliosBirdseye.png";
 import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
-import type { Coords, ITelemetryData } from "@shared/helios-types";
+import {
+  type Coords,
+  ITelemetryData,
+  calculateBearing,
+} from "@shared/helios-types";
 
-import { GEO_DATA } from "./ExampleCoordinates";
-import { mapCameraControls } from "./MapControls";
 import MapControls from "./MapControls";
+import {
+  Hydrated_Grand_Full_course,
+  TRACK_LIST,
+  mapCameraControls,
+} from "./MapSetup";
 import PacketMarker from "./PacketMarker";
-import { Hydrated_Grand_Full_course } from "./test";
 
-const { calculateBearing, distance, fitBounds, isOutsideBounds, lerp } =
-  mapCameraControls;
+const { distance, fitBounds, isOutsideBounds, lerp } = mapCameraControls;
 // @ts-expect-error:next-line
 type MapLibType = MapLib<mapboxgl.Map>;
-export type MapStates = {
-  centered: boolean;
-  currentCarLocation: Coords;
-  satelliteMode: boolean;
+
+export type PacketMarkerData = {
+  data: ITelemetryData;
+  markerCoords: {
+    latitude: number;
+    longitude: number;
+  };
+  open: boolean;
 };
 export type TrackList = {
   layerProps: LayerProps & Partial<LineLayerSpecification>;
@@ -44,69 +53,7 @@ export type TrackList = {
 };
 if (!process.env.NEXT_PUBLIC_MAPSAPIKEY)
   throw new Error("Missing NEXT_PUBLIC_MAPSAPIKEY ");
-const {
-  raceTrackGeoJSON_CORVETTE_RACE_LOOP,
-  raceTrackGeoJSON_GRAND_FULL_COURSE,
-  raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
-} = GEO_DATA;
-const trackLayerStyle: LayerProps = {
-  layout: {
-    "line-cap": "round",
-    "line-join": "round",
-  },
-  paint: {
-    "line-color": "#ff0000", // Red color for the track
-    "line-width": 4, // Thickness of the track
-  },
-  type: "line",
-};
 
-const trackList: TrackList[] = [
-  {
-    layerProps: {
-      ...trackLayerStyle,
-      paint: { ...trackLayerStyle.paint, "line-color": "#ff0000" },
-    },
-    sourceProps: {
-      data: raceTrackGeoJSON_CORVETTE_RACE_LOOP,
-      id: "layer1",
-      type: "geojson",
-    },
-    trackName: "Corvette Race Loop",
-  },
-  {
-    layerProps: {
-      ...trackLayerStyle,
-      paint: { ...trackLayerStyle.paint, "line-color": "#0f00ff" },
-    },
-    sourceProps: {
-      data: raceTrackGeoJSON_GRAND_FULL_COURSE,
-      id: "layer2",
-      type: "geojson",
-    },
-    trackName: "Grand Full Course",
-  },
-  {
-    layerProps: {
-      ...trackLayerStyle,
-      paint: { ...trackLayerStyle.paint, "line-color": "#ff00ff" },
-    },
-    sourceProps: {
-      data: raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
-      id: "layer3",
-      type: "geojson",
-    },
-    trackName: "Grand Max Straight",
-  },
-] as const;
-export type PacketMarker = {
-  data: ITelemetryData;
-  markerCoords: {
-    latitude: number;
-    longitude: number;
-  };
-  open: boolean;
-};
 export default function Map({
   carLocation,
   lapLocation,
@@ -128,16 +75,16 @@ export default function Map({
     satelliteMode: false,
   });
   const [popupOpen, setPopupOpen] = useState(true);
-  const [viewTracks, setViewTracks] = useState(trackList.map(() => true));
-  const [dataPoints, setDataPoints] = useState<PacketMarker[]>(
+  const [viewTracks, setViewTracks] = useState(TRACK_LIST.map(() => true));
+  const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
     Hydrated_Grand_Full_course,
   );
   const mapRef = useRef<MapRef | undefined>(undefined);
   useEffect(() => {
+    const time = 1 / 60; // run at 60fps
     let animationFrameId: number;
     const animateCarMarker = () => {
       setMapStates((prevMapStates) => {
-        const time = 0.01;
         const newLat = lerp(
           prevMapStates.currentCarLocation.lat,
           carLocation.lat,
@@ -290,7 +237,7 @@ export default function Map({
             setDataPoints={setDataPoints}
           />
         ))}
-        {trackList.map(({ layerProps, sourceProps }, index) => {
+        {TRACK_LIST.map(({ layerProps, sourceProps }, index) => {
           if (!viewTracks[index]) return null;
           return (
             <Source {...sourceProps} key={sourceProps.id}>
@@ -304,7 +251,7 @@ export default function Map({
         setViewTracks={setViewTracks}
         toggleCentred={toggleCentred}
         toggleMapStyle={toggleMapStyle}
-        trackList={trackList}
+        trackList={TRACK_LIST}
         viewTracks={viewTracks}
       />
     </div>

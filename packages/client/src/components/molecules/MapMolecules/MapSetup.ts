@@ -1,4 +1,11 @@
 import { FeatureCollection, LineString } from "geojson";
+import { LayerProps, MapRef } from "react-map-gl";
+
+import { Coords } from "@shared/helios-types";
+import { generateFakeTelemetryData } from "@shared/helios-types";
+
+import { TrackList } from "./Map";
+import { PacketMarkerData } from "./Map";
 
 // Created from here: https://www.scribblemaps.com/create#/lat=36.0164938&lng=-86.99736354&z=14&t=hybrid
 const RANDOM_TRACK = [
@@ -1206,6 +1213,73 @@ const raceTrackGeoJSON_GRAND_FULL_COURSE = {
   ],
   type: "FeatureCollection",
 } as const satisfies FeatureCollection<LineString>;
+
+const trackLayerStyle: LayerProps = {
+  layout: {
+    "line-cap": "round",
+    "line-join": "round",
+  },
+  paint: {
+    "line-color": "#ff0000", // Red color for the track
+    "line-width": 4, // Thickness of the track
+  },
+  type: "line",
+};
+
+/**
+ * Calculates the linear interpolation (lerp) between two numbers.
+ * @param startPosition - The starting value.
+ * @param endPosition - The ending value.
+ * @param timeOfAnimation - The ratio (between 0 and 1) representing the progress between start and end.
+ * @returns The interpolated value between startPosition and endPosition.
+ */
+const lerp = (
+  startPosition: number,
+  endPosition: number,
+  timeOfAnimation: number,
+) => {
+  return startPosition * (1 - timeOfAnimation) + endPosition * timeOfAnimation;
+};
+
+const fitBounds = (
+  mapRef: MapRef | undefined,
+  coordsA: Coords,
+  coordsB: Coords,
+) => {
+  if (!mapRef) return;
+  mapRef.fitBounds(
+    [
+      [coordsA.long, coordsA.lat],
+      [coordsB.long, coordsB.lat],
+    ],
+    {
+      linear: true,
+      maxZoom: 16,
+      padding: { bottom: 35, left: 35, right: 35, top: 35 },
+    },
+  );
+};
+const isOutsideBounds = (
+  mapRef: MapRef | undefined,
+  coordinates: Coords[],
+): boolean => {
+  if (!mapRef || !coordinates) return false;
+  const bounds = mapRef.getBounds();
+  if (!bounds) return false;
+  const { lat: northLat, lng: eastLng } = bounds.getNorthEast();
+  const { lat: southLat, lng: westLng } = bounds.getSouthWest();
+  coordinates.forEach((coord) => {
+    if (
+      coord.long < westLng ||
+      coord.long > eastLng ||
+      coord.lat < southLat ||
+      coord.lat > northLat
+    ) {
+      return true;
+    }
+  });
+  return false;
+};
 export const GEO_DATA = {
   raceTrackGeoJSON,
   raceTrackGeoJSON2,
@@ -1213,3 +1287,66 @@ export const GEO_DATA = {
   raceTrackGeoJSON_GRAND_FULL_COURSE,
   raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
 };
+export const TRACK_LIST: TrackList[] = [
+  {
+    layerProps: {
+      ...trackLayerStyle,
+      paint: { ...trackLayerStyle.paint, "line-color": "#ff0000" },
+    },
+    sourceProps: {
+      data: raceTrackGeoJSON_CORVETTE_RACE_LOOP,
+      id: "layer1",
+      type: "geojson",
+    },
+    trackName: "Corvette Race Loop",
+  },
+  {
+    layerProps: {
+      ...trackLayerStyle,
+      paint: { ...trackLayerStyle.paint, "line-color": "#0f00ff" },
+    },
+    sourceProps: {
+      data: raceTrackGeoJSON_GRAND_FULL_COURSE,
+      id: "layer2",
+      type: "geojson",
+    },
+    trackName: "Grand Full Course",
+  },
+  {
+    layerProps: {
+      ...trackLayerStyle,
+      paint: { ...trackLayerStyle.paint, "line-color": "#ff00ff" },
+    },
+    sourceProps: {
+      data: raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
+      id: "layer3",
+      type: "geojson",
+    },
+    trackName: "Grand Max Straight",
+  },
+] as const;
+
+const distance = (x1: number, y1: number, x2: number, y2: number): number => {
+  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+};
+export const mapCameraControls = {
+  distance,
+  fitBounds,
+  isOutsideBounds,
+  lerp,
+};
+
+export const Hydrated_Grand_Full_course: PacketMarkerData[] =
+  raceTrackGeoJSON_GRAND_FULL_COURSE.features[0].geometry.coordinates.map(
+    (coords) => {
+      const newPacketMarker: PacketMarkerData = {
+        data: generateFakeTelemetryData(),
+        markerCoords: {
+          latitude: coords[1]!,
+          longitude: coords[0]!,
+        },
+        open: false,
+      };
+      return newPacketMarker;
+    },
+  );

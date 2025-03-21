@@ -1,13 +1,18 @@
 import React, { useMemo } from "react";
 import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { MapRef } from "react-map-gl";
 import { twMerge } from "tailwind-merge";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import { Coords } from "@shared/helios-types/src/types";
 
-import { MapStates, TrackList } from "./Map";
+import { TrackList } from "./Map";
+
+type MapStates = {
+  centered: boolean;
+  currentCarLocation: Coords;
+  satelliteMode: boolean;
+};
 
 export default function MapControls({
   mapStates,
@@ -93,79 +98,3 @@ export default function MapControls({
     </div>
   );
 }
-
-const lerp = (
-  startPosition: number,
-  endPosition: number,
-  timeOfAnimation: number,
-) => {
-  return startPosition * (1 - timeOfAnimation) + endPosition * timeOfAnimation;
-};
-const calculateBearing = (start: Coords, end: Coords): number => {
-  //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
-  const startLat = (start.lat * Math.PI) / 180; //convert to radians
-  const startLng = (start.long * Math.PI) / 180;
-  const endLat = (end.lat * Math.PI) / 180;
-  const endLng = (end.long * Math.PI) / 180;
-
-  const deltaLng = endLng - startLng;
-  const x = Math.sin(deltaLng) * Math.cos(endLat);
-  const y =
-    Math.cos(startLat) * Math.sin(endLat) -
-    Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
-
-  const bearing = (Math.atan2(x, y) * 180) / Math.PI;
-  return (bearing + 360) % 360; // Normalize to 0-360 degrees
-};
-
-const fitBounds = (
-  mapRef: MapRef | undefined,
-  coordsA: Coords,
-  coordsB: Coords,
-) => {
-  if (!mapRef) return;
-  mapRef.fitBounds(
-    [
-      [coordsA.long, coordsA.lat],
-      [coordsB.long, coordsB.lat],
-    ],
-    {
-      linear: true,
-      maxZoom: 16,
-      padding: { bottom: 35, left: 35, right: 35, top: 35 },
-    },
-  );
-};
-const isOutsideBounds = (
-  mapRef: MapRef | undefined,
-  coordinates: Coords[],
-): boolean => {
-  if (!mapRef || !coordinates) return false;
-  const bounds = mapRef.getBounds();
-  if (!bounds) return false;
-  const { lat: northLat, lng: eastLng } = bounds.getNorthEast();
-  const { lat: southLat, lng: westLng } = bounds.getSouthWest();
-  coordinates.forEach((coord) => {
-    if (
-      coord.long < westLng ||
-      coord.long > eastLng ||
-      coord.lat < southLat ||
-      coord.lat > northLat
-    ) {
-      return true;
-    }
-  });
-  return false;
-};
-
-const distance = (x1: number, y1: number, x2: number, y2: number): number => {
-  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-};
-
-export const mapCameraControls = {
-  calculateBearing,
-  distance,
-  fitBounds,
-  isOutsideBounds,
-  lerp,
-};
