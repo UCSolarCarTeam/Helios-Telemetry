@@ -406,6 +406,7 @@ export interface ILapData {
     averageSpeed: number;
     batterySecondsRemaining: number;
     distance: number;
+    energyConsumed: number;
     lapTime: number;
     netPowerOut: number;
     timeStamp: number;
@@ -424,6 +425,7 @@ export class LapData {
     totalPowerOut: number,
     netPowerOut: number,
     distance: number,
+    energyConsumed: number,
     amphours: number,
     averagePackCurrent: number,
     batterySecondsRemaining: number,
@@ -435,6 +437,7 @@ export class LapData {
     this.totalPowerOut = totalPowerOut;
     this.netPowerOut = netPowerOut;
     this.distance = distance;
+    this.energyConsumed = energyConsumed;
     this.amphours = amphours;
     this.averagePackCurrent = averagePackCurrent;
     this.batterySecondsRemaining = batterySecondsRemaining;
@@ -449,6 +452,7 @@ export class LapData {
   netPowerOut = -1;
   distance = -1;
   amphours = -1;
+  energyConsumed = -1;
   averagePackCurrent = -1;
   batterySecondsRemaining = -1;
   lapsRemaining = -1;
@@ -768,6 +772,7 @@ export interface IFormattedLapData {
     averageSpeed: number;
     batterySecondsRemaining: number;
     distance: number;
+    energyConsumed: number;
     lapTime: number;
     netPowerOut: number;
     timeStamp: string;
