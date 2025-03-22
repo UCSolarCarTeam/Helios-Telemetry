@@ -44,8 +44,8 @@ export class SocketIO implements SocketIOType {
   public broadcastLapData(lapData: ILapData) {
     this.io.emit("lapData", lapData);
   }
-  public broadcastLapComplete(lapTime: number) {
-    this.io.emit("lapComplete", lapTime);
+  public broadcastLapComplete() {
+    this.io.emit("lapComplete");
   }
   public broadcastCarLatency(latency: number) {
     this.io.emit("carLatency", latency);

@@ -58,14 +58,12 @@ export class LapController implements LapControllerType {
 
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.socketIO.broadcastLapComplete(
-      lapData.data.lapTime,
-    );
     await this.backendController.dynamoDB.insertLapData(lapData);
   }
 
   public async handlePacket(packet: ITelemetryData) {
     if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
+      await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
@@ -109,15 +107,15 @@ export class LapController implements LapControllerType {
 
   //checks if lap has been acheived
   private checkLap(packet: ITelemetryData) {
-    const carLocation = {
-      lat: 51.081021,
-      long: -114.136084,
-    };
+    // const carLocation = {
+    //   lat: 51.081021,
+    //   long: -114.136084,
+    // };
 
     const inProximity =
       getDistance(
-        carLocation.lat,
-        carLocation.long,
+        packet.Telemetry.GpsLatitude,
+        packet.Telemetry.GpsLongitude,
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
       ) <= 0.01;
