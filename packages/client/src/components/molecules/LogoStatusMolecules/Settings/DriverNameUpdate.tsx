@@ -13,14 +13,14 @@ import { IDriverNameUpdate } from "@shared/helios-types";
 import { prodURL } from "@shared/helios-types";
 
 const driverDetailsText: IDriverNameUpdate = {
+  Rfid: "Rfid",
   name: "Name",
-  rfid: "RFID",
 } as const;
 
 export default function DriverUpdate() {
   const [driverDetails, setDriverDetails] = useState<IDriverNameUpdate>({
+    Rfid: "",
     name: "",
-    rfid: "",
   });
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -46,12 +46,12 @@ export default function DriverUpdate() {
     }
 
     if (
-      typeof driverDetails.rfid !== "string" ||
-      driverDetails.rfid.trim() === "" ||
-      isNaN(Number(driverDetails.rfid))
+      typeof driverDetails.Rfid !== "string" ||
+      driverDetails.Rfid.trim() === "" ||
+      isNaN(Number(driverDetails.Rfid))
     ) {
-      newErrors.add("rfid");
-      newErrorMessages.rfid = "RFID must not be empty and must be a number.";
+      newErrors.add("Rfid");
+      newErrorMessages.Rfid = "Rfid must not be empty and must be a number.";
     }
 
     setErrors(newErrors);
@@ -81,8 +81,8 @@ export default function DriverUpdate() {
       if (await checkMQTTPassword()) {
         axios
           .post(`${prodURL}/updatedriverinfo`, {
+            Rfid: driverDetails.Rfid,
             name: driverDetails.name,
-            rfid: driverDetails.rfid,
           })
           .then((res) => {
             if (res.status === 200) {

@@ -74,6 +74,7 @@ export class LapController implements LapControllerType {
       );
 
       const lapData: ILapData = {
+        Rfid: packet.Pi.Rfid,
         data: {
           ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
           averagePackCurrent: averagePackCurrent,
@@ -91,7 +92,6 @@ export class LapController implements LapControllerType {
           totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
           totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
         },
-        rfid: packet.Pi.rfid,
         timestamp: packet.TimeStamp,
       };
       this.handleLapData(lapData);
