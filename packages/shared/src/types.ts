@@ -20,7 +20,7 @@ export interface CoordInfoUpdate {
 
 export interface IDriverNameUpdate {
   name: string;
-  rfid: string;
+  Rfid: string;
 }
 
 enum Motor {
@@ -381,7 +381,7 @@ export const ITelemetryDataType = t.exact(
     MotorDetails1: IMotorDetailsType,
     Pi: t.exact(
       t.type({
-        rfid: t.number,
+        Rfid: t.number,
       }),
     ),
     ProximitySensors: IProximitySensorsType,
@@ -396,7 +396,7 @@ export type ITelemetryData = t.TypeOf<typeof ITelemetryDataType>;
 //old data type definitions
 export interface IDriverData {
   driver: string;
-  rfid: string;
+  Rfid: string;
 }
 
 export interface ILapData {
@@ -412,7 +412,7 @@ export interface ILapData {
     totalPowerIn: number;
     totalPowerOut: number;
   };
-  rfid: number;
+  Rfid: number;
   timestamp: number;
 }
 
@@ -456,7 +456,7 @@ export class LapData {
 }
 
 export interface IPi {
-  rfid: number;
+  Rfid: number;
 }
 
 export interface IB3 {
@@ -775,5 +775,5 @@ export interface IFormattedLapData {
     totalPowerOut: number;
   };
   timestamp: number;
-  rfid: number;
+  Rfid: number;
 }
