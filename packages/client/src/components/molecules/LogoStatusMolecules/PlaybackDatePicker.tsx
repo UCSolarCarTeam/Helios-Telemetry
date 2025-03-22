@@ -9,6 +9,12 @@ import { ITelemetryData, prodURL } from "@shared/helios-types";
 
 export type IPlaybackDateTime = { date: Date; startTime: Date; endTime: Date };
 
+interface IPlaybackDynamoResponse {
+  data: ITelemetryData[];
+  id: string;
+  timestamp: number;
+}
+
 function PlaybackDatePicker() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const [open, setOpen] = useState(false);
@@ -58,7 +64,8 @@ function PlaybackDatePicker() {
       })
       .then((response) => {
         const sortedData = response.data.data.sort(
-          (a, b) => a.timestamp - b.timestamp,
+          (a: IPlaybackDynamoResponse, b: IPlaybackDynamoResponse) =>
+            a.timestamp - b.timestamp,
         );
         setPlaybackData(sortedData);
       })
