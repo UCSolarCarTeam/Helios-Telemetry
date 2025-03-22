@@ -28,7 +28,7 @@ export const getDrivers = async (request: Request, response: Response) => {
     return response.status(200).json(data);
   } catch (err) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: "Server Error" });
+    response.status(500).json({ message: `Server Error: ${err}` });
   }
 };
 
@@ -57,7 +57,7 @@ export const getDriverLaps = async (request: Request, response: Response) => {
     return response.status(200).json(data);
   } catch (err) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: "Server Error" });
+    response.status(500).json({ message: `Server Error: ${err}` });
   }
 };
 

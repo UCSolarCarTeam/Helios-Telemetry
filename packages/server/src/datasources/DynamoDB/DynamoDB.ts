@@ -128,10 +128,15 @@ export class DynamoDB implements DynamoDBtypes {
   public async getDriverLaps(Rfid: string) {
     try {
       const lapCommand = new QueryCommand({
+        ExpressionAttributeNames: {
+          "#ts": "timestamp",
+        },
         ExpressionAttributeValues: {
           ":Rfid": Rfid,
+          ":minTimestamp": 0,
         },
-        KeyConditionExpression: "Rfid = :Rfid",
+        KeyConditionExpression: "Rfid = :Rfid AND #ts >= :minTimestamp",
+        ScanIndexForward: false,
         TableName: this.lapTableName,
       });
 
