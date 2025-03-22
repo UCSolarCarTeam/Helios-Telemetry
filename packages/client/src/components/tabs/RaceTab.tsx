@@ -212,7 +212,7 @@ function RaceTab() {
     <div className="m-3 flex flex-col justify-center gap-4">
       <p className="-mb-2 font-bold text-helios">Lap Data</p>
       <hr className="border-[1.4px] border-helios" />
-      <div className="flex w-full flex-col items-center sm:flex-row">
+      <div className="flex w-full flex-col items-center gap-2 sm:flex-row">
         <div className="flex flex-row items-center gap-2">
           <Box className="min-w-[120px]" component="div">
             <FormControl fullWidth>
