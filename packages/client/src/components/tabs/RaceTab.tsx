@@ -38,6 +38,7 @@ const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
       lapPacket.data.batterySecondsRemaining.toFixed(2),
     ),
     distance: parseFloat(lapPacket.data.distance.toFixed(2)),
+    energyConsumed: parseFloat(lapPacket.data.energyConsumed.toFixed(2)),
     lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
     netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
     timeStamp: new Date(lapPacket.data.timeStamp).toLocaleString("en-US"),
@@ -94,6 +95,10 @@ const columns = [
   columnHelper.accessor("data.distance", {
     cell: (info) => info.getValue(),
     header: "Distance",
+  }),
+  columnHelper.accessor("data.energyConsumed", {
+    cell: (info) => info.getValue(),
+    header: "Energy Consumed",
   }),
   columnHelper.accessor("data.lapTime", {
     cell: (info) => info.getValue(),

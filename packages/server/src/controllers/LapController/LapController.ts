@@ -85,9 +85,9 @@ export class LapController implements LapControllerType {
               averagePackCurrent,
             ),
           distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+          energyConsumed: this.getEnergyConsumption(this.lastLapPackets),
           lapTime: this.calculateLapTime(this.lastLapPackets),
           netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
-
           timeStamp: packet.TimeStamp,
           totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
           totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
@@ -342,5 +342,12 @@ export class LapController implements LapControllerType {
     } else {
       return Math.round(secondsUntilChargedOrDepleted);
     }
+  }
+
+  public getEnergyConsumption(packetArray: ITelemetryData[]): number {
+    const lapTime = this.calculateLapTime(packetArray);
+    const netPowerOut = this.netPower(packetArray);
+
+    return lapTime * netPowerOut;
   }
 }
