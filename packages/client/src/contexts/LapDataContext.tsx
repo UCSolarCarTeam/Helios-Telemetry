@@ -48,10 +48,16 @@ export function LapDataContextProvider({
 }: PropsWithChildren): JSX.Element {
   const { currentAppState } = useAppState();
   const [lapData, setLapData] = useState<IFormattedLapData[]>([]);
+  //const [lapTime, setLapTime] = useState<number>(-1);
 
   const onLapData = useCallback((lapPacket: ILapData) => {
     const formattedData = formatLapData(lapPacket);
     setLapData((prev) => [...prev, formattedData]);
+  }, []);
+
+  const onLapComplete = useCallback((lapTime: number) => {
+    //setLapTime(lapTime);
+    alert(`yay u did a lap hooray woo ${lapTime}ms`);
   }, []);
 
   const fetchLapData = useCallback(async () => {
@@ -83,11 +89,18 @@ export function LapDataContextProvider({
       !currentAppState.playbackSwitch
     ) {
       socketIO.on("lapData", onLapData);
+      socketIO.on("lapComplete", onLapComplete);
       return () => {
         socketIO.off("lapData", onLapData);
+        socketIO.off("lapComplete", onLapComplete);
       };
     }
-  }, [currentAppState.connectionType, currentAppState.playbackSwitch]);
+  }, [
+    currentAppState.connectionType,
+    currentAppState.playbackSwitch,
+    onLapData,
+    onLapComplete,
+  ]);
 
   return (
     <lapDataContext.Provider value={{ lapData }}>

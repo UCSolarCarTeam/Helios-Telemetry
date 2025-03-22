@@ -58,6 +58,9 @@ export class LapController implements LapControllerType {
 
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
+    await this.backendController.socketIO.broadcastLapComplete(
+      lapData.data.lapTime,
+    );
     await this.backendController.dynamoDB.insertLapData(lapData);
   }
 
