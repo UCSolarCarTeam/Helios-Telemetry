@@ -30,9 +30,9 @@ if (!process.env.PACKET_TABLE_NAME) {
   throw new Error("Packet table name not defined");
 }
 
-if (!process.env.DRIVER_TABLE_NAME) {
-  throw new Error("Driver table name not defined");
-}
+// if (!process.env.DRIVER_TABLE_NAME) {
+//   throw new Error("Driver table name not defined");
+// }
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
@@ -115,26 +115,31 @@ export class DynamoDB implements DynamoDBtypes {
       const response = await this.client.send(command);
       return response.Items;
     } catch (error) {
-      logger.error("Error getting lap data for driver");
+      logger.error("Error getting drivers");
       throw new Error(error);
     }
   }
 
-  public async getDriverLaps(rfid) {
+  public async getDriverLaps(Rfid: string) {
     try {
-      const command = new QueryCommand({
-        ExpressionAttributeValues: {
-          ":rfid": rfid,
+      const lapCommand = new QueryCommand({
+        ExpressionAttributeNames: {
+          "#ts": "timestamp",
         },
-        KeyConditionExpression: "rfid = :rfid",
-        TableName: this.driverTableName,
+        ExpressionAttributeValues: {
+          ":Rfid": Rfid,
+          ":minTimestamp": 0,
+        },
+        KeyConditionExpression: "Rfid = :Rfid AND #ts >= :minTimestamp",
+        ScanIndexForward: false,
+        TableName: this.lapTableName,
       });
 
-      const response = await this.client.send(command);
-      return response.Items;
+      const lapResponse = await this.client.send(lapCommand);
+      return lapResponse.Items || [];
     } catch (error) {
-      logger.error("Error getting lap data for driver");
-      throw new Error(error);
+      logger.error("Error getting lap data for driver", error);
+      throw new Error(error.message || "Failed to fetch driver laps");
     }
   }
 
@@ -183,6 +188,7 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new PutCommand({
         Item: {
+          Rfid: packet.Rfid,
           data: packet,
           id: uuidv4(),
           timestamp: packet.timestamp,
@@ -251,38 +257,40 @@ export class DynamoDB implements DynamoDBtypes {
     });
   }
 
-  public async updateDriverInfo(rfid: string, name: string) {
+  public async updateDriverInfo(Rfid: string, name: string) {
     try {
-      // Ensure rfid is a string (DynamoDB is type-sensitive)
-      if (typeof rfid !== "string") {
-        throw new Error("RFID must be a string");
+      // Ensure Rfid is a string (DynamoDB is type-sensitive)
+      if (typeof Rfid !== "string") {
+        throw new Error("Rfid must be a string");
       }
 
-      // Check if the RFID exists in the driver table
+      // Check if the Rfid exists in the driver table
       const getCommand = new GetCommand({
         Key: {
-          rfid: rfid,
+          Rfid: Rfid,
         },
         TableName: this.driverTableName,
       });
       const rfidCheckReposonse = await this.client.send(getCommand);
 
       if (!rfidCheckReposonse.Item) {
-        return { message: "RFID not found in driver table" };
+        return { message: "Driver Rfid not found in driver table" };
       }
 
-      // Update only the 'driver' field, keeping the existing RFID
+      // Update only the 'driver' field, keeping the existing Rfid
       const updateCommand = new UpdateCommand({
         ExpressionAttributeValues: {
           ":name": name,
         },
-        Key: { rfid: rfid },
+        Key: { Rfid: Rfid },
         TableName: this.driverTableName,
         UpdateExpression: "SET driver = :name",
       });
 
       await this.client.send(updateCommand);
-      return { message: "Driver info updated successfully" };
+      return {
+        message: `Driver name updated from ${rfidCheckReposonse.Item.driver} to ${name}`,
+      };
     } catch (error) {
       logger.error("Error updating driver info: " + error.message);
       throw new Error(error.message);

@@ -29,7 +29,7 @@ export const getPacket = async (request: Request, response: Response) => {
     return response.status(200).json(data);
   } catch (error) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    return response.status(500).json({ message: "Internal Server Error" });
+    response.status(500).json({ message: `Server Error: ${error}` });
   }
 };
 
@@ -97,7 +97,7 @@ export const getFirstAndLastPacket = async (
     return response.status(200).json(data);
   } catch (error) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    return response.status(500).json({ message: "Internal Server Error" });
+    response.status(500).json({ message: `Server Error: ${error}` });
   }
 };
 
