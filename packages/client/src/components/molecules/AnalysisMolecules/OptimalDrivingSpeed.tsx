@@ -1,4 +1,4 @@
-import React from "react";
+import Card from "./Card";
 
 interface OptimalSpeedSquareProps {
   percent: number;
@@ -15,7 +15,7 @@ const OptimalSpeedSquare: React.FC<OptimalSpeedSquareProps> = ({
   percent,
   rightNumber,
 }) => (
-  <div className="flex h-[17rem] w-[18.7rem] flex-col items-center justify-center rounded-2xl bg-background-stats-tab px-4">
+  <Card className={"bg-red-500 text-3xl font-bold"} square={true}>
     <p className="text-center text-base font-normal sm:text-lg lg:text-xl">
       Optimal Driving Speed At&nbsp;
       <span className="text-primary">{percent}%</span>
@@ -35,7 +35,7 @@ const OptimalSpeedSquare: React.FC<OptimalSpeedSquareProps> = ({
       <span className="text-sm text-primary">{leftNumber}</span>
       <span className="text-sm text-primary">{rightNumber}</span>
     </div>
-  </div>
+  </Card>
 );
 
 export default OptimalSpeedSquare;

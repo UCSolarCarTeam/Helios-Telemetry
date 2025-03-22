@@ -9,9 +9,7 @@ import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
 import MLContainer from "../containers/MLContainer";
-import MotorEfficiencySquare from "../molecules/AnalysisMolecules/MotorEfficiencySquare";
-import OptimalSpeedSquare from "../molecules/AnalysisMolecules/OptimalDrivingSpeed";
-import PerformanceRectangles from "../molecules/AnalysisMolecules/PerformanceRectangles";
+import StatsContainer from "../molecules/AnalysisMolecules/StatsContainer";
 
 type TabContentProps = React.PropsWithChildren<{
   index: number;
@@ -53,71 +51,6 @@ export function TabContent({
     </div>
   );
 }
-interface ShapeProps {
-  infoNumber: number;
-  leftNumber: number;
-  rightNumber: number;
-  percent: number;
-  OptimalDrivingSpeed: number;
-  driverPerfScore: number;
-  dpsLeft: number;
-  dpsRight: number;
-  eodPredictor1: number;
-  epLeft: number;
-  epRight: number;
-  eodPredictor2: number;
-  ep2Left: number;
-  ep2Right: number;
-  linePercentage: number;
-}
-
-const statsProps: ShapeProps = {
-  OptimalDrivingSpeed: 50,
-  dpsLeft: 28,
-  dpsRight: 97,
-  driverPerfScore: 83,
-  eodPredictor1: 74,
-  eodPredictor2: 89,
-  ep2Left: 57,
-  ep2Right: 104,
-  epLeft: 135,
-  epRight: 269,
-  infoNumber: 78,
-  leftNumber: 46,
-  linePercentage: 40,
-  percent: 38,
-  rightNumber: 55,
-};
-
-const StatsContainer: React.FC<ShapeProps> = ({ ...statsProps }) => {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-4">
-      <div className="flex flex-col items-center gap-4 sm:flex-row">
-        <OptimalSpeedSquare
-          OptimalDrivingSpeed={statsProps.OptimalDrivingSpeed}
-          leftNumber={statsProps.leftNumber}
-          linePercentage={statsProps.linePercentage}
-          percent={statsProps.percent}
-          rightNumber={statsProps.rightNumber}
-        />
-
-        <MotorEfficiencySquare infoNumber={statsProps.infoNumber} />
-      </div>
-
-      <PerformanceRectangles
-        dpsLeft={statsProps.dpsLeft}
-        dpsRight={statsProps.dpsRight}
-        driverPerfScore={statsProps.driverPerfScore}
-        eodPredictor1={statsProps.eodPredictor1}
-        eodPredictor2={statsProps.eodPredictor2}
-        ep2Left={statsProps.ep2Left}
-        ep2Right={statsProps.ep2Right}
-        epLeft={statsProps.epLeft}
-        epRight={statsProps.epRight}
-      />
-    </div>
-  );
-};
 
 function AnalysisTab() {
   const [value, setValue] = useState<number>(0);
@@ -208,7 +141,7 @@ function AnalysisTab() {
             </div>
           </TabContent>
           <TabContent index={1} value={value}>
-            <StatsContainer {...statsProps} />
+            <StatsContainer />
           </TabContent>
         </div>
       </div>

@@ -5,34 +5,38 @@ import {
   Legend,
   Tooltip,
 } from "chart.js";
-import React from "react";
 import { Doughnut } from "react-chartjs-2";
+import { twMerge } from "tailwind-merge";
 
 import { getChartConfig } from "../../config/chartConfig";
+import Card from "./Card";
 
 // Register the required elements, controllers, and plugins
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
 
-interface DonutChartProps {
+export interface DonutChartProps {
   percentage: number;
-  fontSize: string;
-  thickness: string;
-  height: string;
-  width: string;
-  numColour: string;
-  leftoverColour: string;
-  circ: number;
+  fontSize?: string;
+  thickness?: string;
+  className?: string;
+  numColour?: string;
+  leftoverColour?: string;
+  circ?: number;
+  lowerBound: number;
+  upperBound: number;
+  subTitle?: string;
 }
 
 const DonutChartRect: React.FC<DonutChartProps> = ({
-  circ,
-  fontSize,
-  height,
+  circ = 310,
+  className,
+  fontSize = "1.4rem",
   leftoverColour,
+  lowerBound,
   numColour,
   percentage,
-  thickness,
-  width,
+  thickness = "78%",
+  upperBound,
 }) => {
   const circumference = circ;
 
@@ -55,14 +59,24 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
     fontSize,
     circumference,
   );
-
   return (
-    <div className={`flex items-center justify-center ${height} ${width}`}>
-      <Doughnut
-        data={config.data}
-        options={config.options}
-        plugins={config.plugins}
-      />
+    <div className="flex w-32 flex-col items-center justify-center">
+      <div
+        className={twMerge(
+          `flex flex-col items-center justify-center`,
+          className,
+        )}
+      >
+        <Doughnut
+          data={config.data}
+          options={config.options}
+          plugins={config.plugins}
+        />
+        <div className="flex w-full items-center justify-between px-6 text-sm">
+          <span className="text-primary">{lowerBound}</span>
+          <span className="text-right text-[#369A34]">{upperBound}</span>
+        </div>
+      </div>
     </div>
   );
 };
