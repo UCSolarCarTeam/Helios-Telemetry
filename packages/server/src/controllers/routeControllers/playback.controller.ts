@@ -34,35 +34,36 @@ export const getPacket = async (request: Request, response: Response) => {
 };
 
 export const getPacketDataBetweenDates = async (
-  request: Request & { params: { startUTCDate: number; endUTCDate: number } },
+  request: Request,
   response: Response,
 ) => {
   const backendController = request.app.locals
     .backendController as BackendController;
-
   const logger = createApplicationLogger(
     "playback.controller.ts",
     request,
     response,
   );
-  try {
-    const { endUTCDate, startUTCDate } = request.params;
-    console.log("REQUEST", request);
 
+  try {
+    // Extract query params safely
+    const startTime = Number(request.query.startTime);
+
+    const endTime = Number(request.query.endTime);
+
+    // Fetch data from DynamoDB
     const packetData =
       await backendController.dynamoDB.scanPacketDataBetweenDates(
-        startUTCDate,
-        endUTCDate,
+        startTime,
+        endTime,
       );
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
-    const data = {
+
+    return response.status(200).json({
       data: packetData,
       message: "OK",
-    };
-    logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
-
-    return response.status(200).json(data);
+    });
   } catch (error) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
     return response.status(500).json({ message: "Internal Server Error" });
@@ -99,6 +100,7 @@ export const getFirstAndLastPacket = async (
     return response.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 export const getHealthPlayback = (request: Request, response: Response) => {
   const logger = createApplicationLogger(
     "driver.controller.ts",

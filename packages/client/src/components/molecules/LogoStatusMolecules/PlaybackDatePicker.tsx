@@ -1,10 +1,11 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Modal } from "@mui/material";
-import { ITelemetryData } from "@shared/helios-types";
+import { Button, Modal } from "@mui/material";
+import { ITelemetryData, prodURL } from "@shared/helios-types";
 
 export type IPlaybackDateTime = { date: Date; startTime: Date; endTime: Date };
 
@@ -20,7 +21,59 @@ function PlaybackDatePicker() {
   const [playbackData, setPlaybackData] = useState<ITelemetryData[]>([]);
 
   const fetchPlaybackData = async () => {
-    // fetch data based on playbackDateTime
+    // Get the date parts from the selected date
+    const year = playbackDateTime.date.getFullYear();
+    const month = playbackDateTime.date.getMonth();
+    const day = playbackDateTime.date.getDate();
+
+    // Create new Date objects that combine the date with the start/end times using Date.UTC
+    const startDateTime = new Date(
+      Date.UTC(
+        year,
+        month,
+        day,
+        playbackDateTime.startTime.getHours(),
+        playbackDateTime.startTime.getMinutes(),
+        playbackDateTime.startTime.getSeconds(),
+      ),
+    );
+
+    const endDateTime = new Date(
+      Date.UTC(
+        year,
+        month,
+        day,
+        playbackDateTime.endTime.getHours(),
+        playbackDateTime.endTime.getMinutes(),
+        playbackDateTime.endTime.getSeconds(),
+      ),
+    );
+
+    // Convert to UTC seconds timestamps
+    const startTimeUTC = Math.floor(startDateTime.getTime() / 1000);
+    const endTimeUTC = Math.floor(endDateTime.getTime() / 1000);
+
+    // console.log("Querying with timestamps:", startTimeUTC, endTimeUTC);
+    // console.log(
+    //   "As date objects:",
+    //   new Date(startTimeUTC * 1000),
+    //   new Date(endTimeUTC * 1000),
+    // );
+
+    axios
+      .get(`${prodURL}/packetsBetween`, {
+        params: {
+          endTime: endTimeUTC,
+          startTime: startTimeUTC,
+        },
+      })
+      .then((response) => {
+        setPlaybackData(response.data.data);
+        // console.log("Playback data fetched successfully: ", response.data);
+      })
+      .catch((error) => {
+        throw new Error("Error fetching playback data", error);
+      });
   };
 
   return (
@@ -40,37 +93,57 @@ function PlaybackDatePicker() {
             <div className="relative flex h-[50vh] w-1/2 rounded-lg border-none bg-white p-6 shadow-lg outline-none sm:max-w-[75%]">
               <div className="flex flex-grow flex-row gap-6">
                 {/* Left Column: Date & Time Picker */}
-                <div className="mt-8 flex w-[40%] flex-col items-center gap-4">
+                <div className="flex w-[40%] flex-col items-center gap-4">
                   <DatePicker
                     onChange={(value) => {
-                      setPlaybackDateTime((prev) => ({
-                        ...prev,
-                        startTime:
-                          new Date(
-                            value +
-                              "T" +
-                              prev.startTime.toISOString().split("T")[1],
-                          ) ?? new Date(),
-                      }));
+                      if (value) {
+                        setPlaybackDateTime((prev) => {
+                          // Create new date from the selected date value
+                          const selectedDate = new Date(value);
+
+                          // Create new startTime while preserving the time component
+                          const newStartTime = new Date(prev.startTime);
+                          // Update only the date part (year, month, day)
+                          newStartTime.setFullYear(selectedDate.getFullYear());
+                          newStartTime.setMonth(selectedDate.getMonth());
+                          newStartTime.setDate(selectedDate.getDate());
+
+                          return {
+                            date: selectedDate,
+                            endTime: prev.endTime, // Keep endTime unchanged
+                            startTime: newStartTime,
+                          };
+                        });
+                      }
                     }}
-                    value={playbackDateTime.startTime}
+                    value={playbackDateTime.date}
                   />
 
                   <div className="flex flex-row items-center gap-1">
                     <TimeInput
                       onChange={(event) => {
-                        setPlaybackDateTime((prev: IPlaybackDateTime) => ({
-                          ...prev,
-                          startTime: new Date(
-                            Date.parse(
-                              new Date(prev.startTime)
-                                .toDateString()
-                                .split("T")[0] +
-                                "T" +
-                                event.target.value,
-                            ),
-                          ),
-                        }));
+                        const timeValue = event.target.value; // format: "HH:MM:SS"
+                        if (!timeValue) return;
+
+                        const [hours, minutes, seconds = 0] = timeValue
+                          .split(":")
+                          .map(Number);
+
+                        setPlaybackDateTime((prev) => {
+                          // Create a new startTime Date object
+                          const newStartTime = new Date(prev.startTime);
+                          // Update only the time part
+                          newStartTime.setHours(
+                            hours ?? 0,
+                            minutes ?? 0,
+                            seconds ?? 0,
+                          );
+
+                          return {
+                            ...prev, // Keep date and endTime unchanged
+                            startTime: newStartTime,
+                          };
+                        });
                       }}
                       value={
                         playbackDateTime.startTime.toTimeString().split(" ")[0]
@@ -79,27 +152,42 @@ function PlaybackDatePicker() {
                     -
                     <TimeInput
                       onChange={(event) => {
-                        setPlaybackDateTime((prev) => ({
-                          ...prev,
-                          endTime: new Date(
-                            new Date(prev.startTime)
-                              .toISOString()
-                              .split("T")[0] +
-                              "T" +
-                              event.target.value,
-                          ),
-                        }));
+                        const timeValue = event.target.value;
+                        if (!timeValue) return;
+
+                        const [hours, minutes, seconds = 0] = timeValue
+                          .split(":")
+                          .map(Number);
+
+                        setPlaybackDateTime((prev) => {
+                          // Create a new endTime Date object
+                          const newEndTime = new Date(prev.endTime);
+                          // Update only the time part
+                          newEndTime.setHours(
+                            hours ?? 0,
+                            minutes ?? 0,
+                            seconds ?? 0,
+                          );
+
+                          return {
+                            ...prev, // Keep date and startTime unchanged
+                            endTime: newEndTime,
+                          };
+                        });
                       }}
                       value={
                         playbackDateTime.endTime.toTimeString().split(" ")[0]
                       }
                     />
                   </div>
+                  <Button className="mb-1" onClick={fetchPlaybackData}>
+                    Confirm
+                  </Button>
                 </div>
 
                 {/* Right Column: Placeholder for Additional Content */}
                 <div className="flex flex-grow items-center border-l border-gray-300 pl-6">
-                  {playbackData ? (
+                  {playbackData.length > 0 ? (
                     <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
                       {`Playback data for ${playbackDateTime.date.toDateString()} at ${playbackDateTime.startTime.toLocaleTimeString()} to ${playbackDateTime.endTime.toLocaleTimeString()} retrieved successfully.`}
                     </h5>

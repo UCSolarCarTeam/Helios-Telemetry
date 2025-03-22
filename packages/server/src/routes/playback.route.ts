@@ -9,5 +9,4 @@ playbackRouter.get("/packetsBetween", controllers.getPacketDataBetweenDates);
 playbackRouter.get("/firstAndLastPacket", controllers.getFirstAndLastPacket);
 playbackRouter.get("playback/health", controllers.getHealthPlayback);
 
-
 export default playbackRouter;

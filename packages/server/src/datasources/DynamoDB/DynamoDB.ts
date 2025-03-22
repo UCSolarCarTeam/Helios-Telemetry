@@ -9,7 +9,7 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, QueryCommandInput } from "@aws-sdk/client-dynamodb";
 import {
   GetCommand,
   PutCommand,
@@ -19,6 +19,7 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall } from "@aws-sdk/util-dynamodb";
 import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
 if (!process.env.LAP_TABLE_NAME) {
@@ -74,8 +75,6 @@ export class DynamoDB implements DynamoDBtypes {
     } catch (error) {
       logger.error("Error getting playback table data: " + error.message);
       throw new Error(error.message);
-      logger.error("Error getting playback table data: " + error.message);
-      throw new Error(error.message);
     }
   }
 
@@ -83,33 +82,28 @@ export class DynamoDB implements DynamoDBtypes {
     startUTCDate: number,
     endUTCDate: number,
   ) {
-    console.log("Scanning Packets between Dates", startUTCDate, endUTCDate);
     try {
+      // Since you can only query on primary key attributes, and we need to filter by timestamp range
+      // without a specific id, we need to use a Scan operation with a filter instead of Query
       const params: ScanCommandInput = {
-        ScanFilter: {
-          timestamp: {
-            AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
-            ComparisonOperator: "BETWEEN",
-          },
+        ExpressionAttributeNames: {
+          "#ts": "timestamp",
         },
+        ExpressionAttributeValues: {
+          ":end": endUTCDate,
+          ":start": startUTCDate,
+        },
+        FilterExpression: "#ts BETWEEN :start AND :end",
         TableName: this.packetTableName,
       };
 
-      let lastEvaluatedKey;
-      do {
-        const command = new ScanCommand(params);
-        const response = await this.client.send(command);
-        const items = response.Items
-          ? response.Items.map((item) => unmarshall(item))
-          : [];
+      const command = new ScanCommand(params);
+      const response = await this.client.send(command);
 
-        lastEvaluatedKey = response.LastEvaluatedKey;
-        if (lastEvaluatedKey) {
-          params.ExclusiveStartKey = lastEvaluatedKey;
-        }
-      } while (lastEvaluatedKey);
+      return response.Items || [];
     } catch (error) {
-      logger.error(" Error Scanning Packets between Dates");
+      logger.error("Error Scanning Packets between Dates", error);
+      throw new Error("Error Scanning Packets between Dates");
     }
   }
 
