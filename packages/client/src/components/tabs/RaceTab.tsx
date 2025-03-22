@@ -115,7 +115,7 @@ const columns = [
 ];
 
 function RaceTab() {
-  const [Rfid, setDriverRFID] = useState<number | null>(null);
+  const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
   const { lapData } = useLapData();
@@ -142,15 +142,15 @@ function RaceTab() {
     setCopy(1);
   };
 
-  const handleDropdown = async (event: SelectChangeEvent<number | null>) => {
-    const newRFID = Number(event.target.value);
+  const handleDropdown = async (event: SelectChangeEvent<number | string>) => {
+    const newRFID = event.target.value;
     setDriverRFID(newRFID);
     setCopy(0);
 
-    if (newRFID === null || Number.isNaN(newRFID)) {
+    if (newRFID === "" || Number.isNaN(newRFID)) {
       setFilteredLaps(lapData);
     } else {
-      await fetchFilteredLaps(newRFID).then((response) => {
+      await fetchFilteredLaps(Number(newRFID)).then((response) => {
         const formattedData = response.data.map(formatLapData);
         setFilteredLaps(formattedData);
       });
@@ -178,6 +178,7 @@ function RaceTab() {
   const fetchDriverNames = async () => {
     try {
       const response = await axios.get(`${prodURL}/drivers`);
+
       return response.data;
     } catch (error) {
       return { error: "Error fetching drivers" };
@@ -217,7 +218,6 @@ function RaceTab() {
           <Box className="min-w-[120px]" component="div">
             <FormControl fullWidth>
               <InputLabel
-                id="driver-select-label"
                 sx={{
                   "&.Mui-focused": {
                     color: "#963A56",
@@ -231,9 +231,7 @@ function RaceTab() {
                 Driver
               </InputLabel>
               <Select
-                id="driver-select"
                 label="Driver"
-                labelId="driver-select-label"
                 onChange={handleDropdown}
                 sx={{
                   "& .MuiMenuItem-root": {
@@ -254,7 +252,7 @@ function RaceTab() {
                 }}
                 value={Rfid}
               >
-                <MenuItem value={NaN}>Show all data</MenuItem>
+                <MenuItem value={""}>Show all data</MenuItem>
                 {driverData.map((driver) => (
                   <MenuItem key={driver.Rfid} value={driver.Rfid}>
                     {driver.driver ? `${driver.driver}` : `NO NAME`}
@@ -269,9 +267,8 @@ function RaceTab() {
               {copy === 0 ? <ContentCopy /> : <ContentCopyTwoTone />}
             </button>
           ) : (
-            <div></div>
+            <></>
           )}
-          <div></div>
         </div>
         <FormControl
           sx={{
@@ -281,7 +278,6 @@ function RaceTab() {
           }}
         >
           <InputLabel
-            id="column-toggle-label"
             sx={{
               "&.Mui-focused": {
                 color: "#963A56",
@@ -299,9 +295,7 @@ function RaceTab() {
           </InputLabel>
 
           <Select
-            id="column-toggle"
-            input={<OutlinedInput id="select-multiple-chip" label="Column" />}
-            labelId="column-toggle-label"
+            input={<OutlinedInput label="Column" />}
             multiple
             onChange={handleChange}
             renderValue={(selected) => (
@@ -371,7 +365,7 @@ function RaceTab() {
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${typeof cell.id} ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
+                    className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
                     key={cell.id}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

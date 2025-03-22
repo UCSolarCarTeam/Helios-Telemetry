@@ -118,7 +118,7 @@ export class DynamoDB implements DynamoDBtypes {
         TableName: this.driverTableName,
       });
       const response = await this.client.send(command);
-      return response;
+      return response.Items;
     } catch (error) {
       logger.error("Error getting drivers");
       throw new Error(error);
