@@ -26,39 +26,28 @@ function PlaybackDatePicker() {
     const month = playbackDateTime.date.getMonth();
     const day = playbackDateTime.date.getDate();
 
-    // Create new Date objects that combine the date with the start/end times using Date.UTC
+    // Create new Date objects that combine the date with the start/end times
     const startDateTime = new Date(
-      Date.UTC(
-        year,
-        month,
-        day,
-        playbackDateTime.startTime.getHours(),
-        playbackDateTime.startTime.getMinutes(),
-        playbackDateTime.startTime.getSeconds(),
-      ),
+      year,
+      month,
+      day,
+      playbackDateTime.startTime.getHours(),
+      playbackDateTime.startTime.getMinutes(),
+      playbackDateTime.startTime.getSeconds(),
     );
 
     const endDateTime = new Date(
-      Date.UTC(
-        year,
-        month,
-        day,
-        playbackDateTime.endTime.getHours(),
-        playbackDateTime.endTime.getMinutes(),
-        playbackDateTime.endTime.getSeconds(),
-      ),
+      year,
+      month,
+      day,
+      playbackDateTime.endTime.getHours(),
+      playbackDateTime.endTime.getMinutes(),
+      playbackDateTime.endTime.getSeconds(),
     );
 
-    // Convert to UTC seconds timestamps
+    // Convert to UNIX time in seconds
     const startTimeUTC = Math.floor(startDateTime.getTime() / 1000);
     const endTimeUTC = Math.floor(endDateTime.getTime() / 1000);
-
-    // console.log("Querying with timestamps:", startTimeUTC, endTimeUTC);
-    // console.log(
-    //   "As date objects:",
-    //   new Date(startTimeUTC * 1000),
-    //   new Date(endTimeUTC * 1000),
-    // );
 
     axios
       .get(`${prodURL}/packetsBetween`, {
@@ -68,8 +57,10 @@ function PlaybackDatePicker() {
         },
       })
       .then((response) => {
-        setPlaybackData(response.data.data);
-        // console.log("Playback data fetched successfully: ", response.data);
+        const sortedData = response.data.data.sort(
+          (a, b) => a.timestamp - b.timestamp,
+        );
+        setPlaybackData(sortedData);
       })
       .catch((error) => {
         throw new Error("Error fetching playback data", error);
