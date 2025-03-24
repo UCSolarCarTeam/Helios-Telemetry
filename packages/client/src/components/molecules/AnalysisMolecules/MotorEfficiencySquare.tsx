@@ -1,4 +1,5 @@
-import React from "react";
+{
+  /*import React from "react";
 
 import DonutChartRect from "./DonutChartRect";
 
@@ -29,3 +30,5 @@ const MotorEfficiencySquare: React.FC<MotorEfficiencySquareProps> = ({
 );
 
 export default MotorEfficiencySquare;
+*/
+}

@@ -9,7 +9,6 @@ import { Doughnut } from "react-chartjs-2";
 import { twMerge } from "tailwind-merge";
 
 import { getChartConfig } from "../../config/chartConfig";
-import Card from "./Card";
 
 // Register the required elements, controllers, and plugins
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
@@ -22,19 +21,20 @@ export interface DonutChartProps {
   numColour?: string;
   leftoverColour?: string;
   circ?: number;
-  lowerBound: number;
-  upperBound: number;
+  lowerBound?: number;
+  upperBound?: number;
   subTitle?: string;
 }
 
 const DonutChartRect: React.FC<DonutChartProps> = ({
   circ = 310,
-  className,
+  className = "h-16 w-16",
   fontSize = "1.4rem",
-  leftoverColour,
+  leftoverColour = "#FFFFFF",
   lowerBound,
-  numColour,
+  numColour = "#CF4242",
   percentage,
+  subTitle,
   thickness = "78%",
   upperBound,
 }) => {
@@ -72,10 +72,11 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
           options={config.options}
           plugins={config.plugins}
         />
-        <div className="flex w-full items-center justify-between px-6 text-sm">
+        <div className="flex w-full items-center justify-between text-sm">
           <span className="text-primary">{lowerBound}</span>
           <span className="text-right text-[#369A34]">{upperBound}</span>
         </div>
+        <p className="text-center text-xxs">{subTitle}</p>
       </div>
     </div>
   );

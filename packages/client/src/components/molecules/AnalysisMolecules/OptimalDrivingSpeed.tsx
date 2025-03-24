@@ -1,4 +1,5 @@
-import Card from "./Card";
+{
+  /*import Card from "./Card";
 
 interface OptimalSpeedSquareProps {
   percent: number;
@@ -39,3 +40,5 @@ const OptimalSpeedSquare: React.FC<OptimalSpeedSquareProps> = ({
 );
 
 export default OptimalSpeedSquare;
+*/
+}

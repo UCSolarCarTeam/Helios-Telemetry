@@ -1,4 +1,5 @@
-import Card from "./Card";
+{
+  /*import Card from "./Card";
 import DonutChartRect from "./DonutChartRect";
 import { PerformanceRectanglesProps } from "./PerformanceRectangles";
 
@@ -84,3 +85,5 @@ const EndOfDayPredictorsComponent: React.FC<PerformanceRectanglesProps> = ({
 );
 
 export default EndOfDayPredictorsComponent;
+*/
+}
