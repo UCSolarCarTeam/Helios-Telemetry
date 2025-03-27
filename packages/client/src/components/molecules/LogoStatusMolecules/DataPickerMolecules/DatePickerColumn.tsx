@@ -38,43 +38,31 @@ const DataPickerColumn = ({
       />
 
       <div className="flex flex-row items-center gap-1">
-        <TimeInput
-          onChange={(event) => {
-            const timeValue = event.target.value;
-            if (!timeValue) return;
+        {(["startTime", "endTime"] as Array<keyof IPlaybackDateTime>).map(
+          (timeKey) => (
+            <React.Fragment key={timeKey}>
+              <TimeInput
+                onChange={(event) => {
+                  const timeValue = event.target.value;
+                  if (!timeValue) return;
 
-            const [hours, minutes, seconds = 0] = timeValue
-              .split(":")
-              .map(Number);
+                  const [hours, minutes, seconds = 0] = timeValue
+                    .split(":")
+                    .map(Number);
 
-            setPlaybackDateTime((prev) => {
-              const newStartTime = new Date(prev.startTime);
-              newStartTime.setHours(hours ?? 0, minutes ?? 0, seconds ?? 0);
+                  setPlaybackDateTime((prev) => {
+                    const newTime = new Date(prev[timeKey]);
+                    newTime.setHours(hours ?? 0, minutes ?? 0, seconds ?? 0);
 
-              return { ...prev, startTime: newStartTime };
-            });
-          }}
-          value={playbackDateTime.startTime.toTimeString().split(" ")[0]}
-        />
-        <span>-</span>
-        <TimeInput
-          onChange={(event) => {
-            const timeValue = event.target.value;
-            if (!timeValue) return;
-
-            const [hours, minutes, seconds = 0] = timeValue
-              .split(":")
-              .map(Number);
-
-            setPlaybackDateTime((prev) => {
-              const newEndTime = new Date(prev.endTime);
-              newEndTime.setHours(hours ?? 0, minutes ?? 0, seconds ?? 0);
-
-              return { ...prev, endTime: newEndTime };
-            });
-          }}
-          value={playbackDateTime.endTime.toTimeString().split(" ")[0]}
-        />
+                    return { ...prev, [timeKey]: newTime };
+                  });
+                }}
+                value={playbackDateTime[timeKey].toTimeString().split(" ")[0]}
+              />
+              {timeKey === "startTime" && <span>-</span>}
+            </React.Fragment>
+          ),
+        )}
       </div>
       <Button className="mb-1" onClick={fetchPlaybackData}>
         Confirm

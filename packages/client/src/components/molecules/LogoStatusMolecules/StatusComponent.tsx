@@ -28,24 +28,6 @@ function PlaybackPickerComponent() {
           }
         />
       </div>
-
-      {currentAppState.playbackSwitch && (
-        <>
-          {/* <Modal
-              aria-describedby="modal-modal-description"
-              aria-labelledby="modal-modal-title"
-              className="flex flex-grow items-center justify-center"
-              onClose={() => setShowModal(false)}
-              open={showModal}
-            >
-              <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none sm:max-w-[75%]">
-                <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
-                  There is no data for this date
-                </h5>{" "}
-              </div>
-            </Modal> */}
-        </>
-      )}
     </div>
   );
 }
