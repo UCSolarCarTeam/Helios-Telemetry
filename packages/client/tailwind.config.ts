@@ -19,7 +19,8 @@ const config: Config = {
         primary: "#9C0534",
         green: "#01650B",
         "green-dark": "#00ae00",
-        "darker-gray": "#BFBFBF",
+        "sand": "#BFBFBF",
+        "arsenic": "#3A3A3A",
       },
       textColor: {
         light: "#3A3A3A",

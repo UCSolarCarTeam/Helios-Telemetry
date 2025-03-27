@@ -1,7 +1,5 @@
 import Card from "./Card";
 import DonutChartRect from "./DonutChartRect";
-//import MotorEfficiencySquare from "./MotorEfficiencySquare";
-//import OptimalSpeedSquare from "./OptimalDrivingSpeed";
 import PerformanceRectangles from "./PerformanceRectangles";
 
 const statsProps = {
@@ -24,18 +22,17 @@ const statsProps = {
 
 const StatsContainer = () => {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4 md:flex-nowrap">
+    <div className="flex flex-wrap items-center justify-center gap-4 xl:flex-nowrap custom:flex-wrap">
       <div className="flex flex-col items-center gap-4 sm:flex-row">
-        {/*<OptimalSpeedSquare {...statsProps} />*/}
-        <Card className={"bg-red-500 text-3xl font-bold"} square={true}>
+        <Card className={"text-3xl font-bold"} square>
           <p className="text-center text-base font-normal sm:text-lg lg:text-xl">
             Optimal Driving Speed At
             <span className="text-primary"> {statsProps.percent}%</span>
           </p>
-          <p className="pt-1 text-center text-4xl font-normal text-primary md:text-[2.5rem] lg:text-4xl">
+          <p className="pt-1 text-center text-4xl font-normal text-primary">
             {statsProps.OptimalDrivingSpeed}km/h
           </p>
-          <div className="h-3 w-full rounded-full bg-[#3A3A3A]">
+          <div className="h-3 w-full rounded-full bg-arsenic">
             <div
               className="flex h-3 items-stretch rounded-full bg-[#009F10]"
               style={{ width: `${statsProps.linePercentage}%` }}
@@ -51,11 +48,11 @@ const StatsContainer = () => {
           </div>
         </Card>
 
-        <Card className="bg-sky-300 text-lg" square={true}>
-          <p className="">{"Motor Efficiency at"}</p>
+        <Card className="text-lg" square>
+          <p className="text-lg">{"Motor Efficiency at"}</p>
           <DonutChartRect
             circ={360}
-            className="h-28 w-28"
+            className="size-28"
             fontSize="2rem"
             leftoverColour="#e0daf0"
             numColour="#65558F"
@@ -63,7 +60,6 @@ const StatsContainer = () => {
             thickness="80%"
           />
         </Card>
-        {/*<MotorEfficiencySquare infoNumber={statsProps.infoNumber} />*/}
       </div>
 
       <PerformanceRectangles percentage={0} {...statsProps} />

@@ -26,18 +26,18 @@ export interface DonutChartProps {
   subTitle?: string;
 }
 
-const DonutChartRect: React.FC<DonutChartProps> = ({
+const DonutChartRect = ({
   circ = 310,
-  className = "h-16 w-16",
+  className,
   fontSize = "1.4rem",
-  leftoverColour = "#FFFFFF",
+  leftoverColour = "white",
   lowerBound,
   numColour = "#CF4242",
   percentage,
   subTitle,
   thickness = "78%",
   upperBound,
-}) => {
+}: DonutChartProps) => {
   const circumference = circ;
 
   // Doughnut chart configuration
@@ -60,10 +60,10 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
     circumference,
   );
   return (
-    <div className="flex w-32 flex-col items-center justify-center">
+    <div className="flex w-32 items-center justify-center">
       <div
         className={twMerge(
-          `flex flex-col items-center justify-center`,
+          `flex size-16 flex-col items-center justify-center`,
           className,
         )}
       >
@@ -74,9 +74,9 @@ const DonutChartRect: React.FC<DonutChartProps> = ({
         />
         <div className="flex w-full items-center justify-between text-sm">
           <span className="text-primary">{lowerBound}</span>
-          <span className="text-right text-[#369A34]">{upperBound}</span>
+          <span className="text-right text-green-dark">{upperBound}</span>
         </div>
-        <p className="text-center text-xxs">{subTitle}</p>
+        <p className="w-24 text-center text-xxs">{subTitle}</p>
       </div>
     </div>
   );
