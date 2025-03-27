@@ -9,7 +9,11 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  AttributeValue,
+  DynamoDBClient,
+  QueryCommandInput,
+} from "@aws-sdk/client-dynamodb";
 import {
   GetCommand,
   PutCommand,
@@ -19,7 +23,12 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import type { ILapData, ITelemetryData } from "@shared/helios-types";
+import { marshall } from "@aws-sdk/util-dynamodb";
+import type {
+  ILapData,
+  IPlaybackDynamoResponse,
+  ITelemetryData,
+} from "@shared/helios-types";
 
 if (!process.env.LAP_TABLE_NAME) {
   throw new Error("Lap table name not defined");
@@ -29,9 +38,9 @@ if (!process.env.PACKET_TABLE_NAME) {
   throw new Error("Packet table name not defined");
 }
 
-if (!process.env.DRIVER_TABLE_NAME) {
-  throw new Error("Driver table name not defined");
-}
+// if (!process.env.DRIVER_TABLE_NAME) {
+//   throw new Error("Driver table name not defined");
+// }
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
@@ -74,8 +83,6 @@ export class DynamoDB implements DynamoDBtypes {
     } catch (error) {
       logger.error("Error getting playback table data: " + error.message);
       throw new Error(error.message);
-      logger.error("Error getting playback table data: " + error.message);
-      throw new Error(error.message);
     }
   }
 
@@ -84,31 +91,39 @@ export class DynamoDB implements DynamoDBtypes {
     endUTCDate: number,
   ) {
     try {
-      const params: ScanCommandInput = {
-        ScanFilter: {
-          timestamp: {
-            AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
-            ComparisonOperator: "BETWEEN",
-          },
-        },
-        TableName: this.packetTableName,
-      };
+      let items: IPlaybackDynamoResponse[] = [];
+      let lastEvaluatedKey: { [key: string]: AttributeValue } | undefined;
 
-      let lastEvaluatedKey;
       do {
+        const params: ScanCommandInput = {
+          ExclusiveStartKey: lastEvaluatedKey, // Continue from last position
+          ExpressionAttributeNames: {
+            "#ts": "timestamp",
+          },
+          ExpressionAttributeValues: {
+            ":end": endUTCDate,
+            ":start": startUTCDate,
+          },
+          FilterExpression: "#ts BETWEEN :start AND :end",
+          TableName: this.packetTableName,
+        };
+
         const command = new ScanCommand(params);
         const response = await this.client.send(command);
-        const items = response.Items
-          ? response.Items.map((item) => unmarshall(item))
-          : [];
 
-        lastEvaluatedKey = response.LastEvaluatedKey;
-        if (lastEvaluatedKey) {
-          params.ExclusiveStartKey = lastEvaluatedKey;
+        if (response.Items) {
+          items = items.concat(
+            response.Items.map((item) => item as IPlaybackDynamoResponse),
+          );
         }
-      } while (lastEvaluatedKey);
+
+        lastEvaluatedKey = response.LastEvaluatedKey; // Set for next iteration
+      } while (lastEvaluatedKey); // Keep scanning if there's more data
+
+      return items;
     } catch (error) {
-      logger.error(" Error Scanning Packets between Dates");
+      logger.error("Error Scanning Packets between Dates", error);
+      throw new Error("Error Scanning Packets between Dates");
     }
   }
 
@@ -120,26 +135,31 @@ export class DynamoDB implements DynamoDBtypes {
       const response = await this.client.send(command);
       return response.Items;
     } catch (error) {
-      logger.error("Error getting lap data for driver");
+      logger.error("Error getting drivers");
       throw new Error(error);
     }
   }
 
-  public async getDriverLaps(rfid) {
+  public async getDriverLaps(Rfid: string) {
     try {
-      const command = new QueryCommand({
-        ExpressionAttributeValues: {
-          ":rfid": rfid,
+      const lapCommand = new QueryCommand({
+        ExpressionAttributeNames: {
+          "#ts": "timestamp",
         },
-        KeyConditionExpression: "rfid = :rfid",
-        TableName: this.driverTableName,
+        ExpressionAttributeValues: {
+          ":Rfid": Rfid,
+          ":minTimestamp": 0,
+        },
+        KeyConditionExpression: "Rfid = :Rfid AND #ts >= :minTimestamp",
+        ScanIndexForward: false,
+        TableName: this.lapTableName,
       });
 
-      const response = await this.client.send(command);
-      return response.Items;
+      const lapResponse = await this.client.send(lapCommand);
+      return lapResponse.Items || [];
     } catch (error) {
-      logger.error("Error getting lap data for driver");
-      throw new Error(error);
+      logger.error("Error getting lap data for driver", error);
+      throw new Error(error.message || "Failed to fetch driver laps");
     }
   }
 
@@ -168,6 +188,7 @@ export class DynamoDB implements DynamoDBtypes {
           data: packet,
           id: uuidv4(),
           timestamp: packet.TimeStamp,
+          type: "packet",
         },
         TableName: this.packetTableName,
       });
@@ -187,9 +208,11 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new PutCommand({
         Item: {
+          Rfid: packet.Rfid,
           data: packet,
           id: uuidv4(),
-          timestamp: packet.data.timeStamp,
+          timestamp: packet.timestamp,
+          type: "lap",
         },
         TableName: this.lapTableName,
       });
@@ -212,9 +235,9 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const firstCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": "packet",
+          ":type": { S: "packet" },
         },
-        KeyConditionExpression: "id = :id",
+        KeyConditionExpression: "type = :type",
         Limit: 1,
         ScanIndexForward: true, // Ascending order → earliest timestamp
         TableName: this.packetTableName,
@@ -222,9 +245,9 @@ export class DynamoDB implements DynamoDBtypes {
 
       const lastCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": "packet",
+          ":type": { S: "packet" },
         },
-        KeyConditionExpression: "id = :id",
+        KeyConditionExpression: "type = :type",
         Limit: 1,
         ScanIndexForward: false, // Descending order → latest timestamp
         TableName: this.packetTableName,
@@ -254,38 +277,40 @@ export class DynamoDB implements DynamoDBtypes {
     });
   }
 
-  public async updateDriverInfo(rfid: string, name: string) {
+  public async updateDriverInfo(Rfid: string, name: string) {
     try {
-      // Ensure rfid is a string (DynamoDB is type-sensitive)
-      if (typeof rfid !== "string") {
-        throw new Error("RFID must be a string");
+      // Ensure Rfid is a string (DynamoDB is type-sensitive)
+      if (typeof Rfid !== "string") {
+        throw new Error("Rfid must be a string");
       }
 
-      // Check if the RFID exists in the driver table
+      // Check if the Rfid exists in the driver table
       const getCommand = new GetCommand({
         Key: {
-          rfid: rfid,
+          Rfid: Rfid,
         },
         TableName: this.driverTableName,
       });
       const rfidCheckReposonse = await this.client.send(getCommand);
 
       if (!rfidCheckReposonse.Item) {
-        return { message: "RFID not found in driver table" };
+        return { message: "Driver Rfid not found in driver table" };
       }
 
-      // Update only the 'driver' field, keeping the existing RFID
+      // Update only the 'driver' field, keeping the existing Rfid
       const updateCommand = new UpdateCommand({
         ExpressionAttributeValues: {
           ":name": name,
         },
-        Key: { rfid: rfid },
+        Key: { Rfid: Rfid },
         TableName: this.driverTableName,
         UpdateExpression: "SET driver = :name",
       });
 
       await this.client.send(updateCommand);
-      return { message: "Driver info updated successfully" };
+      return {
+        message: `Driver name updated from ${rfidCheckReposonse.Item.driver} to ${name}`,
+      };
     } catch (error) {
       logger.error("Error updating driver info: " + error.message);
       throw new Error(error.message);

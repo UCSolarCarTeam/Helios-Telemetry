@@ -15,9 +15,15 @@ phases:
       ### Building the image
       - echo Build started on `date`
       - docker build -t $IMAGE_REPO_URI:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_URI:latest $IMAGE_REPO_URI:$IMAGE_TAG
       - echo Build completed on `date`
   post_build:
     commands:
       ### Publish the docker image to ECR
       - echo Pushing the Docker image...
+      - docker push $IMAGE_REPO_URI:latest
       - docker push $IMAGE_REPO_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"TheContainer","imageUri":"%s"}]' $IMAGE_REPO_URI:$IMAGE_TAG > ./imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json

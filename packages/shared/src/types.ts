@@ -20,7 +20,7 @@ export interface CoordInfoUpdate {
 
 export interface IDriverNameUpdate {
   name: string;
-  rfid: string;
+  Rfid: string;
 }
 
 enum Motor {
@@ -381,7 +381,7 @@ export const ITelemetryDataType = t.exact(
     MotorDetails1: IMotorDetailsType,
     Pi: t.exact(
       t.type({
-        rfid: t.number,
+        Rfid: t.number,
       }),
     ),
     ProximitySensors: IProximitySensorsType,
@@ -396,7 +396,7 @@ export type ITelemetryData = t.TypeOf<typeof ITelemetryDataType>;
 //old data type definitions
 export interface IDriverData {
   driver: string;
-  rfid: string;
+  Rfid: string;
 }
 
 export interface ILapData {
@@ -406,13 +406,14 @@ export interface ILapData {
     averageSpeed: number;
     batterySecondsRemaining: number;
     distance: number;
+    energyConsumed: number;
     lapTime: number;
     netPowerOut: number;
     timeStamp: number;
     totalPowerIn: number;
     totalPowerOut: number;
   };
-  rfid: number;
+  Rfid: number;
   timestamp: number;
 }
 
@@ -424,6 +425,7 @@ export class LapData {
     totalPowerOut: number,
     netPowerOut: number,
     distance: number,
+    energyConsumed: number,
     amphours: number,
     averagePackCurrent: number,
     batterySecondsRemaining: number,
@@ -435,6 +437,7 @@ export class LapData {
     this.totalPowerOut = totalPowerOut;
     this.netPowerOut = netPowerOut;
     this.distance = distance;
+    this.energyConsumed = energyConsumed;
     this.amphours = amphours;
     this.averagePackCurrent = averagePackCurrent;
     this.batterySecondsRemaining = batterySecondsRemaining;
@@ -449,6 +452,7 @@ export class LapData {
   netPowerOut = -1;
   distance = -1;
   amphours = -1;
+  energyConsumed = -1;
   averagePackCurrent = -1;
   batterySecondsRemaining = -1;
   lapsRemaining = -1;
@@ -456,7 +460,7 @@ export class LapData {
 }
 
 export interface IPi {
-  rfid: number;
+  Rfid: number;
 }
 
 export interface IB3 {
@@ -768,6 +772,7 @@ export interface IFormattedLapData {
     averageSpeed: number;
     batterySecondsRemaining: number;
     distance: number;
+    energyConsumed: number;
     lapTime: number;
     netPowerOut: number;
     timeStamp: string;
@@ -775,5 +780,11 @@ export interface IFormattedLapData {
     totalPowerOut: number;
   };
   timestamp: number;
-  rfid: number;
+  Rfid: number;
+}
+
+export interface IPlaybackDynamoResponse {
+  data: ITelemetryData[];
+  id: string;
+  timestamp: number;
 }
