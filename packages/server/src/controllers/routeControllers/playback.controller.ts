@@ -4,7 +4,7 @@ import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
 
-export const getPlaybackData = async (request: Request, response: Response) => {
+export const getPacket = async (request: Request, response: Response) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -30,6 +30,43 @@ export const getPlaybackData = async (request: Request, response: Response) => {
   } catch (error) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
     response.status(500).json({ message: `Server Error: ${error}` });
+  }
+};
+
+export const getPacketDataBetweenDates = async (
+  request: Request,
+  response: Response,
+) => {
+  const backendController = request.app.locals
+    .backendController as BackendController;
+  const logger = createApplicationLogger(
+    "playback.controller.ts",
+    request,
+    response,
+  );
+
+  try {
+    // Extract query params safely
+    const startTime = Number(request.query.startTime);
+
+    const endTime = Number(request.query.endTime);
+
+    // Fetch data from DynamoDB
+    const packetData =
+      await backendController.dynamoDB.scanPacketDataBetweenDates(
+        startTime,
+        endTime,
+      );
+
+    logger.info(`ENTRY - ${request.method} ${request.url}`);
+
+    return response.status(200).json({
+      data: packetData,
+      message: "OK",
+    });
+  } catch (error) {
+    logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
+    return response.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -63,6 +100,7 @@ export const getFirstAndLastPacket = async (
     response.status(500).json({ message: `Server Error: ${error}` });
   }
 };
+
 export const getHealthPlayback = (request: Request, response: Response) => {
   const logger = createApplicationLogger(
     "driver.controller.ts",

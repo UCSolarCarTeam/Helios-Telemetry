@@ -6,7 +6,29 @@ import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { Switch } from "@mantine/core";
 
+function PlaybackPickerComponent() {
+  const { currentAppState, setCurrentAppState } = useAppState();
+
+  return (
+    <div className="flex w-full flex-col items-start gap-2">
+      <div className="flex items-center justify-center gap-2">
+        <span className="pr-3">Playback: </span>
+        <Switch
+          checked={currentAppState.playbackSwitch}
+          color="#B94A6C"
+          onClick={() =>
+            setCurrentAppState((prevState) => ({
+              ...prevState,
+              playbackSwitch: !prevState.playbackSwitch,
+            }))
+          }
+        />
+      </div>
+    </div>
+  );
+}
 function StatusComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
@@ -67,22 +89,7 @@ function StatusComponent() {
           </h5>
         )}
       </div>
-      <div className="flex items-center gap-x-1">
-        <span className="pr-3">Playback: </span>
-        <button
-          className={`bordertransition-colors relative h-6 w-12 cursor-pointer rounded-full ${currentAppState.playbackSwitch ? "bg-helios" : "bg-gray-400"}`}
-          onClick={() =>
-            setCurrentAppState((prevState) => ({
-              ...prevState,
-              playbackSwitch: !prevState.playbackSwitch,
-            }))
-          }
-        >
-          <div
-            className={`absolute left-1 top-1/2 size-4 -translate-y-1/2 translate-x-0 rounded-full bg-white transition-transform ${currentAppState.playbackSwitch ? "translate-x-6" : "translate-x-0"}`}
-          ></div>
-        </button>
-      </div>
+      <PlaybackPickerComponent />
     </div>
   );
 }

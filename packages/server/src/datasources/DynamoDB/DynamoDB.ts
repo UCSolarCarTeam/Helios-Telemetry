@@ -9,7 +9,11 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  AttributeValue,
+  DynamoDBClient,
+  QueryCommandInput,
+} from "@aws-sdk/client-dynamodb";
 import {
   GetCommand,
   PutCommand,
@@ -19,7 +23,12 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import type { ILapData, ITelemetryData } from "@shared/helios-types";
+import { marshall } from "@aws-sdk/util-dynamodb";
+import type {
+  ILapData,
+  IPlaybackDynamoResponse,
+  ITelemetryData,
+} from "@shared/helios-types";
 
 if (!process.env.LAP_TABLE_NAME) {
   throw new Error("Lap table name not defined");
@@ -74,8 +83,6 @@ export class DynamoDB implements DynamoDBtypes {
     } catch (error) {
       logger.error("Error getting playback table data: " + error.message);
       throw new Error(error.message);
-      logger.error("Error getting playback table data: " + error.message);
-      throw new Error(error.message);
     }
   }
 
@@ -84,31 +91,39 @@ export class DynamoDB implements DynamoDBtypes {
     endUTCDate: number,
   ) {
     try {
-      const params: ScanCommandInput = {
-        ScanFilter: {
-          timestamp: {
-            AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
-            ComparisonOperator: "BETWEEN",
-          },
-        },
-        TableName: this.packetTableName,
-      };
+      let items: IPlaybackDynamoResponse[] = [];
+      let lastEvaluatedKey: { [key: string]: AttributeValue } | undefined;
 
-      let lastEvaluatedKey;
       do {
+        const params: ScanCommandInput = {
+          ExclusiveStartKey: lastEvaluatedKey, // Continue from last position
+          ExpressionAttributeNames: {
+            "#ts": "timestamp",
+          },
+          ExpressionAttributeValues: {
+            ":end": endUTCDate,
+            ":start": startUTCDate,
+          },
+          FilterExpression: "#ts BETWEEN :start AND :end",
+          TableName: this.packetTableName,
+        };
+
         const command = new ScanCommand(params);
         const response = await this.client.send(command);
-        const items = response.Items
-          ? response.Items.map((item) => unmarshall(item))
-          : [];
 
-        lastEvaluatedKey = response.LastEvaluatedKey;
-        if (lastEvaluatedKey) {
-          params.ExclusiveStartKey = lastEvaluatedKey;
+        if (response.Items) {
+          items = items.concat(
+            response.Items.map((item) => item as IPlaybackDynamoResponse),
+          );
         }
-      } while (lastEvaluatedKey);
+
+        lastEvaluatedKey = response.LastEvaluatedKey; // Set for next iteration
+      } while (lastEvaluatedKey); // Keep scanning if there's more data
+
+      return items;
     } catch (error) {
-      logger.error(" Error Scanning Packets between Dates");
+      logger.error("Error Scanning Packets between Dates", error);
+      throw new Error("Error Scanning Packets between Dates");
     }
   }
 
@@ -173,6 +188,7 @@ export class DynamoDB implements DynamoDBtypes {
           data: packet,
           id: uuidv4(),
           timestamp: packet.TimeStamp,
+          type: "packet",
         },
         TableName: this.packetTableName,
       });
@@ -194,7 +210,9 @@ export class DynamoDB implements DynamoDBtypes {
         Item: {
           Rfid: packet.Rfid,
           data: packet,
-          timestamp: packet.data.timeStamp,
+          id: uuidv4(),
+          timestamp: packet.timestamp,
+          type: "lap",
         },
         TableName: this.lapTableName,
       });
@@ -217,9 +235,9 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const firstCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": "packet",
+          ":type": { S: "packet" },
         },
-        KeyConditionExpression: "id = :id",
+        KeyConditionExpression: "type = :type",
         Limit: 1,
         ScanIndexForward: true, // Ascending order → earliest timestamp
         TableName: this.packetTableName,
@@ -227,9 +245,9 @@ export class DynamoDB implements DynamoDBtypes {
 
       const lastCommand = new QueryCommand({
         ExpressionAttributeValues: {
-          ":id": "packet",
+          ":type": { S: "packet" },
         },
-        KeyConditionExpression: "id = :id",
+        KeyConditionExpression: "type = :type",
         Limit: 1,
         ScanIndexForward: false, // Descending order → latest timestamp
         TableName: this.packetTableName,
