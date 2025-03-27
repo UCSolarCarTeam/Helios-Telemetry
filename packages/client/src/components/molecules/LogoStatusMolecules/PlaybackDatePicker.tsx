@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useAppState } from "@/contexts/AppStateContext";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Button, Modal } from "@mui/material";
+import { Button, CircularProgress, Modal } from "@mui/material";
 import { ITelemetryData, prodURL } from "@shared/helios-types";
 
 export type IPlaybackDateTime = { date: Date; startTime: Date; endTime: Date };
@@ -18,6 +18,7 @@ interface IPlaybackDynamoResponse {
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [playbackDateTime, setPlaybackDateTime] = useState<IPlaybackDateTime>({
     date: new Date(),
     endTime: new Date(),
@@ -27,6 +28,7 @@ function PlaybackDatePicker() {
   const [playbackData, setPlaybackData] = useState<ITelemetryData[]>([]);
 
   const fetchPlaybackData = async () => {
+    setLoading(true);
     const year = playbackDateTime.date.getFullYear();
     const month = playbackDateTime.date.getMonth();
     const day = playbackDateTime.date.getDate();
@@ -65,7 +67,8 @@ function PlaybackDatePicker() {
       })
       .catch(() => {
         throw new Error("Error fetching playback data");
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -165,15 +168,19 @@ function PlaybackDatePicker() {
 
                 {/* Right Column: Playback Data Message */}
                 <div className="flex flex-grow items-center border-t border-gray-300 pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
-                  {playbackData.length > 0 ? (
-                    <h5 className="text-text-gray dark:text-text-gray-dark text-center text-lg font-semibold sm:text-2xl">
-                      {`Playback data for ${playbackDateTime.date.toDateString()} at ${playbackDateTime.startTime.toLocaleTimeString()} to ${playbackDateTime.endTime.toLocaleTimeString()} retrieved successfully.`}
-                    </h5>
-                  ) : (
-                    <h5 className="text-text-gray dark:text-text-gray-dark text-center text-lg font-semibold sm:text-2xl">
-                      There is no data for this date.
-                    </h5>
-                  )}
+                  <div className="flex w-full flex-col items-center justify-center">
+                    {loading ? (
+                      <CircularProgress />
+                    ) : playbackData.length > 0 ? (
+                      <h5 className="text-text-gray dark:text-text-gray-dark text-center text-lg font-semibold sm:text-2xl">
+                        {`Playback data for ${playbackDateTime.date.toDateString()} at ${playbackDateTime.startTime.toLocaleTimeString()} to ${playbackDateTime.endTime.toLocaleTimeString()} retrieved successfully.`}
+                      </h5>
+                    ) : (
+                      <h5 className="text-text-gray dark:text-text-gray-dark text-center text-lg font-semibold sm:text-2xl">
+                        There is no data for this date.
+                      </h5>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

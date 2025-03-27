@@ -83,24 +83,34 @@ export class DynamoDB implements DynamoDBtypes {
     endUTCDate: number,
   ) {
     try {
-      // Since you can only query on primary key attributes, and we need to filter by timestamp range
-      // without a specific id, we need to use a Scan operation with a filter instead of Query
-      const params: ScanCommandInput = {
-        ExpressionAttributeNames: {
-          "#ts": "timestamp",
-        },
-        ExpressionAttributeValues: {
-          ":end": endUTCDate,
-          ":start": startUTCDate,
-        },
-        FilterExpression: "#ts BETWEEN :start AND :end",
-        TableName: this.packetTableName,
-      };
+      let items: any[] = [];
+      let lastEvaluatedKey: Record<string, any> | undefined = undefined;
 
-      const command = new ScanCommand(params);
-      const response = await this.client.send(command);
+      do {
+        const params: ScanCommandInput = {
+          ExclusiveStartKey: lastEvaluatedKey, // Continue from last position
+          ExpressionAttributeNames: {
+            "#ts": "timestamp",
+          },
+          ExpressionAttributeValues: {
+            ":end": endUTCDate,
+            ":start": startUTCDate,
+          },
+          FilterExpression: "#ts BETWEEN :start AND :end",
+          TableName: this.packetTableName,
+        };
 
-      return response.Items || [];
+        const command = new ScanCommand(params);
+        const response = await this.client.send(command);
+
+        if (response.Items) {
+          items = items.concat(response.Items);
+        }
+
+        lastEvaluatedKey = response.LastEvaluatedKey; // Set for next iteration
+      } while (lastEvaluatedKey); // Keep scanning if there's more data
+
+      return items;
     } catch (error) {
       logger.error("Error Scanning Packets between Dates", error);
       throw new Error("Error Scanning Packets between Dates");
