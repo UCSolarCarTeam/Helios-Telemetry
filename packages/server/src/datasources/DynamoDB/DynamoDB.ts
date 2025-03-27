@@ -9,7 +9,11 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { DynamoDBClient, QueryCommandInput } from "@aws-sdk/client-dynamodb";
+import {
+  AttributeValue,
+  DynamoDBClient,
+  QueryCommandInput,
+} from "@aws-sdk/client-dynamodb";
 import {
   GetCommand,
   PutCommand,
@@ -20,7 +24,11 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import type { ILapData, ITelemetryData } from "@shared/helios-types";
+import type {
+  ILapData,
+  IPlaybackDynamoResponse,
+  ITelemetryData,
+} from "@shared/helios-types";
 
 if (!process.env.LAP_TABLE_NAME) {
   throw new Error("Lap table name not defined");
@@ -83,8 +91,8 @@ export class DynamoDB implements DynamoDBtypes {
     endUTCDate: number,
   ) {
     try {
-      let items: any[] = [];
-      let lastEvaluatedKey: Record<string, any> | undefined = undefined;
+      let items: IPlaybackDynamoResponse[] = [];
+      let lastEvaluatedKey: { [key: string]: AttributeValue } | undefined;
 
       do {
         const params: ScanCommandInput = {
@@ -104,7 +112,9 @@ export class DynamoDB implements DynamoDBtypes {
         const response = await this.client.send(command);
 
         if (response.Items) {
-          items = items.concat(response.Items);
+          items = items.concat(
+            response.Items.map((item) => item as IPlaybackDynamoResponse),
+          );
         }
 
         lastEvaluatedKey = response.LastEvaluatedKey; // Set for next iteration

@@ -4,18 +4,26 @@ import React, { useState } from "react";
 import { useAppState } from "@/contexts/AppStateContext";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Modal } from "@mui/material";
-import { ITelemetryData, prodURL } from "@shared/helios-types";
+import {
+  IPlaybackDynamoResponse,
+  ITelemetryData,
+  prodURL,
+} from "@shared/helios-types";
 
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
 import DatePickerResultColumn from "./DataPickerMolecules/DatePickerResultColumn";
 
 export type IPlaybackDateTime = { date: Date; startTime: Date; endTime: Date };
 
-export interface IPlaybackDynamoResponse {
-  data: ITelemetryData[];
-  id: string;
-  timestamp: number;
-}
+const createDateTime = (time: Date, year: number, month: number, day: number) =>
+  new Date(
+    year,
+    month,
+    day,
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds(),
+  );
 
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
@@ -35,18 +43,18 @@ function PlaybackDatePicker() {
     const month = playbackDateTime.date.getMonth();
     const day = playbackDateTime.date.getDate();
 
-    const createDateTime = (time: Date) =>
-      new Date(
-        year,
-        month,
-        day,
-        time.getHours(),
-        time.getMinutes(),
-        time.getSeconds(),
-      );
-
-    const startDateTime = createDateTime(playbackDateTime.startTime);
-    const endDateTime = createDateTime(playbackDateTime.endTime);
+    const startDateTime = createDateTime(
+      playbackDateTime.startTime,
+      year,
+      month,
+      day,
+    );
+    const endDateTime = createDateTime(
+      playbackDateTime.endTime,
+      year,
+      month,
+      day,
+    );
 
     const startTimeUTC = Math.floor(startDateTime.getTime() / 1000);
     const endTimeUTC = Math.floor(endDateTime.getTime() / 1000);

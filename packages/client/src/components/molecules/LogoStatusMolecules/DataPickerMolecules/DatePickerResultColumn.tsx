@@ -18,6 +18,9 @@ const DatePickerResultColumn: React.FC<DatePickerResultColumnProps> = ({
   playbackData,
   playbackDateTime,
 }) => {
+  const displayStartTime = `${playbackDateTime.date.toDateString()} at ${playbackDateTime.startTime.toLocaleTimeString()}`;
+  const displayEndTime = `${playbackDateTime.date.toDateString()} at ${playbackDateTime.endTime.toLocaleTimeString()}`;
+
   return (
     <div className="flex flex-grow items-center border-t border-gray-300 pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
       <div className="flex w-full flex-col items-center justify-center">
@@ -25,7 +28,7 @@ const DatePickerResultColumn: React.FC<DatePickerResultColumnProps> = ({
           <CircularProgress />
         ) : playbackData.length > 0 ? (
           <h5 className="text-text-gray dark:text-text-gray-dark text-center text-lg font-semibold sm:text-2xl">
-            {`Playback data for ${playbackDateTime.date.toDateString()} at ${playbackDateTime.startTime.toLocaleTimeString()} to ${playbackDateTime.endTime.toLocaleTimeString()} retrieved successfully.`}
+            {`Playback data for ${displayStartTime} to ${displayEndTime} retrieved successfully.`}
           </h5>
         ) : (
           <h5 className="text-text-gray dark:text-text-gray-dark text-center text-lg font-semibold sm:text-2xl">

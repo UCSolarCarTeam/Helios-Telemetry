@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import AWSIcon from "@/components/atoms/AWSIcon";
@@ -8,7 +7,6 @@ import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
 import { Switch } from "@mantine/core";
-import { DateInput, DatePickerInput, TimeInput } from "@mantine/dates";
 
 function PlaybackPickerComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
@@ -19,7 +17,7 @@ function PlaybackPickerComponent() {
         <span className="pr-3">Playback: </span>
         <Switch
           checked={currentAppState.playbackSwitch}
-          color="red"
+          color="#B94A6C"
           onClick={() =>
             setCurrentAppState((prevState) => ({
               ...prevState,

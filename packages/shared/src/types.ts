@@ -777,3 +777,9 @@ export interface IFormattedLapData {
   timestamp: number;
   Rfid: number;
 }
+
+export interface IPlaybackDynamoResponse {
+  data: ITelemetryData[];
+  id: string;
+  timestamp: number;
+}
