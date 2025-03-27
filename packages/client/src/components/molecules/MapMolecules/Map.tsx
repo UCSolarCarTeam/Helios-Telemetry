@@ -166,6 +166,32 @@ export default function Map({
     [setDataPoints],
   );
 
+  const geojson: FeatureCollection = {
+    features: [
+      {
+        geometry: {
+          coordinates: [lapLocation.long, lapLocation.lat],
+          type: "Point",
+        },
+        properties: { title: "Finish Line !!!" },
+        type: "Feature",
+      },
+    ],
+    type: "FeatureCollection",
+  };
+
+  const layerStyle: LayerProps = {
+    id: "finish-line",
+    paint: {
+      "circle-color": "#B94A6C",
+      "circle-opacity": 0.8,
+      "circle-radius": 20,
+      "circle-stroke-color": "#9C0534",
+      "circle-stroke-width": 2,
+    },
+    type: "circle",
+  };
+
   return (
     <div className="relative size-full">
       <ReactMapGL
@@ -243,6 +269,10 @@ export default function Map({
         >
           <SportsScoreIcon />
         </Marker>
+        <Source data={geojson} id="finish-line-source" type="geojson">
+          <Layer {...layerStyle} />
+        </Source>
+        ;
         {dataPoints.map((packetMarker, index) => (
           <PacketMarker
             index={index}
