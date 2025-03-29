@@ -29,6 +29,7 @@ interface ServerToClientEvents {
   lapCoords: (coords: CoordUpdateResponse) => void;
   carLatency: (value: number) => void;
   lapData: (value: ILapData) => void;
+  lapComplete: () => void;
 }
 
 // Defaults to using client fakerJS, change Data to Network in site settings to connect to server
