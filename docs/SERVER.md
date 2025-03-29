@@ -1,3 +1,5 @@
+_last updated March 29th, 2025_
+
 # Server Folder Documentation
 
 We use Express.js, MQTT, the DynamoSDK, and Socket.io as our main tech on the backend.
@@ -10,19 +12,17 @@ We also have our debugger/logger created here, and the main [controller](#contro
 
 If you're in Software Eng then you'll learn sockets in ENSF 462. If you're comp sci then gg
 
+When I say "i sent data over a socket" it basically means I sent data over a connection from myself to another client or server
+
 Sockets are basically used to keep a persistent connection open between a client and a server. Here are some defintions:
 
-- **emit**: Sends an event from the server to a specific client or all clients. Example: socket.emit("eventName", data).
+- **emit**: Sends an event from the server to a specific client or all clients. Example: `io.emit("eventName", data)`.
 
-- **broadcast**: Sends an event to all connected clients except the sender. Example: socket.broadcast.emit("eventName", data).
+- **broadcast**: Sends an event to all connected clients except the sender. Example: `io.broadcast("eventName", data).`
 
-- **listen**: Not a direct Socket.IO method, but conceptually means setting up an event listener to handle incoming events. Typically done using on().
+- **listen**: Not a direct Socket.IO method, but conceptually means setting up an event listener to handle incoming events. Typically done using `on()`.
 
-on – Listens for a specific event and executes a callback when the event occurs. Example: socket.on("eventName", (data) => { /_ handle event _/ }).
-
-Supports broadcasting – Messages can be sent to specific clients, all clients, or groups (rooms).
-
-Handles reconnections and fallbacks – Automatically reconnects if a connection drops.
+Socket.io handles reconnections and fallbacks meaning that it automatically reconnects if a connection drops. This functionality is super important, because without it if the connection dropped during race and never reconnected then we would be in trouble, and have to restart the server which isn't feasible.
 
 ## What is MQTT
 

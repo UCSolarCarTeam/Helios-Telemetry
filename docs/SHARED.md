@@ -1,3 +1,5 @@
+_last updated March 29th, 2025_
+
 # Shared Folder Documentation
 
 The purpose of the shared folder is to give all other folders in the `packages` folder access to these global functions. Otherwise you would have some pretty tricky imports, or duplicated code. This eliminates both and is very modular and maintainable.
