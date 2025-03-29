@@ -20,6 +20,42 @@ As of March 3rd 2025, we have 3 main projects (in terms of priority):
 
 Our main telemetry site found [here](https://telemetry.calgarysolarcar.ca/). This is just where we show all of our stats. There are multiple components that part of the site:
 
+### High Level Communication Explanation
+
+![high level archi](https://i.imgur.com/xhSfwxV.png)
+
+Above you can see the high-level architecture of the communication between our frontend, backend, and the car. There are sections that go into more detail about these topics here:
+
+- [MQTT](./SERVER.md#what-is-mqtt)
+- [AWS](./AMPLIFY.md#what-aws-services-do-we-use)
+- [Sockets](./SERVER.md#wtf-is-a-socketio)
+
+There is no frontend stuff listed here because there the sockets handle broadcasting it from the backend to the frontend.
+
+In race, here is how the data flow should work:
+
+1. The car sends backs via MQTT to the backend hosted in the cloud by the AWS
+2. The backend receives these packets on the specified port
+3. The backend then sends the client these packets via Socket.io
+4. The client/frontend receives these and displays it
+
+One good example that I have of how can you can imitate this flow is by using this website, as well as the [Helios MQTT Webserver Test](https://github.com/UCSolarCarTeam/Helios-Mqtt-Webserver-Test). Here is a brief explanation of what I mean:
+
+- When you run `yarn dev` or `npm run dev` for the **Helios-Telemetry** repository you are running both the **client and the server**, due to the script in the `package.json` file [here](../package.json).
+- **_If you're confused about how this runs both the client and the server, please check [here](./CLIENT.md#wtf-is-a-package-json-script)_**
+- When you run `yarn dev` or `npm run dev` for the **Helios-Mqtt-Webserver-Test** you are running a **simulation of the car sending the backend packets via MQTT**.
+- Below is a screenshot of what you should sort of be seeing:
+
+**Running yarn dev in the Helios-Telemetry repo:**
+![client server terminal](https://i.imgur.com/xiPuvOP.png)
+
+**Running yarn dev in the Helios-MQTT-Webserver-Test repo:**
+![mqtt webserver test](https://i.imgur.com/mtHhmLF.png)
+
+This is an example of one single packet being sent in from the webserver test (the car in this simulation) to the server (when you run yarn dev, but the server part) and then being emitted to the client (when you run yarn dev, but the client part).
+
+You can also see on `http://localhost:3000` that on the network setting, that the packets that are beign sent from the webserver test are being updated in the actual frontend as well! COOL!!!! LOL!!!!
+
 #### Main PIS data
 
 This includes the tabs at the top (Battery, Faults, Motor, MPPT). If you have any questions about what a field means, that is not a question for anyone on the Telemetry team (unless they've been on the team for a while or have been to race). Ask electrical.

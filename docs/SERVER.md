@@ -28,7 +28,7 @@ Handles reconnections and fallbacks – Automatically reconnects if a connection
 
 The specific MQTT library that we use is Aedes MQTT. The file is found [here](../packages/server/src/aedes.ts)
 
-[](https://imgur.com/a/QbcLIhO)
+![mqtt pic](https://i.imgur.com/Zs8WnP6.png)
 
 Above is a diagram of how MQTT works for our website with specific examples. Here are some definitions of what is in the diagram:
 

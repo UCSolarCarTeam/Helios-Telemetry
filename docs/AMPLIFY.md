@@ -23,7 +23,7 @@ As of when this was last edited, these are the AWS Services that we use:
 
 This is kind of confusing but not really. Below is an image of the most basic of what our pipeline looks like. Basically, **whenever a commit is merged into main**, and passes all the github action tests and checks, **CodeCommit** will recognize this and notify **CodeBuild** to start a build to build our new latest image based on our [Dockerfile](../Dockerfile).
 
-[](https://imgur.com/a/J0qk61e)
+![aws pic](https://i.imgur.com/1kh3uYG.png)
 
 If this image is built successfully, an `imagedefinitions.json()` artifact will have been created and passed into the **CodeDeploy** task to deploy our backend on **ECS** using **EC2** instances.
 
