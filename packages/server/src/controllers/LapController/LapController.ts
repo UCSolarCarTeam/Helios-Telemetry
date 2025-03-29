@@ -16,11 +16,18 @@ import type {
 const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
-  public previouslyInFinishLineProximity: boolean = false;
+  public previouslyInFinishLineProximity = false;
+  public passedDebouncedCheckpoint = false;
   public lapNumber: number = 0;
   public finishLineLocation: Coords = {
+    // enter finish line location
     lat: 51.081021,
     long: -114.136084,
+  };
+  public lapDebounceLocation: Coords = {
+    // enter offset for debounce coords
+    lat: this.finishLineLocation.lat - 0.5,
+    long: this.finishLineLocation.long - 0.5,
   };
   backendController: BackendController;
 
@@ -95,6 +102,7 @@ export class LapController implements LapControllerType {
         timestamp: packet.TimeStamp,
       };
       this.handleLapData(lapData);
+      this.backendController.socketIO.broadcastLapNumber(this.lapNumber);
       this.lastLapPackets = [];
     }
     this.lastLapPackets.push(packet);
@@ -104,11 +112,30 @@ export class LapController implements LapControllerType {
     return this.lastLapPackets;
   }
 
-  //checks if lap has been acheived
+  private checkDebounce(packet: ITelemetryData) {
+    // input actual car location
+    const carLocation = {
+      lat: packet.Telemetry.GpsLatitude,
+      long: packet.Telemetry.GpsLongitude,
+    };
+
+    const inDebounceZone =
+      getDistance(
+        carLocation.lat,
+        carLocation.long,
+        this.lapDebounceLocation.lat,
+        this.lapDebounceLocation.long,
+      ) <= 0.01;
+
+    this.passedDebouncedCheckpoint = inDebounceZone;
+    return inDebounceZone;
+  }
+
+  // checks if lap has been acheived (using geofencing)
   private checkLap(packet: ITelemetryData) {
     const carLocation = {
-      lat: 51.081021,
-      long: -114.136084,
+      lat: packet.Telemetry.GpsLatitude, // 51.081021
+      long: packet.Telemetry.GpsLongitude, // -114.136084
     };
 
     const inProximity =
@@ -118,9 +145,18 @@ export class LapController implements LapControllerType {
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
       ) <= 0.01;
+
     let lapHappened = false;
-    if (!this.previouslyInFinishLineProximity && inProximity) {
+    const checkDebounce = this.checkDebounce(packet);
+
+    if (
+      this.passedDebouncedCheckpoint &&
+      !this.previouslyInFinishLineProximity &&
+      inProximity
+    ) {
       lapHappened = true;
+      this.lapNumber += 1;
+      this.passedDebouncedCheckpoint = false;
     }
 
     this.previouslyInFinishLineProximity = inProximity;
