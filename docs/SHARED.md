@@ -30,6 +30,8 @@ What really matter is how it actually works though.
 }
 ```
 
+### Creating a global function
+
 In the package.json, we define what dependencies we have in this npm package, as well as the main file that exports all the functions/types that we need. So, if you plan on adding a shared function that is not currently there, you can follow these steps:
 
 1. Create a `.ts` file and name it in the src folder.

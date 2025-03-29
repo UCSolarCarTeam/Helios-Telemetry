@@ -1,6 +1,6 @@
 _last edited march 29 2025_
 
-# Documentation on what telemetry does
+# What does the telemetry team do?
 
 Hi I'm burton one of the Telemetry team tech leads and I will try and explain everything that Telemetry does as well as our responsibilites
 
@@ -16,9 +16,19 @@ As of March 3rd 2025, we have 3 main projects (in terms of priority):
 2. Helios Machine Learning (sort also for the site lol)
 3. Solar Car Front Facing Website / Business Portal
 
-## Helios Telemetry Site
+### Helios Telemetry Site
 
-Our main telemetry site found [here](https://telemetry.calgarysolarcar.ca/). This is just where we show all of our stats. There are multiple components that part of the site:
+Our main telemetry site found [here](https://telemetry.calgarysolarcar.ca/). This is just where we show all of our stats.
+
+### Helios Machine Learning
+
+Also technically a part of the website, but the repository is in a different place [here](https://github.com/UCSolarCarTeam/ML-Telemetry)
+
+### Solar Car Front Facing Website / Business Portal
+
+Our front facing website that contains information about the roster, our sponsors etc. If you just joined the team and are onboarding, please check it out [here](https://calgarysolarcar.ca/)
+
+You can scroll to the bottom and sign up at the team portal. Get the current team lead to verify you so you can add your information
 
 ## High Level Communication Explanation
 
@@ -39,7 +49,7 @@ In race, here is how the data flow should work:
 3. The backend then sends the client these packets via Socket.io
 4. The client/frontend receives these and displays it
 
-### Example of running everything
+## Example of running everything
 
 One good example that I have of how can you can imitate this flow is by using this website, as well as the [Helios MQTT Webserver Test](https://github.com/UCSolarCarTeam/Helios-Mqtt-Webserver-Test). Here is a brief explanation of what I mean:
 
@@ -58,7 +68,7 @@ This is an example of one single packet being sent in from the webserver test (t
 
 You can also see on `http://localhost:3000` that on the network setting, that the packets that are beign sent from the webserver test are being updated in the actual frontend as well! COOL!!!! LOL!!!!
 
-### Some things you should know about before working on this project
+## Some things you should know about before working on this project
 
 - Packets are assumed both on [demo and network](./CLIENT.md#demo-switch) mode to be sent every 0.5 seconds
 - The data flow during race starts at the car, to the backend hosted on AWS, and then to us on the client side (the user looking at the site)
