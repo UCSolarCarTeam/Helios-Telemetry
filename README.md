@@ -2,12 +2,7 @@
 
 Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 
-### Documentation
-
-[Click here](./docs/) for documentation on everything that we use
-
 ### Development Setup
-
 - Make sure you're using Node 18+
 - Run `corepack enable` to activate Corepack
 - Go into the project root
@@ -32,7 +27,6 @@ Appending `:client` or `:server` behind the dev command will start the servers i
 yarn build
 yarn start
 ```
-
 Appending `:client` or `:server` behind the build command will build/start the production servers individually
 
 ### Secrets and environment variables
@@ -50,6 +44,7 @@ MQTT_PASSWORD=
 ```
 
 In packages/client `.env`:
+
 
 ```
 NEXT_PUBLIC_MAPSAPIKEY=
