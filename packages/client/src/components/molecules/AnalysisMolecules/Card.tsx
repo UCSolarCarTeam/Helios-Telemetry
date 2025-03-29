@@ -12,7 +12,7 @@ export default function Card({
   return (
     <div
       className={twMerge(
-        `flex h-32 w-80 flex-col items-center justify-center rounded-2xl bg-sand sm:text-xxs ${square && "h-72 w-80"}`,
+        `flex h-32 w-80 flex-col items-center justify-center rounded-2xl bg-sand text-xxs ${square && "h-72 w-80"}`,
         className,
       )}
     >

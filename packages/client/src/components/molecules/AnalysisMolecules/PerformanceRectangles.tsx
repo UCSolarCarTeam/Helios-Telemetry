@@ -3,9 +3,9 @@ import DonutChartRect, { DonutChartProps } from "./DonutChartRect";
 
 const PerformanceRectangles = (props: DonutChartProps) => {
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row md:flex-row lg:flex-row xl:flex-col custom:flex-row">
+    <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row md:flex-row xl:flex-col custom:flex-row">
       <Card className="justify-start">
-        <p className="pb-2 pt-2 text-lg">{"Driver Performance Score"}</p>
+        <p className="py-2 text-lg">{"Driver Performance Score"}</p>
         <DonutChartRect
           {...props}
           lowerBound={28}

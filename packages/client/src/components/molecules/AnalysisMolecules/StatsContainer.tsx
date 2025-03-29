@@ -34,9 +34,9 @@ const StatsContainer = () => {
           </p>
           <div className="h-3 w-full rounded-full bg-arsenic">
             <div
-              className="flex h-3 items-stretch rounded-full bg-[#009F10]"
+              className="flex h-3 items-stretch rounded-full bg-green-dark"
               style={{ width: `${statsProps.linePercentage}%` }}
-            ></div>
+            />
           </div>
           <div className="flex w-full items-center justify-between pt-1">
             <span className="text-sm text-primary">
