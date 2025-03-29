@@ -17,6 +17,7 @@ import ReactMapGL, {
 
 import HeliosModel from "@/assets/HeliosBirdseye.png";
 import { useAppState } from "@/contexts/AppStateContext";
+import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import {
   type Coords,
   ITelemetryData,
@@ -165,6 +166,32 @@ export default function Map({
     [setDataPoints],
   );
 
+  const geojson: FeatureCollection = {
+    features: [
+      {
+        geometry: {
+          coordinates: [lapLocation.long, lapLocation.lat],
+          type: "Point",
+        },
+        properties: { title: "Finish Line" },
+        type: "Feature",
+      },
+    ],
+    type: "FeatureCollection",
+  };
+
+  const layerStyle: LayerProps = {
+    id: "finish-line",
+    paint: {
+      "circle-color": "#B94A6C",
+      "circle-opacity": 0.8,
+      "circle-radius": 20,
+      "circle-stroke-color": "#9C0534",
+      "circle-stroke-width": 2,
+    },
+    type: "circle",
+  };
+
   return (
     <div className="relative size-full">
       <ReactMapGL
@@ -229,17 +256,21 @@ export default function Map({
             width={20}
           />
         </Marker>
-        <Marker
-          latitude={lapLocation.lat}
-          longitude={lapLocation.long}
-          style={{
-            color: mapStates.satelliteMode
-              ? "white"
-              : darkMode
+        <Marker latitude={lapLocation.lat} longitude={lapLocation.long}>
+          <SportsScoreIcon
+            fontSize="large"
+            style={{
+              color: mapStates.satelliteMode
                 ? "white"
-                : "black",
-          }}
-        ></Marker>
+                : darkMode
+                  ? "white"
+                  : "black",
+            }}
+          />
+        </Marker>
+        <Source data={geojson} id="finish-line-source" type="geojson">
+          <Layer {...layerStyle} />
+        </Source>
 
         {dataPoints.map((packetMarker, index) => (
           <PacketMarker
