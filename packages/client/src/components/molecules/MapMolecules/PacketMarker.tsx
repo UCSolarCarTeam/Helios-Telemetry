@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import { Marker, Popup } from "react-map-gl";
 
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
