@@ -107,11 +107,6 @@ export class LapController implements LapControllerType {
 
   //checks if lap has been acheived
   private checkLap(packet: ITelemetryData) {
-    // const carLocation = {
-    //   lat: 51.081021,
-    //   long: -114.136084,
-    // };
-
     const inProximity =
       getDistance(
         packet.Telemetry.GpsLatitude,

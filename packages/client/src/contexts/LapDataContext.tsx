@@ -11,6 +11,7 @@ import {
 
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
+import { notifications } from "@mantine/notifications";
 import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 
 const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
@@ -25,7 +26,7 @@ const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
       lapPacket.data.batterySecondsRemaining.toFixed(2),
     ),
     distance: parseFloat(lapPacket.data.distance.toFixed(2)),
-    energyConsumed: parseFloat(lapPacket.data.energyConsumed.toFixed(2)),
+    energyConsumed: parseFloat((lapPacket.data.energyConsumed ?? 0).toFixed(2)),
     lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
     netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
     timeStamp: new Date(lapPacket.data.timeStamp).toLocaleString("en-US"),
@@ -55,7 +56,11 @@ export function LapDataContextProvider({
   }, []);
 
   const onLapComplete = useCallback(() => {
-    alert("lap completed");
+    notifications.show({
+      color: "green",
+      message: "A lap has been completed!",
+      title: "Lap Completion",
+    });
   }, []);
 
   const fetchLapData = useCallback(async () => {
