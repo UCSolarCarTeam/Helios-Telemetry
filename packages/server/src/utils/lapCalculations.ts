@@ -1,5 +1,15 @@
 import { Coords } from "@shared/helios-types";
 
+// Finds offset by converting distance (in km) to a certain latitude and longitude
+export function calculateOffset(offsetDistance: number, referenceLat: number) {
+  const oneDegToKm = 111; // 111 km = 1 deg
+  const latOffset = offsetDistance / oneDegToKm;
+  const longOffset =
+    offsetDistance / (oneDegToKm * Math.cos((referenceLat * Math.PI) / 180));
+
+  return { latOffset, longOffset };
+}
+
 // Main private that converts latitude and longitude to Decimal Degrees (DD)
 export function convertToDecimalDegrees(lat: string, long: string): Coords {
   let latitude: number;
