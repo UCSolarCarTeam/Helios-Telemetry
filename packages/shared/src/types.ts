@@ -777,3 +777,11 @@ export interface IFormattedLapData {
   timestamp: number;
   rfid: number;
 }
+
+export interface IRaceInfo {
+  distance: number;
+  lapNumber: number;
+  prevTime: number;
+  raceDay: number;
+  timeLeft: number;
+}

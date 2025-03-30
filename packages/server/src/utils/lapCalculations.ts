@@ -5,6 +5,16 @@ function toRad(value: number) {
   return (value * Math.PI) / 180;
 }
 
+// Finds offset by converting distance (in km) to a certain latitude and longitude
+export function calculateOffset(offsetDistance: number, referenceLat: number) {
+  const oneDegToKm = 111; // 111 km = 1 deg
+  const latOffset = offsetDistance / oneDegToKm;
+  const longOffset =
+    offsetDistance / (oneDegToKm * Math.cos((referenceLat * Math.PI) / 180));
+
+  return { latOffset, longOffset };
+}
+
 //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
 export function getDistance(
   lat1: number,

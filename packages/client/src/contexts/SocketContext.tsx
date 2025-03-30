@@ -15,6 +15,7 @@ import type {
   CoordUpdateResponse,
   Coords,
   ILapData,
+  IRaceInfo,
   ITelemetryData,
 } from "@shared/helios-types";
 
@@ -28,7 +29,7 @@ interface ServerToClientEvents {
   lapCoords: (coords: CoordUpdateResponse) => void;
   carLatency: (value: number) => void;
   lapData: (value: ILapData) => void;
-  lapNumber: (value: number) => void;
+  raceInfo: (value: IRaceInfo) => void;
 }
 
 const URL =
