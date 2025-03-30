@@ -28,7 +28,7 @@ export const getDrivers = async (request: Request, response: Response) => {
     return response.status(200).json(data);
   } catch (err) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: "Server Error" });
+    response.status(500).json({ message: `Server Error: ${err}` });
   }
 };
 
@@ -43,8 +43,8 @@ export const getDriverLaps = async (request: Request, response: Response) => {
   );
 
   try {
-    const rfid = request.params.rfid;
-    const driverLaps = await backendController.dynamoDB.getDriverLaps(rfid);
+    const Rfid = request.params.Rfid;
+    const driverLaps = await backendController.dynamoDB.getDriverLaps(Rfid);
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
@@ -57,7 +57,7 @@ export const getDriverLaps = async (request: Request, response: Response) => {
     return response.status(200).json(data);
   } catch (err) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: "Server Error" });
+    response.status(500).json({ message: `Server Error: ${err}` });
   }
 };
 
@@ -82,12 +82,12 @@ export const updateDriverInfo = async (
   request: Request,
   response: Response,
 ) => {
-  const { name, rfid } = request.body;
+  const { name, Rfid } = request.body;
 
-  if (!name || !rfid) {
+  if (!name || !Rfid) {
     return response
       .status(400)
-      .json({ error: "Name and RFID fields are required" });
+      .json({ error: "Name and Rfid fields are required" });
   }
 
   const backendController = request.app.locals
@@ -101,7 +101,7 @@ export const updateDriverInfo = async (
 
   try {
     const responseMessage = await backendController.dynamoDB.updateDriverInfo(
-      rfid,
+      Rfid,
       name,
     );
 
@@ -115,6 +115,6 @@ export const updateDriverInfo = async (
     return response.status(200).json(data);
   } catch (err) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: "Server Error" });
+    response.status(500).json({ message: err });
   }
 };

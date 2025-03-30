@@ -11,9 +11,11 @@ import {
 
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
-import { IFormattedLapData, ILapData } from "@shared/helios-types";
+import { notifications } from "@mantine/notifications";
+import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 
 const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
+  Rfid: lapPacket.Rfid,
   data: {
     ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
     averagePackCurrent: parseFloat(
@@ -24,13 +26,13 @@ const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
       lapPacket.data.batterySecondsRemaining.toFixed(2),
     ),
     distance: parseFloat(lapPacket.data.distance.toFixed(2)),
+    energyConsumed: parseFloat((lapPacket.data.energyConsumed ?? 0).toFixed(2)),
     lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
     netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
-    timeStamp: new Date(lapPacket.data.timeStamp).toLocaleDateString("en-US"),
+    timeStamp: new Date(lapPacket.data.timeStamp).toLocaleString("en-US"),
     totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
     totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
   },
-  rfid: lapPacket.rfid,
   timestamp: lapPacket.timestamp,
 });
 
@@ -53,11 +55,17 @@ export function LapDataContextProvider({
     setLapData((prev) => [...prev, formattedData]);
   }, []);
 
+  const onLapComplete = useCallback(() => {
+    notifications.show({
+      color: "green",
+      message: "A lap has been completed!",
+      title: "Lap Completion",
+    });
+  }, []);
+
   const fetchLapData = useCallback(async () => {
     try {
-      const response = await axios.get(
-        `https://aedes.calgarysolarcar.ca:3001/laps`,
-      );
+      const response = await axios.get(`${prodURL}/laps`);
       return response.data.data; // Assuming the API returns an array of lap data
     } catch (error) {
       return { error: "Error fetching lap data" };
@@ -84,11 +92,18 @@ export function LapDataContextProvider({
       !currentAppState.playbackSwitch
     ) {
       socketIO.on("lapData", onLapData);
+      socketIO.on("lapComplete", onLapComplete);
       return () => {
         socketIO.off("lapData", onLapData);
+        socketIO.off("lapComplete", onLapComplete);
       };
     }
-  }, [currentAppState.connectionType, currentAppState.playbackSwitch]);
+  }, [
+    currentAppState.connectionType,
+    currentAppState.playbackSwitch,
+    onLapData,
+    onLapComplete,
+  ]);
 
   return (
     <lapDataContext.Provider value={{ lapData }}>

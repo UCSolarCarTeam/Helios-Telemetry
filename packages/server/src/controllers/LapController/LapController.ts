@@ -151,6 +151,7 @@ export class LapController implements LapControllerType {
       this.startTimers();
 
     if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
+      await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
@@ -162,6 +163,7 @@ export class LapController implements LapControllerType {
       );
 
       const lapData: ILapData = {
+        Rfid: packet.Pi.Rfid,
         data: {
           ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
           averagePackCurrent: averagePackCurrent,
@@ -172,14 +174,13 @@ export class LapController implements LapControllerType {
               averagePackCurrent,
             ),
           distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+          energyConsumed: this.getEnergyConsumption(this.lastLapPackets),
           lapTime: this.calculateLapTime(this.lastLapPackets),
           netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
-
           timeStamp: packet.TimeStamp,
           totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
           totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
         },
-        rfid: packet.Pi.rfid,
         timestamp: packet.TimeStamp,
       };
 
@@ -227,8 +228,8 @@ export class LapController implements LapControllerType {
 
     const inProximity =
       getDistance(
-        carLocation.lat,
-        carLocation.long,
+        packet.Telemetry.GpsLatitude,
+        packet.Telemetry.GpsLongitude,
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
       ) <= 0.01;
@@ -461,5 +462,12 @@ export class LapController implements LapControllerType {
     } else {
       return Math.round(secondsUntilChargedOrDepleted);
     }
+  }
+
+  public getEnergyConsumption(packetArray: ITelemetryData[]): number {
+    const lapTime = this.calculateLapTime(packetArray);
+    const netPowerOut = this.netPower(packetArray);
+
+    return lapTime * netPowerOut;
   }
 }

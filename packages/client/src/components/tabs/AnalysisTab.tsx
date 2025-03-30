@@ -9,6 +9,7 @@ import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
 import MLContainer from "../containers/MLContainer";
+import StatsContainer from "../molecules/AnalysisMolecules/StatsContainer";
 
 type TabContentProps = React.PropsWithChildren<{
   index: number;
@@ -140,7 +141,7 @@ function AnalysisTab() {
             </div>
           </TabContent>
           <TabContent index={1} value={value}>
-            Stats
+            <StatsContainer />
           </TabContent>
         </div>
       </div>

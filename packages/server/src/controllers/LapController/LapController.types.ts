@@ -26,4 +26,5 @@ export interface LapControllerType {
   netPower(packetArray: ITelemetryData[]): number;
   previouslyInFinishLineProximity: boolean;
   setFinishLineLocation(coords: CoordInfoUpdate): void;
+  getEnergyConsumption(packetArray: ITelemetryData[]): number;
 }

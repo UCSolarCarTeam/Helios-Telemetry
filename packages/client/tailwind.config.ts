@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        custom: { min: "1280px", max: "1311px" },
+      },
       fontSize: {
         xxs: "0.6rem",
       },
@@ -16,6 +19,8 @@ const config: Config = {
         primary: "#9C0534",
         green: "#01650B",
         "green-dark": "#00ae00",
+        "sand": "#BFBFBF",
+        "arsenic": "#3A3A3A",
       },
       textColor: {
         light: "#3A3A3A",
