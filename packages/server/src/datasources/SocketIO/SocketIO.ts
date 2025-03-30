@@ -12,6 +12,7 @@ import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
   ILapData,
+  IRaceInfo,
   ITelemetryData,
 } from "@shared/helios-types";
 
@@ -53,8 +54,8 @@ export class SocketIO implements SocketIOType {
   public broadcastLapCoords(response: CoordUpdateResponse) {
     this.io.emit("lapCoords", response);
   }
-  public broadcastLapNumber(lapNumber: number) {
-    this.io.emit("lapNumber", lapNumber);
+  public broadcastRaceInfo(raceInfo: IRaceInfo) {
+    this.io.emit("raceInfo", raceInfo);
   }
 
   public initializeSocketListeners(socket: Socket) {
