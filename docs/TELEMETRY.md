@@ -8,7 +8,20 @@ What is Telemetry? Telemetry is just statistics and analytics of the car basical
 
 First off, Telemetry has the least impact on whatever the rest of the solar car team does. Although it is a requirement in the race (I think) to have some sort of telemetry (statistics about the car basically), we don't really interact with any of mechanical or electrical (sometimes we do but not really).
 
-## Our projects
+## As a new recruit, what should you know?
+
+Future tech leads can edit this if they want but this is what I think
+
+If you're a 3rd year you were probably recruited because you know what you're doing. Hopefully at least LOL this is more for first and second years
+
+You may be intimidated with the amount of stuff you have to learn - most first and second years have never touched typescript before, and many of the technologies listed below. However this is what the documentation is written for - and here are some words of advice
+
+1. You were recruited for a reason - your tech lead is not dumb (hopefully) and knows what the team needs. "Oh but I barely know anything and I barely even know HTML and CSS" - please know that hard work trumps all. We have learned from our mistakes in recruiting and would rather recruit someone who wants to learn, rather than someone who knows it all. If you feel like you have imposter syndrome, just ask yourself this question: "Am I afraid of being unemployed in the future" if the answer is yes then that in itself should motivate you to learn
+2. Ask your tech leads for help if you are stuck - We would rather help you then you be stuck on something for the whole workday. "Oh but they look busy" nah we are not busy just ask
+
+Good luck!@#!@!
+
+## Our projects / tech stacks
 
 As of March 3rd 2025, we have 3 main projects (in terms of priority):
 
@@ -20,15 +33,48 @@ As of March 3rd 2025, we have 3 main projects (in terms of priority):
 
 Our main telemetry site found [here](https://telemetry.calgarysolarcar.ca/). This is just where we show all of our stats.
 
+This site uses:
+
+- Typescript
+- React
+- Next.js
+- Express.js and Node.js
+- Tailwind
+- MUI and Mantine Styled Components
+- MapboxGL and ThreeJS
+- MQTT
+- Socket.io
+- Vercel
+- AWS Services
+  - DynamoDB (databse for our tables)
+  - AWS Amplify (no clue why we need this lowk)
+  - AWS CodePipeline (Commit, Build and Deploy)
+  - AWS ECR and ECS (deploying our ec2 instances)
+  - Route 53 (for our DNS records)
+
 ### Helios Machine Learning
 
 Also technically a part of the website, but the repository is in a different place [here](https://github.com/UCSolarCarTeam/ML-Telemetry)
+
+Our ML stack is listed [here](./ML.md).
 
 ### Solar Car Front Facing Website / Business Portal
 
 Our front facing website that contains information about the roster, our sponsors etc. If you just joined the team and are onboarding, please check it out [here](https://calgarysolarcar.ca/)
 
 You can scroll to the bottom and sign up at the team portal. Get the current team lead to verify you so you can add your information
+
+This site uses:
+
+- Typescript
+- React
+- Next.js
+- SASS
+- Prisma
+- Supabase
+- Clerk
+- TRPC
+- Vercel
 
 ## High Level Communication Explanation
 

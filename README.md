@@ -7,7 +7,8 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 ### [General Telemetry Documentation](./docs/TELEMETRY.md)
 
 - [What does the telemetry team do?](./docs/TELEMETRY.md#what-does-the-telemetry-team-do)
-- [Our Projects](./docs/TELEMETRY.md#our-projects)
+- [For new recruits](./docs/TELEMETRY.md#as-a-new-recruit-what-should-you-know)
+- [Our Projects and Tech Stacks](./docs/TELEMETRY.md#our-projects--tech-stacks)
   - [Helios Telemetry Site](./docs/TELEMETRY.md#helios-telemetry-site)
   - [Helios Machine Learning](./docs/TELEMETRY.md#helios-machine-learning)
   - [Solar Car Front Facing Website / Business Portal](./docs/TELEMETRY.md#solar-car-front-facing-website--business-portal)
