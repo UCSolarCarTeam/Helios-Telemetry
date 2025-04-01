@@ -8,6 +8,10 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 
 - [What does the telemetry team do?](./docs/TELEMETRY.md#what-does-the-telemetry-team-do)
 - [For new recruits](./docs/TELEMETRY.md#as-a-new-recruit-what-should-you-know)
+  - [Things to install](./docs/TELEMETRY.md#things-you-should-probably-install)
+  - [Local Environment Setup](./docs/TELEMETRY.md#local-env-setup)
+    - [Prettier Setup](./docs/TELEMETRY.md#prettier-setup)
+    - [AWS Setup](./docs/TELEMETRY.md#AWS-setup)
 - [Our Projects and Tech Stacks](./docs/TELEMETRY.md#our-projects--tech-stacks)
   - [Helios Telemetry Site](./docs/TELEMETRY.md#helios-telemetry-site)
   - [Helios Machine Learning](./docs/TELEMETRY.md#helios-machine-learning)
@@ -32,6 +36,7 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 ### [Amplify/AWS Folder](./docs/AMPLIFY.md)
 
 - [Introduction](./docs/AMPLIFY.md#amplify-folder-documentation)
+- [AWS Environment Setup](./docs/AMPLIFY.md#aws-environment-setup)
 - [AWS Services Used](./docs/AMPLIFY.md#aws-services-used)
 - [CI/CD Pipeline](./docs/AMPLIFY.md#cicd-pipeline)
 - [Database Tables](./docs/AMPLIFY.md#database-tables)

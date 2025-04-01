@@ -6,7 +6,46 @@ Hello it's burton again I will be explaining what exactly is in the amplify fold
 
 [Amplify](https://aws.amazon.com/amplify/) is an AWS service that we use to host our backend, which also handles our CI/CD Pipeline
 
-### What AWS Services do we use?
+## AWS Environment Setup
+
+Ask your tech lead to:
+
+1. Create you an IAM account with sufficient permissions
+2. Create a secret access key so you have access to the CLI
+3. Help you configure your AWS profile
+
+To configure AWS locally, run these specific commands after these 3 steps have been completed:
+
+```bash
+aws configure
+```
+
+Then, four options should have appeared and you should have filled them out
+
+```bash
+asked for secret access key
+asked for secret access id secret whatever secreter one
+asked for region
+asked for json format or whatever, can leave this one empty
+```
+
+You can check to see if this worked by running:
+
+```bash
+aws sts get-caller-identity aws sts-
+```
+
+The output should be something like:
+
+```json
+{
+  "UserId": "SDJHFHSDJLFHJKLSEDHTRJKLS",
+  "Account": "34523452345",
+  "Arn": "arn:aws:iam::34523452345:user/{whatever your lead named your IAM username whatever}"
+}
+```
+
+## What AWS Services do we use?
 
 As of when this was last edited, these are the AWS Services that we use:
 

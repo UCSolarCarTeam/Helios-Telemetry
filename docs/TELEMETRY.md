@@ -19,7 +19,55 @@ You may be intimidated with the amount of stuff you have to learn - most first a
 1. You were recruited for a reason - your tech lead is not dumb (hopefully) and knows what the team needs. "Oh but I barely know anything and I barely even know HTML and CSS" - please know that hard work trumps all. We have learned from our mistakes in recruiting and would rather recruit someone who wants to learn, rather than someone who knows it all. If you feel like you have imposter syndrome, just ask yourself this question: "Am I afraid of being unemployed in the future" if the answer is yes then that in itself should motivate you to learn
 2. Ask your tech leads for help if you are stuck - We would rather help you then you be stuck on something for the whole workday. "Oh but they look busy" nah we are not busy just ask
 
+I guess at the very least, we expect you to know Python or Java. But those are first year requirements. So basically nothing lol
+
 Good luck!@#!@!
+
+### Things you should probably install
+
+**Yarn**: Similar to when you run `npm run dev`, yarn is just another package manager. There are instructions to install it [here](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)
+
+**Prettier**: Just an extension to make your code prettier. You can install it in the extensions tab (if you're in vscode). You can install it [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+**ESLint**: An extension to "lint" your code. You can install it in the extensions tab (if you're in vscode). You can install it [here](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+**Git Graph**: An extension to see the different git branches created, which is good for visualization. You can install it [here](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph)
+
+**GitLens**: An extension to see who wrote a piece of code in the repository, also known as `git blame`. You can install it [here](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
+
+The rest of these are optional, but helpful
+
+**Color Highlight**: An extension to highlight colors in your code. You can install it [here](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight)
+
+**Pretty Typescript Errors**: Typescript errors that are actually readable. You can install it [here](https://marketplace.visualstudio.com/items?itemName=YoavBls.pretty-ts-errors)
+
+**Material Icon Theme**: To make the file directory a little bit more easy to look at, I suggest this. You can install it [here](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme)
+
+**Live Share**: If you are doing peer programming sessions with your tech lead or other team members, you can collaborate in real-time with this tool. You can install it [here](https://marketplace.visualstudio.com/items?itemName=ms-vsliveshare.vsliveshare)
+
+### Local Env Setup
+
+Also make sure you follow whatever is written in the [README](../README.md) as well regarding the berry stuff
+
+#### Prettier Setup
+
+You should have prettier on save configured. What this does is that when you save, prettier formats your code for you (very nice!)
+
+You can follow these commands:
+
+1. `ctrl+,` (windows) or `cmd+,` (mac)
+2. Type in `format on save`
+3. Click the first checkbox
+4. After that, click the link in the red box
+5. Change it from `off` to `onFocusChange`
+
+![format on save photo](https://i.imgur.com/pBigCnc.png)
+
+Now, whenever you switch windows, you will save meaning you don't have to save the file and then switch to the preview to save stuff
+
+#### AWS Setup
+
+Once you start working with things related to AWS, follow the guide [here](./AMPLIFY.md#aws-environment-setup)
 
 ## Our projects / tech stacks
 
