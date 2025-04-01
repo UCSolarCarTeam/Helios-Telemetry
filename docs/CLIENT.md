@@ -177,4 +177,26 @@ This fake data is based off the actual HeliosTelemetry data type found [here](..
 
 ### PIS logic
 
-Ideen pls explain this you are the best thanks
+There are currently 4 PIS hooks that generate the data we use to actually show on the frotend, namely:
+
+1. `PIS.battery.tsx`
+2. `PIS.fault.tsx`
+3. `PIS.motor.tsx`
+4. `PIS.mppt.tsx`
+
+You can look through the files and they are pretty straightforward, as it basically just accesses the fields that we want from the [packet](./TELEMETRY.md#packet) and packages into JSON object that we can parse anyway we want, which is what we do in the [`PISTransformer.tsx`](../packages/client/src/components/transformers/PISTransformer.tsx) file.
+
+If we actually look through this file, it may look complicated, but I can try and break down each function to make it easier. You can treat this transformer file as a giant JSON parser.
+
+- `FieldUnitsHandler()`: Handles different types of units to display. Straightforward, and uses an ENUM to distinguish between imperial vs. metric units.
+- `RangeCheckFieldData()`: We show all types of different data from booleans, numbers, and strings/text. This is a function to basically see which type the field is trying to display, and making sure that the correct symbol or number is shown (if its true, we show T, etc.)
+- `FormatString()`: Formats the string. Nice!
+- `FieldDataFormatter()`: Basically, if the field does have an fstring then it will format the string based on the fstring. You will notice that in the interface, the fstring is actually declared as an optional variable so there are cases when there is no fstring (it's just a boolean or just a number.) Here is an example of what the fstring field might look like in the PIS [here](../packages/client/src/hooks/PIS/PIS.battery.tsx#L382)
+- `FieldPrinter()`: There's some logic here for actually adding the favorites here but that's pretty self explanatory. This function is for printing the name of the field as well as the number (which is explained in the FieldDataFormatter() function)
+- `FieldsPrinter()`: Instead of printing the field, this maps the object and prints the fields... Yeah
+- `PISTransformer()`: This one is probably the most important one. Since the packet object that we are parsing is not consistently nested, meaning that there could be arrays in arrays in objects, etc, we use the PISTransformer() as a recursive loop to actually see when we want to print the fields. We use this using the depth variable, so we pass in props and use recursion to pass depth + 1 to increase the depth. Based on the depth as well, the text size will get smaller and smaller when printing the keys of the fields. Here is an example:
+
+![motor faults example](https://imgur.com/ZzqVTfl)
+![motor faults web example](https://imgur.com/LRein7b)
+
+The top image is the nested structure of the Right motors warning flags that you can find [here](../packages/client/src/hooks/PIS/PIS.faults.tsx). The bottom image is what is actually shown on the website. You can see that the titles (keys) of the object are actually getting smaller with how deep you parse the packet object. If you still don't get it, ask a tech lead.git
