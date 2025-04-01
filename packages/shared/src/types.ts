@@ -788,3 +788,11 @@ export interface IPlaybackDynamoResponse {
   id: string;
   timestamp: number;
 }
+
+export interface IRaceInfo {
+  distance: number;
+  lapNumber: number;
+  prevTime: number;
+  raceDay: number;
+  timeLeft: number;
+}

@@ -1,7 +1,11 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
-import { convertToDecimalDegrees, getDistance } from "@/utils/lapCalculations";
+import {
+  calculateOffset,
+  convertToDecimalDegrees,
+  getDistance,
+} from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { calculateVehicleVelocity } from "@shared/helios-types";
@@ -10,22 +14,102 @@ import type {
   CoordUpdateResponse,
   Coords,
   ILapData,
+  IRaceInfo,
   ITelemetryData,
 } from "@shared/helios-types";
 
 const logger = createLightweightApplicationLogger("LapController.ts");
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
-  public previouslyInFinishLineProximity: boolean = false;
-  public lapNumber: number = 0;
+  public previouslyInFinishLineProximity = false;
+  public passedDebouncedCheckpoint = false;
+  public totalTime = 3600 * 1000 * 8; // 1000 ms/sec * 3600 sec/hr * 8 hr
+  // public raceStartTime = new Date("2025-08-01-13:00");
+  // public myTime = new Date("2025-08-01-13:00");
+  // public myTimeEnd = new Date("2025-08-01-21:00");
+
+  public raceInfo: IRaceInfo = {
+    distance: 0,
+    lapNumber: 0,
+    prevTime: 0,
+    raceDay: 0,
+    timeLeft: this.totalTime,
+  };
+
   public finishLineLocation: Coords = {
+    // enter finish line location
     lat: 51.081021,
     long: -114.136084,
   };
+
+  public lapDebounceLocation: Coords = {
+    lat:
+      this.finishLineLocation.lat -
+      calculateOffset(0.05, this.finishLineLocation.lat).latOffset,
+    long:
+      this.finishLineLocation.long -
+      calculateOffset(0.05, this.finishLineLocation.lat).longOffset,
+  };
+
+  private timerInterval: NodeJS.Timeout;
+  private checkRaceEndInterval: NodeJS.Timeout;
+
   backendController: BackendController;
+
+  public startTimers() {
+    this.timerInterval = setInterval(() => {
+      this.raceInfo.timeLeft -= 1000;
+    }, 1000); // update the time every 1 second.
+
+    this.checkRaceEndInterval = setInterval(() => {
+      if (this.raceInfo.timeLeft <= 0) {
+        this.resetRaceInfo(); // or do myTime > myTimeEnd
+        this.incrementRaceDay();
+      }
+
+      if (this.raceInfo.raceDay >= 3) {
+        this.raceInfo.timeLeft = 0;
+      }
+    }, 1000); // check for end of race every second
+  }
 
   constructor(backendController: BackendController) {
     this.backendController = backendController;
+    this.startTimers();
+  }
+
+  public cleanUp() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+    if (this.checkRaceEndInterval) {
+      clearInterval(this.checkRaceEndInterval);
+      this.checkRaceEndInterval = null;
+    }
+  }
+
+  public resetRaceInfo() {
+    this.raceInfo.timeLeft = this.totalTime;
+  }
+
+  public incrementRaceDay() {
+    this.raceInfo.raceDay += 1;
+  }
+
+  public calculateRaceDistance(motorDetails0: number, motorDetails1: number) {
+    const vehicleVelocity = calculateVehicleVelocity(
+      motorDetails0,
+      motorDetails1,
+    );
+
+    // calculate distance
+    const currentTime = Date.now();
+    if (this.raceInfo.prevTime !== 0) {
+      const dTime = (currentTime - this.raceInfo.prevTime) / (3600 * 1000); // convert ms to hr
+      this.raceInfo.distance = this.raceInfo.distance + vehicleVelocity * dTime;
+    }
+    this.raceInfo.prevTime = currentTime;
   }
 
   public setFinishLineLocation(
@@ -62,6 +146,10 @@ export class LapController implements LapControllerType {
   }
 
   public async handlePacket(packet: ITelemetryData) {
+    if (false) this.cleanUp();
+    else if (this.timerInterval == null || this.checkRaceEndInterval == null)
+      this.startTimers();
+
     if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
       await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
@@ -95,9 +183,15 @@ export class LapController implements LapControllerType {
         },
         timestamp: packet.TimeStamp,
       };
+
       this.handleLapData(lapData);
       this.lastLapPackets = [];
     }
+
+    const motorDetails0 = packet.MotorDetails0.CurrentRpmValue;
+    const motorDetails1 = packet.MotorDetails1.CurrentRpmValue;
+    this.calculateRaceDistance(motorDetails0, motorDetails1);
+    this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
     this.lastLapPackets.push(packet);
   }
 
@@ -105,8 +199,33 @@ export class LapController implements LapControllerType {
     return this.lastLapPackets;
   }
 
-  //checks if lap has been acheived
+  private checkDebounce(packet: ITelemetryData) {
+    const carLocation = {
+      lat: packet.Telemetry.GpsLatitude,
+      long: packet.Telemetry.GpsLongitude,
+    };
+
+    const inDebounceZone =
+      getDistance(
+        carLocation.lat,
+        carLocation.long,
+        this.lapDebounceLocation.lat,
+        this.lapDebounceLocation.long,
+      ) <= 0.01;
+
+    if (inDebounceZone && !this.passedDebouncedCheckpoint)
+      this.passedDebouncedCheckpoint = true;
+
+    return this.passedDebouncedCheckpoint;
+  }
+
+  // checks if lap has been acheived (using geofencing)
   private checkLap(packet: ITelemetryData) {
+    const carLocation = {
+      lat: packet.Telemetry.GpsLatitude, // 51.081021
+      long: packet.Telemetry.GpsLongitude, // -114.136084
+    };
+
     const inProximity =
       getDistance(
         packet.Telemetry.GpsLatitude,
@@ -114,9 +233,14 @@ export class LapController implements LapControllerType {
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
       ) <= 0.01;
+
     let lapHappened = false;
-    if (!this.previouslyInFinishLineProximity && inProximity) {
+    const checkDebounce = this.checkDebounce(packet);
+
+    if (checkDebounce && !this.previouslyInFinishLineProximity && inProximity) {
       lapHappened = true;
+      this.raceInfo.lapNumber += 1;
+      this.passedDebouncedCheckpoint = false;
     }
 
     this.previouslyInFinishLineProximity = inProximity;
