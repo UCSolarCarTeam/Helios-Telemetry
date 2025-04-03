@@ -138,7 +138,7 @@ There is no frontend stuff listed here because there the sockets handle broadcas
 
 In race, here is how the data flow should work:
 
-1. The car sends backs via MQTT to the backend hosted in the cloud by the AWS
+1. The car sends packets via MQTT to the backend hosted in the cloud by the AWS
 2. The backend receives these packets on the specified port
 3. The backend then sends the client these packets via Socket.io
 4. The client/frontend receives these and displays it
