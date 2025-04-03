@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useLapData } from "@/contexts/LapDataContext";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -309,25 +308,15 @@ function RaceTab() {
           </InputLabel>
 
           <Select
-            className="max-w-[1200px] overflow-auto"
+            className="max-w-56 overflow-auto"
             input={<OutlinedInput label="Column" />}
             multiple
             onChange={handleChange}
-            renderValue={(selected) => (
-              <Box
-                className="overflow-auto"
-                component="div"
-                sx={{
-                  "&::-webkit-scrollbar": {
-                    display: "none",
-                  },
-                }}
-              >
-                {selected.map((value) => (
-                  <Chip key={value} label={checkBoxFormatting(value)} />
-                ))}
-              </Box>
-            )}
+            renderValue={(selected) => {
+              return selected
+                .map((value) => checkBoxFormatting(value))
+                .join(", ");
+            }}
             sx={{
               "& .MuiMenuItem-root": {
                 "&:hover": {
