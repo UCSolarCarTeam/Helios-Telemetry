@@ -105,7 +105,6 @@ export default function Map({
     animateCarMarker();
     return () => cancelAnimationFrame(animationFrameId);
   }, [carLocation]);
-
   useEffect(() => {
     const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
     if (!mapRef.current) return;
@@ -178,6 +177,7 @@ export default function Map({
       "circle-color": "#B94A6C",
       "circle-opacity": 0.8,
       "circle-radius": 20,
+
       "circle-stroke-color": "#9C0534",
       "circle-stroke-width": 2,
     },
@@ -205,7 +205,9 @@ export default function Map({
           if (!mapRef.current) return;
           fitBounds(mapRef.current, carLocation, lapLocation);
         }}
-        onMove={(evt) => setViewState(evt.viewState)}
+        onMove={(evt) => {
+          setViewState(evt.viewState);
+        }}
         ref={(instance) => {
           if (instance) {
             mapRef.current = instance;
@@ -240,9 +242,11 @@ export default function Map({
             width={20}
           />
         </Marker>
-        <Marker latitude={lapLocation.lat} longitude={lapLocation.long}>
+        <Marker
+          latitude={lapLocation.lat + 0.00008}
+          longitude={lapLocation.long + 0.00009}
+        >
           <SportsScoreIcon
-            fontSize="large"
             style={{
               color: mapStates.satelliteMode
                 ? "white"
@@ -250,12 +254,12 @@ export default function Map({
                   ? "white"
                   : "black",
             }}
+            sx={{ fontSize: "40px" }}
           />
         </Marker>
         <Source data={geojson} id="finish-line-source" type="geojson">
           <Layer {...layerStyle} />
         </Source>
-
         {dataPoints.map((packetMarker, index) => (
           <PacketMarker
             index={index}
@@ -266,6 +270,7 @@ export default function Map({
             setDataPoints={setDataPoints}
           />
         ))}
+
         {TRACK_LIST.map(({ layerProps, sourceProps }, index) => {
           if (!viewTracks[index]) return null;
           return (
