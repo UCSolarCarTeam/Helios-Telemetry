@@ -184,7 +184,7 @@ export default function Map({
     paint: {
       "circle-color": "#B94A6C",
       "circle-opacity": 0.8,
-      "circle-radius": 20,
+      "circle-radius": 10,
 
       "circle-stroke-color": "#9C0534",
       "circle-stroke-width": 2,
