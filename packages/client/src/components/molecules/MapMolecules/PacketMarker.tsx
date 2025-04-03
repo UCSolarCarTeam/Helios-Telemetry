@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { Marker, Popup } from "react-map-gl";
 
-import SportsScoreIcon from "@mui/icons-material/SportsScore";
+import CircleIcon from "@mui/icons-material/Circle";
 
 import type { PacketMarkerData } from "./Map";
 
@@ -15,14 +15,18 @@ export default function PacketMarker(props: {
   const { index, onMouseEnterDataPoint, onMouseLeaveDataPoint, packetMarker } =
     props;
   const { data, markerCoords, open } = packetMarker;
+
   return (
     <>
       {open && <Popup {...markerCoords}>{data.TimeStamp}</Popup>}
-      <Marker {...markerCoords}>
-        <SportsScoreIcon
-          height={50}
+      <Marker
+        latitude={packetMarker.markerCoords.latitude}
+        longitude={packetMarker.markerCoords.longitude}
+      >
+        <CircleIcon
           onMouseEnter={() => onMouseEnterDataPoint(index)}
           onMouseLeave={() => onMouseLeaveDataPoint(index)}
+          sx={{ fontSize: "8px" }}
         />
       </Marker>
     </>
