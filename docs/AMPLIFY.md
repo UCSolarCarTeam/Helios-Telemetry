@@ -23,7 +23,7 @@ aws configure
 Then, four options should have appeared and you should have filled them out
 
 ```bash
-asked for secret access key
+asked for access key id
 asked for secret access id secret whatever secreter one
 asked for region
 asked for json format or whatever, can leave this one empty
@@ -32,7 +32,7 @@ asked for json format or whatever, can leave this one empty
 You can check to see if this worked by running:
 
 ```bash
-aws sts get-caller-identity aws sts-
+aws sts get-caller-identity
 ```
 
 The output should be something like:
@@ -83,7 +83,7 @@ This table stores the driver name and the driver's RFID as it's main partition k
                 "AttributeType": "S"
             }
         ],
-        "TableName": "amplify-d2m2fu81qyo9pl-amplifymain-branch-f78c72a9c8-TelemetryBackend00F6569C-QPV5X166STWQ-driverdatatable6750A51B-O7CL7AMIRCFM",
+        "TableName": "amplify-...-amplifymain-branch-f78c72a9c8-TelemetryBackend00F6569C-...-driverdatatable...",
         "KeySchema": [
             {
                 "AttributeName": "Rfid",
@@ -91,7 +91,7 @@ This table stores the driver name and the driver's RFID as it's main partition k
             }
         ],
         "TableStatus": "ACTIVE",
-        "CreationDateTime": "2025-03-20T15:56:52.561000-06:00",
+        "CreationDateTime": "...",
         "ProvisionedThroughput": {
             "NumberOfDecreasesToday": 0,
             "ReadCapacityUnits": 0,
@@ -99,11 +99,11 @@ This table stores the driver name and the driver's RFID as it's main partition k
         },
         "TableSizeBytes": 122,
         "ItemCount": 2,
-        "TableArn": "arn:aws:dynamodb:ca-central-1:602361116849:table/amplify-d2m2fu81qyo9pl-amplifymain-branch-f78c72a9c8-TelemetryBackend00F6569C-QPV5X166STWQ-driverdatatable6750A51B-O7CL7AMIRCFM",
-        "TableId": "49b5771b-d264-4a52-b469-498a57940558",
+        "TableArn": "...",
+        "TableId": "...",
         "BillingModeSummary": {
             "BillingMode": "PAY_PER_REQUEST",
-            "LastUpdateToPayPerRequestDateTime": "2025-03-20T15:56:52.561000-06:00"
+            "LastUpdateToPayPerRequestDateTime": "..."
         },
         "DeletionProtectionEnabled": false
     }
@@ -127,7 +127,7 @@ This table stores the [lap](./TELEMETRY.md#lap) data and the driver's [RFID](./T
                 "AttributeType": "N"
             }
         ],
-        "TableName": "amplify-d2m2fu81qyo9pl-amplifymain-branch-f78c72a9c8-TelemetryBackend00F6569C-QPV5X166STWQ-lapdatatable045D6A05-18U9Z8JTTMJ3N",
+        "TableName": "amplify-...-amplifymain-branch-f78c72a9c8-TelemetryBackend...-lapdatatable...",
         "KeySchema": [
             {
                 "AttributeName": "Rfid",
@@ -139,7 +139,7 @@ This table stores the [lap](./TELEMETRY.md#lap) data and the driver's [RFID](./T
             }
         ],
         "TableStatus": "ACTIVE",
-        "CreationDateTime": "2025-03-20T15:56:52.473000-06:00",
+        "CreationDateTime": "...",
         "ProvisionedThroughput": {
             "NumberOfDecreasesToday": 0,
             "ReadCapacityUnits": 0,
@@ -147,11 +147,11 @@ This table stores the [lap](./TELEMETRY.md#lap) data and the driver's [RFID](./T
         },
         "TableSizeBytes": 694,
         "ItemCount": 3,
-        "TableArn": "arn:aws:dynamodb:ca-central-1:602361116849:table/amplify-d2m2fu81qyo9pl-amplifymain-branch-f78c72a9c8-TelemetryBackend00F6569C-QPV5X166STWQ-lapdatatable045D6A05-18U9Z8JTTMJ3N",
-        "TableId": "a2cbaf85-972d-4067-98aa-e9282708fa7f",
+        "TableArn": "...",
+        "TableId": "...",
         "BillingModeSummary": {
             "BillingMode": "PAY_PER_REQUEST",
-            "LastUpdateToPayPerRequestDateTime": "2025-03-20T15:56:52.473000-06:00"
+            "LastUpdateToPayPerRequestDateTime": "..."
         },
         "DeletionProtectionEnabled": false
     }
@@ -175,7 +175,7 @@ This table stores the [packet](./TELEMETRY.md#packet) data. The timestamp of whe
                 "AttributeType": "N"
             }
         ],
-        "TableName": "amplify-d2m2fu81qyo9pl-amplifymain-branch-f78c72a9c8-TelemetryBackend00F6569C-QPV5X166STWQ-packetdatatable4FB463D7-JEPBKJQDQP1G",
+        "TableName": "amplify-...-amplifymain-branch-...-TelemetryBackend...-packetdatatable...",
         "KeySchema": [
             {
                 "AttributeName": "id",
@@ -195,11 +195,11 @@ This table stores the [packet](./TELEMETRY.md#packet) data. The timestamp of whe
         },
         "TableSizeBytes": 102008477,
         "ItemCount": 13662,
-        "TableArn": "arn:aws:dynamodb:ca-central-1:602361116849:table/amplify-d2m2fu81qyo9pl-amplifymain-branch-f78c72a9c8-TelemetryBackend00F6569C-QPV5X166STWQ-packetdatatable4FB463D7-JEPBKJQDQP1G",
-        "TableId": "61f3fc53-fa0c-4096-af0a-4683a079b1c6",
+        "TableArn": "...",
+        "TableId": "...",
         "BillingModeSummary": {
             "BillingMode": "PAY_PER_REQUEST",
-            "LastUpdateToPayPerRequestDateTime": "2024-12-07T20:27:38.460000-07:00"
+            "LastUpdateToPayPerRequestDateTime": "..."
         },
         "DeletionProtectionEnabled": false
     }
