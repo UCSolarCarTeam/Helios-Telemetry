@@ -127,10 +127,25 @@ function RaceTab() {
   const { lapData } = useLapData();
   const [filteredLaps, setFilteredLaps] =
     useState<IFormattedLapData[]>(lapData);
-  const [columnName, setColumnName] = React.useState<string[]>([]);
   const [sorting, setSorting] = useState<SortingState>([
     { desc: false, id: "data_timeStamp" },
   ]);
+
+  const table = useReactTable({
+    columns,
+    data: filteredLaps,
+    defaultColumn: { enableSorting: true },
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      sorting: [{ desc: false, id: "data_timeStamp" }],
+    },
+    onSortingChange: setSorting,
+    state: { sorting },
+  });
+  const [columnName, setColumnName] = React.useState<string[]>(
+    table.getAllLeafColumns().map((col) => col.id),
+  );
 
   const handleChange = (event: SelectChangeEvent<typeof columnName>) => {
     const {
@@ -165,19 +180,6 @@ function RaceTab() {
       });
     }
   };
-
-  const table = useReactTable({
-    columns,
-    data: filteredLaps,
-    defaultColumn: { enableSorting: true },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: [{ desc: false, id: "data_timeStamp" }],
-    },
-    onSortingChange: setSorting,
-    state: { sorting },
-  });
 
   function checkBoxFormatting(text: string) {
     return text
@@ -307,11 +309,20 @@ function RaceTab() {
           </InputLabel>
 
           <Select
+            className="max-w-[1200px] overflow-auto"
             input={<OutlinedInput label="Column" />}
             multiple
             onChange={handleChange}
             renderValue={(selected) => (
-              <Box component="div">
+              <Box
+                className="overflow-auto"
+                component="div"
+                sx={{
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                }}
+              >
                 {selected.map((value) => (
                   <Chip key={value} label={checkBoxFormatting(value)} />
                 ))}
