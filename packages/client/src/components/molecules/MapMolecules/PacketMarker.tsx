@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { Marker, Popup } from "react-map-gl";
 
-import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
+import CircleIcon from "@mui/icons-material/Circle";
 
 import type { PacketMarkerData } from "./Map";
 
@@ -23,10 +23,10 @@ export default function PacketMarker(props: {
         latitude={packetMarker.markerCoords.latitude}
         longitude={packetMarker.markerCoords.longitude}
       >
-        <PanoramaFishEyeIcon
-          fontSize="10px"
+        <CircleIcon
           onMouseEnter={() => onMouseEnterDataPoint(index)}
           onMouseLeave={() => onMouseLeaveDataPoint(index)}
+          sx={{ fontSize: "8px" }}
         />
       </Marker>
     </>
