@@ -17,6 +17,7 @@ import {
 } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
+  SortingState,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
@@ -127,6 +128,9 @@ function RaceTab() {
   const [filteredLaps, setFilteredLaps] =
     useState<IFormattedLapData[]>(lapData);
   const [columnName, setColumnName] = React.useState<string[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { desc: false, id: "data_timeStamp" },
+  ]);
 
   const handleChange = (event: SelectChangeEvent<typeof columnName>) => {
     const {
@@ -137,7 +141,7 @@ function RaceTab() {
     table.getAllLeafColumns().forEach((col) => {
       const columnInstance = table.getColumn(col.id);
       if (columnInstance) {
-        columnInstance.toggleVisibility(!value.includes(col.id));
+        columnInstance.toggleVisibility(value.includes(col.id));
       }
     });
   };
@@ -165,11 +169,14 @@ function RaceTab() {
   const table = useReactTable({
     columns,
     data: filteredLaps,
+    defaultColumn: { enableSorting: true },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
       sorting: [{ desc: false, id: "data_timeStamp" }],
     },
+    onSortingChange: setSorting,
+    state: { sorting },
   });
 
   function checkBoxFormatting(text: string) {
@@ -360,6 +367,17 @@ function RaceTab() {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
+                    <span
+                      className="ml-1 cursor-pointer text-xs font-bold text-helios hover:text-red-900"
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      {header.column.getIsSorted() === "asc"
+                        ? "↑"
+                        : header.column.getIsSorted() === "desc"
+                          ? "↓"
+                          : "⇅"}
+                    </span>
                   </th>
                 ))}
               </tr>
