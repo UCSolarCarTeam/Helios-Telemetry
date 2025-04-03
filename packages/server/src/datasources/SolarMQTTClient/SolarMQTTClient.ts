@@ -1,3 +1,5 @@
+//import { SvgProps } from "./SVGProps.js";
+
 import { IClientOptions, type MqttClient, connect } from "mqtt";
 
 import { type BackendController } from "@/controllers/BackendController/BackendController";
@@ -78,6 +80,11 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         }
       });
     });
+
+    /*this.client.on("offline", () => {
+      logger.info("MQTT Client offline");
+      
+    });*/
 
     this.client.on("message", (topic, message) => {
       if (topic === pongTopic) {
