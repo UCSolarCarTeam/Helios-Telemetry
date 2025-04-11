@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useLapData } from "@/contexts/LapDataContext";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,6 +16,7 @@ import {
 } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
+  SortingState,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
@@ -126,7 +126,25 @@ function RaceTab() {
   const { lapData } = useLapData();
   const [filteredLaps, setFilteredLaps] =
     useState<IFormattedLapData[]>(lapData);
-  const [columnName, setColumnName] = React.useState<string[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { desc: false, id: "data_timeStamp" },
+  ]);
+
+  const table = useReactTable({
+    columns,
+    data: filteredLaps,
+    defaultColumn: { enableSorting: true },
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      sorting: [{ desc: false, id: "data_timeStamp" }],
+    },
+    onSortingChange: setSorting,
+    state: { sorting },
+  });
+  const [columnName, setColumnName] = React.useState<string[]>(
+    table.getAllLeafColumns().map((col) => col.id),
+  );
 
   const handleChange = (event: SelectChangeEvent<typeof columnName>) => {
     const {
@@ -137,7 +155,7 @@ function RaceTab() {
     table.getAllLeafColumns().forEach((col) => {
       const columnInstance = table.getColumn(col.id);
       if (columnInstance) {
-        columnInstance.toggleVisibility(!value.includes(col.id));
+        columnInstance.toggleVisibility(value.includes(col.id));
       }
     });
   };
@@ -161,16 +179,6 @@ function RaceTab() {
       });
     }
   };
-
-  const table = useReactTable({
-    columns,
-    data: filteredLaps,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: [{ desc: false, id: "data_timeStamp" }],
-    },
-  });
 
   function checkBoxFormatting(text: string) {
     return text
@@ -300,16 +308,15 @@ function RaceTab() {
           </InputLabel>
 
           <Select
+            className="max-w-56 overflow-auto"
             input={<OutlinedInput label="Column" />}
             multiple
             onChange={handleChange}
-            renderValue={(selected) => (
-              <Box component="div">
-                {selected.map((value) => (
-                  <Chip key={value} label={checkBoxFormatting(value)} />
-                ))}
-              </Box>
-            )}
+            renderValue={(selected) => {
+              return selected
+                .map((value) => checkBoxFormatting(value))
+                .join(", ");
+            }}
             sx={{
               "& .MuiMenuItem-root": {
                 "&:hover": {
@@ -360,6 +367,17 @@ function RaceTab() {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
+                    <span
+                      className="ml-1 cursor-pointer text-xs font-bold text-helios hover:text-red-900"
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      {header.column.getIsSorted() === "asc"
+                        ? "↑"
+                        : header.column.getIsSorted() === "desc"
+                          ? "↓"
+                          : "⇅"}
+                    </span>
                   </th>
                 ))}
               </tr>
