@@ -60,6 +60,13 @@ function PlaybackDatePicker() {
     const startTimeUTC = Math.floor(startDateTime.getTime() / 1000);
     const endTimeUTC = Math.floor(endDateTime.getTime() / 1000);
 
+    const maxInterval = 10 * 60; // 10 minutes in seconds
+    if (endTimeUTC - startTimeUTC > maxInterval) {
+      alert("Please select a range of maximum 10 minutes.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.get(`${prodURL}/packetsBetween`, {
         params: { endTime: endTimeUTC, startTime: startTimeUTC },
