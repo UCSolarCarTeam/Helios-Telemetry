@@ -5,35 +5,35 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PauseIcon from "@/components/atoms/PauseIcon";
 import PlayIcon from "@/components/atoms/PlayIcon";
 import { usePacket } from "@/contexts/PacketContext";
+import { usePlaybackContext } from "@/contexts/PlayBackContext";
 import Tooltip from "@mui/material/Tooltip";
-
-import { fakeData } from "./fakedata";
 
 export default function PlaybackSlider() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
   const [hoverValue, setHoverValue] = useState<number | null>(null);
-  const animationRef = useRef<number>(null);
-  const playStartTime = useRef<number>(null);
+  const animationRef = useRef<number | null>(null);
+  const playStartTime = useRef<number | null>(null);
   const playStartSlider = useRef<number>(0);
   const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
 
   const { setCurrentPacket } = usePacket();
+  const { playbackData } = usePlaybackContext();
 
-  const sortedData = useMemo(
-    () => [...fakeData].sort((a, b) => a.TimeStamp - b.TimeStamp),
-    [],
+  const hasData = useMemo(
+    () => playbackData && playbackData.length > 0,
+    [playbackData],
   );
 
-  // dynamic playback duration based on the length of how many packets were fetched
   const PLAYBACK_DURATION = useMemo(
-    () => sortedData.length * 1000,
-    [sortedData.length],
+    () => (hasData ? playbackData.length * 1000 : 0),
+    [playbackData.length, hasData],
   );
 
   const stepSize = useMemo(
-    () => (sortedData.length > 0 ? 100 / (sortedData.length - 1) : 0),
-    [sortedData.length],
+    () =>
+      hasData && playbackData.length > 1 ? 100 / (playbackData.length - 1) : 0,
+    [playbackData.length, hasData],
   );
 
   const currentIndex = useMemo(
@@ -41,63 +41,80 @@ export default function PlaybackSlider() {
     [sliderValue, stepSize],
   );
 
+  // Using a ref to avoid rerunning the effect too often
+  const prevIndexRef = useRef(currentIndex);
+
   useEffect(() => {
-    if (sortedData[currentIndex]) {
-      setCurrentPacket(sortedData[currentIndex]);
+    if (
+      hasData &&
+      playbackData[currentIndex] &&
+      currentIndex !== prevIndexRef.current
+    ) {
+      setCurrentPacket(playbackData[currentIndex]);
+      prevIndexRef.current = currentIndex;
     }
-  }, [currentIndex, setCurrentPacket, sortedData]);
+  }, [currentIndex, setCurrentPacket, playbackData, hasData]);
 
   const handlePlayPause = () => {
     setIsPlaying((prev) => {
-      if (!prev) {
-        playStartTime.current = Date.now();
-        playStartSlider.current = sliderValue;
-      } else {
+      if (prev) {
+        // Pause functionality: cancel the animation and stop updating slider value
         if (animationRef.current) {
           cancelAnimationFrame(animationRef.current);
+          animationRef.current = null;
         }
+        return false; // Set playing state to false
+      } else {
+        // Play functionality: start animation
+        playStartTime.current = Date.now();
+        playStartSlider.current = sliderValue;
+        animationRef.current = requestAnimationFrame(animate);
+        return true; // Set playing state to true
       }
-      return !prev;
     });
   };
 
+  const animate = () => {
+    if (!playStartTime.current || !hasData) return;
+
+    const elapsed = Date.now() - playStartTime.current;
+    const progressPercentage = (elapsed / PLAYBACK_DURATION) * 100;
+    const newValue = Math.min(
+      playStartSlider.current + progressPercentage,
+      100,
+    );
+
+    setSliderValue(newValue);
+
+    if (newValue < 100) {
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      setIsPlaying(false);
+      setSliderValue(100); // Ensure it reaches the end of the slider
+    }
+  };
+
   useEffect(() => {
-    const animate = () => {
-      if (!playStartTime.current || !sortedData.length) return;
-
-      const elapsed = Date.now() - playStartTime.current;
-      const progressPercentage = (elapsed / PLAYBACK_DURATION) * 100;
-      const newValue = Math.min(
-        playStartSlider.current + progressPercentage,
-        100,
-      );
-
-      setSliderValue(newValue);
-
-      if (newValue < 100) {
-        animationRef.current = requestAnimationFrame(animate);
-      } else {
-        setIsPlaying(false);
-        setSliderValue(0);
-      }
-    };
-
     if (isPlaying) {
       animationRef.current = requestAnimationFrame(animate);
+    } else {
+      // Cancel animation frame when paused
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
     }
-
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [PLAYBACK_DURATION, isPlaying, sortedData.length]);
+  }, [isPlaying]);
 
   const handleSliderChange = useCallback(
     (value: number | number[]) => {
       if (typeof value === "number") {
         setSliderValue(value);
-
         if (isPlaying) {
           playStartTime.current = Date.now();
           playStartSlider.current = value;
@@ -110,19 +127,19 @@ export default function PlaybackSlider() {
   const getTooltipContent = useCallback(
     (value: number) => {
       const index = Math.round(value / stepSize);
-      if (sortedData[index]) {
+      if (hasData && playbackData[index]) {
         return (
           <div className="flex flex-col items-center gap-1">
             <p>Packet: {index + 1}</p>
-            {`Timestamp: ${new Date(
-              sortedData[index].TimeStamp,
-            ).toLocaleString()}`}
+            <p>{`Timestamp: ${new Date(
+              playbackData[index].TimeStamp * 1000,
+            ).toLocaleString()}`}</p>
           </div>
         );
       }
       return "";
     },
-    [sortedData, stepSize],
+    [playbackData, stepSize, hasData],
   );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -136,6 +153,14 @@ export default function PlaybackSlider() {
   const handleMouseLeave = () => {
     setHoverValue(null);
   };
+
+  if (!hasData) {
+    return (
+      <p className="text-gray-500 mt-3 text-center font-bold text-helios">
+        Please select a valid date and time range before viewing playback data
+      </p>
+    );
+  }
 
   return (
     <div className="flex flex-row items-center justify-center gap-2 py-1">
