@@ -34,11 +34,25 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   }
 
   public telemetryToCar(milliseconds: number) {
-    setInterval(() => {
+    setInterval(async () => {
       const backendToCarLatency =
-        this.backendController.carLatency?.toString() || "0";
-      this.client.publish(telemetryToCarTopic, backendToCarLatency);
-      logger.info("Car Latency - sending: ", backendToCarLatency);
+        this.backendController.carLatency?.toString() || "-1";
+      try {
+        const driverName =
+          await this.backendController.dynamoDB.getDriverNameUsingRfid(
+            "18634850",
+          ); //TODO: fetch rfid from the packet
+
+        const tempJSON = {
+          carLatency: backendToCarLatency,
+          driverName: driverName,
+        };
+
+        this.client.publish(telemetryToCarTopic, JSON.stringify(tempJSON));
+        logger.info("Car Latency - sending: ", backendToCarLatency);
+      } catch (error) {
+        logger.error("Error fetching driver name using Rfid: ", error.message);
+      }
     }, milliseconds);
   }
 
