@@ -14,7 +14,7 @@ import { socketIO } from "@/contexts/SocketContext";
 import { notifications } from "@mantine/notifications";
 import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 
-const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
+export const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
   Rfid: lapPacket.Rfid,
   data: {
     ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
@@ -38,9 +38,11 @@ const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
 
 interface ILapDataContextReturn {
   lapData: IFormattedLapData[];
+  formatLapData: (lapPacket: ILapData) => IFormattedLapData;
 }
 
 const lapDataContext = createContext<ILapDataContextReturn>({
+  formatLapData,
   lapData: [],
 });
 
@@ -84,7 +86,7 @@ export function LapDataContextProvider({
       .catch((error) => {
         throw new Error(error);
       });
-  }, []);
+  }, [fetchLapData]);
 
   useEffect(() => {
     if (
@@ -106,7 +108,7 @@ export function LapDataContextProvider({
   ]);
 
   return (
-    <lapDataContext.Provider value={{ lapData }}>
+    <lapDataContext.Provider value={{ formatLapData, lapData }}>
       {children}
     </lapDataContext.Provider>
   );
