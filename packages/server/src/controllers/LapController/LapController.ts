@@ -41,16 +41,19 @@ export class LapController implements LapControllerType {
   public previouslyInFinishLineProximity = false;
   public passedDebouncedCheckpoint = false;
   public totalTime = 3600 * 1000 * 8; // 1000 ms/sec * 3600 sec/hr * 8 hr
-  // public raceStartTime = new Date("2025-08-01-13:00");
-  // public myTime = new Date("2025-08-01-13:00");
-  // public myTimeEnd = new Date("2025-08-01-21:00");
+  public day1 = new Date(Date.UTC(2025, 6, 3, 14, 0, 0)); // July 3rd 2025, 2:00:00 PM (in UTC)
+  public day2 = new Date(Date.UTC(2025, 6, 4, 13, 0, 0)); // July 4th 2025, 3:00:00 PM (in UTC)
+  public day3 = new Date(Date.UTC(2025, 6, 5, 13, 0, 0)); // July 5th 2025, 3:00:00 PM (in UTC)
+  public raceDates = [this.day1, this.day2, this.day3];
 
   public raceInfo: IRaceInfo = {
     distance: 0,
     lapNumber: 0,
     prevTime: 0,
+    raceDates: this.raceDates,
     raceDay: 0,
     timeLeft: this.totalTime,
+    totalDistance: 0,
   };
 
   public finishLineLocation: Coords = {
@@ -59,6 +62,7 @@ export class LapController implements LapControllerType {
   };
 
   public lapDebounceLocation: Coords = {
+    // 0.05 = 0.05 km = 50 meters
     lat:
       this.finishLineLocation.lat -
       calculateOffset(0.05, this.finishLineLocation.lat).latOffset,
@@ -68,30 +72,31 @@ export class LapController implements LapControllerType {
   };
 
   private timerInterval: NodeJS.Timeout;
-  private checkRaceEndInterval: NodeJS.Timeout;
-
   backendController: BackendController;
 
   public startTimers() {
     this.timerInterval = setInterval(() => {
       this.raceInfo.timeLeft -= 1000;
-    }, 1000); // update the time every 1 second.
 
-    this.checkRaceEndInterval = setInterval(() => {
+      // reset race info
       if (this.raceInfo.timeLeft <= 0) {
-        this.resetRaceInfo(); // or do myTime > myTimeEnd
-        this.incrementRaceDay();
+        this.cleanUp(); // clean up timer interval
+        this.raceInfo.totalDistance += this.raceInfo.distance;
+        this.raceInfo.distance = 0;
+        this.raceInfo.timeLeft = this.totalTime; // reset race info
+        this.raceInfo.prevTime = 0; // reset previous time calculated back to 0
+        this.raceInfo.raceDay += 1;
+        this.startRace(); // check for new day
       }
 
       if (this.raceInfo.raceDay >= 3) {
-        this.raceInfo.timeLeft = 0;
+        this.raceInfo.timeLeft = this.totalTime; // reset back to start after 3 days
       }
-    }, 1000); // check for end of race every second
+    }, 1000); // update the time every 1 second.
   }
 
   constructor(backendController: BackendController) {
     this.backendController = backendController;
-    this.startTimers();
   }
 
   public cleanUp() {
@@ -99,18 +104,6 @@ export class LapController implements LapControllerType {
       clearInterval(this.timerInterval);
       this.timerInterval = null;
     }
-    if (this.checkRaceEndInterval) {
-      clearInterval(this.checkRaceEndInterval);
-      this.checkRaceEndInterval = null;
-    }
-  }
-
-  public resetRaceInfo() {
-    this.raceInfo.timeLeft = this.totalTime;
-  }
-
-  public incrementRaceDay() {
-    this.raceInfo.raceDay += 1;
   }
 
   public calculateRaceDistance(motorDetails0: number, motorDetails1: number) {
@@ -119,13 +112,24 @@ export class LapController implements LapControllerType {
       motorDetails1,
     );
 
-    // calculate distance
     const currentTime = Date.now();
-    if (this.raceInfo.prevTime !== 0) {
+    if (this.raceInfo.prevTime !== 0 && this.raceInfo.raceDay < 3) {
       const dTime = (currentTime - this.raceInfo.prevTime) / (3600 * 1000); // convert ms to hr
       this.raceInfo.distance = this.raceInfo.distance + vehicleVelocity * dTime;
     }
     this.raceInfo.prevTime = currentTime;
+  }
+
+  public startRace() {
+    const currentTime = new Date().getTime();
+    const raceStarting = this.raceDates.some((raceDate) => {
+      const timeDifference = Math.abs(currentTime - raceDate.getTime());
+      return timeDifference <= 1000; // true if within one second tolerance (can be changed)
+    });
+
+    if (raceStarting) {
+      this.startTimers();
+    }
   }
 
   public setFinishLineLocation(
@@ -162,9 +166,20 @@ export class LapController implements LapControllerType {
   }
 
   public async handlePacket(packet: ITelemetryData) {
-    if (false) this.cleanUp();
-    else if (this.timerInterval == null || this.checkRaceEndInterval == null)
-      this.startTimers();
+    const motorDetails0 = packet.MotorDetails0.CurrentRpmValue;
+    const motorDetails1 = packet.MotorDetails1.CurrentRpmValue;
+    if (this.raceInfo.raceDay >= 3)
+      // also include if !packet.B3.RaceMode
+      this.cleanUp(); // clean up after the last race day
+    else if (this.timerInterval == null) this.startRace(); // also include if packet.B3.RaceMode == true
+
+    if (
+      this.timerInterval != null &&
+      this.raceInfo.timeLeft > 0 &&
+      this.raceInfo.timeLeft < this.totalTime
+    ) {
+      this.calculateRaceDistance(motorDetails0, motorDetails1);
+    }
 
     if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
       await this.backendController.socketIO.broadcastLapComplete();
@@ -204,9 +219,6 @@ export class LapController implements LapControllerType {
       this.lastLapPackets = [];
     }
 
-    const motorDetails0 = packet.MotorDetails0.CurrentRpmValue;
-    const motorDetails1 = packet.MotorDetails1.CurrentRpmValue;
-    this.calculateRaceDistance(motorDetails0, motorDetails1);
     this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
     this.lastLapPackets.push(packet);
   }
@@ -216,18 +228,13 @@ export class LapController implements LapControllerType {
   }
 
   private checkDebounce(packet: ITelemetryData) {
-    const carLocation = {
-      lat: packet.Telemetry.GpsLatitude,
-      long: packet.Telemetry.GpsLongitude,
-    };
-
     const inDebounceZone =
-      getDistance(
-        carLocation.lat,
-        carLocation.long,
+      haversineDistance(
+        packet.Telemetry.GpsLatitude,
+        packet.Telemetry.GpsLongitude,
         this.lapDebounceLocation.lat,
         this.lapDebounceLocation.long,
-      ) <= 0.01;
+      ) <= 0.01; // 0.01 km = 10 m
 
     if (inDebounceZone && !this.passedDebouncedCheckpoint)
       this.passedDebouncedCheckpoint = true;
@@ -243,7 +250,7 @@ export class LapController implements LapControllerType {
         packet.Telemetry.GpsLongitude,
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
-      ) <= 0.01;
+      ) <= 0.01; // 0.01 km = 10 m
 
     let lapHappened = false;
     const checkDebounce = this.checkDebounce(packet);
