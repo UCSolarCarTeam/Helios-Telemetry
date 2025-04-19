@@ -19,10 +19,12 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   client: MqttClient;
   backendController: BackendController;
   pingLastSent: number;
+  latestRfid: string | null;
   constructor(options: IClientOptions, backendController: BackendController) {
     this.backendController = backendController;
     this.connectToAedes(options);
     this.pingLastSent = Date.now();
+    this.latestRfid = null;
   }
 
   public pingTimer(milliseconds: number) {
@@ -33,10 +35,27 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     }, milliseconds);
   }
 
-  public telemetryToCar(milliseconds: number, message: string) {
-    setInterval(() => {
-      this.client.publish(telemetryToCarTopic, message);
-      logger.info("Car Latency - sending: ", message);
+  public telemetryToCar(milliseconds: number) {
+    setInterval(async () => {
+      const backendToCarLatency =
+        this.backendController.carLatency?.toString() || "-1";
+      try {
+        const driverName = this.latestRfid
+          ? await this.backendController.dynamoDB.getDriverNameUsingRfid(
+              this.latestRfid,
+            )
+          : "Rfid not scanned";
+
+        const infoToCar = {
+          carLatency: backendToCarLatency,
+          driverName: driverName,
+        };
+
+        this.client.publish(telemetryToCarTopic, JSON.stringify(infoToCar));
+        logger.info("Car Latency - sending: ", backendToCarLatency);
+      } catch (error) {
+        logger.error("Error fetching driver name using Rfid: ", error.message);
+      }
     }, milliseconds);
   }
 
@@ -64,8 +83,8 @@ export class SolarMQTTClient implements SolarMQTTClientType {
       if (topic === pongTopic) {
         logger.info("pong");
         const serverToCarLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
-        logger.info(serverToCarLatency.toString());
         this.backendController.carLatency = serverToCarLatency;
+        logger.info(this.backendController.carLatency.toString());
         this.backendController.handleTelemetryToCar(serverToCarLatency);
       } else if (topic === packetTopic) {
         logger.info("Packet Received");
@@ -73,6 +92,10 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         try {
           const validPacket = validateTelemetryData(packet);
           this.backendController.handlePacketReceive(validPacket);
+
+          if (validPacket.Pi.Rfid) {
+            this.latestRfid = validPacket.Pi.Rfid.toString();
+          }
         } catch (error) {
           logger.error(`Invalid packet format: ${error.message}`);
         }

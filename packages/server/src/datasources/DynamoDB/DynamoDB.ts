@@ -38,9 +38,9 @@ if (!process.env.PACKET_TABLE_NAME) {
   throw new Error("Packet table name not defined");
 }
 
-// if (!process.env.DRIVER_TABLE_NAME) {
-//   throw new Error("Driver table name not defined");
-// }
+if (!process.env.DRIVER_TABLE_NAME) {
+  throw new Error("Driver table name not defined");
+}
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
@@ -140,6 +140,28 @@ export class DynamoDB implements DynamoDBtypes {
     }
   }
 
+  public async getDriverNameUsingRfid(Rfid: string) {
+    try {
+      const command = new GetCommand({
+        Key: {
+          Rfid: Rfid,
+        },
+        TableName: this.driverTableName,
+      });
+      const response = await this.client.send(command);
+
+      if (!response.Item) {
+        logger.warn(`No item found for Rfid: ${Rfid}`);
+        return "Driver not found";
+      }
+
+      return response.Item.driver;
+    } catch (error) {
+      logger.error("Error getting driver name using the given Rfid");
+      throw new Error(error.message);
+    }
+  }
+
   public async getDriverLaps(Rfid: string) {
     try {
       const lapCommand = new QueryCommand({
@@ -163,7 +185,7 @@ export class DynamoDB implements DynamoDBtypes {
     }
   }
 
-  // // Helper function to get lap table data
+  // Helper function to get lap table data
   public async getLapData() {
     try {
       const command = new ScanCommand({
