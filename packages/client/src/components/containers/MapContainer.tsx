@@ -59,7 +59,7 @@ function MapContainer(): JSX.Element {
           lapLocation={currentAppState.lapCoords}
         />
       </div>
-      <div className="min-h-[50px]">
+      <div className="h-11">
         <MapText />
       </div>
     </div>
