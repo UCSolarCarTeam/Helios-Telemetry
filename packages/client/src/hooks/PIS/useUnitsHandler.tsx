@@ -1,17 +1,16 @@
 import { APPUNITS, useAppState } from "@/contexts/AppStateContext";
 import { UnitType } from "@/objects/PIS/PIS.interface";
 
-function useUnitsHandler(
+const MI_TO_KM = 0.621371;
+
+export default function useUnitsHandler(
   unit: UnitType | undefined,
   value: string | number | boolean,
 ) {
   const { currentAppState } = useAppState();
-  const MI_TO_KM = 0.621371;
 
-  let unitReturn: string | undefined;
-  let valueReturn: string | number | boolean;
-  unitReturn = unit;
-  valueReturn = value;
+  let unitReturn: string | undefined = unit;
+  let valueReturn: string | number | boolean = value;
 
   switch (unit) {
     case UnitType.TEMP:
@@ -59,9 +58,5 @@ function useUnitsHandler(
       break;
   }
 
-  const val = valueReturn;
-  const units = `${unitReturn}`;
-
-  return { units: units, val: val };
+  return { units: `${unitReturn}`, val: valueReturn };
 }
-export default useUnitsHandler;
