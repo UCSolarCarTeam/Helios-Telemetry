@@ -1,8 +1,7 @@
 import { FeatureCollection, LineString } from "geojson";
 import { LayerProps, MapRef } from "react-map-gl";
 
-import { Coords } from "@shared/helios-types";
-import { generateFakeTelemetryData } from "@shared/helios-types";
+import { Coords, generateFakeTelemetryData } from "@shared/helios-types";
 
 import { TrackList } from "./Map";
 import { PacketMarkerData } from "./Map";

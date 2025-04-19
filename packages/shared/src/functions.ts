@@ -475,7 +475,7 @@ export function generateFakeTelemetryData(): ITelemetryData {
       SoftwareEnable: faker.datatype.boolean(),
     },
     Pi: {
-      Rfid: faker.number.int({ max: 100, min: 0 }),
+      Rfid: faker.number.int({ max: 100, min: 0 }).toString(),
     },
     ProximitySensors: {
       ProximitySensor1: faker.number.int({ max: 100, min: 0 }),

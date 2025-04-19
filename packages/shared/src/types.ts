@@ -381,7 +381,7 @@ export const ITelemetryDataType = t.exact(
     MotorDetails1: IMotorDetailsType,
     Pi: t.exact(
       t.type({
-        Rfid: t.number,
+        Rfid: t.string,
       }),
     ),
     ProximitySensors: IProximitySensorsType,
@@ -413,7 +413,7 @@ export interface ILapData {
     totalPowerIn: number;
     totalPowerOut: number;
   };
-  Rfid: number;
+  Rfid: string;
   timestamp: number;
 }
 
@@ -460,7 +460,7 @@ export class LapData {
 }
 
 export interface IPi {
-  Rfid: number;
+  Rfid: string;
 }
 
 export interface IB3 {
@@ -780,7 +780,7 @@ export interface IFormattedLapData {
     totalPowerOut: number;
   };
   timestamp: number;
-  Rfid: number;
+  Rfid: string;
 }
 
 export interface IPlaybackDynamoResponse {
