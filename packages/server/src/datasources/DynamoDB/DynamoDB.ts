@@ -152,7 +152,7 @@ export class DynamoDB implements DynamoDBtypes {
 
       if (!response.Item) {
         logger.warn(`No item found for Rfid: ${Rfid}`);
-        return null;
+        return "Driver not found";
       }
 
       return response.Item.driver;
