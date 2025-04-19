@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useLapData } from "@/contexts/LapDataContext";
+import { notifications } from "@mantine/notifications";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,6 +17,7 @@ import {
 } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
+  SortingState,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
@@ -25,28 +26,6 @@ import {
 } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<IFormattedLapData>();
-
-const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
-  Rfid: lapPacket.Rfid,
-  data: {
-    ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
-    averagePackCurrent: parseFloat(
-      lapPacket.data.averagePackCurrent.toFixed(2),
-    ),
-    averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
-    batterySecondsRemaining: parseFloat(
-      lapPacket.data.batterySecondsRemaining.toFixed(2),
-    ),
-    distance: parseFloat(lapPacket.data.distance.toFixed(2)),
-    energyConsumed: parseFloat(lapPacket.data.energyConsumed.toFixed(2)),
-    lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
-    netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
-    timeStamp: new Date(lapPacket.data.timeStamp).toLocaleString("en-US"),
-    totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
-    totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
-  },
-  timestamp: lapPacket.timestamp,
-});
 
 const columns = [
   columnHelper.accessor("data.timeStamp", {
@@ -123,54 +102,80 @@ function RaceTab() {
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
-  const { lapData } = useLapData();
+  const { formatLapData, lapData } = useLapData();
   const [filteredLaps, setFilteredLaps] =
     useState<IFormattedLapData[]>(lapData);
-  const [columnName, setColumnName] = React.useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof columnName>) => {
-    const {
-      target: { value },
-    } = event;
-    setColumnName(typeof value === "string" ? value.split(",") : value);
-
-    table.getAllLeafColumns().forEach((col) => {
-      const columnInstance = table.getColumn(col.id);
-      if (columnInstance) {
-        columnInstance.toggleVisibility(!value.includes(col.id));
-      }
-    });
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(String(Rfid));
-    setCopy(1);
-  };
-
-  const handleDropdown = async (event: SelectChangeEvent<number | string>) => {
-    const newRFID = event.target.value;
-    setDriverRFID(newRFID);
-    setCopy(0);
-
-    if (newRFID === "" || Number.isNaN(newRFID)) {
-      setFilteredLaps(lapData);
-    } else {
-      await fetchFilteredLaps(Number(newRFID)).then((response) => {
-        const formattedData = response.data.map(formatLapData);
-        setFilteredLaps(formattedData);
-      });
-    }
-  };
+  const [sorting, setSorting] = useState<SortingState>([
+    { desc: false, id: "data_timeStamp" },
+  ]);
 
   const table = useReactTable({
     columns,
     data: filteredLaps,
+    defaultColumn: { enableSorting: true },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
       sorting: [{ desc: false, id: "data_timeStamp" }],
     },
+    onSortingChange: setSorting,
+    state: { sorting },
   });
+
+  const [columnName, setColumnName] = React.useState<string[]>(
+    table.getAllLeafColumns().map((col) => col.id),
+  );
+
+  const handleChange = useCallback(
+    (event: SelectChangeEvent<typeof columnName>) => {
+      const {
+        target: { value },
+      } = event;
+
+      setColumnName(typeof value === "string" ? value.split(",") : value);
+
+      table.getAllLeafColumns().forEach((col) => {
+        const columnInstance = table.getColumn(col.id);
+        if (columnInstance) {
+          columnInstance.toggleVisibility(value.includes(col.id));
+        }
+      });
+    },
+    [table, setColumnName],
+  );
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(String(Rfid));
+    setCopy(1);
+    setTimeout(() => setCopy(0), 5000);
+    onCopied();
+  };
+
+  const onCopied = useCallback(() => {
+    notifications.show({
+      color: "green",
+      message: "Copied to clipboard",
+      title: "Copied",
+    });
+  }, []);
+
+  const handleDropdown = useCallback(
+    async (event: SelectChangeEvent<number | string>) => {
+      const newRFID = event.target.value;
+      setDriverRFID(newRFID);
+      setCopy(0);
+
+      if (Number.isNaN(newRFID) || newRFID === "Show all data") {
+        setFilteredLaps(lapData);
+      } else {
+        await fetchFilteredLaps(Number(newRFID)).then((response) => {
+          const formattedData = response.data.map(formatLapData);
+          setFilteredLaps(formattedData);
+        });
+      }
+    },
+    [formatLapData, lapData],
+  );
 
   function checkBoxFormatting(text: string) {
     return text
@@ -257,7 +262,7 @@ function RaceTab() {
                 }}
                 value={Rfid}
               >
-                <MenuItem value={""}>Show all data</MenuItem>
+                <MenuItem value={"Show all data"}>Show all data</MenuItem>
                 {driverData.map((driver) => (
                   <MenuItem key={driver.Rfid} value={driver.Rfid}>
                     {driver.driver ? `${driver.driver}` : `NO NAME`}
@@ -266,8 +271,8 @@ function RaceTab() {
               </Select>
             </FormControl>
           </Box>
-          {Rfid ? Rfid : ""}
-          {Rfid ? (
+          {Number.isNaN(Rfid) || Rfid === "Show all data" ? "" : Rfid}
+          {Rfid && Rfid !== "Show all data" ? (
             <button className="items-center" onClick={handleCopy}>
               {copy === 0 ? <ContentCopy /> : <ContentCopyTwoTone />}
             </button>
@@ -300,16 +305,15 @@ function RaceTab() {
           </InputLabel>
 
           <Select
+            className="max-w-56 overflow-auto"
             input={<OutlinedInput label="Column" />}
             multiple
             onChange={handleChange}
-            renderValue={(selected) => (
-              <Box component="div">
-                {selected.map((value) => (
-                  <Chip key={value} label={checkBoxFormatting(value)} />
-                ))}
-              </Box>
-            )}
+            renderValue={(selected) => {
+              return selected
+                .map((value) => checkBoxFormatting(value))
+                .join(", ");
+            }}
             sx={{
               "& .MuiMenuItem-root": {
                 "&:hover": {
@@ -360,6 +364,17 @@ function RaceTab() {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
+                    <span
+                      className="ml-1 cursor-pointer text-xs font-bold text-helios hover:text-red-900"
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      {header.column.getIsSorted() === "asc"
+                        ? "↑"
+                        : header.column.getIsSorted() === "desc"
+                          ? "↓"
+                          : "⇅"}
+                    </span>
                   </th>
                 ))}
               </tr>
