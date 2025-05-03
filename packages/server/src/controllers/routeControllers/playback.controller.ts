@@ -20,10 +20,7 @@ export const getPacket = async (request: Request, response: Response) => {
       await backendController.dynamoDB.getPacketData(timestamp);
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
-    const data = {
-      data: packetData,
-      message: "OK",
-    };
+    const data = { data: packetData, message: "OK" };
     logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
 
     return response.status(200).json(data);
@@ -60,10 +57,7 @@ export const getPacketDataBetweenDates = async (
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
 
-    return response.status(200).json({
-      data: packetData,
-      message: "OK",
-    });
+    return response.status(200).json({ data: packetData, message: "OK" });
   } catch (error) {
     logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
     return response.status(500).json({ message: "Internal Server Error" });
