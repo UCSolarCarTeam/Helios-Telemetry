@@ -21,23 +21,22 @@ export default function PlaybackSlider() {
   const { playbackData } = usePlaybackContext();
   const isPlayingRef = useRef(isPlaying);
 
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     isPlayingRef.current = isPlaying;
   }, [isPlaying]);
 
-  const sortedPlaybackData = useMemo(() => {
-    if (playbackData && playbackData.length > 0) {
-      return [...playbackData].sort((a, b) => a.TimeStamp - b.TimeStamp);
-    }
-    return [];
+  const { hasData, sortedPlaybackData } = useMemo(() => {
+    const sortedData =
+      playbackData && playbackData.length > 0
+        ? [...playbackData].sort((a, b) => a.TimeStamp - b.TimeStamp)
+        : [];
+    return {
+      hasData: sortedData.length > 0,
+      sortedPlaybackData: sortedData,
+    };
   }, [playbackData]);
-
-  const hasData = useMemo(
-    () => sortedPlaybackData && sortedPlaybackData.length > 0,
-    [sortedPlaybackData],
-  );
 
   const MAX_PLAYBACK_DURATION = 240000;
 
@@ -195,6 +194,7 @@ export default function PlaybackSlider() {
     return (
       <p className="text-gray-500 mt-3 text-center font-bold text-helios">
         Please select a valid date and time range before viewing playback data
+        (Note: Max interval is 10 minutes).
       </p>
     );
   }

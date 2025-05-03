@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePlaybackContext } from "@/contexts/PlayBackContext";
+import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Modal } from "@mui/material";
 import { ITelemetryData, prodURL } from "@shared/helios-types";
@@ -62,7 +63,11 @@ function PlaybackDatePicker() {
 
     const maxInterval = 10 * 60; // 10 minutes in seconds
     if (endTimeUTC - startTimeUTC > maxInterval) {
-      alert("Please select a range of maximum 10 minutes.");
+      notifications.show({
+        color: "red",
+        message: "Please select a range of maximum 10 minutes.",
+        title: "Error",
+      });
       setLoading(false);
       return;
     }
