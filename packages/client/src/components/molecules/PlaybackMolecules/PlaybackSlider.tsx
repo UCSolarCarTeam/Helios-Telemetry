@@ -21,26 +21,37 @@ export default function PlaybackSlider() {
   const { playbackData } = usePlaybackContext();
   const isPlayingRef = useRef(isPlaying);
 
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     isPlayingRef.current = isPlaying;
   }, [isPlaying]);
 
+  const sortedPlaybackData = useMemo(() => {
+    if (playbackData && playbackData.length > 0) {
+      return [...playbackData].sort((a, b) => a.TimeStamp - b.TimeStamp);
+    }
+    return [];
+  }, [playbackData]);
+
   const hasData = useMemo(
-    () => playbackData && playbackData.length > 0,
-    [playbackData],
+    () => sortedPlaybackData && sortedPlaybackData.length > 0,
+    [sortedPlaybackData],
   );
 
   const MAX_PLAYBACK_DURATION = 240000;
 
   const PLAYBACK_DURATION = useMemo(() => {
     if (!hasData) return 0;
-    return Math.min(playbackData.length * 1000, MAX_PLAYBACK_DURATION);
-  }, [playbackData.length, hasData]);
+    return Math.min(sortedPlaybackData.length * 1000, MAX_PLAYBACK_DURATION);
+  }, [sortedPlaybackData.length, hasData]);
 
   const stepSize = useMemo(
     () =>
-      hasData && playbackData.length > 1 ? 100 / (playbackData.length - 1) : 0,
-    [playbackData.length, hasData],
+      hasData && sortedPlaybackData.length > 1
+        ? 100 / (sortedPlaybackData.length - 1)
+        : 0,
+    [sortedPlaybackData.length, hasData],
   );
 
   const currentIndex = useMemo(
@@ -53,13 +64,13 @@ export default function PlaybackSlider() {
   useEffect(() => {
     if (
       hasData &&
-      playbackData[currentIndex] &&
+      sortedPlaybackData[currentIndex] &&
       currentIndex !== prevIndexRef.current
     ) {
-      setCurrentPacket(playbackData[currentIndex]);
+      setCurrentPacket(sortedPlaybackData[currentIndex]);
       prevIndexRef.current = currentIndex;
     }
-  }, [currentIndex, setCurrentPacket, playbackData, hasData]);
+  }, [currentIndex, setCurrentPacket, sortedPlaybackData, hasData]);
 
   const handlePlayPause = () => {
     setIsPlaying((prev) => {
@@ -82,7 +93,7 @@ export default function PlaybackSlider() {
     if (!playStartTime.current || !hasData || !isPlayingRef.current) return;
 
     const elapsed = Date.now() - playStartTime.current;
-    const totalSteps = playbackData.length - 1;
+    const totalSteps = sortedPlaybackData.length - 1;
 
     const progressIndex = Math.min(
       playStartSlider.current + (elapsed / PLAYBACK_DURATION) * totalSteps,
@@ -93,6 +104,9 @@ export default function PlaybackSlider() {
 
     if (roundedIndex !== prevIndexRef.current) {
       setSliderValue(roundedIndex);
+      if (sortedPlaybackData[roundedIndex]) {
+        setCurrentPacket(sortedPlaybackData[roundedIndex]); // Update packet during animation
+      }
     }
 
     if (progressIndex < totalSteps) {
@@ -100,6 +114,9 @@ export default function PlaybackSlider() {
     } else {
       setIsPlaying(false);
       setSliderValue(totalSteps);
+      if (sortedPlaybackData[totalSteps]) {
+        setCurrentPacket(sortedPlaybackData[totalSteps]); // Update at the end of animation
+      }
     }
   };
 
@@ -122,34 +139,44 @@ export default function PlaybackSlider() {
   const handleSliderChange = useCallback(
     (value: number | number[]) => {
       if (typeof value === "number") {
-        const clamped = Math.max(0, Math.min(value, playbackData.length - 1));
+        const clamped = Math.max(
+          0,
+          Math.min(value, sortedPlaybackData.length - 1),
+        );
         setSliderValue(clamped);
 
-        if (isPlaying) {
-          playStartTime.current = Date.now();
-          playStartSlider.current = clamped;
+        // Debounce the packet update
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
         }
+
+        timeoutRef.current = setTimeout(() => {
+          if (sortedPlaybackData[clamped]) {
+            setCurrentPacket(sortedPlaybackData[clamped]);
+          }
+          prevIndexRef.current = clamped;
+        }, 100); // 100ms delay to avoid excessive updates
       }
     },
-    [isPlaying, playbackData.length],
+    [sortedPlaybackData.length, setCurrentPacket],
   );
 
   const getTooltipContent = useCallback(
     (value: number) => {
       const index = Math.round(value / stepSize);
-      if (hasData && playbackData[index]) {
+      if (hasData && sortedPlaybackData[index]) {
         return (
           <div className="flex flex-col items-center gap-1">
             <p>Packet: {index + 1}</p>
             <p>{`Timestamp: ${new Date(
-              playbackData[index].TimeStamp * 1000,
+              sortedPlaybackData[index].TimeStamp * 1000,
             ).toLocaleString()}`}</p>
           </div>
         );
       }
       return "";
     },
-    [playbackData, stepSize, hasData],
+    [sortedPlaybackData, stepSize, hasData],
   );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -199,14 +226,14 @@ export default function PlaybackSlider() {
         >
           <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
             <Slider
-              max={playbackData.length - 1}
+              max={sortedPlaybackData.length - 1}
               min={0}
               onChange={(value) => {
                 setHoverValue(null);
                 handleSliderChange(value);
               }}
               onChangeComplete={() => setHoverValue(null)}
-              value={currentIndex}
+              value={sliderValue} // Bind the slider value directly
             />
           </div>
         </Tooltip>
