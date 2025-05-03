@@ -6337,12 +6337,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantine/notifications@npm:^7.17.7":
+  version: 7.17.7
+  resolution: "@mantine/notifications@npm:7.17.7"
+  dependencies:
+    "@mantine/store": "npm:7.17.7"
+    react-transition-group: "npm:4.4.5"
+  peerDependencies:
+    "@mantine/core": 7.17.7
+    "@mantine/hooks": 7.17.7
+    react: ^18.x || ^19.x
+    react-dom: ^18.x || ^19.x
+  checksum: 10c0/963b2773c752111bc395ce30d80fe12621ecd2edf3fddb3b9543ec9d8ffb319260a5190a5965d4e0f0b96d4dff894059bf3325dcab845d275e3edca6449405d8
+  languageName: node
+  linkType: hard
+
 "@mantine/store@npm:7.17.3":
   version: 7.17.3
   resolution: "@mantine/store@npm:7.17.3"
   peerDependencies:
     react: ^18.x || ^19.x
   checksum: 10c0/21e12cbbe7433855e83baaadf9e03c1e04491b71d31f3fb0b2edd1f0198cf582436591b341d6c52a0693f60ba98d7e6ea92b7a1561bfc4b79d5352ba6d3a19cb
+  languageName: node
+  linkType: hard
+
+"@mantine/store@npm:7.17.7":
+  version: 7.17.7
+  resolution: "@mantine/store@npm:7.17.7"
+  peerDependencies:
+    react: ^18.x || ^19.x
+  checksum: 10c0/ca5b9cc75c7bdcb02e2df2826a87c8b686cbfa1eb41adaafb5b0e1024f7d54893f1fb664340227a156601dba7e985f556861fca6751c790e7a039df4dfd7821d
   languageName: node
   linkType: hard
 
@@ -20742,6 +20766,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
+    "@mantine/notifications": "npm:^7.17.7"
     "@types/eslint": "npm:^9.6.0"
     "@typescript-eslint/eslint-plugin": "npm:^7.4.0"
     "@typescript-eslint/parser": "npm:^7.4.0"
