@@ -19,16 +19,23 @@ export default function PlaybackSlider() {
 
   const { setCurrentPacket } = usePacket();
   const { playbackData } = usePlaybackContext();
+  const isPlayingRef = useRef(isPlaying);
+
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   const hasData = useMemo(
     () => playbackData && playbackData.length > 0,
     [playbackData],
   );
 
-  const PLAYBACK_DURATION = useMemo(
-    () => (hasData ? playbackData.length * 1000 : 0),
-    [playbackData.length, hasData],
-  );
+  const MAX_PLAYBACK_DURATION = 240000;
+
+  const PLAYBACK_DURATION = useMemo(() => {
+    if (!hasData) return 0;
+    return Math.min(playbackData.length * 1000, MAX_PLAYBACK_DURATION);
+  }, [playbackData.length, hasData]);
 
   const stepSize = useMemo(
     () =>
@@ -41,7 +48,6 @@ export default function PlaybackSlider() {
     [sliderValue, stepSize],
   );
 
-  // Using a ref to avoid rerunning the effect too often
   const prevIndexRef = useRef(currentIndex);
 
   useEffect(() => {
@@ -58,39 +64,42 @@ export default function PlaybackSlider() {
   const handlePlayPause = () => {
     setIsPlaying((prev) => {
       if (prev) {
-        // Pause functionality: cancel the animation and stop updating slider value
         if (animationRef.current) {
           cancelAnimationFrame(animationRef.current);
           animationRef.current = null;
         }
-        return false; // Set playing state to false
+        return false;
       } else {
-        // Play functionality: start animation
         playStartTime.current = Date.now();
         playStartSlider.current = sliderValue;
         animationRef.current = requestAnimationFrame(animate);
-        return true; // Set playing state to true
+        return true;
       }
     });
   };
 
   const animate = () => {
-    if (!playStartTime.current || !hasData) return;
+    if (!playStartTime.current || !hasData || !isPlayingRef.current) return;
 
     const elapsed = Date.now() - playStartTime.current;
-    const progressPercentage = (elapsed / PLAYBACK_DURATION) * 100;
-    const newValue = Math.min(
-      playStartSlider.current + progressPercentage,
-      100,
+    const totalSteps = playbackData.length - 1;
+
+    const progressIndex = Math.min(
+      playStartSlider.current + (elapsed / PLAYBACK_DURATION) * totalSteps,
+      totalSteps,
     );
 
-    setSliderValue(newValue);
+    const roundedIndex = Math.round(progressIndex);
 
-    if (newValue < 100) {
+    if (roundedIndex !== prevIndexRef.current) {
+      setSliderValue(roundedIndex);
+    }
+
+    if (progressIndex < totalSteps) {
       animationRef.current = requestAnimationFrame(animate);
     } else {
       setIsPlaying(false);
-      setSliderValue(100); // Ensure it reaches the end of the slider
+      setSliderValue(totalSteps);
     }
   };
 
@@ -98,7 +107,6 @@ export default function PlaybackSlider() {
     if (isPlaying) {
       animationRef.current = requestAnimationFrame(animate);
     } else {
-      // Cancel animation frame when paused
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
@@ -114,14 +122,16 @@ export default function PlaybackSlider() {
   const handleSliderChange = useCallback(
     (value: number | number[]) => {
       if (typeof value === "number") {
-        setSliderValue(value);
+        const clamped = Math.max(0, Math.min(value, playbackData.length - 1));
+        setSliderValue(clamped);
+
         if (isPlaying) {
           playStartTime.current = Date.now();
-          playStartSlider.current = value;
+          playStartSlider.current = clamped;
         }
       }
     },
-    [isPlaying],
+    [isPlaying, playbackData.length],
   );
 
   const getTooltipContent = useCallback(
@@ -145,7 +155,7 @@ export default function PlaybackSlider() {
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const hoverPercentage = (x / rect.width) * 100; // calculate the percentage of the hover position relative to slider, set tooltip to this packet
+    const hoverPercentage = (x / rect.width) * 100;
     setHoverValue(hoverPercentage);
     setTooltipPosition({ left: x + rect.left, top: rect.top });
   };
@@ -189,14 +199,14 @@ export default function PlaybackSlider() {
         >
           <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
             <Slider
-              max={100}
+              max={playbackData.length - 1}
               min={0}
               onChange={(value) => {
                 setHoverValue(null);
                 handleSliderChange(value);
               }}
               onChangeComplete={() => setHoverValue(null)}
-              value={sliderValue}
+              value={currentIndex}
             />
           </div>
         </Tooltip>
