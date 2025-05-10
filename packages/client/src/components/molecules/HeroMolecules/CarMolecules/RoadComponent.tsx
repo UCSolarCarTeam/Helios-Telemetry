@@ -11,24 +11,35 @@ interface roadComponentProps {
   speed: number;
 }
 const RoadComponent = (props: roadComponentProps) => {
-  const geometry = useMemo(
+  const stripGeometry = useMemo(
     () => new PlaneGeometry(0.5, props.size * 5),
     [props.size],
   );
-  const planeGeom = new PlaneGeometry(9, props.size * 7);
+  const planeGeometry = useMemo(
+    () => new PlaneGeometry(15.7, props.size * 5),
+    [props.size],
+  );
+
   return (
     <>
       <mesh
-        geometry={geometry}
-        position={[-5.5, -0.01, -3]}
+        geometry={stripGeometry}
+        position={[-5.5, -0.01, 5]}
         rotation={[Math.PI / 2, 0, 0]}
       >
         <meshBasicMaterial color="white" side={THREE.DoubleSide} />
       </mesh>
+      <mesh
+        geometry={planeGeometry}
+        position={[2.6, -0.02, 5]}
+        rotation={[Math.PI / 2, 0, 0]}
+      >
+        <meshBasicMaterial color="grey" side={THREE.DoubleSide} />
+      </mesh>
       <RoadStripGroup {...props} />
       <mesh
-        geometry={geometry}
-        position={[10.5, -0.01, -6]}
+        geometry={stripGeometry}
+        position={[10.5, -0.01, 5]}
         rotation={[Math.PI / 2, 0, 0]}
       >
         <meshBasicMaterial color="white" side={THREE.DoubleSide} />
@@ -92,7 +103,7 @@ function RoadStripGroup(props: roadComponentProps) {
 
   for (let i = 0; i < props.size; i++) {
     const back = (props.size / 2) * -5;
-    roadStrips.push(back + i * 5);
+    roadStrips.push(back + i * 5.3);
   }
 
   return (
@@ -101,7 +112,7 @@ function RoadStripGroup(props: roadComponentProps) {
         <RoadStripComponent
           direction={props.direction}
           key={i}
-          position={[2.5, -0.1, z]}
+          position={[2.5, -0.01, z]}
           size={props.size}
           speed={props.speed}
         />
