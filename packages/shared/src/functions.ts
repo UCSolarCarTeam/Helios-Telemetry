@@ -521,7 +521,7 @@ export function generateFakeTelemetryData(): ITelemetryData {
       }),
       MpuTemperature: faker.number.float({ max: 85, min: -40 }),
     },
-    TimeStamp: faker.date.recent().getTime(),
+    TimeStamp: Math.round(faker.date.recent().getTime() / 1000),
     Title: faker.lorem.words(2),
   };
 }
