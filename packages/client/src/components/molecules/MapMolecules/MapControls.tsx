@@ -42,7 +42,7 @@ export default function MapControls({
   const toggleRaceTracks = () => setViewRaceTracks(!viewRaceTracks);
 
   return (
-    <div className="absolute top-0 flex flex-col gap-4 p-2">
+    <div className="absolute top-0 z-50 flex flex-col gap-4 p-2">
       <button className={buttonClasses} onClick={toggleMapStyle}>
         {mapStates.satelliteMode ? (
           <FaSatellite className={iconClasses} />

@@ -1,5 +1,5 @@
 import type { FeatureCollection, LineString } from "geojson";
-import { LineLayerSpecification } from "mapbox-gl";
+import mapboxgl, { LineLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
 import { type JSX, useCallback, useEffect, useRef, useState } from "react";
@@ -79,7 +79,15 @@ export default function Map({
   const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
     Hydrated_Grand_Full_course,
   );
+  const [mapControlsAdded, setMapControlsAdded] = useState(false);
+
   const mapRef = useRef<MapRef | undefined>(undefined);
+
+  if (mapRef.current && !mapControlsAdded) {
+    mapRef.current.addControl(new mapboxgl.FullscreenControl(), "top-right");
+    setMapControlsAdded(true);
+  }
+
   useEffect(() => {
     const time = 1 / 60; // run at 60fps
     let animationFrameId: number;
@@ -189,6 +197,14 @@ export default function Map({
         {...viewState}
         style={{ height: "100%", width: "100%" }}
       >
+        <MapControls
+          mapStates={mapStates}
+          setViewTracks={setViewTracks}
+          toggleCentred={toggleCentred}
+          toggleMapStyle={toggleMapStyle}
+          trackList={TRACK_LIST}
+          viewTracks={viewTracks}
+        />
         {popupOpen && (
           <Popup
             latitude={mapStates.currentCarLocation.lat}
@@ -246,14 +262,6 @@ export default function Map({
           );
         })}
       </ReactMapGL>
-      <MapControls
-        mapStates={mapStates}
-        setViewTracks={setViewTracks}
-        toggleCentred={toggleCentred}
-        toggleMapStyle={toggleMapStyle}
-        trackList={TRACK_LIST}
-        viewTracks={viewTracks}
-      />
     </div>
   );
 }
