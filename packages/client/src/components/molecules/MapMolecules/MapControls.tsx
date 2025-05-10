@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
@@ -38,6 +38,9 @@ export default function MapControls({
     [darkMode],
   );
   const iconClasses = useMemo(() => `h-6 text-xl`, []);
+  const [viewRaceTracks, setViewRaceTracks] = useState(false);
+  const toggleRaceTracks = () => setViewRaceTracks(!viewRaceTracks);
+
   return (
     <div className="absolute top-0 flex flex-col gap-4 p-2">
       <button className={buttonClasses} onClick={toggleMapStyle}>
@@ -54,17 +57,18 @@ export default function MapControls({
         <FaLocationArrow className={iconClasses} />
       </button>
       <button
-        className={twMerge(
-          buttonClasses,
-          "group relative transition-all duration-700 focus-within:h-24 focus-within:w-32 focus-within:rounded-md",
-        )}
+        className={twMerge(buttonClasses, "relative")}
+        onBlur={toggleRaceTracks}
+        onClick={toggleRaceTracks}
       >
-        <FaMagnifyingGlass className="transition duration-200 group-focus-within:opacity-0" />
-        <div className="group absolute bottom-0 left-2 top-1.5 flex flex-col gap-2">
+        <FaMagnifyingGlass />
+        <div
+          className={`absolute left-12 flex flex-col gap-2 rounded bg-inherit p-4 transition-opacity duration-300 ${viewRaceTracks ? "opacity-100" : "opacity-0"}`}
+        >
           {trackList.map((track, index) => {
             return (
               <button
-                className="flex size-full -translate-y-10 items-center gap-2 text-nowrap text-end opacity-0 transition duration-500 group-focus-within:translate-y-0 group-focus-within:opacity-100"
+                className={`flex size-full items-center gap-2 text-nowrap text-end transition-transform duration-500 ${!viewRaceTracks && "-translate-y-10"}`}
                 key={track.sourceProps.id}
                 onClick={() =>
                   setViewTracks((prevState) => {
@@ -87,7 +91,7 @@ export default function MapControls({
                         : "transparent",
                   }}
                 />
-                <p className="hidden select-none text-xxs font-semibold group-focus-within:block">
+                <p className="select-none text-xxs font-semibold">
                   {track.trackName}
                 </p>
               </button>
