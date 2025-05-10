@@ -695,12 +695,6 @@ const GRAND_FULL_COURSE_GEO_JSON = {
       type: "Feature",
     },
     {
-      geometry: { coordinates: [-86.363013541, 37.004657904], type: "Point" },
-      id: "sm0ccceba4",
-      properties: {},
-      type: "Feature",
-    },
-    {
       geometry: { coordinates: [-86.36270777, 37.004837829], type: "Point" },
       id: "sm0c2176b8",
       properties: {},
