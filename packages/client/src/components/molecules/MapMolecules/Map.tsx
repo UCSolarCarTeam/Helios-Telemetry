@@ -79,9 +79,9 @@ export default function Map({
   const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
     Hydrated_Grand_Full_course,
   );
-  const mapRef = useRef<MapRef | undefined>(undefined);
-
   const [mapControlsAdded, setMapControlsAdded] = useState(false);
+
+  const mapRef = useRef<MapRef | undefined>(undefined);
 
   if (mapRef.current && !mapControlsAdded) {
     mapRef.current.addControl(new mapboxgl.FullscreenControl(), "top-right");
