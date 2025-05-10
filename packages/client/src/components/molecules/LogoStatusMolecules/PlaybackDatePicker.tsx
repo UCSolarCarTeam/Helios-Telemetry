@@ -2,18 +2,21 @@ import axios from "axios";
 import React, { useState } from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
+import { usePlaybackContext } from "@/contexts/PlayBackContext";
+import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Modal } from "@mui/material";
-import {
-  IPlaybackDynamoResponse,
-  ITelemetryData,
-  prodURL,
-} from "@shared/helios-types";
+import { ITelemetryData, prodURL } from "@shared/helios-types";
 
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
 import DatePickerResultColumn from "./DataPickerMolecules/DatePickerResultColumn";
 
 export type IPlaybackDateTime = { date: Date; startTime: Date; endTime: Date };
+export type IPlaybackDataResponse = {
+  data: ITelemetryData;
+  timestamp: number;
+  id: string;
+};
 
 const createDateTime = (time: Date, year: number, month: number, day: number) =>
   new Date(
@@ -24,7 +27,6 @@ const createDateTime = (time: Date, year: number, month: number, day: number) =>
     time.getMinutes(),
     time.getSeconds(),
   );
-
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ function PlaybackDatePicker() {
     startTime: new Date(),
   });
 
-  const [playbackData, setPlaybackData] = useState<ITelemetryData[]>([]);
+  const { playbackData, setPlaybackData } = usePlaybackContext();
 
   const fetchPlaybackData = async () => {
     setLoading(true);
@@ -59,21 +61,33 @@ function PlaybackDatePicker() {
     const startTimeUTC = Math.floor(startDateTime.getTime() / 1000);
     const endTimeUTC = Math.floor(endDateTime.getTime() / 1000);
 
-    axios
-      .get(`${prodURL}/packetsBetween`, {
+    const maxInterval = 10 * 60; // 10 minutes in seconds
+    if (endTimeUTC - startTimeUTC > maxInterval) {
+      notifications.show({
+        color: "red",
+        message: "Please select a range of maximum 10 minutes.",
+        title: "Error",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${prodURL}/packetsBetween`, {
         params: { endTime: endTimeUTC, startTime: startTimeUTC },
-      })
-      .then((response) => {
-        const sortedData = response.data.data.sort(
-          (a: IPlaybackDynamoResponse, b: IPlaybackDynamoResponse) =>
-            a.timestamp - b.timestamp,
-        );
-        setPlaybackData(sortedData);
-      })
-      .catch(() => {
-        throw new Error("Error fetching playback data");
-      })
-      .finally(() => setLoading(false));
+      });
+
+      // Extract only the `data` field from each response item
+      const extractedData: ITelemetryData[] = response.data.data.map(
+        (item: IPlaybackDataResponse) => item.data,
+      );
+
+      setPlaybackData(extractedData);
+    } catch (error) {
+      throw new Error("Error fetching playback data");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

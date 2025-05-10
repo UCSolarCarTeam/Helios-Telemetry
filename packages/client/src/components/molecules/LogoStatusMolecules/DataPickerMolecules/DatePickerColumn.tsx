@@ -17,6 +17,7 @@ const DataPickerColumn = ({
   return (
     <div className="m-4 flex flex-col items-center gap-4 sm:w-[50%]">
       <DatePicker
+        highlightToday={true}
         onChange={(value) => {
           if (value) {
             setPlaybackDateTime((prev) => {

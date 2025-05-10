@@ -89,28 +89,37 @@ export default function Map({
   }
 
   useEffect(() => {
-    const time = 1 / 60; // run at 60fps
+    const time = 1 / 60;
     let animationFrameId: number;
+
     const animateCarMarker = () => {
       setMapStates((prevMapStates) => {
-        const newLat = lerp(
-          prevMapStates.currentCarLocation.lat,
-          carLocation.lat,
-          time,
-        );
-        const newLng = lerp(
-          prevMapStates.currentCarLocation.long,
-          carLocation.long,
-          time,
-        );
+        const { currentCarLocation } = prevMapStates;
+        const newLat = lerp(currentCarLocation.lat, carLocation.lat, time);
+        const newLng = lerp(currentCarLocation.long, carLocation.long, time);
+
+        // Check if we're close enough to stop updating
+        const closeEnough =
+          Math.abs(newLat - carLocation.lat) < 0.00001 &&
+          Math.abs(newLng - carLocation.long) < 0.00001;
+
+        if (closeEnough) {
+          cancelAnimationFrame(animationFrameId);
+          return {
+            ...prevMapStates,
+            currentCarLocation: carLocation,
+          };
+        }
+
+        animationFrameId = requestAnimationFrame(animateCarMarker);
         return {
           ...prevMapStates,
           currentCarLocation: { lat: newLat, long: newLng },
         };
       });
-      animationFrameId = requestAnimationFrame(animateCarMarker);
     };
-    animateCarMarker();
+
+    animationFrameId = requestAnimationFrame(animateCarMarker);
     return () => cancelAnimationFrame(animationFrameId);
   }, [carLocation]);
 
