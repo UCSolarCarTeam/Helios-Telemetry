@@ -10,6 +10,7 @@ import {
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import type { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import {
   DynamoDBDocumentClient,
   GetCommand,
@@ -61,7 +62,7 @@ export class DynamoDB implements DynamoDBtypes {
 
   // Helper function to get playback table data
   public async getPacketData(timestamp: string) {
-    const params = {
+    const params: QueryCommandInput = {
       ExpressionAttributeNames: { "#ts": "timestamp" },
       ExpressionAttributeValues: { ":tsVal": Number(timestamp) },
       IndexName: this.packetTableIndexName,
@@ -83,14 +84,14 @@ export class DynamoDB implements DynamoDBtypes {
     endUTCDate: number,
   ) {
     try {
-      const queryParams = {
+      const queryParams: QueryCommandInput = {
         ExpressionAttributeNames: {
           "#pk": "type",
           "#ts": "timestamp",
         },
         ExpressionAttributeValues: {
-          ":end": Number(endUTCDate),
-          ":start": Number(startUTCDate),
+          ":end": endUTCDate,
+          ":start": startUTCDate,
           ":type": "packet",
         },
         IndexName: this.packetTableIndexName,
