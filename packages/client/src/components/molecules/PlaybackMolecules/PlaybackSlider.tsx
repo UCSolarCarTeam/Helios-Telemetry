@@ -94,17 +94,17 @@ export default function PlaybackSlider() {
     const elapsed = Date.now() - playStartTime.current;
     const totalSteps = sortedPlaybackData.length - 1;
 
-    const progressIndex = Math.min(
-      playStartSlider.current + (elapsed / PLAYBACK_DURATION) * totalSteps,
-      totalSteps,
-    );
+    const progressIndex =
+      playStartSlider.current + (elapsed / PLAYBACK_DURATION) * totalSteps;
 
-    const roundedIndex = Math.round(progressIndex);
+    const clampedProgress = Math.min(progressIndex, totalSteps);
+    setSliderValue(clampedProgress);
 
-    if (roundedIndex !== prevIndexRef.current) {
-      setSliderValue(roundedIndex);
-      if (sortedPlaybackData[roundedIndex]) {
-        setCurrentPacket(sortedPlaybackData[roundedIndex]); // Update packet during animation
+    const flooredIndex = Math.floor(clampedProgress);
+    if (flooredIndex > prevIndexRef.current) {
+      prevIndexRef.current = flooredIndex;
+      if (sortedPlaybackData[flooredIndex]) {
+        setCurrentPacket(sortedPlaybackData[flooredIndex]);
       }
     }
 
@@ -114,7 +114,7 @@ export default function PlaybackSlider() {
       setIsPlaying(false);
       setSliderValue(totalSteps);
       if (sortedPlaybackData[totalSteps]) {
-        setCurrentPacket(sortedPlaybackData[totalSteps]); // Update at the end of animation
+        setCurrentPacket(sortedPlaybackData[totalSteps]);
       }
     }
   };
