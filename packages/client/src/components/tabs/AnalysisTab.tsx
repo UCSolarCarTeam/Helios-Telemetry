@@ -88,7 +88,7 @@ function AnalysisTab() {
               <Tab
                 key={tab.id}
                 label={tab.name.toUpperCase()}
-                sx={currentAppState.darkMode ? { color: "white" } : {}}
+                sx={currentAppState.darkMode ? { color: "#D2D2D2" } : {}}
                 value={tab.id}
               ></Tab>
             ))}
