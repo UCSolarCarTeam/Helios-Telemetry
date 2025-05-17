@@ -30,7 +30,6 @@ import {
   TRACK_LIST,
   mapCameraControls,
 } from "./MapSetup";
-import PacketMarker from "./PacketMarker";
 
 const { distance, fitBounds, isOutsideBounds, lerp } = mapCameraControls;
 // @ts-expect-error:next-line
@@ -103,13 +102,6 @@ export default function Map({
   }, []);
 
   useEffect(() => {
-    setViewState((prev) => ({
-      ...prev,
-      zoom: mapStates.isFullscreen ? 16 : 14,
-    }));
-  }, [mapStates.isFullscreen]);
-
-  useEffect(() => {
     const time = mapStates.isFullscreen ? 1 : 1 / 60;
     let animationFrameId: number;
     const animateCarMarker = () => {
@@ -148,12 +140,19 @@ export default function Map({
         map.getCenter().lng,
       );
       const speedFactor = 80;
+
+      const maxSpeed = 5;
+      const minSpeed = 1.5;
+      const rawSpeed = speedFactor * dist;
+      const speed = Math.min(Math.max(rawSpeed, minSpeed), maxSpeed);
       map.flyTo({
+        bearing: map.getBearing(),
         center: [carLocation.long, carLocation.lat],
         curve: 1, // Adjust the curve of the animation
         easing: (t) => t, // Easing function for the animation
-        speed: speedFactor * dist,
-        zoom: mapStates.isFullscreen ? 16 : 14,
+        pitch: map.getPitch(),
+        speed,
+        zoom: mapStates.isFullscreen ? 20 : 14,
       });
     }
   }, [carLocation, lapLocation, mapStates.centered, mapStates.isFullscreen]);
@@ -165,26 +164,6 @@ export default function Map({
   const toggleCentred = useCallback(() => {
     setMapStates((prev) => ({ ...prev, centered: !prev.centered }));
   }, [setMapStates]);
-  const onMouseEnterDataPoint = useCallback(
-    (index: number) => {
-      setDataPoints((prevDataPoints) =>
-        prevDataPoints.map((point, i) =>
-          i === index ? { ...point, open: true } : point,
-        ),
-      );
-    },
-    [setDataPoints],
-  );
-  const onMouseLeaveDataPoint = useCallback(
-    (index: number) => {
-      setDataPoints((prevDataPoints) =>
-        prevDataPoints.map((point, i) =>
-          i === index ? { ...point, open: false } : point,
-        ),
-      );
-    },
-    [setDataPoints],
-  );
 
   const geojson: FeatureCollection = {
     features: [
@@ -205,7 +184,7 @@ export default function Map({
     paint: {
       "circle-color": "#B94A6C",
       "circle-opacity": 0.8,
-      "circle-radius": 30,
+      "circle-radius": 150,
 
       "circle-stroke-color": "#9C0534",
       "circle-stroke-width": 2,
@@ -269,19 +248,19 @@ export default function Map({
         >
           <Image
             alt="map-pin"
-            height={mapStates.isFullscreen ? 80 : 50}
+            height={mapStates.isFullscreen ? 100 : 50}
             onMouseEnter={() => setPopupOpen(true)}
             onMouseLeave={() => setPopupOpen(false)}
             src={HeliosModel}
             style={{
               transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
             }}
-            width={mapStates.isFullscreen ? 40 : 20}
+            width={mapStates.isFullscreen ? 60 : 20}
           />
         </Marker>
         <Marker
-          latitude={lapLocation.lat + 0.00025}
-          longitude={lapLocation.long + 0.00025}
+          latitude={lapLocation.lat + 0.00001}
+          longitude={lapLocation.long + 0.00003}
         >
           <SportsScoreIcon
             style={{
@@ -291,7 +270,7 @@ export default function Map({
                   ? "white"
                   : "black",
             }}
-            sx={{ fontSize: mapStates.isFullscreen ? "100px" : "40px" }}
+            sx={{ fontSize: mapStates.isFullscreen ? "200px" : "40px" }}
           />
         </Marker>
         {mapStates.isFullscreen && (
@@ -299,17 +278,6 @@ export default function Map({
             <Layer {...layerStyle} />
           </Source>
         )}
-
-        {dataPoints.map((packetMarker, index) => (
-          <PacketMarker
-            index={index}
-            key={packetMarker.data.TimeStamp}
-            onMouseEnterDataPoint={onMouseEnterDataPoint}
-            onMouseLeaveDataPoint={onMouseLeaveDataPoint}
-            packetMarker={packetMarker}
-            setDataPoints={setDataPoints}
-          />
-        ))}
 
         {TRACK_LIST.map(({ layerProps, sourceProps }, index) => {
           if (!viewTracks[index]) return null;
