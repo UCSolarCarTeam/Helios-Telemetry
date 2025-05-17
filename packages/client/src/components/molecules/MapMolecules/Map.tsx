@@ -72,6 +72,7 @@ export default function Map({
   const [mapStates, setMapStates] = useState({
     centered: true,
     currentCarLocation: carLocation,
+    isFullscreen: false,
     satelliteMode: false,
   });
   const [popupOpen, setPopupOpen] = useState(true);
@@ -89,7 +90,27 @@ export default function Map({
   }
 
   useEffect(() => {
-    const time = 1 / 60; // run at 60fps
+    const handleFullscreenChange = () => {
+      const isFullscreen = document.fullscreenElement !== null;
+      setMapStates((prev) => ({ ...prev, isFullscreen }));
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setViewState((prev) => ({
+      ...prev,
+      zoom: mapStates.isFullscreen ? 16 : 14,
+    }));
+  }, [mapStates.isFullscreen]);
+
+  useEffect(() => {
+    const time = mapStates.isFullscreen ? 1 : 1 / 60;
     let animationFrameId: number;
     const animateCarMarker = () => {
       setMapStates((prevMapStates) => {
@@ -112,7 +133,7 @@ export default function Map({
     };
     animateCarMarker();
     return () => cancelAnimationFrame(animationFrameId);
-  }, [carLocation]);
+  }, [carLocation, mapStates.isFullscreen]);
   useEffect(() => {
     const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
     if (!mapRef.current) return;
@@ -132,10 +153,10 @@ export default function Map({
         curve: 1, // Adjust the curve of the animation
         easing: (t) => t, // Easing function for the animation
         speed: speedFactor * dist,
-        zoom: 16,
+        zoom: mapStates.isFullscreen ? 16 : 14,
       });
     }
-  }, [carLocation, lapLocation, mapStates.centered]);
+  }, [carLocation, lapLocation, mapStates.centered, mapStates.isFullscreen]);
 
   const toggleMapStyle = useCallback(() => {
     setMapStates((prev) => ({ ...prev, satelliteMode: !prev.satelliteMode }));
@@ -184,7 +205,7 @@ export default function Map({
     paint: {
       "circle-color": "#B94A6C",
       "circle-opacity": 0.8,
-      "circle-radius": 10,
+      "circle-radius": 30,
 
       "circle-stroke-color": "#9C0534",
       "circle-stroke-width": 2,
@@ -193,7 +214,7 @@ export default function Map({
   };
 
   return (
-    <div className="relative size-full">
+    <div className="relative size-full" id="map-container">
       <ReactMapGL
         boxZoom={false}
         doubleClickZoom={false}
@@ -248,19 +269,19 @@ export default function Map({
         >
           <Image
             alt="map-pin"
-            height={50}
+            height={mapStates.isFullscreen ? 80 : 50}
             onMouseEnter={() => setPopupOpen(true)}
             onMouseLeave={() => setPopupOpen(false)}
             src={HeliosModel}
             style={{
               transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
             }}
-            width={20}
+            width={mapStates.isFullscreen ? 40 : 20}
           />
         </Marker>
         <Marker
-          latitude={lapLocation.lat + 0.00008}
-          longitude={lapLocation.long + 0.00009}
+          latitude={lapLocation.lat + 0.00025}
+          longitude={lapLocation.long + 0.00025}
         >
           <SportsScoreIcon
             style={{
@@ -270,12 +291,15 @@ export default function Map({
                   ? "white"
                   : "black",
             }}
-            sx={{ fontSize: "40px" }}
+            sx={{ fontSize: mapStates.isFullscreen ? "100px" : "40px" }}
           />
         </Marker>
-        <Source data={geojson} id="finish-line-source" type="geojson">
-          <Layer {...layerStyle} />
-        </Source>
+        {mapStates.isFullscreen && (
+          <Source data={geojson} id="finish-line-source" type="geojson">
+            <Layer {...layerStyle} />
+          </Source>
+        )}
+
         {dataPoints.map((packetMarker, index) => (
           <PacketMarker
             index={index}
