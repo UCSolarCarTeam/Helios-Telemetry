@@ -1,3 +1,4 @@
+// This file shows the current location of the car.
 import type { FeatureCollection, LineString } from "geojson";
 import mapboxgl, { LineLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -32,7 +33,7 @@ import {
 } from "./MapSetup";
 import PacketMarker from "./PacketMarker";
 
-const { distance, fitBounds, isOutsideBounds, lerp } = mapCameraControls;
+const { distance, fitBounds, isOutsideBounds } = mapCameraControls;
 // @ts-expect-error:next-line
 type MapLibType = MapLib<mapboxgl.Map>;
 
@@ -74,7 +75,7 @@ export default function Map({
     currentCarLocation: carLocation,
     satelliteMode: false,
   });
-  const [popupOpen, setPopupOpen] = useState(true);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [viewTracks, setViewTracks] = useState(TRACK_LIST.map(() => true));
   const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
     Hydrated_Grand_Full_course,
@@ -89,29 +90,7 @@ export default function Map({
   }
 
   useEffect(() => {
-    const time = 1 / 60; // run at 60fps
-    let animationFrameId: number;
-    const animateCarMarker = () => {
-      setMapStates((prevMapStates) => {
-        const newLat = lerp(
-          prevMapStates.currentCarLocation.lat,
-          carLocation.lat,
-          time,
-        );
-        const newLng = lerp(
-          prevMapStates.currentCarLocation.long,
-          carLocation.long,
-          time,
-        );
-        return {
-          ...prevMapStates,
-          currentCarLocation: { lat: newLat, long: newLng },
-        };
-      });
-      animationFrameId = requestAnimationFrame(animateCarMarker);
-    };
-    animateCarMarker();
-    return () => cancelAnimationFrame(animationFrameId);
+    setMapStates((prev) => ({ ...prev, currentCarLocation: carLocation }));
   }, [carLocation]);
 
   useEffect(() => {
@@ -171,8 +150,9 @@ export default function Map({
       <ReactMapGL
         boxZoom={false}
         doubleClickZoom={false}
-        dragPan
-        dragRotate
+        dragPan={!mapStates.centered}
+        dragRotate={!mapStates.centered}
+        interactive={false}
         keyboard={false}
         mapLib={import("mapbox-gl") as Promise<MapLibType>}
         mapStyle={
