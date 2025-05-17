@@ -260,6 +260,9 @@ function RaceTab() {
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     borderColor: "#963A56",
                   },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: currentAppState.darkMode ? "white" : "",
+                  },
                 }}
                 value={Rfid}
               >
@@ -333,6 +336,9 @@ function RaceTab() {
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#963A56",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: currentAppState.darkMode ? "white" : "",
               },
             }}
             value={columnName}
