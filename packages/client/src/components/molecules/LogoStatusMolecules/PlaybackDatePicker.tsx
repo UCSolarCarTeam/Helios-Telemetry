@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import { usePlaybackContext } from "@/contexts/PlayBackContext";
@@ -11,7 +11,11 @@ import { ITelemetryData, prodURL } from "@shared/helios-types";
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
 import DatePickerResultColumn from "./DataPickerMolecules/DatePickerResultColumn";
 
-export type IPlaybackDateTime = { date: Date; startTime: Date; endTime: Date };
+export type IPlaybackDateTime = {
+  date: Date | null;
+  startTime: Date | null;
+  endTime: Date | null;
+};
 export type IPlaybackDataResponse = {
   data: ITelemetryData;
   timestamp: number;
@@ -31,15 +35,29 @@ function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [playbackDateTime, setPlaybackDateTime] = useState<IPlaybackDateTime>({
-    date: new Date(),
-    endTime: new Date(),
-    startTime: new Date(),
-  });
+  const [playbackDateTime, setPlaybackDateTime] = useState<IPlaybackDateTime>(
+    () => {
+      return currentAppState.playbackDateTime?.date
+        ? currentAppState.playbackDateTime
+        : {
+            date: new Date(),
+            endTime: new Date(),
+            startTime: new Date(),
+          };
+    },
+  );
 
   const { playbackData, setPlaybackData } = usePlaybackContext();
 
   const fetchPlaybackData = async () => {
+    if (
+      !playbackDateTime.date ||
+      !playbackDateTime.startTime ||
+      !playbackDateTime.endTime
+    ) {
+      return;
+    }
+
     setLoading(true);
     const year = playbackDateTime.date.getFullYear();
     const month = playbackDateTime.date.getMonth();
@@ -61,7 +79,7 @@ function PlaybackDatePicker() {
     const startTimeUTC = Math.floor(startDateTime.getTime());
     const endTimeUTC = Math.floor(endDateTime.getTime());
 
-    const maxInterval = 10 * 60 * 1000; // 10 minutes in seconds
+    const maxInterval = 10 * 60 * 1000; // 10 minutes in ms
     if (endTimeUTC - startTimeUTC > maxInterval) {
       notifications.show({
         color: "red",
@@ -77,7 +95,6 @@ function PlaybackDatePicker() {
         params: { endTime: endTimeUTC, startTime: startTimeUTC },
       });
 
-      // Extract only the `data` field from each response item
       const extractedData: ITelemetryData[] = response.data.data.map(
         (item: IPlaybackDataResponse) => item.data,
       );
@@ -89,6 +106,17 @@ function PlaybackDatePicker() {
       setLoading(false);
     }
   };
+
+  // When the playback switch is on, auto-fetch the data if a date was stored in local storage
+  useEffect(() => {
+    if (
+      currentAppState.playbackSwitch &&
+      currentAppState.playbackDateTime?.date
+    ) {
+      setPlaybackDateTime(currentAppState.playbackDateTime);
+      fetchPlaybackData();
+    }
+  }, [currentAppState.playbackSwitch]);
 
   return (
     <>
@@ -106,14 +134,11 @@ function PlaybackDatePicker() {
           >
             <div className="relative flex h-auto w-full max-w-lg rounded-lg border-none bg-white p-6 shadow-lg outline-none sm:max-w-xl md:max-w-2xl">
               <div className="flex w-full flex-col gap-6 sm:flex-row">
-                {/* Left Column: Date & Time Picker */}
                 <DatePickerColumn
                   fetchPlaybackData={fetchPlaybackData}
                   playbackDateTime={playbackDateTime}
                   setPlaybackDateTime={setPlaybackDateTime}
                 />
-
-                {/* Right Column: Playback Data Message */}
                 <DatePickerResultColumn
                   loading={loading}
                   playbackData={playbackData}

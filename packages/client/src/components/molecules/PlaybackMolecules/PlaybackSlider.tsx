@@ -56,6 +56,8 @@ export default function PlaybackSlider() {
     });
   };
 
+  const lastPacketIndexRef = useRef<number>(-1);
+
   useEffect(() => {
     const animate = () => {
       if (!playStartTime.current || !sortedData.length) return;
@@ -68,6 +70,13 @@ export default function PlaybackSlider() {
       );
 
       setSliderValue(newValue);
+
+      const index = Math.round(newValue / stepSize);
+
+      if (index !== lastPacketIndexRef.current && sortedData[index]) {
+        setCurrentPacket(sortedData[index]);
+        lastPacketIndexRef.current = index;
+      }
 
       if (newValue < 100) {
         animationRef.current = requestAnimationFrame(animate);
