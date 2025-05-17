@@ -1,3 +1,4 @@
+// This file controls app settings.
 import {
   type Dispatch,
   type ReactNode,
@@ -58,7 +59,7 @@ export function AppStateContextProvider({ children }: Props) {
     displayLoading: true,
     error: false,
     favourites: [],
-    lapCoords: { lat: 51.081021, long: -114.136084 },
+    lapCoords: { lat: 37.001949324, long: -86.366554059 },
     loading: true,
     playbackSwitch: false,
     radioConnected: false,
