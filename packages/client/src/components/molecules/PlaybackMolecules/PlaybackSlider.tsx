@@ -16,6 +16,7 @@ export default function PlaybackSlider() {
   const playStartTime = useRef<number>(null);
   const playStartSlider = useRef<number>(0);
   const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
+  const hoverAnchorRef = useRef<HTMLDivElement>(null);
 
   const { setCurrentPacket } = usePacket();
   const { playbackData } = usePlaybackContext();
@@ -27,11 +28,10 @@ export default function PlaybackSlider() {
         : [];
     return {
       hasData: sortedData.length > 0,
-      sortedData: sortedData, // Use only the first 10 packets for testing
+      sortedData,
     };
   }, [playbackData]);
 
-  // dynamic playback duration based on the length of how many packets were fetched
   const PLAYBACK_DURATION = useMemo(
     () => sortedData.length * 1000,
     [sortedData.length],
@@ -41,17 +41,6 @@ export default function PlaybackSlider() {
     () => (sortedData.length > 0 ? 100 / (sortedData.length - 1) : 0),
     [sortedData.length],
   );
-
-  const currentIndex = useMemo(
-    () => (stepSize > 0 ? Math.round(sliderValue / stepSize) : 0),
-    [sliderValue, stepSize],
-  );
-
-  useEffect(() => {
-    if (sortedData[currentIndex]) {
-      setCurrentPacket(sortedData[currentIndex]);
-    }
-  }, [currentIndex, setCurrentPacket, sortedData]);
 
   const handlePlayPause = () => {
     setIsPlaying((prev) => {
@@ -113,6 +102,13 @@ export default function PlaybackSlider() {
     [isPlaying],
   );
 
+  const handleSliderRelease = useCallback(() => {
+    const index = Math.round(sliderValue / stepSize);
+    if (sortedData[index]) {
+      setCurrentPacket(sortedData[index]);
+    }
+  }, [sliderValue, stepSize, sortedData, setCurrentPacket]);
+
   const getTooltipContent = useCallback(
     (value: number) => {
       const index = Math.round(value / stepSize);
@@ -134,9 +130,9 @@ export default function PlaybackSlider() {
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const hoverPercentage = (x / rect.width) * 100; // calculate the percentage of the hover position relative to slider, set tooltip to this packet
+    const hoverPercentage = (x / rect.width) * 100;
     setHoverValue(hoverPercentage);
-    setTooltipPosition({ left: x + rect.left, top: rect.top });
+    setTooltipPosition({ left: x, top: 0 });
   };
 
   const handleMouseLeave = () => {
@@ -164,13 +160,18 @@ export default function PlaybackSlider() {
           <PlayIcon color="white" height="25" width="25" />
         )}
       </button>
-      <div className="w-full rounded-md bg-helios p-2">
+      <div className="relative w-full rounded-md bg-helios p-2">
+        <div
+          className="absolute h-0 w-0"
+          ref={hoverAnchorRef}
+          style={{
+            left: tooltipPosition.left,
+            top: tooltipPosition.top,
+          }}
+        />
         <Tooltip
           PopperProps={{
-            anchorEl: {
-              getBoundingClientRect: () =>
-                new DOMRect(tooltipPosition.left, tooltipPosition.top, 0, 0),
-            },
+            anchorEl: hoverAnchorRef.current,
           }}
           arrow
           open={!!hoverValue}
@@ -185,7 +186,7 @@ export default function PlaybackSlider() {
                 setHoverValue(null);
                 handleSliderChange(value);
               }}
-              onChangeComplete={() => setHoverValue(null)}
+              onChangeComplete={handleSliderRelease}
               value={sliderValue}
             />
           </div>
