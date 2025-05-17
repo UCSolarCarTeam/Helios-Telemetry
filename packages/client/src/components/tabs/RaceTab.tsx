@@ -359,7 +359,7 @@ function RaceTab() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
-                    className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios bg-white px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
+                    className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 ${header.id === "data_timeStamp" ? "left-0 z-50" : ""} ${currentAppState.darkMode ? "bg-lightergrey" : "bg-slate"}`}
                     key={header.id}
                   >
                     {header.isPlaceholder
@@ -384,12 +384,15 @@ function RaceTab() {
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
+          <tbody className="divide-y divide-gray-200">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
+              <tr
+                className={`${currentAppState.darkMode ? "odd:bg-darkergrey even:bg-lightergrey" : "odd:bg-white even:bg-slate"}`}
+                key={row.id}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
+                    className={`w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${cell.id.includes("data_timeStamp") ? "left-0 z-10" : ""} ${currentAppState.darkMode ? "text-white" : "text-gray-900"}`}
                     key={cell.id}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
