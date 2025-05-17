@@ -12,45 +12,34 @@ export default function PlaybackSlider() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
   const [hoverValue, setHoverValue] = useState<number | null>(null);
-  const animationRef = useRef<number | null>(null);
-  const playStartTime = useRef<number | null>(null);
+  const animationRef = useRef<number>(null);
+  const playStartTime = useRef<number>(null);
   const playStartSlider = useRef<number>(0);
   const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
 
   const { setCurrentPacket } = usePacket();
   const { playbackData } = usePlaybackContext();
-  const isPlayingRef = useRef(isPlaying);
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    isPlayingRef.current = isPlaying;
-  }, [isPlaying]);
-
-  const { hasData, sortedPlaybackData } = useMemo(() => {
+  const { hasData, sortedData } = useMemo(() => {
     const sortedData =
       playbackData && playbackData.length > 0
         ? [...playbackData].sort((a, b) => a.TimeStamp - b.TimeStamp)
         : [];
     return {
       hasData: sortedData.length > 0,
-      sortedPlaybackData: sortedData,
+      sortedData: sortedData, // Use only the first 10 packets for testing
     };
   }, [playbackData]);
 
-  const MAX_PLAYBACK_DURATION = 240000;
-
-  const PLAYBACK_DURATION = useMemo(() => {
-    if (!hasData) return 0;
-    return Math.min(sortedPlaybackData.length * 1000, MAX_PLAYBACK_DURATION);
-  }, [sortedPlaybackData.length, hasData]);
+  // dynamic playback duration based on the length of how many packets were fetched
+  const PLAYBACK_DURATION = useMemo(
+    () => sortedData.length * 1000,
+    [sortedData.length],
+  );
 
   const stepSize = useMemo(
-    () =>
-      hasData && sortedPlaybackData.length > 1
-        ? 100 / (sortedPlaybackData.length - 1)
-        : 0,
-    [sortedPlaybackData.length, hasData],
+    () => (sortedData.length > 0 ? 100 / (sortedData.length - 1) : 0),
+    [sortedData.length],
   );
 
   const currentIndex = useMemo(
@@ -58,130 +47,94 @@ export default function PlaybackSlider() {
     [sliderValue, stepSize],
   );
 
-  const prevIndexRef = useRef(currentIndex);
-
   useEffect(() => {
-    if (
-      hasData &&
-      sortedPlaybackData[currentIndex] &&
-      currentIndex !== prevIndexRef.current
-    ) {
-      setCurrentPacket(sortedPlaybackData[currentIndex]);
-      prevIndexRef.current = currentIndex;
+    if (sortedData[currentIndex]) {
+      setCurrentPacket(sortedData[currentIndex]);
     }
-  }, [currentIndex, setCurrentPacket, sortedPlaybackData, hasData]);
+  }, [currentIndex, setCurrentPacket, sortedData]);
 
   const handlePlayPause = () => {
     setIsPlaying((prev) => {
-      if (prev) {
-        if (animationRef.current) {
-          cancelAnimationFrame(animationRef.current);
-          animationRef.current = null;
-        }
-        return false;
-      } else {
+      if (!prev) {
         playStartTime.current = Date.now();
         playStartSlider.current = sliderValue;
-        animationRef.current = requestAnimationFrame(animate);
-        return true;
+      } else {
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+        }
       }
+      return !prev;
     });
   };
 
-  const animate = () => {
-    if (!playStartTime.current || !hasData || !isPlayingRef.current) return;
-
-    const elapsed = Date.now() - playStartTime.current;
-    const totalSteps = sortedPlaybackData.length - 1;
-
-    const progressIndex =
-      playStartSlider.current + (elapsed / PLAYBACK_DURATION) * totalSteps;
-
-    const clampedProgress = Math.min(progressIndex, totalSteps);
-    setSliderValue(clampedProgress);
-
-    const flooredIndex = Math.floor(clampedProgress);
-    if (flooredIndex > prevIndexRef.current) {
-      prevIndexRef.current = flooredIndex;
-      if (sortedPlaybackData[flooredIndex]) {
-        setCurrentPacket(sortedPlaybackData[flooredIndex]);
-      }
-    }
-
-    if (progressIndex < totalSteps) {
-      animationRef.current = requestAnimationFrame(animate);
-    } else {
-      setIsPlaying(false);
-      setSliderValue(totalSteps);
-      if (sortedPlaybackData[totalSteps]) {
-        setCurrentPacket(sortedPlaybackData[totalSteps]);
-      }
-    }
-  };
-
   useEffect(() => {
+    const animate = () => {
+      if (!playStartTime.current || !sortedData.length) return;
+
+      const elapsed = Date.now() - playStartTime.current;
+      const progressPercentage = (elapsed / PLAYBACK_DURATION) * 100;
+      const newValue = Math.min(
+        playStartSlider.current + progressPercentage,
+        100,
+      );
+
+      setSliderValue(newValue);
+
+      if (newValue < 100) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        setIsPlaying(false);
+        setSliderValue(0);
+      }
+    };
+
     if (isPlaying) {
       animationRef.current = requestAnimationFrame(animate);
-    } else {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
     }
+
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [PLAYBACK_DURATION, isPlaying, sortedData.length]);
 
   const handleSliderChange = useCallback(
     (value: number | number[]) => {
       if (typeof value === "number") {
-        const clamped = Math.max(
-          0,
-          Math.min(value, sortedPlaybackData.length - 1),
-        );
-        setSliderValue(clamped);
+        setSliderValue(value);
 
-        // Debounce the packet update
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
+        if (isPlaying) {
+          playStartTime.current = Date.now();
+          playStartSlider.current = value;
         }
-
-        timeoutRef.current = setTimeout(() => {
-          if (sortedPlaybackData[clamped]) {
-            setCurrentPacket(sortedPlaybackData[clamped]);
-          }
-          prevIndexRef.current = clamped;
-        }, 100); // 100ms delay to avoid excessive updates
       }
     },
-    [sortedPlaybackData.length, setCurrentPacket],
+    [isPlaying],
   );
 
   const getTooltipContent = useCallback(
     (value: number) => {
       const index = Math.round(value / stepSize);
-      if (hasData && sortedPlaybackData[index]) {
+      if (sortedData[index]) {
         return (
           <div className="flex flex-col items-center gap-1">
             <p>Packet: {index + 1}</p>
-            <p>{`Timestamp: ${new Date(
-              sortedPlaybackData[index].TimeStamp * 1000,
-            ).toLocaleString()}`}</p>
+            {`Timestamp: ${new Date(
+              sortedData[index].TimeStamp,
+            ).toLocaleString()}`}
           </div>
         );
       }
       return "";
     },
-    [sortedPlaybackData, stepSize, hasData],
+    [sortedData, stepSize],
   );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const hoverPercentage = (x / rect.width) * 100;
+    const hoverPercentage = (x / rect.width) * 100; // calculate the percentage of the hover position relative to slider, set tooltip to this packet
     setHoverValue(hoverPercentage);
     setTooltipPosition({ left: x + rect.left, top: rect.top });
   };
@@ -226,14 +179,14 @@ export default function PlaybackSlider() {
         >
           <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
             <Slider
-              max={sortedPlaybackData.length - 1}
+              max={100}
               min={0}
               onChange={(value) => {
                 setHoverValue(null);
                 handleSliderChange(value);
               }}
               onChangeComplete={() => setHoverValue(null)}
-              value={sliderValue} // Bind the slider value directly
+              value={sliderValue}
             />
           </div>
         </Tooltip>
