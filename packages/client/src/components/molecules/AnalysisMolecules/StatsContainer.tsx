@@ -23,7 +23,7 @@ const statsProps = {
 const StatsContainer = () => {
   return (
     <div className="flex flex-wrap items-center justify-center gap-4 xl:flex-nowrap custom:flex-wrap">
-      <div className="flex flex-col items-center gap-4 sm:flex-row">
+      <div className="flex flex-col items-center gap-4 dark:text-black sm:flex-row">
         <Card className={"text-3xl font-bold"} square>
           <p className="text-center text-base font-normal sm:text-lg lg:text-xl">
             Optimal Driving Speed At
