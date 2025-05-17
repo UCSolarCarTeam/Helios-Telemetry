@@ -120,7 +120,8 @@ export function AppStateContextProvider({ children }: Props) {
     const favourites = localStorage.getItem("favourites");
 
     if (savedSettings) {
-      const parsedSettings = JSON.parse(savedSettings) as IAppState;
+      const parsedSettings = JSON.parse(savedSettings) as Partial<IAppState>;
+
       const parsedFavourites = favourites
         ? (JSON.parse(favourites) as string[])
         : [
@@ -132,24 +133,33 @@ export function AppStateContextProvider({ children }: Props) {
             "Battery Average Voltage",
           ];
 
-      // Convert stringified Dates back to real Date objects
-      const parsedPlaybackDateTime = {
-        date: new Date(parsedSettings.playbackDateTime.date ?? new Date()),
-        endTime: new Date(
-          parsedSettings.playbackDateTime.endTime ?? new Date(),
-        ),
-        startTime: new Date(
-          parsedSettings.playbackDateTime.startTime ?? new Date(),
-        ),
-      };
+      const hasPlaybackDateTime = !!parsedSettings.playbackDateTime;
+
+      const parsedPlaybackDateTime = hasPlaybackDateTime
+        ? {
+            date: parsedSettings.playbackDateTime!.date
+              ? new Date(parsedSettings.playbackDateTime!.date)
+              : null,
+            endTime: parsedSettings.playbackDateTime!.endTime
+              ? new Date(parsedSettings.playbackDateTime!.endTime)
+              : null,
+            startTime: parsedSettings.playbackDateTime!.startTime
+              ? new Date(parsedSettings.playbackDateTime!.startTime)
+              : null,
+          }
+        : {
+            date: null,
+            endTime: null,
+            startTime: null,
+          };
 
       setCurrentAppState((prev) => ({
         ...prev,
-        appUnits: parsedSettings.appUnits,
-        connectionType: parsedSettings.connectionType,
-        darkMode: parsedSettings.darkMode,
+        appUnits: parsedSettings.appUnits ?? prev.appUnits,
+        connectionType: parsedSettings.connectionType ?? prev.connectionType,
+        darkMode: parsedSettings.darkMode ?? prev.darkMode,
         favourites: parsedFavourites,
-        lapCoords: parsedSettings.lapCoords,
+        lapCoords: parsedSettings.lapCoords ?? prev.lapCoords,
         playbackDateTime: parsedPlaybackDateTime,
       }));
     }
