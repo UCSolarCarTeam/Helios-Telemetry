@@ -187,7 +187,13 @@ export default function PlaybackSlider() {
           placement="top"
           title={hoverValue ? getTooltipContent(hoverValue) : ""}
         >
-          <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
+          <div
+            className={
+              isPlaying ? "pointer-events-none" : "pointer-events-auto"
+            }
+            onMouseLeave={handleMouseLeave}
+            onMouseMove={handleMouseMove}
+          >
             <Slider
               max={100}
               min={0}
