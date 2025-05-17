@@ -1,4 +1,4 @@
-_last edited march 29 2025_
+_last edited may 17th 2025_
 
 # What does the telemetry team do?
 
@@ -22,6 +22,33 @@ You may be intimidated with the amount of stuff you have to learn - most first a
 I guess at the very least, we expect you to know Python or Java. But those are first year requirements. So basically nothing lol
 
 Good luck!@#!@!
+
+### General rules and conventions
+
+#### Try and use absolute imports when possible. Example:
+
+```typescript
+
+import ColumnFilters from "@/components/molecules/RaceTabMolecules/ColumnFilters"; // GOOD
+
+import ColumnFilters from "../molecules/RaceTabMolecules/ColumnFilters"; // BAD
+
+```
+
+#### Documentation for maintainability
+
+If a file has more than 50 lines, and has not been given documentation, you need to add an explanation as to what the file is used for at the top of the file. (_Note that not all files not have been docuemnted, so if you come across one that doesn't have any documentation, please add it if you are editing it_). Example [here](/packages/client/src/components/tabs/RaceTab.tsx)
+
+To autocomplete IDE settings for this:
+
+1. Go into VSCode Settings (Ctrl + Shift + P), search up user settings
+2. Click on `Preferences: Open User Settings (JSON)
+3. Add these lines into your configuration
+
+```JSON
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifier": "non-relative"
+```
 
 ### Things you should probably install
 
