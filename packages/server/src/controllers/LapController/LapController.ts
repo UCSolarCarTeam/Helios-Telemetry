@@ -19,8 +19,8 @@ export class LapController implements LapControllerType {
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
   public finishLineLocation: Coords = {
-    lat: 51.081021,
-    long: -114.136084,
+    lat: 37.004657904,
+    long: -86.363013541, // coords from grand race track
   };
   backendController: BackendController;
 
