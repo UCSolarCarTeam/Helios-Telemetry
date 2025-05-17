@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <MantineProvider>
-        <Notifications />
+        <Notifications zIndex={1400} />
         <AppStateContextProvider>
           <SocketContextProvider>
             <PacketContextProvider>
