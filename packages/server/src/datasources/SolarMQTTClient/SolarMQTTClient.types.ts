@@ -11,7 +11,8 @@ export const options: IClientOptions = {
 };
 
 export const topics = {
-  packetTopic: "packet",
+  carDisconnect: "carDisconnect",
+  packetTopic: "packetzainab",
   pingTopic: "ping",
   pongTopic: "pong",
   telemetryToCarTopic: "telemetryToCar",

@@ -7,6 +7,7 @@ import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { useSocket } from "@/contexts/SocketContext";
 import { Switch } from "@mantine/core";
 
 function PlaybackPickerComponent() {
@@ -33,7 +34,7 @@ function PlaybackPickerComponent() {
 function StatusComponent() {
   const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
-
+  const {} = useSocket();
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
   const carConnection = currentAppState.carLatency ? true : false;

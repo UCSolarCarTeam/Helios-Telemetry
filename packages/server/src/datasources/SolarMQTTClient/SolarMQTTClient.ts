@@ -1,5 +1,4 @@
 //import { SvgProps } from "./SVGProps.js";
-
 import { IClientOptions, type MqttClient, connect } from "mqtt";
 
 import { type BackendController } from "@/controllers/BackendController/BackendController";
@@ -14,7 +13,13 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { validateTelemetryData } from "@shared/helios-types";
 
-const { packetTopic, pingTopic, pongTopic, telemetryToCarTopic } = topics;
+const {
+  carDisconnect,
+  packetTopic,
+  pingTopic,
+  pongTopic,
+  telemetryToCarTopic,
+} = topics;
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
 
 export class SolarMQTTClient implements SolarMQTTClientType {
@@ -44,8 +49,8 @@ export class SolarMQTTClient implements SolarMQTTClientType {
       try {
         const driverName = this.latestRfid
           ? await this.backendController.dynamoDB.getDriverNameUsingRfid(
-              this.latestRfid,
-            )
+            this.latestRfid,
+          )
           : "Rfid not scanned";
 
         const infoToCar = {
@@ -72,21 +77,20 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   public initializeListeners() {
     this.client.on("connect", () => {
       logger.info("MQTT Client connected");
-      this.client.subscribe([packetTopic, pongTopic], (error) => {
-        if (!error) {
-          //
-        } else {
-          logger.error("Subscription error: ", error);
-        }
-      });
+      this.client.subscribe(
+        [packetTopic, pongTopic, carDisconnect],
+        (error) => {
+          if (!error) {
+            //
+          } else {
+            logger.error("Subscription error: ", error);
+          }
+        },
+      );
     });
 
-    /*this.client.on("offline", () => {
-      logger.info("MQTT Client offline");
-      
-    });*/
-
     this.client.on("message", (topic, message) => {
+      logger.info("topic: ", topic);
       if (topic === pongTopic) {
         logger.info("pong");
         const serverToCarLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
@@ -106,6 +110,9 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         } catch (error) {
           logger.error(`Invalid packet format: ${error.message}`);
         }
+      } else if (topic === "carDisconnect") {
+        logger.info("car disconnected on mqtt client");
+        // this.backendController.handleCarDisconnect();
       } else {
         logger.info("unknown topic: ", topic, "message: ", message.toString());
       }

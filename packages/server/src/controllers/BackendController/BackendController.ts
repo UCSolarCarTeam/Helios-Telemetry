@@ -45,12 +45,18 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    this.dynamoDB.insertPacketData(message);
+    //this.dynamoDB.insertPacketData(message);
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);
+  }
+
+  public handleCarDisconnect() {
+    // Broadcast the car disconnect event to the frontend
+    this.socketIO.broadcastCarDisconnect({ message: "Car has disconnected" });
+    logger.info("Car disconnect event broadcasted to frontend");
   }
 }
