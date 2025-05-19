@@ -53,6 +53,9 @@ export class SocketIO implements SocketIOType {
   public broadcastLapCoords(response: CoordUpdateResponse) {
     this.io.emit("lapCoords", response);
   }
+  public broadcastCarDisconnect(data: { message: string }) {
+    this.io.emit("carDisconnect", data); // Emit the event to all connected clients
+  }
   public initializeSocketListeners(socket: Socket) {
     socket.on("ping", (callback: () => void) => {
       callback();

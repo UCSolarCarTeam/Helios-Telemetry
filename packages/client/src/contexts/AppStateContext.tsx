@@ -35,6 +35,7 @@ interface IAppState {
   favourites: string[];
   connectionType: CONNECTIONTYPES;
   socketConnected: boolean;
+  mqttConnected: boolean;
   radioConnected: boolean;
   userLatency: number;
   carLatency: number;
@@ -60,6 +61,7 @@ export function AppStateContextProvider({ children }: Props) {
     favourites: [],
     lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
+    mqttConnected: false,
     playbackSwitch: false,
     radioConnected: false,
     socketConnected: false,
