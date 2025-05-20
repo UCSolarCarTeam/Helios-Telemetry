@@ -1,5 +1,3 @@
-import { getSecrets } from "./utils/getSecrets";
-
 import Aedes, {
   type AuthenticateError,
   type Client,
@@ -23,7 +21,7 @@ class MqttError extends Error {
     Object.setPrototypeOf(this, MqttError.prototype);
   }
 }
-const myObj: PublishPacket = {
+const notifyHeliosDisconnect: PublishPacket = {
   cmd: "publish",
   dup: false, // Not a duplicate
   payload: Buffer.from("Client has disconnected"), // Message content
@@ -33,13 +31,10 @@ const myObj: PublishPacket = {
 };
 
 const aedes: Aedes = new Aedes();
-// aedes.on("clientDisconnect", () => {
-//   logger.info("client disconnected");
-//   aedes.publish(myObj, () => {});
-// });
-setInterval(() => {
-  aedes.publish(myObj, () => { });
-}, 2000);
+aedes.on("clientDisconnect", () => {
+  logger.info("client disconnected");
+  aedes.publish(notifyHeliosDisconnect, () => {});
+});
 // Authentication function
 aedes.authenticate = function (
   client: Client,
@@ -66,7 +61,9 @@ aedes.authenticate = function (
   if (username === validUsername && password.toString() === validPassword) {
     done(null, true); // Authentication successful
     logger.info(`MQTT Client ${client.id} successfully authenticated!`);
-    logger.info("Brokers: ", aedes.brokers);
+    // TODO: Publish to the car client, updating the mqtt connected state to true.
+    // aedes.publish(notifyHeliosConnecct)
+    // logger.info("Brokers: ", aedes.brokers);
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed
