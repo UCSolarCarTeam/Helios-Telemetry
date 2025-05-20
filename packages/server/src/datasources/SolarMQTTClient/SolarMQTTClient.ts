@@ -1,4 +1,3 @@
-//import { SvgProps } from "./SVGProps.js";
 import { IClientOptions, type MqttClient, connect } from "mqtt";
 
 import { type BackendController } from "@/controllers/BackendController/BackendController";
@@ -8,7 +7,6 @@ import {
   topics,
 } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
-import { getSecrets } from "@/utils/getSecrets";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { validateTelemetryData } from "@shared/helios-types";
@@ -49,8 +47,8 @@ export class SolarMQTTClient implements SolarMQTTClientType {
       try {
         const driverName = this.latestRfid
           ? await this.backendController.dynamoDB.getDriverNameUsingRfid(
-            this.latestRfid,
-          )
+              this.latestRfid,
+            )
           : "Rfid not scanned";
 
         const infoToCar = {
@@ -112,7 +110,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         }
       } else if (topic === "carDisconnect") {
         logger.info("car disconnected on mqtt client");
-        // this.backendController.handleCarDisconnect();
+        this.backendController.handleCarDisconnect();
       } else {
         logger.info("unknown topic: ", topic, "message: ", message.toString());
       }
