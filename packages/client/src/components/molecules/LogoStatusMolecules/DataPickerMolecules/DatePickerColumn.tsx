@@ -6,6 +6,18 @@ import { Button } from "@mui/material";
 
 import { IPlaybackDateTime } from "../PlaybackDatePicker";
 
+/*
+ * This component is used to select a date and time for retrieving playback data.
+ * It allows the user to select a date (day of the month) and time range (start and end time).
+ * The selected date and time are then used to fetch playback data from DynamoDB.
+ * This component is one of two columns in the PlaybackDatePicker component.
+ *
+ * handleDateChange: This function is called when the user selects the day of the month in the date picker.
+ * It uses the current startTime and endTime as place holders.
+ *
+ * handleTimeChange: This function is called when the user selects the start or end time in the time input.
+ */
+
 const DataPickerColumn = ({
   fetchPlaybackData,
   playbackDateTime,
@@ -22,20 +34,20 @@ const DataPickerColumn = ({
       setPlaybackDateTime((prev) => {
         const selectedDate = new Date(value);
         // Keep the current time for startTime and endTime as a placeholder
-        const newStartTime = new Date(prev.startTime ?? new Date());
-        newStartTime.setFullYear(selectedDate.getFullYear());
-        newStartTime.setMonth(selectedDate.getMonth());
-        newStartTime.setDate(selectedDate.getDate());
+        const newStartDate = new Date(prev.startTime ?? new Date());
+        newStartDate.setFullYear(selectedDate.getFullYear());
+        newStartDate.setMonth(selectedDate.getMonth());
+        newStartDate.setDate(selectedDate.getDate());
 
-        const newEndTime = new Date(prev.endTime ?? new Date());
-        newEndTime.setFullYear(selectedDate.getFullYear());
-        newEndTime.setMonth(selectedDate.getMonth());
-        newEndTime.setDate(selectedDate.getDate());
+        const newEndDate = new Date(prev.endTime ?? new Date());
+        newEndDate.setFullYear(selectedDate.getFullYear());
+        newEndDate.setMonth(selectedDate.getMonth());
+        newEndDate.setDate(selectedDate.getDate());
 
         return {
           date: selectedDate,
-          endTime: newEndTime,
-          startTime: newStartTime,
+          endTime: newEndDate,
+          startTime: newStartDate,
         };
       });
     }

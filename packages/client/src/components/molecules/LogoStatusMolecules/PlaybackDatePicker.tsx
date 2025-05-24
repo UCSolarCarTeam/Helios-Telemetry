@@ -11,6 +11,20 @@ import { ITelemetryData, prodURL } from "@shared/helios-types";
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
 import DatePickerResultColumn from "./DataPickerMolecules/DatePickerResultColumn";
 
+/*
+ * This component defines a modal that conatins the DatePicker and Results columns for the playback feature.
+ * The modal is opened when the user clicks on the calendar icon, which appears when the playback switch is on.
+ *
+ * createDateTime: This function creates a Date object from the selected date and time (Selected via the DatePickerColumn).
+ *
+ * fetchPlaybackData: This function fetches the lap data from the server (DyanmoDB) based on the selected date and time range.
+ * It then updates the playback data in the PlaybackContext to be used in the PlaybackSlider component.
+ *
+ * This component is also responsbile for automatically loading playback data when the playback switch is on and a date is stored
+ * in local storage (Date and time was previosuly "cached"). The date and time are only stored in local storage once the user selects
+ * a date and time range and clicks the confirm button in the DatePickerColumn for the first time.
+ */
+
 export type IPlaybackDateTime = {
   date: Date | null;
   startTime: Date | null;
@@ -31,6 +45,7 @@ const createDateTime = (time: Date, year: number, month: number, day: number) =>
     time.getMinutes(),
     time.getSeconds(),
   );
+
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
@@ -101,7 +116,7 @@ function PlaybackDatePicker() {
 
       setPlaybackData(extractedData);
     } catch (error) {
-      throw new Error("Error fetching playback data");
+      throw new Error(`Error fetching playback data: ${error}`);
     } finally {
       setLoading(false);
     }
