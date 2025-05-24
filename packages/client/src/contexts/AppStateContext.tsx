@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 
+import type { IPlaybackDateTime } from "@/components/molecules/LogoStatusMolecules/PlaybackDatePicker";
 import type { Coords } from "@shared/helios-types";
 
 interface Props {
@@ -40,6 +41,7 @@ interface IAppState {
   carLatency: number;
   lapCoords: Coords;
   playbackSwitch: boolean;
+  playbackDateTime: IPlaybackDateTime;
 }
 interface IAppStateReturn {
   currentAppState: IAppState;
@@ -60,6 +62,11 @@ export function AppStateContextProvider({ children }: Props) {
     favourites: [],
     lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
+    playbackDateTime: {
+      date: null,
+      endTime: null,
+      startTime: null,
+    },
     playbackSwitch: false,
     radioConnected: false,
     socketConnected: false,
@@ -111,33 +118,49 @@ export function AppStateContextProvider({ children }: Props) {
   const fetchSettingsFromLocalStorage = useCallback(() => {
     const savedSettings = localStorage.getItem("settings");
     const favourites = localStorage.getItem("favourites");
-    if (savedSettings && favourites) {
-      const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
-      const parsedFavourites: string[] = JSON.parse(favourites) as string[];
+
+    if (savedSettings) {
+      const parsedSettings = JSON.parse(savedSettings) as Partial<IAppState>;
+
+      const parsedFavourites = favourites
+        ? (JSON.parse(favourites) as string[])
+        : [
+            "Motor Temp",
+            "Battery Cell Voltage",
+            "Vehicle Velocity",
+            "Pack Voltage",
+            "Pack Current",
+            "Battery Average Voltage",
+          ];
+
+      const hasPlaybackDateTime = !!parsedSettings.playbackDateTime;
+
+      const parsedPlaybackDateTime = hasPlaybackDateTime
+        ? {
+            date: parsedSettings.playbackDateTime!.date
+              ? new Date(parsedSettings.playbackDateTime!.date)
+              : null,
+            endTime: parsedSettings.playbackDateTime!.endTime
+              ? new Date(parsedSettings.playbackDateTime!.endTime)
+              : null,
+            startTime: parsedSettings.playbackDateTime!.startTime
+              ? new Date(parsedSettings.playbackDateTime!.startTime)
+              : null,
+          }
+        : {
+            date: null,
+            endTime: null,
+            startTime: null,
+          };
+
       setCurrentAppState((prev) => ({
         ...prev,
-        appUnits: parsedSettings.appUnits,
-        connectionType: parsedSettings.connectionType,
-        darkMode: parsedSettings.darkMode,
+        appUnits: parsedSettings.appUnits ?? prev.appUnits,
+        connectionType: parsedSettings.connectionType ?? prev.connectionType,
+        darkMode: parsedSettings.darkMode ?? prev.darkMode,
         favourites: parsedFavourites,
-        lapCoords: parsedSettings.lapCoords,
-      }));
-    } else if (favourites === null && savedSettings) {
-      const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
-      setCurrentAppState((prev) => ({
-        ...prev,
-        appUnits: parsedSettings.appUnits,
-        connectionType: parsedSettings.connectionType,
-        darkMode: parsedSettings.darkMode,
-        favourites: [
-          "Motor Temp",
-          "Battery Cell Voltage",
-          "Vehicle Velocity",
-          "Pack Voltage",
-          "Pack Current",
-          "Battery Average Voltage",
-        ],
-        lapCoords: parsedSettings.lapCoords,
+        lapCoords: parsedSettings.lapCoords ?? prev.lapCoords,
+        playbackDateTime: parsedPlaybackDateTime,
       }));
     }
   }, []);
