@@ -30,7 +30,6 @@ interface IAppState {
   displayLoading: boolean;
   loading: boolean;
   error: boolean;
-  darkMode: boolean;
   appUnits: APPUNITS;
   favourites: string[];
   connectionType: CONNECTIONTYPES;
@@ -44,7 +43,6 @@ interface IAppState {
 interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
-  toggleDarkMode: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
@@ -54,7 +52,6 @@ export function AppStateContextProvider({ children }: Props) {
     appUnits: APPUNITS.METRIC,
     carLatency: 0,
     connectionType: CONNECTIONTYPES.DEMO,
-    darkMode: false,
     displayLoading: true,
     error: false,
     favourites: [],
@@ -118,7 +115,6 @@ export function AppStateContextProvider({ children }: Props) {
         ...prev,
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
-        darkMode: parsedSettings.darkMode,
         favourites: parsedFavourites,
         lapCoords: parsedSettings.lapCoords,
       }));
@@ -128,7 +124,6 @@ export function AppStateContextProvider({ children }: Props) {
         ...prev,
         appUnits: parsedSettings.appUnits,
         connectionType: parsedSettings.connectionType,
-        darkMode: parsedSettings.darkMode,
         favourites: [
           "Motor Temp",
           "Battery Cell Voltage",
@@ -141,13 +136,6 @@ export function AppStateContextProvider({ children }: Props) {
       }));
     }
   }, []);
-
-  const toggleDarkMode = useCallback(() => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      darkMode: !currentAppState.darkMode,
-    }));
-  }, [currentAppState.darkMode]);
 
   const saveSettingsToLocalStorage = useCallback(() => {
     localStorage.setItem("settings", JSON.stringify(currentAppState));
@@ -176,7 +164,6 @@ export function AppStateContextProvider({ children }: Props) {
       value={{
         currentAppState,
         setCurrentAppState,
-        toggleDarkMode,
       }}
     >
       {children}

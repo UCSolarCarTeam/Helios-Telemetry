@@ -1,3 +1,4 @@
+import { useTheme } from "next-themes";
 import { useCallback, useState } from "react";
 
 import {
@@ -14,18 +15,18 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import DriverNameUpdate from "./Settings/DriverNameUpdate";
 
 function SettingsComponent() {
+  const { setTheme, theme } = useTheme();
+
   const { currentAppState, setCurrentAppState } = useAppState();
   const [open, setOpen] = useState(false);
+
   const handleDarkChange = useCallback(
-    (
-      event: React.MouseEvent<HTMLElement>,
-      inputMode: (typeof currentAppState)["darkMode"],
-    ) => {
-      if (inputMode !== null) {
-        setCurrentAppState((prev) => ({ ...prev, darkMode: inputMode }));
+    (event: React.MouseEvent<HTMLElement>, newTheme: string | null) => {
+      if (newTheme) {
+        setTheme(newTheme);
       }
     },
-    [setCurrentAppState],
+    [setTheme],
   );
 
   const handleUnitChange = useCallback(
@@ -89,13 +90,16 @@ function SettingsComponent() {
                 className="w-full"
                 exclusive
                 onChange={handleDarkChange}
-                value={currentAppState.darkMode}
+                value={theme}
               >
-                <ToggleButton className="w-1/2" value={false}>
+                <ToggleButton className="w-1/3" value="light">
                   Light
                 </ToggleButton>
-                <ToggleButton className="w-1/2" value={true}>
+                <ToggleButton className="w-1/3" value="dark">
                   Dark
+                </ToggleButton>
+                <ToggleButton className="w-1/3" value="system">
+                  System
                 </ToggleButton>
               </ToggleButtonGroup>
             </div>

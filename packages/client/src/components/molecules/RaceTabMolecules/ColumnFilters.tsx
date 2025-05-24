@@ -1,6 +1,6 @@
+import { useTheme } from "next-themes";
 import { useCallback } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -22,7 +22,7 @@ export default function ColumnFilters({
   setColumnName: React.Dispatch<React.SetStateAction<string[]>>;
   table: Table<IFormattedLapData>;
 }) {
-  const { currentAppState } = useAppState();
+  const { resolvedTheme } = useTheme();
   function checkBoxFormatting(text: string) {
     return text
       .replace(/^.*?_/g, "")
@@ -95,13 +95,13 @@ export default function ColumnFilters({
             color: "#963A56",
           },
           "& .MuiSelect-select": {
-            color: currentAppState.darkMode ? "#D2D2D2" : "black",
+            color: resolvedTheme === "dark" ? "#D2D2D2" : "black",
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: "#963A56",
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: currentAppState.darkMode ? "white" : "",
+            borderColor: resolvedTheme === "dark" ? "white" : "",
           },
         }}
         value={columnName}

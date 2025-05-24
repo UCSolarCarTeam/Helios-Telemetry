@@ -1,12 +1,15 @@
+/* eslint-disable */
 "use client";
 
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import type { PlotParams } from "react-plotly.js";
 
-import { useAppState } from "@/contexts/AppStateContext";
 import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
 
 import Plotly from "./Plotly";
+
+/* eslint-disable */
 
 const SMALL_SCREEN = 380;
 
@@ -21,9 +24,8 @@ export default function MLContainer({
 }) {
   const [plot, setPlot] = useState<PlotParams | { error: boolean }>();
   const { width } = useWindowDimensions();
-  const {
-    currentAppState: { darkMode },
-  } = useAppState();
+  const { resolvedTheme } = useTheme();
+
   useEffect(() => {
     const fetchPlot = async () => {
       try {
@@ -33,7 +35,11 @@ export default function MLContainer({
         const layout: PlotParams["layout"] = {
           autosize: true,
           font: {
-            color: darkMode ? "white" : "black",
+            color: resolvedTheme
+              ? resolvedTheme === "dark"
+                ? "white"
+                : "black"
+              : "black",
           },
           margin: { l: 175, t: 75 },
           paper_bgcolor: "rgba(0,0,0,0)",
@@ -47,16 +53,16 @@ export default function MLContainer({
       }
     };
     fetchPlot();
-  }, [plotType, darkMode]);
+  }, [plotType, resolvedTheme]);
 
-  if (!plot) {
+  if (!plot || !resolvedTheme || resolvedTheme === undefined) {
     return (
       <div className="flex h-72 items-center justify-center rounded-lg bg-white p-2 text-3xl font-bold dark:bg-arsenic dark:text-white">
         Loading...
       </div>
     );
   }
-  if ("error" in plot) {
+  if ("error" in plot || !resolvedTheme || resolvedTheme === undefined) {
     return (
       <div className="flex h-72 items-center justify-center rounded-lg bg-white p-2 text-3xl font-bold dark:bg-arsenic dark:text-white">
         Error loading data
@@ -80,6 +86,7 @@ export default function MLContainer({
           staticPlot: width < SMALL_SCREEN,
         }}
         data={plot.data}
+        /* tslint:disable-next-line */
         layout={plot.layout}
       />
     </div>
