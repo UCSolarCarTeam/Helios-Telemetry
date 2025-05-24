@@ -2,6 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { useAppState } from "@/contexts/AppStateContext";
 import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
@@ -51,6 +52,7 @@ export function TabContent({
 }
 
 function AnalysisTab() {
+  const { currentAppState } = useAppState();
   const [value, setValue] = useState<number>(0);
 
   return (
@@ -86,6 +88,7 @@ function AnalysisTab() {
               <Tab
                 key={tab.id}
                 label={tab.name.toUpperCase()}
+                sx={currentAppState.darkMode ? { color: "#D2D2D2" } : {}}
                 value={tab.id}
               ></Tab>
             ))}

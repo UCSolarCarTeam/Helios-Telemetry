@@ -33,6 +33,7 @@ import {
  * When the column filter is changed, the setColumnName() is called to set the column name
  */
 function RaceTab() {
+  const { currentAppState } = useAppState();
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);

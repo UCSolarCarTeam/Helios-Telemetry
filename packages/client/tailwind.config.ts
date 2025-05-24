@@ -35,6 +35,9 @@ const config: Config = {
         dark: "#212121",
         helios: "#B94A6C",
         "helios-compliment": "#963A56",
+        darkergrey: "#141414",
+        lightergrey: "#242423",
+        slate: "#E9ECEF",
       },
       borderColor: {
         helios: "#B94A6C",
