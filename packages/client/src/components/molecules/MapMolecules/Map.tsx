@@ -25,11 +25,7 @@ import {
 } from "@shared/helios-types";
 
 import MapControls from "./MapControls";
-import {
-  Hydrated_Grand_Full_course,
-  TRACK_LIST,
-  mapCameraControls,
-} from "./MapSetup";
+import { TRACK_LIST, mapCameraControls } from "./MapSetup";
 
 const { distance, fitBounds, isOutsideBounds, lerp } = mapCameraControls;
 // @ts-expect-error:next-line
@@ -74,11 +70,8 @@ export default function Map({
     isFullscreen: false,
     satelliteMode: false,
   });
-  const [popupOpen, setPopupOpen] = useState(true);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [viewTracks, setViewTracks] = useState(TRACK_LIST.map(() => true));
-  const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
-    Hydrated_Grand_Full_course,
-  );
   const [mapControlsAdded, setMapControlsAdded] = useState(false);
 
   const mapRef = useRef<MapRef | undefined>(undefined);
@@ -102,7 +95,7 @@ export default function Map({
   }, []);
 
   useEffect(() => {
-    const time = mapStates.isFullscreen ? 1 : 1 / 60;
+    const time = 1 / 60;
     let animationFrameId: number;
     const animateCarMarker = () => {
       setMapStates((prevMapStates) => {
@@ -125,7 +118,7 @@ export default function Map({
     };
     animateCarMarker();
     return () => cancelAnimationFrame(animationFrameId);
-  }, [carLocation, mapStates.isFullscreen]);
+  }, [carLocation]);
   useEffect(() => {
     const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
     if (!mapRef.current) return;
@@ -152,7 +145,7 @@ export default function Map({
         easing: (t) => t, // Easing function for the animation
         pitch: map.getPitch(),
         speed,
-        zoom: mapStates.isFullscreen ? 20 : 14,
+        zoom: mapStates.isFullscreen ? 16 : 14,
       });
     }
   }, [carLocation, lapLocation, mapStates.centered, mapStates.isFullscreen]);

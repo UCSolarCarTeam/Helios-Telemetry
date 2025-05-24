@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 
+import { useAppState } from "@/contexts/AppStateContext";
 import { useLapData } from "@/contexts/LapDataContext";
 import { notifications } from "@mantine/notifications";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
@@ -10,11 +11,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import {
-  type IFormattedLapData,
-  ILapData,
-  prodURL,
-} from "@shared/helios-types";
+import { type IFormattedLapData, prodURL } from "@shared/helios-types";
 import { IDriverData } from "@shared/helios-types/src/types";
 import {
   SortingState,
@@ -26,7 +23,6 @@ import {
 } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<IFormattedLapData>();
-
 const columns = [
   columnHelper.accessor("data.timeStamp", {
     cell: (info) => info.getValue(),
@@ -99,6 +95,7 @@ const columns = [
 ];
 
 function RaceTab() {
+  const { currentAppState } = useAppState();
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
@@ -259,6 +256,9 @@ function RaceTab() {
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     borderColor: "#963A56",
                   },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: currentAppState.darkMode ? "white" : "",
+                  },
                 }}
                 value={Rfid}
               >
@@ -327,8 +327,14 @@ function RaceTab() {
               "& .MuiSelect-icon": {
                 color: "#963A56",
               },
+              "& .MuiSelect-select": {
+                color: currentAppState.darkMode ? "#D2D2D2" : "black",
+              },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#963A56",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: currentAppState.darkMode ? "white" : "",
               },
             }}
             value={columnName}
@@ -355,7 +361,7 @@ function RaceTab() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
-                    className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios bg-white px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
+                    className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios bg-slate px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 dark:bg-lightergrey ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
                     key={header.id}
                   >
                     {header.isPlaceholder
@@ -380,12 +386,15 @@ function RaceTab() {
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
+          <tbody className="divide-y divide-gray-200">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
+              <tr
+                className="odd:bg-white even:bg-slate dark:odd:bg-darkergrey dark:even:bg-lightergrey"
+                key={row.id}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 ${cell.id.includes("data_timeStamp") ? "left-0 z-10 bg-white" : ""}`}
+                    className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 dark:text-white ${cell.id.includes("data_timeStamp") ? "left-0 z-10" : ""}`}
                     key={cell.id}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
