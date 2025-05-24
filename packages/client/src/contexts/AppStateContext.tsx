@@ -58,7 +58,7 @@ export function AppStateContextProvider({ children }: Props) {
     displayLoading: true,
     error: false,
     favourites: [],
-    lapCoords: { lat: 51.081021, long: -114.136084 },
+    lapCoords: { lat: 37.004657904, long: -86.363013541 }, // random point from raceTrackGeoJSON_GRAND_FULL_COURSE
     loading: true,
     playbackSwitch: false,
     radioConnected: false,
