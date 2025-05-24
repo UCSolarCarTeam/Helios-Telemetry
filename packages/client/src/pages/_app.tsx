@@ -1,3 +1,4 @@
+import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 
 import LoadingWrapper from "@/components/global/LoadingWrapper";
@@ -14,8 +15,8 @@ import "@mantine/notifications/styles.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <MantineProvider>
+    <MantineProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Notifications />
         <AppStateContextProvider>
           <SocketContextProvider>
@@ -28,7 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
             </PacketContextProvider>
           </SocketContextProvider>
         </AppStateContextProvider>
-      </MantineProvider>
-    </>
+      </ThemeProvider>
+    </MantineProvider>
   );
 }

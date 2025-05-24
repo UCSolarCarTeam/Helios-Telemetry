@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useTheme } from "next-themes";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
@@ -95,6 +96,8 @@ const columns = [
 ];
 
 function RaceTab() {
+  const { theme } = useTheme();
+
   const { currentAppState } = useAppState();
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
@@ -257,7 +260,7 @@ function RaceTab() {
                     borderColor: "#963A56",
                   },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: currentAppState.darkMode ? "white" : "",
+                    borderColor: theme === "dark" ? "white" : "",
                   },
                 }}
                 value={Rfid}
@@ -328,13 +331,13 @@ function RaceTab() {
                 color: "#963A56",
               },
               "& .MuiSelect-select": {
-                color: currentAppState.darkMode ? "#D2D2D2" : "black",
+                color: theme === "dark" ? "#D2D2D2" : "black",
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#963A56",
               },
               "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: currentAppState.darkMode ? "white" : "",
+                borderColor: theme === "dark" ? "white" : "",
               },
             }}
             value={columnName}
@@ -361,6 +364,7 @@ function RaceTab() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
+                    // eslint-disable-next-line prettier/prettier
                     className={`sticky top-0 z-10 w-24 border-b-2 border-r-2 border-t-2 border-helios bg-slate px-4 py-2 text-center text-xs font-medium uppercase text-helios first:border-l-2 dark:bg-lightergrey ${header.id === "data_timeStamp" ? "left-0 z-50" : ""}`}
                     key={header.id}
                   >
@@ -389,6 +393,7 @@ function RaceTab() {
           <tbody className="divide-y divide-gray-200">
             {table.getRowModel().rows.map((row) => (
               <tr
+                // eslint-disable-next-line prettier/prettier
                 className="odd:bg-white even:bg-slate dark:odd:bg-darkergrey dark:even:bg-lightergrey"
                 key={row.id}
               >
