@@ -1,6 +1,9 @@
 import { IFormattedLapData } from "@shared/helios-types";
 import { Table, flexRender } from "@tanstack/react-table";
 
+/**
+ *  The actual table that displays the lap data
+ */
 export default function RaceTabTable({
   table,
 }: {

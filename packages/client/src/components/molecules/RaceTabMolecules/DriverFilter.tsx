@@ -5,6 +5,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 
+/*
+ * This component is used to filter the drivers of the lap data table
+ * Each specific driver is shown in the dropdown and will have their specific laps based on their Rfid
+ */
 export default function DriverFilter({
   Rfid,
   copy,
@@ -55,7 +59,7 @@ export default function DriverFilter({
                 borderColor: "#963A56",
               },
             }}
-            value={Rfid}
+            value={Rfid?.toString()}
           >
             <MenuItem value={"Show all data"}>Show all data</MenuItem>
             {driverData.map((driver) => (

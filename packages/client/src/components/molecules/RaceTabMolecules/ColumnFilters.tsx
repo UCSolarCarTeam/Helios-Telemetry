@@ -8,6 +8,10 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { IFormattedLapData } from "@shared/helios-types";
 import { Table } from "@tanstack/react-table";
 
+/*
+ * This component is used to filter the columns of the lap data table
+ * Contains the main functionality of the column picker
+ */
 export default function ColumnFilters({
   columnName,
   setColumnName,

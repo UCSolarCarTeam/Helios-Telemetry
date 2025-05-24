@@ -1,6 +1,11 @@
 import { IFormattedLapData } from "@shared/helios-types";
 import { createColumnHelper } from "@tanstack/react-table";
 
+/*
+ * This file is used to configure the columns of the lap data table
+ * The columns are created using the createColumnHelper() function from tanstack table
+ */
+
 const columnHelper = createColumnHelper<IFormattedLapData>();
 
 export const columns = [
