@@ -145,7 +145,7 @@ export default function Map({
         easing: (t) => t, // Easing function for the animation
         pitch: map.getPitch(),
         speed,
-        zoom: mapStates.isFullscreen ? 16 : 14,
+        zoom: mapStates.isFullscreen ? 20 : 14,
       });
     }
   }, [carLocation, lapLocation, mapStates.centered, mapStates.isFullscreen]);
@@ -177,8 +177,17 @@ export default function Map({
     paint: {
       "circle-color": "#B94A6C",
       "circle-opacity": 0.8,
-      "circle-radius": 150,
-
+      "circle-radius": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        10,
+        15,
+        10,
+        20,
+        150,
+      ],
       "circle-stroke-color": "#9C0534",
       "circle-stroke-width": 2,
     },
