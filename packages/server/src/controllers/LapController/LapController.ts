@@ -4,7 +4,7 @@ import { type LapControllerType } from "@/controllers/LapController/LapControlle
 import { convertToDecimalDegrees, getDistance } from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { calculateVehicleVelocity } from "@shared/helios-types";
+import { calculateVehicleVelocity, devFlag } from "@shared/helios-types";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
@@ -58,7 +58,7 @@ export class LapController implements LapControllerType {
 
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.dynamoDB.insertLapData(lapData);
+    if (!devFlag) await this.backendController.dynamoDB.insertLapData(lapData);
   }
 
   public async handlePacket(packet: ITelemetryData) {

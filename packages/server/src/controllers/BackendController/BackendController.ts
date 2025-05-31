@@ -9,7 +9,7 @@ import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
 import { logger } from "@/index";
-import { ILapData, type ITelemetryData } from "@shared/helios-types";
+import { type ITelemetryData, devFlag } from "@shared/helios-types";
 
 //getDriverInfo
 export class BackendController implements BackendControllerTypes {
@@ -45,7 +45,11 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    this.dynamoDB.insertPacketData(message);
+    console.log(process.env.NODE_ENV);
+    if (!devFlag) {
+      this.dynamoDB.insertPacketData(message);
+      logger.info("Inserting packet data into DynamoDB");
+    }
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
