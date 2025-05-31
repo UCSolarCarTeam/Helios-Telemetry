@@ -1,3 +1,4 @@
+import { useAppState } from "@/contexts/AppStateContext";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
@@ -22,6 +23,7 @@ export default function DriverFilter({
   Rfid: string | number;
   copy: number;
 }) {
+  const { currentAppState } = useAppState();
   return (
     <div className="flex flex-row items-center gap-2">
       <Box className="min-w-[120px]" component="div">
@@ -57,6 +59,9 @@ export default function DriverFilter({
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#963A56",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: currentAppState.darkMode ? "white" : "",
               },
             }}
             value={Rfid?.toString()}
