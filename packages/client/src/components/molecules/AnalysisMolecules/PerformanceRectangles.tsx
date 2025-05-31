@@ -3,7 +3,7 @@ import DonutChartRect, { DonutChartProps } from "./DonutChartRect";
 
 const PerformanceRectangles = (props: DonutChartProps) => {
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-4 dark:text-black sm:flex-row md:flex-row xl:flex-col custom:flex-row">
+    <div className="flex w-full flex-col items-center justify-center gap-4 dark:text-white sm:flex-row md:flex-row xl:flex-col custom:flex-row">
       <Card className="justify-start">
         <p className="py-2 text-lg">{"Driver Performance Score"}</p>
         <DonutChartRect

@@ -11,6 +11,8 @@ import Plotly from "./Plotly";
 
 /* eslint-disable */
 
+/* eslint-disable */
+
 const SMALL_SCREEN = 380;
 
 type PlotTypes =
@@ -86,7 +88,6 @@ export default function MLContainer({
           staticPlot: width < SMALL_SCREEN,
         }}
         data={plot.data}
-        /* tslint:disable-next-line */
         layout={plot.layout}
       />
     </div>
