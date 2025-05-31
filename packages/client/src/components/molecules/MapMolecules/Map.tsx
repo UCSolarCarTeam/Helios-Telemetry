@@ -23,6 +23,7 @@ import {
   type Coords,
   ITelemetryData,
   calculateBearing,
+  haversineDistance,
 } from "@shared/helios-types";
 
 import MapControls from "./MapControls";
@@ -33,7 +34,7 @@ import {
 } from "./MapSetup";
 import PacketMarker from "./PacketMarker";
 
-const { distance, fitBounds, isOutsideBounds } = mapCameraControls;
+const { distance, fitBounds, isOutsideBounds, lerp } = mapCameraControls;
 // @ts-expect-error:next-line
 type MapLibType = MapLib<mapboxgl.Map>;
 
@@ -90,8 +91,44 @@ export default function Map({
   }
 
   useEffect(() => {
-    setMapStates((prev) => ({ ...prev, currentCarLocation: carLocation }));
-  }, [carLocation]);
+    const distance = haversineDistance(
+      mapStates.currentCarLocation.lat,
+      mapStates.currentCarLocation.long,
+      carLocation.lat,
+      carLocation.long,
+    );
+
+    // if the distance is greater than 10 km, update the current car location without animations/lerp
+    // if the disatnce isn't, just animate it like normal
+
+    if (distance < 10) {
+      const time = 1 / 60; // run at 60fps
+      let animationFrameId: number;
+      const animateCarMarker = () => {
+        setMapStates((prevMapStates) => {
+          const newLat = lerp(
+            prevMapStates.currentCarLocation.lat,
+            carLocation.lat,
+            time,
+          );
+          const newLng = lerp(
+            prevMapStates.currentCarLocation.long,
+            carLocation.long,
+            time,
+          );
+          return {
+            ...prevMapStates,
+            currentCarLocation: { lat: newLat, long: newLng },
+          };
+        });
+        animationFrameId = requestAnimationFrame(animateCarMarker);
+      };
+      animateCarMarker();
+      return () => cancelAnimationFrame(animationFrameId);
+    } else {
+      setMapStates((prev) => ({ ...prev, currentCarLocation: carLocation }));
+    }
+  }, [carLocation, haversineDistance]);
 
   useEffect(() => {
     const coordinates: Coords[] = [carLocation, carLocation, lapLocation];

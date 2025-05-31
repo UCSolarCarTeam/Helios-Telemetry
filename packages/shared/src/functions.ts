@@ -567,3 +567,27 @@ export const calculateBearing = (start: Coords, end: Coords): number => {
   const bearing = (Math.atan2(x, y) * 180) / Math.PI;
   return (bearing + 360) % 360; // Normalize to 0-360 degrees
 };
+
+// Converts numeric degrees to radians
+function toRad(value: number) {
+  return (value * Math.PI) / 180;
+}
+
+//This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+export function haversineDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+) {
+  const R = 6371; // km
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d;
+}
