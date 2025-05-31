@@ -25,7 +25,7 @@ const StatsContainer = () => {
     <div className="flex flex-wrap items-center justify-center gap-4 xl:flex-nowrap custom:flex-wrap">
       <div className="flex flex-col items-center gap-4 dark:text-black sm:flex-row">
         <Card className={"text-3xl font-bold"} square>
-          <p className="text-center text-base font-normal sm:text-lg lg:text-xl">
+          <p className="text-center text-base font-normal dark:text-white sm:text-lg lg:text-xl">
             Optimal Driving Speed At
             <span className="text-primary"> {statsProps.percent}%</span>
           </p>
@@ -49,7 +49,7 @@ const StatsContainer = () => {
         </Card>
 
         <Card className="text-lg" square>
-          <p className="text-lg">{"Motor Efficiency at"}</p>
+          <p className="text-lg dark:text-white">{"Motor Efficiency at"}</p>
           <DonutChartRect
             circ={360}
             className="size-28"
