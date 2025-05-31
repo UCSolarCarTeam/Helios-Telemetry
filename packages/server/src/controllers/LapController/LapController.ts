@@ -1,10 +1,13 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
-import { convertToDecimalDegrees, getDistance } from "@/utils/lapCalculations";
+import { convertToDecimalDegrees } from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { calculateVehicleVelocity } from "@shared/helios-types";
+import {
+  calculateVehicleVelocity,
+  haversineDistance,
+} from "@shared/helios-types";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
@@ -19,8 +22,8 @@ export class LapController implements LapControllerType {
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
   public finishLineLocation: Coords = {
-    lat: 51.081021,
-    long: -114.136084,
+    lat: 37.001949324,
+    long: -86.366554059,
   };
   backendController: BackendController;
 
@@ -108,7 +111,7 @@ export class LapController implements LapControllerType {
   //checks if lap has been acheived
   private checkLap(packet: ITelemetryData) {
     const inProximity =
-      getDistance(
+      haversineDistance(
         packet.Telemetry.GpsLatitude,
         packet.Telemetry.GpsLongitude,
         this.finishLineLocation.lat,

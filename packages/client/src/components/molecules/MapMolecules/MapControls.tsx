@@ -1,12 +1,12 @@
-import React, { useMemo, useState } from "react";
+// This file allows us to toggle map layers.
+import React, { useCallback, useMemo, useState } from "react";
 import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 
+import { TrackList } from "@/components/molecules/MapMolecules/Map";
 import { useAppState } from "@/contexts/AppStateContext";
 import { Coords } from "@shared/helios-types/src/types";
-
-import { TrackList } from "./Map";
 
 type MapStates = {
   centered: boolean;
@@ -39,8 +39,22 @@ export default function MapControls({
   );
   const iconClasses = useMemo(() => `h-6 text-xl`, []);
   const [viewRaceTracks, setViewRaceTracks] = useState(false);
-  const toggleRaceTracks = () => setViewRaceTracks(!viewRaceTracks);
+  const toggleRaceTracks = useCallback(
+    () => setViewRaceTracks(!viewRaceTracks),
+    [viewRaceTracks],
+  );
 
+  const toggleTrackLayer = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
+      e.stopPropagation();
+      setViewTracks((prevState) => {
+        const newState = [...prevState];
+        newState[index] = !newState[index];
+        return newState;
+      });
+    },
+    [setViewTracks],
+  );
   return (
     <div className="absolute top-0 z-50 flex flex-col gap-4 p-2">
       <button className={buttonClasses} onClick={toggleMapStyle}>
@@ -58,25 +72,18 @@ export default function MapControls({
       </button>
       <button
         className={twMerge(buttonClasses, "relative")}
-        onBlur={toggleRaceTracks}
         onClick={toggleRaceTracks}
       >
         <FaMagnifyingGlass />
         <div
-          className={`absolute left-12 flex flex-col gap-2 rounded bg-inherit p-4 transition-opacity duration-300 ${viewRaceTracks ? "opacity-100" : "opacity-0"}`}
+          className={`absolute left-12 flex flex-col gap-2 rounded bg-inherit p-4 transition-opacity duration-300 ${viewRaceTracks ? "opacity-100" : "pointer-events-none opacity-0"}`}
         >
           {trackList.map((track, index) => {
             return (
               <button
                 className={`flex size-full items-center gap-2 text-nowrap text-end transition-transform duration-500 ${!viewRaceTracks && "-translate-y-10"}`}
                 key={track.sourceProps.id}
-                onClick={() =>
-                  setViewTracks((prevState) => {
-                    const newState = [...prevState];
-                    newState[index] = !newState[index];
-                    return newState;
-                  })
-                }
+                onClick={(e) => toggleTrackLayer(e, index)}
                 style={{
                   transitionDelay: `${(3 - index) * 100}ms`,
                 }}
