@@ -48,7 +48,7 @@
     "@types/google.maps": "^3.55.11",
     "@types/lodash": "^4",
     "@types/node": "^20.14.10",
-    "@types/plotly.js": "^2.35.1",
+    "@types/plotly.js": "^3.0.0",
     "@types/plotly.js-dist-min": "^2",
     "@types/prettier": "^3.0.0",
     "@types/react": "19.0.7",
