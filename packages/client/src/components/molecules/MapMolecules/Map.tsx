@@ -1,3 +1,4 @@
+// This file shows the current location of the car.
 import type { FeatureCollection, LineString } from "geojson";
 import mapboxgl, { LineLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -22,6 +23,7 @@ import {
   type Coords,
   ITelemetryData,
   calculateBearing,
+  haversineDistance,
 } from "@shared/helios-types";
 
 import MapControls from "./MapControls";
@@ -39,6 +41,8 @@ export type PacketMarkerData = {
   };
   open: boolean;
 };
+
+// this is for the demo mode when default tracks are shown in demo mode
 export type TrackList = {
   layerProps: LayerProps & Partial<LineLayerSpecification>;
   sourceProps: SourceProps & {
@@ -49,6 +53,24 @@ export type TrackList = {
 if (!process.env.NEXT_PUBLIC_MAPSAPIKEY)
   throw new Error("Missing NEXT_PUBLIC_MAPSAPIKEY ");
 
+/**
+ * The main map component that visualizes the current location of a vehicle on a Mapbox map,
+ * along with track overlays and telemetry data markers.
+ *
+ * Features:
+ * - Smooth car movement animation using interpolation, thats what the lerp function is for
+ *      - lerp is only triggered when the car moves less than 10km, otherwise
+ *         it just jumps/teleports to the new location so it doesn't look like the car is missing
+ * - Satellite and light/dark mode toggle
+ * - Display of track lines, lap location, and telemetry markers
+ * - There are some popups that show the current car location as well as the timestamp marker
+ *    of the telemetry data points on the demo mode track
+ *
+ * IMPORTANT: ReactMapGL docs: https://visgl.github.io/react-map-gl/docs/api-reference/mapbox/map
+ *
+ * @param {Coords} carLocation - The current GPS coordinates of the vehicle
+ * @param {Coords} lapLocation - The fixed GPS coordinates of the lap marker
+ */
 export default function Map({
   carLocation,
   lapLocation,
@@ -81,44 +103,49 @@ export default function Map({
     setMapControlsAdded(true);
   }
 
+  // calculation for the car marker animation
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      const isFullscreen = document.fullscreenElement !== null;
-      setMapStates((prev) => ({ ...prev, isFullscreen }));
-    };
+    const distance = haversineDistance(
+      mapStates.currentCarLocation.lat,
+      mapStates.currentCarLocation.long,
+      carLocation.lat,
+      carLocation.long,
+    );
 
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    // if the distance is greater than 10 km, update the current car location without animations/lerp
+    // if the disatnce isn't, just animate it like normal
 
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-  }, []);
+    if (distance < 10) {
+      const time = 1 / 60; // run at 60fps
+      let animationFrameId: number;
+      const animateCarMarker = () => {
+        setMapStates((prevMapStates) => {
+          const newLat = lerp(
+            prevMapStates.currentCarLocation.lat,
+            carLocation.lat,
+            time,
+          );
+          const newLng = lerp(
+            prevMapStates.currentCarLocation.long,
+            carLocation.long,
+            time,
+          );
+          return {
+            ...prevMapStates,
+            currentCarLocation: { lat: newLat, long: newLng },
+          };
+        });
+        animationFrameId = requestAnimationFrame(animateCarMarker);
+      };
+      animateCarMarker();
+      return () => cancelAnimationFrame(animationFrameId);
+    } else {
+      setMapStates((prev) => ({ ...prev, currentCarLocation: carLocation }));
+    }
+  }, [carLocation, haversineDistance]);
 
-  useEffect(() => {
-    const time = 1 / 60;
-    let animationFrameId: number;
-    const animateCarMarker = () => {
-      setMapStates((prevMapStates) => {
-        const newLat = lerp(
-          prevMapStates.currentCarLocation.lat,
-          carLocation.lat,
-          time,
-        );
-        const newLng = lerp(
-          prevMapStates.currentCarLocation.long,
-          carLocation.long,
-          time,
-        );
-        return {
-          ...prevMapStates,
-          currentCarLocation: { lat: newLat, long: newLng },
-        };
-      });
-      animationFrameId = requestAnimationFrame(animateCarMarker);
-    };
-    animateCarMarker();
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [carLocation]);
+  // this effect is used to fit the map bounds to the car and lap location
+  // it is triggered when the car or lap location changes, or when the map is centered
   useEffect(() => {
     const coordinates: Coords[] = [carLocation, carLocation, lapLocation];
     if (!mapRef.current) return;
@@ -199,8 +226,8 @@ export default function Map({
       <ReactMapGL
         boxZoom={false}
         doubleClickZoom={false}
-        dragPan
-        dragRotate
+        dragPan={!mapStates.centered}
+        dragRotate={!mapStates.centered}
         keyboard={false}
         mapLib={import("mapbox-gl") as Promise<MapLibType>}
         mapStyle={
@@ -223,7 +250,8 @@ export default function Map({
             mapRef.current = instance;
           }
         }}
-        scrollZoom
+        scrollZoom={!mapStates.centered}
+        touchZoomRotate={!mapStates.centered}
         {...viewState}
         style={{ height: "100%", width: "100%" }}
       >

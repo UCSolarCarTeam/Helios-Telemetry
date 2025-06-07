@@ -1,3 +1,4 @@
+// This file controls app settings.
 import {
   type Dispatch,
   type ReactNode,
@@ -49,6 +50,18 @@ interface IAppStateReturn {
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
 
+/**
+ * Just another context provider that manages a lot of the app's state
+ * for the future, you could technically use redux and it might be better to do that instead
+ * thats for future recruits though
+ *
+ * you can read some documentation on context providers here:
+ * https://www.telerik.com/blogs/react-basics-how-when-use-react-context
+ *
+ * and then you can read the documentation for this specific context provider here:
+ * in docs/CLIENT.md#appstatecontextprovider
+ *
+ */
 export function AppStateContextProvider({ children }: Props) {
   const [currentAppState, setCurrentAppState] = useState<IAppState>({
     appUnits: APPUNITS.METRIC,
@@ -58,7 +71,7 @@ export function AppStateContextProvider({ children }: Props) {
     displayLoading: true,
     error: false,
     favourites: [],
-    lapCoords: { lat: 37.004657904, long: -86.363013541 }, // random point from raceTrackGeoJSON_GRAND_FULL_COURSE
+    lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
     playbackSwitch: false,
     radioConnected: false,
