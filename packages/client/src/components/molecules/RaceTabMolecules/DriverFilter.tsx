@@ -43,6 +43,14 @@ export default function DriverFilter({
             Driver
           </InputLabel>
           <Select
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: resolvedTheme === "dark" ? "#222" : "#fff",
+                  color: resolvedTheme === "dark" ? "#fff" : "#963A56",
+                },
+              },
+            }}
             label="Driver"
             onChange={handleDropdown}
             sx={{
@@ -51,12 +59,16 @@ export default function DriverFilter({
                   backgroundColor: "#963A56",
                 },
                 backgroundColor: "#B94A6C",
+                color: resolvedTheme === "dark" ? "#fff" : "#963A56",
               },
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#B94A6C",
               },
               "& .MuiSelect-icon": {
                 color: "#963A56",
+              },
+              "& .MuiSelect-select": {
+                color: resolvedTheme === "dark" ? "#fff" : "#963A56",
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#963A56",

@@ -74,6 +74,14 @@ export default function ColumnFilters({
       </InputLabel>
 
       <Select
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              backgroundColor: resolvedTheme === "dark" ? "#222" : "#fff",
+              color: resolvedTheme === "dark" ? "#fff" : "#963A56",
+            },
+          },
+        }}
         className="max-w-56 overflow-auto"
         input={<OutlinedInput label="Column" />}
         multiple
