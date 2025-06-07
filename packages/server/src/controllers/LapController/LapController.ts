@@ -37,8 +37,8 @@ export class LapController implements LapControllerType {
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
   public finishLineLocation: Coords = {
-    lat: 37.001949324,
-    long: -86.366554059,
+    lat: 51.081021,
+    long: -114.136084,
   };
   backendController: BackendController;
 
@@ -76,7 +76,7 @@ export class LapController implements LapControllerType {
 
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.dynamoDB.insertLapData(lapData);
+    if (!devFlag) await this.backendController.dynamoDB.insertLapData(lapData);
   }
 
   public async handlePacket(packet: ITelemetryData) {
