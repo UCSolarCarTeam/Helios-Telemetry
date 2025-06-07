@@ -1,13 +1,10 @@
-
-// This file allows us to toggle map layers.
-import React, { useCallback, useMemo, useState } from "react";
 import { useTheme } from "next-themes";
+import React, { useCallback, useMemo, useState } from "react";
 import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 
 import { TrackList } from "@/components/molecules/MapMolecules/Map";
-import { useAppState } from "@/contexts/AppStateContext";
 import { Coords } from "@shared/helios-types/src/types";
 
 type MapStates = {
