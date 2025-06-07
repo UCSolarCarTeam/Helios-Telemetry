@@ -189,7 +189,7 @@ export default function Map({
         doubleClickZoom={false}
         dragPan={!mapStates.centered}
         dragRotate={!mapStates.centered}
-        interactive={false}
+        interactive={true}
         keyboard={false}
         mapLib={import("mapbox-gl") as Promise<MapLibType>}
         mapStyle={
