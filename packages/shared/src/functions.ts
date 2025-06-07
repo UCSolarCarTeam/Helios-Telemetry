@@ -3,6 +3,11 @@ import { Coords, ITelemetryData, ITelemetryDataType } from "./types";
 import { isRight } from "fp-ts/Either";
 import { type ValidationError } from "io-ts";
 
+/**
+ * This file generates fake telemetry data for testing purposes on the demo mode
+ * There are other functions lower for other purposes
+ *
+ */
 export function generateFakeTelemetryData(): ITelemetryData {
   return {
     B3: {
@@ -526,6 +531,8 @@ export function generateFakeTelemetryData(): ITelemetryData {
   };
 }
 
+// this is a helper function to format the validation errors if there
+// is an error in the telemetry data that is being sent
 function formatValidationErrors(errors: ValidationError[]): string {
   return errors
     .map((error) => {
@@ -542,6 +549,8 @@ function formatValidationErrors(errors: ValidationError[]): string {
     .join(", ");
 }
 
+// using the we match the structure of the telemetry data that is coming in from the car
+// and we validate it against the ITelemetryDataType
 export function validateTelemetryData(packet: unknown) {
   const validationResult = ITelemetryDataType.decode(packet);
   if (isRight(validationResult)) {
@@ -551,6 +560,7 @@ export function validateTelemetryData(packet: unknown) {
   throw new Error(errorMessages);
 }
 
+// calculateBearing calculates the bearing from start to end coordinates
 export const calculateBearing = (start: Coords, end: Coords): number => {
   //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
   const startLat = (start.lat * Math.PI) / 180; //convert to radians

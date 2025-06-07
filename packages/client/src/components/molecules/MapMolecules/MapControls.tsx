@@ -14,6 +14,20 @@ type MapStates = {
   satelliteMode: boolean;
 };
 
+/**
+ * A floating control panel rendered over the map that allows users to:
+ * - Toggle satellite view or vector map style
+ * - Re-center the map to follow the car
+ * - choose the track that they want to view on demo mode
+ *
+ * Props:
+ * @param {() => void} toggleMapStyle - Function to toggle between satellite and vector map styles
+ * @param {() => void} toggleCentred - Function to toggle whether the map is centered on the car
+ * @param {Dispatch<SetStateAction<boolean[]>>} setViewTracks - State setter to control which track layers are visible
+ * @param {MapStates} mapStates - Current map interaction states (centered, satelliteMode, car position)
+ * @param {TrackList[]} trackList - Metadata for all available track overlays
+ * @param {boolean[]} viewTracks - Booleans to indicate which track layers are currently visible
+ */
 export default function MapControls({
   mapStates,
   setViewTracks,
