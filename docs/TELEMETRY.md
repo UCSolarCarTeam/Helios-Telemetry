@@ -72,6 +72,12 @@ The rest of these are optional, but helpful
 
 **Live Share**: If you are doing peer programming sessions with your tech lead or other team members, you can collaborate in real-time with this tool. You can install it [here](https://marketplace.visualstudio.com/items?itemName=ms-vsliveshare.vsliveshare)
 
+### Useful links for documentation
+
+MapboxGL: https://visgl.github.io/react-map-gl/docs/api-reference/mapbox/map
+If you know JS but don't know TS: https://dev.to/andrewbaisden/moving-from-javascript-to-typescript-40ac
+TailwindDocs: https://tailwindcss.com/docs/installation/using-vite
+
 ### Local Env Setup
 
 Also make sure you follow whatever is written in the [README](../README.md) as well regarding the berry stuff
