@@ -114,14 +114,25 @@ export default function DriverUpdate() {
           <TextField
             error={errors.has(key as keyof IDriverNameUpdate)}
             helperText={errorMessages[key as keyof IDriverNameUpdate] || ""}
+            inputProps={{
+              placeholder: driverDetailsText[key as keyof IDriverNameUpdate],
+            }}
             key={key}
-            label={driverDetailsText[key as keyof IDriverNameUpdate]}
             name={key}
             onChange={(e) => {
               setDriverDetails((prev) => ({
                 ...prev,
                 [key]: e.target.value,
               }));
+            }}
+            sx={{
+              "& .MuiInputBase-input": {
+                color: "#BFBFBF",
+              },
+              "& .MuiInputBase-input::placeholder": {
+                color: "#BFBFBF",
+                opacity: 1,
+              },
             }}
             variant="filled"
           />
@@ -136,13 +147,26 @@ export default function DriverUpdate() {
               </InputAdornment>
             ),
           }}
-          label="Password"
+          inputProps={{
+            placeholder: "Password",
+          }}
           onChange={(e) => setPassword(e.target.value)}
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#BFBFBF",
+            },
+            "& .MuiInputBase-input::placeholder": {
+              color: "#BFBFBF",
+              opacity: 1,
+            },
+          }}
           type={showPassword ? "text" : "password"}
           value={password}
           variant="filled"
         />
-        <Button type="submit">Submit</Button>
+        <Button className="dark:text-sand" type="submit">
+          Submit
+        </Button>
         {loading && (
           <div className="flex justify-center">
             <CircularProgress size="2rem" />

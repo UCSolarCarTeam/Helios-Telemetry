@@ -31,14 +31,14 @@ function PlaybackPickerComponent() {
   );
 }
 function StatusComponent() {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
 
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
   const carConnection = currentAppState.socketConnected;
-  const colorTheme = theme === "dark" ? "#FFFFFF" : "#000000";
+  const colorTheme = resolvedTheme === "dark" ? "#FFFFFF" : "#000000";
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = currentAppState.socketConnected
     ? new Date(currentPacket.TimeStamp).toLocaleString()

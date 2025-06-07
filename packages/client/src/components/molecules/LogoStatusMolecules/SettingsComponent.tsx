@@ -15,7 +15,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import DriverNameUpdate from "./Settings/DriverNameUpdate";
 
 function SettingsComponent() {
-  const { setTheme, theme } = useTheme();
+  const { resolvedTheme, setTheme, theme } = useTheme();
 
   const { currentAppState, setCurrentAppState } = useAppState();
   const [open, setOpen] = useState(false);
@@ -72,7 +72,7 @@ function SettingsComponent() {
         onClose={() => setOpen(false)}
         open={open}
       >
-        <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none sm:max-w-[75%]">
+        <div className="w-full rounded-lg border-none bg-white p-4 shadow-lg outline-none dark:bg-dark dark:text-sand sm:max-w-[75%]">
           <h5 className="text-text-gray dark:text-text-gray-dark mb-5 text-center text-3xl font-semibold">
             Settings
           </h5>
@@ -90,6 +90,19 @@ function SettingsComponent() {
                 className="w-full"
                 exclusive
                 onChange={handleDarkChange}
+                sx={{
+                  "& .MuiToggleButton-root": {
+                    color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
+                  },
+                  "& .MuiToggleButton-root.Mui-selected": {
+                    "&:hover": {
+                      backgroundColor:
+                        resolvedTheme === "dark" ? "#a13b5a" : null,
+                    },
+                    backgroundColor:
+                      resolvedTheme === "dark" ? "#B94A6C" : null,
+                  },
+                }}
                 value={theme}
               >
                 <ToggleButton className="w-1/3" value="light">
@@ -117,6 +130,19 @@ function SettingsComponent() {
                 className="w-full"
                 exclusive
                 onChange={handleUnitChange}
+                sx={{
+                  "& .MuiToggleButton-root": {
+                    color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
+                  },
+                  "& .MuiToggleButton-root.Mui-selected": {
+                    "&:hover": {
+                      backgroundColor:
+                        resolvedTheme === "dark" ? "#a13b5a" : null,
+                    },
+                    backgroundColor:
+                      resolvedTheme === "dark" ? "#B94A6C" : null,
+                  },
+                }}
                 value={currentAppState.appUnits}
               >
                 <ToggleButton className="w-1/2" value={APPUNITS.METRIC}>
@@ -142,6 +168,19 @@ function SettingsComponent() {
                 className="w-full"
                 exclusive
                 onChange={handleConnectionChange}
+                sx={{
+                  "& .MuiToggleButton-root": {
+                    color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
+                  },
+                  "& .MuiToggleButton-root.Mui-selected": {
+                    "&:hover": {
+                      backgroundColor:
+                        resolvedTheme === "dark" ? "#a13b5a" : null,
+                    },
+                    backgroundColor:
+                      resolvedTheme === "dark" ? "#B94A6C" : null,
+                  },
+                }}
                 value={currentAppState.connectionType}
               >
                 {(Object.keys(CONNECTIONTYPES) as Array<CONNECTIONTYPES>).map(
