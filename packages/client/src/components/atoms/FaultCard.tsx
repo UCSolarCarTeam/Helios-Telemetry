@@ -18,13 +18,13 @@ function FaultCard(props: FaultCardProps) {
     <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 100 }}>
       <div className="flex p-2">
         <div
-          className={`flex size-full items-center justify-start border p-2 ${
+          className={`flex size-full items-center justify-start border p-2 transition-all duration-200 ${
             severity === ISeverity.ERROR
-              ? "border-[#9C0534]"
+              ? "hover:border-primaryDark border-primary hover:scale-[1.01]"
               : severity === ISeverity.WARNING
-                ? "border-[#F98D10]"
+                ? "border-[#F98D10] hover:scale-[1.01]"
                 : severity === ISeverity.CLEAR
-                  ? "border-[#00A651]"
+                  ? "border-[#00A651] hover:scale-[1.01]"
                   : ""
           }`}
         >

@@ -17,10 +17,11 @@ const config: Config = {
       },
       colors: {
         primary: "#9C0534",
+        secondary: "#B94A6C",
         green: "#01650B",
         "green-dark": "#00ae00",
-        "sand": "#BFBFBF",
-        "arsenic": "#3A3A3A",
+        sand: "#BFBFBF",
+        arsenic: "#3A3A3A",
       },
       textColor: {
         light: "#3A3A3A",
@@ -86,6 +87,9 @@ const config: Config = {
         },
         "::-webkit-scrollbar-track": {
           backgroundColor: "#D2D2D2",
+        },
+        ".dark ::-webkit-scrollbar-track": {
+          backgroundColor: "#3A3A3A",
         },
       };
 
