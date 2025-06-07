@@ -17,7 +17,6 @@ import ReactMapGL, {
 } from "react-map-gl";
 
 import HeliosModel from "@/assets/HeliosBirdseye.png";
-import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import {
   type Coords,
@@ -67,7 +66,7 @@ export default function Map({
     longitude: carLocation.long,
     zoom: 14,
   });
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const [mapStates, setMapStates] = useState({
     centered: true,
@@ -178,7 +177,7 @@ export default function Map({
         mapStyle={
           mapStates.satelliteMode
             ? "mapbox://styles/mapbox/satellite-streets-v12"
-            : theme === "dark"
+            : resolvedTheme === "dark"
               ? "mapbox://styles/mapbox/dark-v11"
               : "mapbox://styles/mapbox/light-v11"
         }
@@ -236,7 +235,7 @@ export default function Map({
           style={{
             color: mapStates.satelliteMode
               ? "white"
-              : theme === "dark"
+              : resolvedTheme === "dark"
                 ? "white"
                 : "black",
           }}

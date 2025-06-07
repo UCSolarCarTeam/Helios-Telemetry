@@ -92,6 +92,7 @@ function SettingsComponent() {
                 onChange={handleDarkChange}
                 sx={{
                   "& .MuiToggleButton-root": {
+                    borderColor: resolvedTheme === "dark" ? "#BFBFBF" : null,
                     color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
                   },
                   "& .MuiToggleButton-root.Mui-selected": {
@@ -132,6 +133,7 @@ function SettingsComponent() {
                 onChange={handleUnitChange}
                 sx={{
                   "& .MuiToggleButton-root": {
+                    borderColor: resolvedTheme === "dark" ? "#BFBFBF" : null,
                     color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
                   },
                   "& .MuiToggleButton-root.Mui-selected": {
@@ -170,6 +172,7 @@ function SettingsComponent() {
                 onChange={handleConnectionChange}
                 sx={{
                   "& .MuiToggleButton-root": {
+                    borderColor: resolvedTheme === "dark" ? "#BFBFBF" : null,
                     color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
                   },
                   "& .MuiToggleButton-root.Mui-selected": {
