@@ -88,6 +88,9 @@ const config: Config = {
         "::-webkit-scrollbar-track": {
           backgroundColor: "#D2D2D2",
         },
+        ".dark ::-webkit-scrollbar-track": {
+          backgroundColor: "#3A3A3A",
+        },
       };
 
       addUtilities(newUtilities, ["responsive", "hover"]);
