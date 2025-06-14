@@ -38,6 +38,15 @@ export type IPlaybackDataResponse = {
   id: string;
 };
 
+/*
+ * This component is used to contain the PlaybackResultColumn and DatePickerColumn in a modal. It contains the actual logic for 
+ * fetching the playback data from the database based on the selected date and time.
+
+ * It also contains the logic for exporting the playback data to a CSV file. It does so by flattening the nested JSON TelemetryData
+ * objects into a flat structure that can be easily converted to CSV format and then using the browser's Blob API to create a 
+ * downloadable file.
+ */
+
 const createDateTime = (time: Date, year: number, month: number, day: number) =>
   new Date(
     year,
