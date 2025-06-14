@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 
 import LoadingWrapper from "@/components/global/LoadingWrapper";
 import { AppStateContextProvider } from "@/contexts/AppStateContext";
+import { GraphOverlayContextProvider } from "@/contexts/GraphOverlayContext";
 import { LapDataContextProvider } from "@/contexts/LapDataContext";
 import { PacketContextProvider } from "@/contexts/PacketContext";
 import { SocketContextProvider } from "@/contexts/SocketContext";
@@ -21,9 +22,11 @@ export default function App({ Component, pageProps }: AppProps) {
           <SocketContextProvider>
             <PacketContextProvider>
               <LapDataContextProvider>
-                <LoadingWrapper>
-                  <Component {...pageProps} />
-                </LoadingWrapper>
+                <GraphOverlayContextProvider>
+                  <LoadingWrapper>
+                    <Component {...pageProps} />
+                  </LoadingWrapper>
+                </GraphOverlayContextProvider>
               </LapDataContextProvider>
             </PacketContextProvider>
           </SocketContextProvider>

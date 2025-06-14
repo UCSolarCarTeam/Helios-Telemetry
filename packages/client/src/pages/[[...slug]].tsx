@@ -1,4 +1,5 @@
 import BottomInformationContainer from "@/components/containers/BottomInformationContainer";
+import GraphContainer from "@/components/containers/GraphContainer";
 import HeroContainer from "@/components/containers/HeroContainer";
 import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
@@ -38,6 +39,7 @@ export default function Home() {
                 <BottomInformationContainer />
               )}
             </div>
+            <GraphContainer />
           </div>
         </PlaybackContextProvider>
       </div>
