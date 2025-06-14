@@ -308,6 +308,7 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
 
   resources: [
     packetDataTable.tableArn,
+    `${packetDataTable.tableArn}/index/type-timestamp-index`,
     lapDataTable.tableArn,
     driverDataTable.tableArn,
   ],
