@@ -68,7 +68,7 @@ function NavBar(): JSX.Element {
           label={
             <h3
               className={`text-light dark:text-dark ${
-                route.path === router.pathname ? "" : "group-hover:text-helios"
+                route.path === router.asPath ? "" : "group-hover:text-helios"
               }`}
             >
               {route.id}
