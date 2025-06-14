@@ -33,10 +33,8 @@ export class BackendController implements BackendControllerTypes {
   public establishCarPinging() {
     // Ping the car every 5 seconds
     this.mqtt.pingTimer(5000);
-
     // send data to car every 5 seconds
-    const myMessage = this.carLatency?.toString();
-    this.mqtt.telemetryToCar(5000, myMessage);
+    this.mqtt.telemetryToCar(5000);
   }
 
   public handleTelemetryToCar(carLatency: number) {

@@ -10,7 +10,8 @@ export interface DynamoDBtypes {
   insertLapData(packet: ILapData): Promise<GenericResponse>;
   insertPacketData(packet: ITelemetryData): Promise<GenericResponse>;
   getDrivers(): void;
-  getDriverLaps(rfid: number): void;
+  getDriverNameUsingRfid(Rfid: string): Promise<string | null>;
+  getDriverLaps(Rfid: string): void;
 }
 
 export interface GenericResponse {

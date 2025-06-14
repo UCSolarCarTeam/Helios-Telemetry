@@ -1,8 +1,13 @@
 import { faker } from "@faker-js/faker";
-import { ITelemetryData, ITelemetryDataType } from "./types";
+import { Coords, ITelemetryData, ITelemetryDataType } from "./types";
 import { isRight } from "fp-ts/Either";
 import { type ValidationError } from "io-ts";
 
+/**
+ * This file generates fake telemetry data for testing purposes on the demo mode
+ * There are other functions lower for other purposes
+ *
+ */
 export function generateFakeTelemetryData(): ITelemetryData {
   return {
     B3: {
@@ -475,7 +480,7 @@ export function generateFakeTelemetryData(): ITelemetryData {
       SoftwareEnable: faker.datatype.boolean(),
     },
     Pi: {
-      rfid: faker.number.int({ max: 100, min: 0 }),
+      Rfid: faker.number.int({ max: 100, min: 0 }).toString(),
     },
     ProximitySensors: {
       ProximitySensor1: faker.number.int({ max: 100, min: 0 }),
@@ -521,11 +526,13 @@ export function generateFakeTelemetryData(): ITelemetryData {
       }),
       MpuTemperature: faker.number.float({ max: 85, min: -40 }),
     },
-    TimeStamp: faker.date.recent().getTime(),
+    TimeStamp: Math.round(faker.date.recent().getTime() / 1000),
     Title: faker.lorem.words(2),
   };
 }
 
+// this is a helper function to format the validation errors if there
+// is an error in the telemetry data that is being sent
 function formatValidationErrors(errors: ValidationError[]): string {
   return errors
     .map((error) => {
@@ -542,6 +549,8 @@ function formatValidationErrors(errors: ValidationError[]): string {
     .join(", ");
 }
 
+// using the we match the structure of the telemetry data that is coming in from the car
+// and we validate it against the ITelemetryDataType
 export function validateTelemetryData(packet: unknown) {
   const validationResult = ITelemetryDataType.decode(packet);
   if (isRight(validationResult)) {
@@ -549,4 +558,46 @@ export function validateTelemetryData(packet: unknown) {
   }
   const errorMessages = formatValidationErrors(validationResult.left);
   throw new Error(errorMessages);
+}
+
+// calculateBearing calculates the bearing from start to end coordinates
+export const calculateBearing = (start: Coords, end: Coords): number => {
+  //using the haversine formula from https://www.movable-type.co.uk/scripts/latlong.html
+  const startLat = (start.lat * Math.PI) / 180; //convert to radians
+  const startLng = (start.long * Math.PI) / 180;
+  const endLat = (end.lat * Math.PI) / 180;
+  const endLng = (end.long * Math.PI) / 180;
+
+  const deltaLng = endLng - startLng;
+  const x = Math.sin(deltaLng) * Math.cos(endLat);
+  const y =
+    Math.cos(startLat) * Math.sin(endLat) -
+    Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
+
+  const bearing = (Math.atan2(x, y) * 180) / Math.PI;
+  return (bearing + 360) % 360; // Normalize to 0-360 degrees
+};
+
+// Converts numeric degrees to radians
+function toRad(value: number) {
+  return (value * Math.PI) / 180;
+}
+
+//This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+export function haversineDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+) {
+  const R = 6371; // km
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d;
 }

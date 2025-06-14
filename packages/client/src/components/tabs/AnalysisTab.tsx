@@ -1,14 +1,14 @@
-import clsx from "clsx";
 import Image from "next/image";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
+import { useAppState } from "@/contexts/AppStateContext";
 import { tabs } from "@/objects/TabRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
 import MLContainer from "../containers/MLContainer";
+import StatsContainer from "../molecules/AnalysisMolecules/StatsContainer";
 
 type TabContentProps = React.PropsWithChildren<{
   index: number;
@@ -52,8 +52,8 @@ export function TabContent({
 }
 
 function AnalysisTab() {
+  const { currentAppState } = useAppState();
   const [value, setValue] = useState<number>(0);
-  const { width } = useWindowDimensions();
 
   return (
     <div className="flex flex-col gap-y-4 px-4">
@@ -88,6 +88,7 @@ function AnalysisTab() {
               <Tab
                 key={tab.id}
                 label={tab.name.toUpperCase()}
+                sx={currentAppState.darkMode ? { color: "#D2D2D2" } : {}}
                 value={tab.id}
               ></Tab>
             ))}
@@ -115,32 +116,17 @@ function AnalysisTab() {
           ))}
         </div>
 
-        <div
-          className="flex w-full flex-1 flex-col justify-center gap-4 md:flex-row md:gap-x-4 lg:w-auto lg:flex-nowrap"
-          id="main-content"
-        >
-          <TabContent className="my-auto w-full" index={0} value={value}>
-            <div
-              className={twMerge(
-                clsx(
-                  "grid max-h-72 w-full flex-1 grid-flow-row items-center gap-4",
-                  {
-                    "grid-cols-1 overflow-y-auto": width < 1200,
-                    "grid-cols-2": width >= 1200,
-                  },
-                ),
-              )}
-            >
-              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold dark:bg-[#BAB8B8] dark:text-black">
-                <MLContainer plotType="/api/getLapCorrelationMatrix" />
-              </div>
-              <div className="flex max-h-72 w-full max-w-2xl items-center justify-center gap-4 rounded-lg bg-white p-2 text-3xl font-bold dark:bg-[#BAB8B8] dark:text-black">
-                <MLContainer plotType="/api/getPacketCorrelationMatrix" />
-              </div>
-            </div>
+        <div className="w-full flex-1 justify-center gap-4" id="main-content">
+          <TabContent
+            className="grid max-h-72 w-full flex-1 gap-4 overflow-y-auto overflow-x-hidden xl:grid-cols-2"
+            index={0}
+            value={value}
+          >
+            <MLContainer plotType="/api/getLapCorrelationMatrix" />
+            <MLContainer plotType="/api/getPacketCorrelationMatrix" />
           </TabContent>
           <TabContent index={1} value={value}>
-            Stats
+            <StatsContainer />
           </TabContent>
         </div>
       </div>

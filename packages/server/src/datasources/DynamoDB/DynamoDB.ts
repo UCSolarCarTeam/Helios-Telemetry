@@ -10,15 +10,15 @@ import {
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import type { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import {
+  DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
   QueryCommand,
   ScanCommand,
-  ScanCommandInput,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
 import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
 if (!process.env.LAP_TABLE_NAME) {
@@ -29,9 +29,9 @@ if (!process.env.PACKET_TABLE_NAME) {
   throw new Error("Packet table name not defined");
 }
 
-// if (!process.env.DRIVER_TABLE_NAME) {
-//   throw new Error("Driver table name not defined");
-// }
+if (!process.env.DRIVER_TABLE_NAME) {
+  throw new Error("Driver table name not defined");
+}
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
@@ -44,11 +44,13 @@ export class DynamoDB implements DynamoDBtypes {
   lapTableName: string;
   packetTableName: string;
   driverTableName: string;
+  packetTableIndexName: string = "type-timestamp-index";
 
   constructor(backendController: BackendController) {
     try {
       this.backendController = backendController;
-      this.client = new DynamoDBClient({ region: "ca-central-1" });
+      const rawClient = new DynamoDBClient({ region: "ca-central-1" });
+      this.client = DynamoDBDocumentClient.from(rawClient);
       this.lapTableName = lapTableName;
       this.packetTableName = packetTableName;
       this.driverTableName = driverTableName;
@@ -60,20 +62,18 @@ export class DynamoDB implements DynamoDBtypes {
 
   // Helper function to get playback table data
   public async getPacketData(timestamp: string) {
-    try {
-      const command = new GetCommand({
-        Key: {
-          id: "packet",
-          timestamp: Number(timestamp), // Ensure `timestamp` is converted to a number
-        },
-        TableName: this.packetTableName,
-      });
+    const params: QueryCommandInput = {
+      ExpressionAttributeNames: { "#ts": "timestamp" },
+      ExpressionAttributeValues: { ":tsVal": Number(timestamp) },
+      IndexName: this.packetTableIndexName,
+      KeyConditionExpression: "#ts = :tsVal",
+      TableName: this.packetTableName,
+    };
 
-      const response = await this.client.send(command);
-      return response.Item;
+    try {
+      const { Items } = await this.client.send(new QueryCommand(params));
+      return Items[0];
     } catch (error) {
-      logger.error("Error getting playback table data: " + error.message);
-      throw new Error(error.message);
       logger.error("Error getting playback table data: " + error.message);
       throw new Error(error.message);
     }
@@ -84,71 +84,82 @@ export class DynamoDB implements DynamoDBtypes {
     endUTCDate: number,
   ) {
     try {
-      const params: ScanCommandInput = {
-        ScanFilter: {
-          timestamp: {
-            AttributeValueList: [{ N: startUTCDate }, { N: endUTCDate }],
-            ComparisonOperator: "BETWEEN",
-          },
+      const queryParams: QueryCommandInput = {
+        ExpressionAttributeNames: {
+          "#pk": "type",
+          "#ts": "timestamp",
         },
+        ExpressionAttributeValues: {
+          ":end": endUTCDate,
+          ":start": startUTCDate,
+          ":type": "packet",
+        },
+        IndexName: this.packetTableIndexName,
+        KeyConditionExpression: "#pk = :type AND #ts BETWEEN :start AND :end",
         TableName: this.packetTableName,
       };
 
-      let lastEvaluatedKey;
-      do {
-        const command = new ScanCommand(params);
-        const response = await this.client.send(command);
-        const items = response.Items
-          ? response.Items.map((item) => unmarshall(item))
-          : [];
-
-        lastEvaluatedKey = response.LastEvaluatedKey;
-        if (lastEvaluatedKey) {
-          params.ExclusiveStartKey = lastEvaluatedKey;
-        }
-      } while (lastEvaluatedKey);
+      const data = await this.client.send(new QueryCommand(queryParams));
+      return data.Items ?? [];
     } catch (error) {
-      logger.error(" Error Scanning Packets between Dates");
+      logger.error("Error Scanning Packets between Dates", error);
+      throw new Error("Error Scanning Packets between Dates");
     }
   }
 
   public async getDrivers() {
     try {
-      const command = new ScanCommand({
-        TableName: this.driverTableName,
-      });
+      const command = new ScanCommand({ TableName: this.driverTableName });
       const response = await this.client.send(command);
       return response.Items;
     } catch (error) {
-      logger.error("Error getting lap data for driver");
+      logger.error("Error getting drivers");
       throw new Error(error);
     }
   }
 
-  public async getDriverLaps(rfid) {
+  public async getDriverNameUsingRfid(Rfid: string) {
     try {
-      const command = new QueryCommand({
-        ExpressionAttributeValues: {
-          ":rfid": rfid,
-        },
-        KeyConditionExpression: "rfid = :rfid",
+      const command = new GetCommand({
+        Key: { Rfid: Rfid },
         TableName: this.driverTableName,
       });
-
       const response = await this.client.send(command);
-      return response.Items;
+
+      if (!response.Item) {
+        logger.warn(`No item found for Rfid: ${Rfid}`);
+        return "Driver not found";
+      }
+
+      return response.Item.driver;
     } catch (error) {
-      logger.error("Error getting lap data for driver");
-      throw new Error(error);
+      logger.error("Error getting driver name using the given Rfid");
+      throw new Error(error.message);
     }
   }
 
-  // // Helper function to get lap table data
-  public async getLapData() {
+  public async getDriverLaps(Rfid: string) {
     try {
-      const command = new ScanCommand({
+      const lapCommand = new QueryCommand({
+        ExpressionAttributeNames: { "#ts": "timestamp" },
+        ExpressionAttributeValues: { ":Rfid": Rfid, ":minTimestamp": 0 },
+        KeyConditionExpression: "Rfid = :Rfid AND #ts >= :minTimestamp",
+        ScanIndexForward: false,
         TableName: this.lapTableName,
       });
+
+      const lapResponse = await this.client.send(lapCommand);
+      return lapResponse.Items || [];
+    } catch (error) {
+      logger.error("Error getting lap data for driver", error);
+      throw new Error(error.message || "Failed to fetch driver laps");
+    }
+  }
+
+  // Helper function to get lap table data
+  public async getLapData() {
+    try {
+      const command = new ScanCommand({ TableName: this.lapTableName });
 
       const response = await this.client.send(command);
       return response.Items;
@@ -168,6 +179,7 @@ export class DynamoDB implements DynamoDBtypes {
           data: packet,
           id: uuidv4(),
           timestamp: packet.TimeStamp,
+          type: "packet",
         },
         TableName: this.packetTableName,
       });
@@ -187,9 +199,11 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new PutCommand({
         Item: {
+          Rfid: packet.Rfid,
           data: packet,
           id: uuidv4(),
-          timestamp: packet.data.timeStamp,
+          timestamp: packet.timestamp,
+          type: "lap",
         },
         TableName: this.lapTableName,
       });
@@ -211,22 +225,30 @@ export class DynamoDB implements DynamoDBtypes {
   }> {
     try {
       const firstCommand = new QueryCommand({
-        ExpressionAttributeValues: {
-          ":id": "packet",
+        ExpressionAttributeNames: {
+          "#pk": "type",
         },
-        KeyConditionExpression: "id = :id",
+        ExpressionAttributeValues: {
+          ":pkValue": "packet",
+        },
+        IndexName: this.packetTableIndexName,
+        KeyConditionExpression: "#pk = :pkValue",
         Limit: 1,
-        ScanIndexForward: true, // Ascending order → earliest timestamp
+        ScanIndexForward: true,
         TableName: this.packetTableName,
       });
 
       const lastCommand = new QueryCommand({
-        ExpressionAttributeValues: {
-          ":id": "packet",
+        ExpressionAttributeNames: {
+          "#pk": "type",
         },
-        KeyConditionExpression: "id = :id",
+        ExpressionAttributeValues: {
+          ":pkValue": "packet",
+        },
+        IndexName: this.packetTableIndexName,
+        KeyConditionExpression: "#pk = :pkValue",
         Limit: 1,
-        ScanIndexForward: false, // Descending order → latest timestamp
+        ScanIndexForward: false,
         TableName: this.packetTableName,
       });
 
@@ -254,32 +276,28 @@ export class DynamoDB implements DynamoDBtypes {
     });
   }
 
-  public async updateDriverInfo(rfid: string, name: string) {
+  public async updateDriverInfo(Rfid: string, name: string) {
     try {
-      // Ensure rfid is a string (DynamoDB is type-sensitive)
-      if (typeof rfid !== "string") {
-        throw new Error("RFID must be a string");
+      // Ensure Rfid is a string (DynamoDB is type-sensitive)
+      if (typeof Rfid !== "string") {
+        throw new Error("Rfid must be a string");
       }
 
-      // Check if the RFID exists in the driver table
+      // Check if the Rfid exists in the driver table
       const getCommand = new GetCommand({
-        Key: {
-          rfid: rfid,
-        },
+        Key: { Rfid: Rfid },
         TableName: this.driverTableName,
       });
       const rfidCheckReposonse = await this.client.send(getCommand);
 
       if (!rfidCheckReposonse.Item) {
-        return { message: "Driver RFID not found in driver table" };
+        return { message: "Driver Rfid not found in driver table" };
       }
 
-      // Update only the 'driver' field, keeping the existing RFID
+      // Update only the 'driver' field, keeping the existing Rfid
       const updateCommand = new UpdateCommand({
-        ExpressionAttributeValues: {
-          ":name": name,
-        },
-        Key: { rfid: rfid },
+        ExpressionAttributeValues: { ":name": name },
+        Key: { Rfid: Rfid },
         TableName: this.driverTableName,
         UpdateExpression: "SET driver = :name",
       });
