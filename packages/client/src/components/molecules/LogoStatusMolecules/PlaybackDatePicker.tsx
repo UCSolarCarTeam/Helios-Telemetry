@@ -5,7 +5,9 @@ import { useAppState } from "@/contexts/AppStateContext";
 import { usePlaybackContext } from "@/contexts/PlayBackContext";
 import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { Modal } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import { ITelemetryData, prodURL } from "@shared/helios-types";
 
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
@@ -45,6 +47,74 @@ const createDateTime = (time: Date, year: number, month: number, day: number) =>
     time.getMinutes(),
     time.getSeconds(),
   );
+
+function flattenObject(
+  obj: ITelemetryData,
+  prefix = "",
+): Record<string, string | number | boolean | null> {
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) => {
+      const newKey = prefix ? `${prefix}.${key}` : key;
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        Object.assign(
+          acc,
+          flattenObject(value as unknown as ITelemetryData, newKey),
+        );
+      } else {
+        acc[newKey] =
+          typeof value === "object" && value !== null
+            ? JSON.stringify(value)
+            : value;
+      }
+      return acc;
+    },
+    {} as Record<string, string | number | boolean | null>,
+  );
+}
+
+function convertToCSV(jsonArray: ITelemetryData[]): string {
+  // Flatten all objects (CSV uses a flat structure)
+  const flatObjects = jsonArray.map((obj) => flattenObject(obj));
+
+  // Get all the field names (headers)
+  const headers = Array.from(
+    new Set(flatObjects.flatMap((obj) => Object.keys(obj))),
+  );
+
+  // Create the CSV rows
+  const csvRows = [
+    headers.join(","), // header row
+    ...flatObjects.map((obj) =>
+      headers
+        .map((key) => {
+          const value = obj[key];
+          if (typeof value === "string") {
+            return `"${value.replace(/"/g, '""')}"`; // escape quotes
+          }
+          return value ?? "";
+        })
+        .join(","),
+    ),
+  ];
+
+  return csvRows.join("\n");
+}
+
+function handleDownloadCSV(csv: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.setAttribute("download", "playback_data.csv");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
@@ -160,6 +230,18 @@ function PlaybackDatePicker() {
                   playbackDateTime={playbackDateTime}
                 />
               </div>
+              {playbackData.length > 0 && (
+                <Tooltip arrow title="Download to CSV">
+                  <button
+                    className="absolute right-7 top-5"
+                    onClick={() =>
+                      handleDownloadCSV(convertToCSV(playbackData))
+                    }
+                  >
+                    <FileDownloadOutlinedIcon />
+                  </button>
+                </Tooltip>
+              )}
             </div>
           </Modal>
         </div>

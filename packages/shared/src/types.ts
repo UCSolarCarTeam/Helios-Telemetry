@@ -783,12 +783,6 @@ export interface IFormattedLapData {
   Rfid: string;
 }
 
-export interface IPlaybackDynamoResponse {
-  data: ITelemetryData;
-  id: string;
-  timestamp: number;
-}
-
 export interface IRaceInfo {
   distance: number;
   lapNumber: number;
