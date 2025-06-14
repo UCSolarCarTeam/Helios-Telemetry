@@ -782,3 +782,13 @@ export interface IFormattedLapData {
   timestamp: number;
   Rfid: string;
 }
+
+export interface IRaceInfo {
+  distance: number;
+  lapNumber: number;
+  prevTime: number;
+  raceDates: Date[];
+  raceDay: number;
+  timeLeft: number;
+  totalDistance: number;
+}
