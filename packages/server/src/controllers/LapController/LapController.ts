@@ -5,6 +5,7 @@ import { convertToDecimalDegrees } from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import {
+  FINISH_LINE_LOCATION,
   calculateVehicleVelocity,
   haversineDistance,
 } from "@shared/helios-types";
@@ -36,10 +37,7 @@ export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
   public previouslyInFinishLineProximity: boolean = false;
   public lapNumber: number = 0;
-  public finishLineLocation: Coords = {
-    lat: 37.001949324,
-    long: -86.366554059,
-  };
+  public finishLineLocation: Coords = FINISH_LINE_LOCATION;
   backendController: BackendController;
 
   constructor(backendController: BackendController) {
