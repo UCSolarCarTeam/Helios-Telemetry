@@ -5,9 +5,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PauseIcon from "@/components/atoms/PauseIcon";
 import PlayIcon from "@/components/atoms/PlayIcon";
 import { usePacket } from "@/contexts/PacketContext";
+import { usePlaybackContext } from "@/contexts/PlayBackContext";
 import Tooltip from "@mui/material/Tooltip";
-
-import { fakeData } from "./fakedata";
 
 export default function PlaybackSlider() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -17,15 +16,22 @@ export default function PlaybackSlider() {
   const playStartTime = useRef<number>(null);
   const playStartSlider = useRef<number>(0);
   const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
+  const hoverAnchorRef = useRef<HTMLDivElement>(null);
 
   const { setCurrentPacket } = usePacket();
+  const { playbackData } = usePlaybackContext();
 
-  const sortedData = useMemo(
-    () => [...fakeData].sort((a, b) => a.TimeStamp - b.TimeStamp),
-    [],
-  );
+  const { hasData, sortedData } = useMemo(() => {
+    const sortedData =
+      playbackData && playbackData.length > 0
+        ? [...playbackData].sort((a, b) => a.TimeStamp - b.TimeStamp)
+        : [];
+    return {
+      hasData: sortedData.length > 0,
+      sortedData,
+    };
+  }, [playbackData]);
 
-  // dynamic playback duration based on the length of how many packets were fetched
   const PLAYBACK_DURATION = useMemo(
     () => sortedData.length * 1000,
     [sortedData.length],
@@ -35,17 +41,6 @@ export default function PlaybackSlider() {
     () => (sortedData.length > 0 ? 100 / (sortedData.length - 1) : 0),
     [sortedData.length],
   );
-
-  const currentIndex = useMemo(
-    () => (stepSize > 0 ? Math.round(sliderValue / stepSize) : 0),
-    [sliderValue, stepSize],
-  );
-
-  useEffect(() => {
-    if (sortedData[currentIndex]) {
-      setCurrentPacket(sortedData[currentIndex]);
-    }
-  }, [currentIndex, setCurrentPacket, sortedData]);
 
   const handlePlayPause = () => {
     setIsPlaying((prev) => {
@@ -61,6 +56,8 @@ export default function PlaybackSlider() {
     });
   };
 
+  const lastPacketIndexRef = useRef<number>(-1);
+
   useEffect(() => {
     const animate = () => {
       if (!playStartTime.current || !sortedData.length) return;
@@ -73,6 +70,13 @@ export default function PlaybackSlider() {
       );
 
       setSliderValue(newValue);
+
+      const index = Math.round(newValue / stepSize);
+
+      if (index !== lastPacketIndexRef.current && sortedData[index]) {
+        setCurrentPacket(sortedData[index]);
+        lastPacketIndexRef.current = index;
+      }
 
       if (newValue < 100) {
         animationRef.current = requestAnimationFrame(animate);
@@ -107,6 +111,13 @@ export default function PlaybackSlider() {
     [isPlaying],
   );
 
+  const handleSliderRelease = useCallback(() => {
+    const index = Math.round(sliderValue / stepSize);
+    if (sortedData[index]) {
+      setCurrentPacket(sortedData[index]);
+    }
+  }, [sliderValue, stepSize, sortedData, setCurrentPacket]);
+
   const getTooltipContent = useCallback(
     (value: number) => {
       const index = Math.round(value / stepSize);
@@ -128,14 +139,23 @@ export default function PlaybackSlider() {
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const hoverPercentage = (x / rect.width) * 100; // calculate the percentage of the hover position relative to slider, set tooltip to this packet
+    const hoverPercentage = (x / rect.width) * 100;
     setHoverValue(hoverPercentage);
-    setTooltipPosition({ left: x + rect.left, top: rect.top });
+    setTooltipPosition({ left: x, top: 0 });
   };
 
   const handleMouseLeave = () => {
     setHoverValue(null);
   };
+
+  if (!hasData) {
+    return (
+      <p className="text-gray-500 mt-3 text-center font-bold text-helios">
+        Please select a valid date and time range before viewing playback data
+        (Note: Max interval is 10 minutes).
+      </p>
+    );
+  }
 
   return (
     <div className="flex flex-row items-center justify-center gap-2 py-1">
@@ -149,20 +169,31 @@ export default function PlaybackSlider() {
           <PlayIcon color="white" height="25" width="25" />
         )}
       </button>
-      <div className="w-full rounded-md bg-helios p-2">
+      <div className="relative w-full rounded-md bg-helios p-2">
+        <div
+          className="absolute h-0 w-0"
+          ref={hoverAnchorRef}
+          style={{
+            left: tooltipPosition.left,
+            top: tooltipPosition.top,
+          }}
+        />
         <Tooltip
           PopperProps={{
-            anchorEl: {
-              getBoundingClientRect: () =>
-                new DOMRect(tooltipPosition.left, tooltipPosition.top, 0, 0),
-            },
+            anchorEl: hoverAnchorRef.current,
           }}
           arrow
           open={!!hoverValue}
           placement="top"
           title={hoverValue ? getTooltipContent(hoverValue) : ""}
         >
-          <div onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
+          <div
+            className={
+              isPlaying ? "pointer-events-none" : "pointer-events-auto"
+            }
+            onMouseLeave={handleMouseLeave}
+            onMouseMove={handleMouseMove}
+          >
             <Slider
               max={100}
               min={0}
@@ -170,7 +201,7 @@ export default function PlaybackSlider() {
                 setHoverValue(null);
                 handleSliderChange(value);
               }}
-              onChangeComplete={() => setHoverValue(null)}
+              onChangeComplete={handleSliderRelease}
               value={sliderValue}
             />
           </div>

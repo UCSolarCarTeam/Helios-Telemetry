@@ -6313,6 +6313,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantine/dates@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "@mantine/dates@npm:8.0.1"
+  dependencies:
+    clsx: "npm:^2.1.1"
+  peerDependencies:
+    "@mantine/core": 8.0.1
+    "@mantine/hooks": 8.0.1
+    dayjs: ">=1.0.0"
+    react: ^18.x || ^19.x
+    react-dom: ^18.x || ^19.x
+  checksum: 10c0/cb1a1b91238548ccae4e2d15875b349c169eedea0d04d19475d1c7f2c61a1c6b20d09457345c483d51790f8bfa1b7bda29859e57ca49caa71f85bd53fe405175
+  languageName: node
+  linkType: hard
+
 "@mantine/hooks@npm:^7.17.0":
   version: 7.17.3
   resolution: "@mantine/hooks@npm:7.17.3"
@@ -20742,6 +20757,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
+    "@mantine/dates": "npm:^8.0.1"
+    "@mantine/notifications": "npm:^7.17.3"
     "@types/eslint": "npm:^9.6.0"
     "@typescript-eslint/eslint-plugin": "npm:^7.4.0"
     "@typescript-eslint/parser": "npm:^7.4.0"
