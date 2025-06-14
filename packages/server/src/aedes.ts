@@ -29,6 +29,14 @@ const notifyHeliosDisconnect: PublishPacket = {
   retain: true, // Do retain the message
   topic: "carDisconnect",
 };
+const notifyHeliosConnect = {
+  cmd: "publish",
+  dup: false, // Not a duplicate
+  payload: Buffer.from("Aedes has connected to the vehicle"), // Message content
+  qos: 0, // No delivery guarantee
+  retain: true, // Do retain the message
+  topic: "carConnect",
+} as const satisfies PublishPacket;
 
 const aedes: Aedes = new Aedes();
 aedes.on("clientDisconnect", () => {
@@ -61,9 +69,9 @@ aedes.authenticate = function (
   if (username === validUsername && password.toString() === validPassword) {
     done(null, true); // Authentication successful
     logger.info(`MQTT Client ${client.id} successfully authenticated!`);
-    // TODO: Publish to the car client, updating the mqtt connected state to true.
-    // aedes.publish(notifyHeliosConnecct)
-    // logger.info("Brokers: ", aedes.brokers);
+    aedes.publish(notifyHeliosConnect, (err) =>
+      logger.error(err?.message || "Failed to publish connect message"),
+    );
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed

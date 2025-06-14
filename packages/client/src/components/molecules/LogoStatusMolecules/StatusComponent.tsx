@@ -2,12 +2,10 @@ import { twMerge } from "tailwind-merge";
 
 import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
-//import Disconnect from "@/components/atoms/UserComputerIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
-import { useSocket } from "@/contexts/SocketContext";
 import { Switch } from "@mantine/core";
 
 function PlaybackPickerComponent() {
@@ -31,10 +29,10 @@ function PlaybackPickerComponent() {
     </div>
   );
 }
+
 function StatusComponent() {
   const { currentAppState } = useAppState();
   const { currentPacket } = usePacket();
-  const {} = useSocket();
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
   const carConnection = currentAppState.mqttConnected;

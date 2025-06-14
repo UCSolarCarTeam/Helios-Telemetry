@@ -170,7 +170,7 @@ export class DynamoDB implements DynamoDBtypes {
   }
 
   // // Helper function to put data into the packet table
-  /*public async insertPacketData(
+  public async insertPacketData(
     packet: ITelemetryData,
   ): Promise<GenericResponse> {
     try {
@@ -192,7 +192,7 @@ export class DynamoDB implements DynamoDBtypes {
       logger.error("Error inserting playback table data");
       throw new Error(error);
     }
-  }*/
+  }
 
   // // Helper function to put data into the lap table
   public async insertLapData(packet: ILapData): Promise<GenericResponse> {
