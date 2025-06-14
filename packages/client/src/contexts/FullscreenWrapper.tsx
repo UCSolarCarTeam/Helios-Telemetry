@@ -1,19 +1,27 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useRef } from "react";
 
 const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const targetElement = useRef<HTMLDivElement>(null);
+
+  function toggleFullScreen() {
+    const elementReferenced = targetElement.current;
+    if (!elementReferenced) {
+      return;
+    }
+    if (!document.fullscreenElement) {
+      elementReferenced.requestFullscreen();
+    } else {
+      document.exitFullscreen?.();
+    }
+  }
 
   return (
-    <div
-      className={
-        isFullscreen ? "fixed inset-0 z-50 overflow-auto bg-white p-4" : ""
-      }
-    >
+    <div ref={targetElement}>
       <button
-        className="absolute right-2 top-2 z-50 rounded bg-helios px-2 py-1 text-xs text-white"
-        onClick={() => setIsFullscreen((f) => !f)}
+        className="right-2 top-2 z-50 rounded bg-helios px-2 py-1 text-xs text-white"
+        onClick={() => toggleFullScreen()}
       >
-        {isFullscreen ? "Close Fullscreen" : "Fullscreen"}
+        Toggle Fullscreen
       </button>
       <div>{children}</div>
     </div>
