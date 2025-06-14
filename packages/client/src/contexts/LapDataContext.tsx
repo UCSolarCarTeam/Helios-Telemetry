@@ -49,7 +49,7 @@ const lapDataContext = createContext<ILapDataContextReturn>({
 export function LapDataContextProvider({
   children,
 }: PropsWithChildren): JSX.Element {
-  const { currentAppState, setCurrentAppState } = useAppState();
+  const { currentAppState } = useAppState();
   const [lapData, setLapData] = useState<IFormattedLapData[]>([]);
 
   const onLapData = useCallback((lapPacket: ILapData) => {
@@ -64,14 +64,7 @@ export function LapDataContextProvider({
       title: "Lap Completion",
     });
   }, []);
-  const onDisconnect = useCallback(() => {
-    setCurrentAppState((prev) => ({ ...prev, mqttConnected: false }));
-    notifications.show({
-      color: "red",
-      message: "Car has disconnected!",
-      title: "Connection Lost",
-    });
-  }, [setCurrentAppState]);
+
   const fetchLapData = useCallback(async () => {
     try {
       const response = await axios.get(`${prodURL}/laps`);
@@ -100,11 +93,9 @@ export function LapDataContextProvider({
       currentAppState.connectionType === CONNECTIONTYPES.NETWORK &&
       !currentAppState.playbackSwitch
     ) {
-      socketIO.on("disconnect", onDisconnect);
       socketIO.on("lapData", onLapData);
       socketIO.on("lapComplete", onLapComplete);
       return () => {
-        socketIO.off("disconnect", onDisconnect);
         socketIO.off("lapData", onLapData);
         socketIO.off("lapComplete", onLapComplete);
       };
@@ -114,7 +105,6 @@ export function LapDataContextProvider({
     currentAppState.playbackSwitch,
     onLapData,
     onLapComplete,
-    onDisconnect,
   ]);
 
   return (

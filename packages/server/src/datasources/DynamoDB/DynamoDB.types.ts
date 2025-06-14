@@ -8,7 +8,7 @@ export interface DynamoDBtypes {
   getPacketData(timestamp: string): void;
   scanPacketDataBetweenDates(startUTCDate: number, endUTCDate: number): void;
   insertLapData(packet: ILapData): Promise<GenericResponse>;
-  //insertPacketData(packet: ITelemetryData): Promise<GenericResponse>;
+  insertPacketData(packet: ITelemetryData): Promise<GenericResponse>;
   getDrivers(): void;
   getDriverNameUsingRfid(Rfid: string): Promise<string | null>;
   getDriverLaps(Rfid: string): void;

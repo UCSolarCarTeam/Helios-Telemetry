@@ -56,6 +56,9 @@ export class SocketIO implements SocketIOType {
   public broadcastCarDisconnect(data: { message: string }) {
     this.io.emit("carDisconnect", data); // Emit the event to all connected clients
   }
+  public broadcastCarConnect(data: { message: string }) {
+    this.io.emit("carConnect", data); // Emit the event to all connected clients
+  }
   public initializeSocketListeners(socket: Socket) {
     socket.on("ping", (callback: () => void) => {
       callback();
