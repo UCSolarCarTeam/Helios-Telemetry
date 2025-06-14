@@ -18,6 +18,8 @@
     "test": "lerna run test"
   },
   "dependencies": {
+    "@mantine/dates": "^8.0.1",
+    "@mantine/notifications": "^7.17.3",
     "esbuild": "^0.23.0",
     "uuid": "^11.0.5"
   },
