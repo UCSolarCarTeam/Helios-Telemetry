@@ -7,7 +7,6 @@ import Tabs from "@mui/material/Tabs";
 
 function NavBar(): JSX.Element {
   const router = useRouter();
-
   const getCurrentPath = () => {
     let currIndex = "1";
     routes.map((route: SolarCarRoutes, i: number) => {
@@ -63,9 +62,18 @@ function NavBar(): JSX.Element {
     >
       {routes.map((route: SolarCarRoutes, i: number) => (
         <Tab
+          className="group"
           disableRipple
           key={i}
-          label={<h3 className="text-light dark:text-dark">{route.id}</h3>}
+          label={
+            <h3
+              className={`text-light dark:text-dark ${
+                route.path === router.asPath ? "" : "group-hover:text-helios"
+              }`}
+            >
+              {route.id}
+            </h3>
+          }
           sx={{ height: "4vh", minHeight: "4vh" }}
           value={route.value}
         ></Tab>
