@@ -1,6 +1,8 @@
-import { getSecrets } from "./utils/getSecrets";
-
-import Aedes, { type AuthenticateError, type Client } from "aedes";
+import Aedes, {
+  type AuthenticateError,
+  type Client,
+  PublishPacket,
+} from "aedes";
 import { createServer } from "net";
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
@@ -19,8 +21,28 @@ class MqttError extends Error {
     Object.setPrototypeOf(this, MqttError.prototype);
   }
 }
+const notifyHeliosDisconnect: PublishPacket = {
+  cmd: "publish",
+  dup: false, // Not a duplicate
+  payload: Buffer.from("Client has disconnected"), // Message content
+  qos: 0, // No delivery guarantee
+  retain: true, // Do retain the message
+  topic: "carDisconnect",
+};
+const notifyHeliosConnect = {
+  cmd: "publish",
+  dup: false, // Not a duplicate
+  payload: Buffer.from("Aedes has connected to the vehicle"), // Message content
+  qos: 0, // No delivery guarantee
+  retain: true, // Do retain the message
+  topic: "carConnect",
+} as const satisfies PublishPacket;
 
 const aedes: Aedes = new Aedes();
+aedes.on("clientDisconnect", () => {
+  logger.info("client disconnected");
+  aedes.publish(notifyHeliosDisconnect, () => {});
+});
 // Authentication function
 aedes.authenticate = function (
   client: Client,
@@ -47,6 +69,10 @@ aedes.authenticate = function (
   if (username === validUsername && password.toString() === validPassword) {
     done(null, true); // Authentication successful
     logger.info(`MQTT Client ${client.id} successfully authenticated!`);
+    // TODO: Publish to the car client, updating the mqtt connected state to true.
+    aedes.publish(notifyHeliosConnect, (err) =>
+      logger.error(err?.message || "Failed to publish connect message"),
+    );
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed

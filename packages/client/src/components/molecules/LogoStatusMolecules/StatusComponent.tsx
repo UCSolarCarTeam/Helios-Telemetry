@@ -2,10 +2,12 @@ import { twMerge } from "tailwind-merge";
 
 import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
+//import Disconnect from "@/components/atoms/UserComputerIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { useSocket } from "@/contexts/SocketContext";
 import { Switch } from "@mantine/core";
 
 function PlaybackPickerComponent() {
@@ -30,12 +32,12 @@ function PlaybackPickerComponent() {
   );
 }
 function StatusComponent() {
-  const { currentAppState, setCurrentAppState } = useAppState();
+  const { currentAppState } = useAppState();
   const { currentPacket } = usePacket();
-
+  const {} = useSocket();
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
-  const carConnection = currentAppState.socketConnected;
+  const carConnection = currentAppState.mqttConnected;
   const colorTheme = currentAppState.darkMode ? "#FFFFFF" : "#000000";
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = currentAppState.socketConnected

@@ -64,7 +64,6 @@ export function LapDataContextProvider({
       title: "Lap Completion",
     });
   }, []);
-
   const fetchLapData = useCallback(async () => {
     try {
       const response = await axios.get(`${prodURL}/laps`);
