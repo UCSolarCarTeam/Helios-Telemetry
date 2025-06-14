@@ -52,14 +52,14 @@ function MapContainer(): JSX.Element {
   }, [currentPacket, isDemo]);
 
   return (
-    <div className="size-full">
-      <div className="grid h-[90%]">
+    <div className="flex size-full flex-col">
+      <div className="flex-grow">
         <Map
           carLocation={carLocation}
           lapLocation={currentAppState.lapCoords}
         />
       </div>
-      <div className="grid h-[10%]">
+      <div className="h-11">
         <MapText />
       </div>
     </div>
