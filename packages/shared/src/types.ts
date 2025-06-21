@@ -375,7 +375,7 @@ const ITelemetryType = t.exact(
   }),
 );
 
-const ITelemetryDataType = t.exact(
+export const ITelemetryDataType = t.exact(
   t.type({
     B3: IB3Type,
     Battery: IBatteryType,
@@ -476,4 +476,13 @@ export class LapData {
   batterySecondsRemaining = -1;
   lapsRemaining = -1;
   averageSpeed = -1;
+}
+export interface IRaceInfo {
+  distance: number;
+  lapNumber: number;
+  prevTime: number;
+  raceDates: Date[];
+  raceDay: number;
+  timeLeft: number;
+  totalDistance: number;
 }
