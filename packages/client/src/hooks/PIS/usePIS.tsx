@@ -8,6 +8,7 @@ const usePIS = (): I_PIS => {
   return {
     battery: Battery(),
     faults: Faults(),
+    mbms: Faults(),
     motor: Motor(),
     mppt: MPPT(),
   };

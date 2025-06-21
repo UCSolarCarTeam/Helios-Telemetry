@@ -7,6 +7,8 @@ import type I_PIS from "@/objects/PIS/PIS.interface";
 
 const Faults = (): I_PIS => {
   const { currentPacket } = usePacket();
+  const { BatteryFaults, Contactor, MBMS, MotorDetails0, MotorDetails1 } =
+    currentPacket;
   const data = {
     BatteryFaults: {
       ErrorFlags: [
@@ -15,8 +17,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.InternalCommunicationFault,
+              value: BatteryFaults.Errors.InternalCommunicationFault,
             },
           ],
           isFault: true,
@@ -27,8 +28,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.InternalConversionFault,
+              value: BatteryFaults.Errors.InternalConversionFault,
             },
           ],
           isFault: true,
@@ -39,7 +39,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.WeakCellFault,
+              value: BatteryFaults.Errors.WeakCellFault,
             },
           ],
           isFault: true,
@@ -50,7 +50,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.LowCellVoltageFault,
+              value: BatteryFaults.Errors.LowCellVoltageFault,
             },
           ],
           isFault: true,
@@ -61,7 +61,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.OpenWiringFault,
+              value: BatteryFaults.Errors.OpenWiringFault,
             },
           ],
           isFault: true,
@@ -72,7 +72,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.CurrentSensorFault,
+              value: BatteryFaults.Errors.CurrentSensorFault,
             },
           ],
           isFault: true,
@@ -83,7 +83,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.PackVoltageSensorFault,
+              value: BatteryFaults.Errors.PackVoltageSensorFault,
             },
           ],
           isFault: true,
@@ -94,7 +94,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.WeakPackFault,
+              value: BatteryFaults.Errors.WeakPackFault,
             },
           ],
           isFault: true,
@@ -105,7 +105,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.VoltageRedundancyFault,
+              value: BatteryFaults.Errors.VoltageRedundancyFault,
             },
           ],
           isFault: true,
@@ -116,7 +116,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.FanMonitorFault,
+              value: BatteryFaults.Errors.FanMonitorFault,
             },
           ],
           isFault: true,
@@ -127,7 +127,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.ThermistorFault,
+              value: BatteryFaults.Errors.ThermistorFault,
             },
           ],
           isFault: true,
@@ -138,8 +138,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.CanbusCommunicationFault,
+              value: BatteryFaults.Errors.CanbusCommunicationFault,
             },
           ],
           isFault: true,
@@ -150,7 +149,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.AlwaysOnSupplyFault,
+              value: BatteryFaults.Errors.AlwaysOnSupplyFault,
             },
           ],
           isFault: true,
@@ -161,8 +160,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.HighVoltageIsolationFault,
+              value: BatteryFaults.Errors.HighVoltageIsolationFault,
             },
           ],
           isFault: true,
@@ -173,7 +171,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.PowerSupply12VFault,
+              value: BatteryFaults.Errors.PowerSupply12VFault,
             },
           ],
           isFault: true,
@@ -184,8 +182,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.ChargeLimitEnforcementFault,
+              value: BatteryFaults.Errors.ChargeLimitEnforcementFault,
             },
           ],
           isFault: true,
@@ -196,8 +193,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.ChargerSafetyRelayFault,
+              value: BatteryFaults.Errors.ChargerSafetyRelayFault,
             },
           ],
           isFault: true,
@@ -208,9 +204,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors
-                  .DischargeLimitEnforcementFault,
+              value: BatteryFaults.Errors.DischargeLimitEnforcementFault,
             },
           ],
           isFault: true,
@@ -221,8 +215,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.ChargerSafetyRelayFault,
+              value: BatteryFaults.Errors.ChargerSafetyRelayFault,
             },
           ],
           isFault: true,
@@ -233,7 +226,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.InternalMemoryFault,
+              value: BatteryFaults.Errors.InternalMemoryFault,
             },
           ],
           isFault: true,
@@ -244,8 +237,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value:
-                currentPacket?.BatteryFaults.Errors.InternalThermistorFault,
+              value: BatteryFaults.Errors.InternalThermistorFault,
             },
           ],
           isFault: true,
@@ -256,7 +248,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
-              value: currentPacket?.BatteryFaults.Errors.InternalLogicFault,
+              value: BatteryFaults.Errors.InternalLogicFault,
             },
           ],
           isFault: true,
@@ -269,8 +261,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings.DclReducedDueToLowSoc,
+              value: BatteryFaults.Warnings.DclReducedDueToLowSoc,
             },
           ],
           isFault: true,
@@ -281,9 +272,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .DclReducedDueToHighCellResistance,
+              value: BatteryFaults.Warnings.DclReducedDueToHighCellResistance,
             },
           ],
           isFault: true,
@@ -294,9 +283,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .DclReducedDueToTemperature,
+              value: BatteryFaults.Warnings.DclReducedDueToTemperature,
             },
           ],
           isFault: true,
@@ -307,9 +294,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .DclReducedDueToLowCellVoltage,
+              value: BatteryFaults.Warnings.DclReducedDueToLowCellVoltage,
             },
           ],
           isFault: true,
@@ -320,9 +305,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .DclReducedDueToLowPackVoltage,
+              value: BatteryFaults.Warnings.DclReducedDueToLowPackVoltage,
             },
           ],
           isFault: true,
@@ -334,8 +317,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
               value:
-                currentPacket?.BatteryFaults.Warnings
-                  .DclAndCclReducedDueToVoltageFailsafe,
+                BatteryFaults.Warnings.DclAndCclReducedDueToVoltageFailsafe,
             },
           ],
           isFault: true,
@@ -347,7 +329,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.ERROR,
               value:
-                currentPacket?.BatteryFaults.Warnings
+                BatteryFaults.Warnings
                   .DclAndCclReducedDueToCommunicationFailsafe,
             },
           ],
@@ -359,8 +341,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings.CclReducedDueToHighSoc,
+              value: BatteryFaults.Warnings.CclReducedDueToHighSoc,
             },
           ],
           isFault: true,
@@ -371,9 +352,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .CclReducedDueToHighCellResistance,
+              value: BatteryFaults.Warnings.CclReducedDueToHighCellResistance,
             },
           ],
           isFault: true,
@@ -384,9 +363,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .CclReducedDueToTemperature,
+              value: BatteryFaults.Warnings.CclReducedDueToTemperature,
             },
           ],
           isFault: true,
@@ -397,9 +374,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .CclReducedDueToHighCellVoltage,
+              value: BatteryFaults.Warnings.CclReducedDueToHighCellVoltage,
             },
           ],
           isFault: true,
@@ -410,9 +385,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .CclReducedDueToHighPackVoltage,
+              value: BatteryFaults.Warnings.CclReducedDueToHighPackVoltage,
             },
           ],
           isFault: true,
@@ -423,9 +396,7 @@ const Faults = (): I_PIS => {
             {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
-              value:
-                currentPacket?.BatteryFaults.Warnings
-                  .CclReducedDueToChargerLatch,
+              value: BatteryFaults.Warnings.CclReducedDueToChargerLatch,
             },
           ],
           isFault: true,
@@ -437,8 +408,7 @@ const Faults = (): I_PIS => {
               indicationLocation: FaultLocations.BATTERY,
               severity: ISeverity.WARNING,
               value:
-                currentPacket?.BatteryFaults.Warnings
-                  .CclReducedDueToAlternateCurrentLimit,
+                BatteryFaults.Warnings.CclReducedDueToAlternateCurrentLimit,
             },
           ],
           isFault: true,
@@ -446,1899 +416,580 @@ const Faults = (): I_PIS => {
         },
       ],
     },
+    ContactorFaults: {
+      ErrorFlags: [
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.ArrayBPSError,
+            },
+          ],
+          isFault: true,
+          name: "Array BPS Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.ArrayContactorError,
+            },
+          ],
+          isFault: true,
+          name: "Array Contactor Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.ArrayPrechargerError,
+            },
+          ],
+          isFault: true,
+          name: "Array Precharger Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.ChargeBPSError,
+            },
+          ],
+          isFault: true,
+          name: "Charge BPS Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.ChargeContactorError,
+            },
+          ],
+          isFault: true,
+          name: "Charge Contactor Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.ChargePrechargerError,
+            },
+          ],
+          isFault: true,
+          name: "Charge Precharger Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.CommonContactorError,
+            },
+          ],
+          isFault: true,
+          name: "Common Contactor Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.CommonContactorOpeningError,
+            },
+          ],
+          isFault: true,
+          name: "Common Contactor Opening Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.CommonPrechargerError,
+            },
+          ],
+          isFault: true,
+          name: "Common Precharger Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.LvBpsError,
+            },
+          ],
+          isFault: true,
+          name: "LV BPS Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.LvContactorError,
+            },
+          ],
+          isFault: true,
+          name: "LV Contactor Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.LvPrechargerError,
+            },
+          ],
+          isFault: true,
+          name: "LV Precharger Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.MotorBPSError,
+            },
+          ],
+          isFault: true,
+          name: "Motor BPS Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.MotorContactorError,
+            },
+          ],
+          isFault: true,
+          name: "Motor Contactor Error",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: Contactor?.MotorPrechargerError,
+            },
+          ],
+          isFault: true,
+          name: "Motor Precharger Error",
+        },
+      ],
+    },
+    MbmsFaults: {
+      ErrorFlags: [
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.ArrayHeartbeatDeadTrip,
+            },
+          ],
+          isFault: true,
+          name: "Array Heartbeat Dead Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.ArrayHighCurrentTrip,
+            },
+          ],
+          isFault: true,
+          name: "Array High Current Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.ChargeHeartbeatDeadTrip,
+            },
+          ],
+          isFault: true,
+          name: "Charge Heartbeat Dead Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.ChargeHighCurrentTrip,
+            },
+          ],
+          isFault: true,
+          name: "Charge High Current Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.CommonHeartbeatDeadTrip,
+            },
+          ],
+          isFault: true,
+          name: "Common Heartbeat Dead Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.CommonHighCurrentTrip,
+            },
+          ],
+          isFault: true,
+          name: "Common High Current Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.ContactorConnectedUnexpectedlyTrip,
+            },
+          ],
+          isFault: true,
+          name: "Contactor Connected Unexpectedly Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.ContactorDisconnectedUnexpectedlyTrip,
+            },
+          ],
+          isFault: true,
+          name: "Contactor Disconnected Unexpectedly Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.EsdEnabledTrip,
+            },
+          ],
+          isFault: true,
+          name: "Esd Enabled Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.Heartbeat,
+            },
+          ],
+          isFault: true,
+          name: "No MBMS Heartbeat For 2.5s",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.HighCellVoltageTrip,
+            },
+          ],
+          isFault: true,
+          name: "High Cell Voltage Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.HighTemperatureTrip,
+            },
+          ],
+          isFault: true,
+          name: "High Temperature Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.HighTemperatureWarning,
+            },
+          ],
+          isFault: true,
+          name: "High Temperature Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.LowCellVoltageTrip,
+            },
+          ],
+          isFault: true,
+          name: "Low Cell Voltage Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.LowCellVoltageWarning,
+            },
+          ],
+          isFault: true,
+          name: "Low Cell Voltage Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.LvHeartbeatDeadTrip,
+            },
+          ],
+          isFault: true,
+          name: "LV Heartbeat Dead Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.LvHighCurrentTrip,
+            },
+          ],
+          isFault: true,
+          name: "LV High Current Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.MotorHeartbeatDeadTrip,
+            },
+          ],
+          isFault: true,
+          name: "Motor Heartbeat Dead Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.MotorHighCurrentTrip,
+            },
+          ],
+          isFault: true,
+          name: "Motor High Current Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.MpsDisabledTrip,
+            },
+          ],
+          isFault: true,
+          name: "MPS Disabled Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.OrionMessageTimeoutTrip,
+            },
+          ],
+          isFault: true,
+          name: "Orion Message Timeout Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.ProtectionTrip,
+            },
+          ],
+          isFault: true,
+          name: "Protection Trip",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: MBMS?.StrobeBmsLight,
+            },
+          ],
+          isFault: true,
+          name: "Strobe SOS",
+        },
+      ],
+      WarningFlags: [
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value: MBMS?.ArrayHighCurrentWarning,
+            },
+          ],
+          isFault: true,
+          name: "Array High Current Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value: MBMS?.CanOc12VWarning,
+            },
+          ],
+          isFault: true,
+          name: "CAN OC 12V Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value: MBMS?.ChargeHighCurrentWarning,
+            },
+          ],
+          isFault: true,
+          name: "Charge High Current Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value: MBMS?.CommonHighCurrentWarning,
+            },
+          ],
+          isFault: true,
+          name: "Common High Current Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value: MBMS?.HighCellVoltageWarning,
+            },
+          ],
+          isFault: true,
+          name: "High Cell Voltage Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value: MBMS?.LvHighCurrentWarning,
+            },
+          ],
+          isFault: true,
+          name: "LV High Current Warning",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value: MBMS?.MotorHighCurrentWarning,
+            },
+          ],
+          isFault: true,
+          name: "Motor High Current Warning",
+        },
+      ],
+    },
     MotorFaults: {
-      MotorLeft: {
-        ErrorFlags: [
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .CanCommsTimeoutError,
-              },
-            ],
-            isFault: true,
-            name: "Can Comms Timeout Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails0?.MotorErrors.CanSendError,
-              },
-            ],
-            isFault: true,
-            name: "Can Send Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails0?.MotorErrors.CpuOverload,
-              },
-            ],
-            isFault: true,
-            name: "CPU Overload",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails0?.MotorErrors.CpuTempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "CPU Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.DclinkTempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "DC Link Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .ErrorInDclinkCommunication,
-              },
-            ],
-            isFault: true,
-            name: "Error in DC Link Communication",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.ErrorReadingEncoder,
-              },
-            ],
-            isFault: true,
-            name: "Error Reading Encoder",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.DoubleCanIdOnBus,
-              },
-            ],
-            isFault: true,
-            name: "Double Can ID on Bus",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .ErrorReadingTempSensor,
-              },
-            ],
-            isFault: true,
-            name: "Error Reading Temp Sensor",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails0?.MotorErrors.OverspeedError,
-              },
-            ],
-            isFault: true,
-            name: "Motor Over Speed",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.HallTempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Hall Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails0?.MotorErrors.HwEnableNotSet,
-              },
-            ],
-            isFault: true,
-            name: "HW Enable Not Set",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails0?.MotorErrors.InitError,
-              },
-            ],
-            isFault: true,
-            name: "Init Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.InvalidHallSector,
-              },
-            ],
-            isFault: true,
-            name: "Invalid Hall Sector",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter1FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter1OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter1TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter2FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter2OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter2TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter3FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter3OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter3TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter4FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter4OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter4TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter5FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter5OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter5TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.Inverter6FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter6OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .Inverter6TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.DcOvervoltageError,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Over Voltage",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails0?.MotorErrors.MotorStalled,
-              },
-            ],
-            isFault: true,
-            name: "Motor Stalled",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.SettingsNotFound,
-              },
-            ],
-            isFault: true,
-            name: "Settings Not Found",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .ZeroPositionOffsetNotSet,
-              },
-            ],
-            isFault: true,
-            name: "Zero Position Offset Not Set",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors.DcUndervoltageError,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Under Voltage Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .InvalidHallSensorSequence,
-              },
-            ],
-            isFault: true,
-            name: "Bad Motor Position Hall Sequence",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .PositionSensorReadingError,
-              },
-            ],
-            isFault: true,
-            name: "Position Sensor Reading Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0?.MotorErrors
-                    .LostFramesOnCanBusError,
-              },
-            ],
-            isFault: true,
-            name: "Lost Frame on Can Bus Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails0.MotorErrors
-                    .ControllerDataReadingTimeout,
-              },
-            ],
-            isFault: true,
-            name: "Config Read Error",
-          },
-        ],
-        WarningFlags: [
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .CanCommsTimeoutWarning,
-              },
-            ],
-            isFault: true,
-            name: "Can Comms Timeout Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings.CanSendWarning,
-              },
-            ],
-            isFault: true,
-            name: "Can Send Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value: currentPacket?.MotorDetails0?.MotorWarnings.CpuOverload,
-              },
-            ],
-            isFault: true,
-            name: "CPU Overload",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .CpuTemperatureVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "CPU Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .DclinkTemperatureVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "DC Link Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings.OverspeedWarning,
-              },
-            ],
-            isFault: true,
-            name: "Motor Over Speed",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .DelayInDclinkCommunication,
-              },
-            ],
-            isFault: true,
-            name: "Delay in DC Link Communication",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .DelayInReadingPosSensor,
-              },
-            ],
-            isFault: true,
-            name: "Delay In Reading Pos Sensor",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .DelayInReadingTempSensor,
-              },
-            ],
-            isFault: true,
-            name: "Delay In Reading Temp Sensor",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .HallTemperatureVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Hall Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter1FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter1OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter1TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter2FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter2OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter2TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter3FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter3OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter3TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter4FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter4OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter4TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter5FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter5OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter5TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter6FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter6OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .Inverter6TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .DcOvervoltageWarning,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Over Voltage",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings.MotorAboutToStall,
-              },
-            ],
-            isFault: true,
-            name: "Motor About To Stall",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .DcUndervoltageWarning,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Under Voltage Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings
-                    .LostFramesOnCanBusWarning,
-              },
-            ],
-            isFault: true,
-            name: "Lost Frame on Can Bus Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings.StartAtHighRpm,
-              },
-            ],
-            isFault: true,
-            name: "Start At High RPM",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.LEFTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails0?.MotorWarnings.TorqueLimited,
-              },
-            ],
-            isFault: true,
-            name: "Torque Limited",
-          },
-        ],
-      },
-      MotorRight: {
-        ErrorFlags: [
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .CanCommsTimeoutError,
-              },
-            ],
-            isFault: true,
-            name: "Can Comms Timeout Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails1?.MotorErrors.CanSendError,
-              },
-            ],
-            isFault: true,
-            name: "Can Send Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails1?.MotorErrors.CpuOverload,
-              },
-            ],
-            isFault: true,
-            name: "CPU Overload",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails1?.MotorErrors.CpuTempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "CPU Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.DclinkTempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "DC Link Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .ErrorInDclinkCommunication,
-              },
-            ],
-            isFault: true,
-            name: "Error in DC Link Communication",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.ErrorReadingEncoder,
-              },
-            ],
-            isFault: true,
-            name: "Error Reading Encoder",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.DoubleCanIdOnBus,
-              },
-            ],
-            isFault: true,
-            name: "Double Can ID on Bus",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .ErrorReadingTempSensor,
-              },
-            ],
-            isFault: true,
-            name: "Error Reading Temp Sensor",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails1?.MotorErrors.OverspeedError,
-              },
-            ],
-            isFault: true,
-            name: "Motor Over Speed",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.HallTempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Hall Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails1?.MotorErrors.HwEnableNotSet,
-              },
-            ],
-            isFault: true,
-            name: "HW Enable Not Set",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails1?.MotorErrors.InitError,
-              },
-            ],
-            isFault: true,
-            name: "Init Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.InvalidHallSector,
-              },
-            ],
-            isFault: true,
-            name: "Invalid Hall Sector",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter1FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter1OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter1TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter2FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter2OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter2TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter3FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter3OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter3TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter4FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter4OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter4TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter5FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter5OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter5TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.Inverter6FaultError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Fault Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter6OvercurrentError,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Overcurrent Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .Inverter6TempTooHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Temperature Too High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.DcOvervoltageError,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Over Voltage",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value: currentPacket?.MotorDetails1?.MotorErrors.MotorStalled,
-              },
-            ],
-            isFault: true,
-            name: "Motor Stalled",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.SettingsNotFound,
-              },
-            ],
-            isFault: true,
-            name: "Settings Not Found",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .ZeroPositionOffsetNotSet,
-              },
-            ],
-            isFault: true,
-            name: "Zero Position Offset Not Set",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors.DcUndervoltageError,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Under Voltage Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .InvalidHallSensorSequence,
-              },
-            ],
-            isFault: true,
-            name: "Bad Motor Position Hall Sequence",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .PositionSensorReadingError,
-              },
-            ],
-            isFault: true,
-            name: "Position Sensor Reading Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1?.MotorErrors
-                    .LostFramesOnCanBusError,
-              },
-            ],
-            isFault: true,
-            name: "Lost Frame on Can Bus Error",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.ERROR,
-                value:
-                  currentPacket?.MotorDetails1.MotorErrors
-                    .ControllerDataReadingTimeout,
-              },
-            ],
-            isFault: true,
-            name: "Config Read Error",
-          },
-        ],
-        WarningFlags: [
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .CanCommsTimeoutWarning,
-              },
-            ],
-            isFault: true,
-            name: "Can Comms Timeout Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings.CanSendWarning,
-              },
-            ],
-            isFault: true,
-            name: "Can Send Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value: currentPacket?.MotorDetails1?.MotorWarnings.CpuOverload,
-              },
-            ],
-            isFault: true,
-            name: "CPU Overload",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .CpuTemperatureVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "CPU Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .DclinkTemperatureVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "DC Link Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings.OverspeedWarning,
-              },
-            ],
-            isFault: true,
-            name: "Motor Over Speed",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .DelayInDclinkCommunication,
-              },
-            ],
-            isFault: true,
-            name: "Delay in DC Link Communication",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .DelayInReadingPosSensor,
-              },
-            ],
-            isFault: true,
-            name: "Delay In Reading Pos Sensor",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .DelayInReadingTempSensor,
-              },
-            ],
-            isFault: true,
-            name: "Delay In Reading Temp Sensor",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .HallTemperatureVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Hall Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter1FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter1OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter1TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 1 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter2FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter2OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter2TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 2 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter3FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter3OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter3TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 3 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter4FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter4OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter4TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 4 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter5FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter5OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter5TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 5 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter6FaultWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Fault Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter6OverCurrentWarning,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Overcurrent Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .Inverter6TempVeryHigh,
-              },
-            ],
-            isFault: true,
-            name: "Inverter 6 Temperature Very High",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .DcOvervoltageWarning,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Over Voltage",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings.MotorAboutToStall,
-              },
-            ],
-            isFault: true,
-            name: "Motor About To Stall",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .DcUndervoltageWarning,
-              },
-            ],
-            isFault: true,
-            name: "Dc Bus Under Voltage Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings
-                    .LostFramesOnCanBusWarning,
-              },
-            ],
-            isFault: true,
-            name: "Lost Frame on Can Bus Warning",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings.StartAtHighRpm,
-              },
-            ],
-            isFault: true,
-            name: "Start At High RPM",
-          },
-          {
-            data: [
-              {
-                indicationLocation: FaultLocations.RIGHTMOTOR,
-                severity: ISeverity.WARNING,
-                value:
-                  currentPacket?.MotorDetails1?.MotorWarnings.TorqueLimited,
-              },
-            ],
-            isFault: true,
-            name: "Torque Limited",
-          },
-        ],
-      },
+      ErrorFlags: [
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.LEFTMOTOR,
+              severity: ISeverity.ERROR,
+              value: MotorDetails0?.ErrorFlags,
+            },
+          ],
+          isFault: true,
+          name: "Error Flag Raised In Left Motor",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.LEFTMOTOR,
+              severity: ISeverity.ERROR,
+              value: MotorDetails0?.RxErrorCount,
+            },
+          ],
+          isFault: true,
+          name: "Rx Error Raised In Left Motor",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.LEFTMOTOR,
+              severity: ISeverity.ERROR,
+              value: MotorDetails0?.TxErrorCount,
+            },
+          ],
+          isFault: true,
+          name: "Tx Error Raised In Left Motor",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.RIGHTMOTOR,
+              severity: ISeverity.ERROR,
+              value: MotorDetails1?.ErrorFlags,
+            },
+          ],
+          isFault: true,
+          name: "Error Flag Raised In Right Motor",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.RIGHTMOTOR,
+              severity: ISeverity.ERROR,
+              value: MotorDetails1?.RxErrorCount,
+            },
+          ],
+          isFault: true,
+          name: "Rx Error Raised In Right Motor",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.RIGHTMOTOR,
+              severity: ISeverity.ERROR,
+              value: MotorDetails1?.TxErrorCount,
+            },
+          ],
+          isFault: true,
+          name: "Tx Error Raised In Right Motor",
+        },
+      ],
     },
   };
 
