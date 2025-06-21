@@ -485,7 +485,7 @@ export function haversineDistance(
 }
 
 export function flattenObject(
-  obj: ITelemetryData,
+  obj: Record<string, unknown>,
   prefix = "",
 ): Record<string, string | number | boolean | null> {
   return Object.entries(obj).reduce(
@@ -498,13 +498,10 @@ export function flattenObject(
       ) {
         Object.assign(
           acc,
-          flattenObject(value as unknown as ITelemetryData, newKey),
+          flattenObject(value as Record<string, unknown>, newKey),
         );
       } else {
-        acc[newKey] =
-          typeof value === "object" && value !== null
-            ? JSON.stringify(value)
-            : value;
+        acc[newKey] = value as string | number | boolean | null;
       }
       return acc;
     },

@@ -7,7 +7,7 @@ const config = {
   extends: ["../../.eslintrc.cjs"],
   root: true,
   rules: {
-    "prettier/prettier": 0,
+    "prettier/prettier": ["error", prettierConfig],
   },
 };
 
