@@ -5,8 +5,10 @@ import { useAppState } from "@/contexts/AppStateContext";
 import { usePlaybackContext } from "@/contexts/PlayBackContext";
 import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { Modal } from "@mui/material";
-import { ITelemetryData, prodURL } from "@shared/helios-types";
+import Tooltip from "@mui/material/Tooltip";
+import { ITelemetryData, convertToCSV, prodURL } from "@shared/helios-types";
 
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
 import DatePickerResultColumn from "./DataPickerMolecules/DatePickerResultColumn";
@@ -45,6 +47,18 @@ const createDateTime = (time: Date, year: number, month: number, day: number) =>
     time.getMinutes(),
     time.getSeconds(),
   );
+
+function handleDownloadCSV(csv: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.setAttribute("download", "playback_data.csv");
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
@@ -94,7 +108,7 @@ function PlaybackDatePicker() {
     const startTimeUTC = Math.floor(startDateTime.getTime());
     const endTimeUTC = Math.floor(endDateTime.getTime());
 
-    const maxInterval = 10 * 60 * 1000; // 10 minutes in ms
+    const maxInterval = 60 * 60 * 1000; // 60 minutes in ms
     if (endTimeUTC - startTimeUTC > maxInterval) {
       notifications.show({
         color: "red",
@@ -160,6 +174,18 @@ function PlaybackDatePicker() {
                   playbackDateTime={playbackDateTime}
                 />
               </div>
+              {playbackData.length > 0 && (
+                <Tooltip arrow title="Download to CSV">
+                  <button
+                    className="absolute right-7 top-5"
+                    onClick={() =>
+                      handleDownloadCSV(convertToCSV(playbackData))
+                    }
+                  >
+                    <FileDownloadOutlinedIcon />
+                  </button>
+                </Tooltip>
+              )}
             </div>
           </Modal>
         </div>
