@@ -11,12 +11,12 @@ function SpeedAtom() {
   const speedValue = React.useMemo(
     () =>
       calculateVehicleVelocity(
-        currentPacket.MotorDetails0?.CurrentRpmValue,
-        currentPacket.MotorDetails1?.CurrentRpmValue,
+        currentPacket.MotorDetails0?.MotorVelocity,
+        currentPacket.MotorDetails1?.MotorVelocity,
       ),
     [
-      currentPacket.MotorDetails0?.CurrentRpmValue,
-      currentPacket.MotorDetails1?.CurrentRpmValue,
+      currentPacket.MotorDetails0?.MotorVelocity,
+      currentPacket.MotorDetails1?.MotorVelocity,
     ],
   );
 

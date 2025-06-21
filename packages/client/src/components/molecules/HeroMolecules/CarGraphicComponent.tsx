@@ -98,12 +98,12 @@ const CarGraphicComponent = () => {
           warningMaterial={warningMaterial}
         />
         <RoadComponent
-          direction={currentPacket?.B3.Reverse}
+          direction={currentPacket?.B3.ReverseDigital}
           size={20}
           speed={
             calculateVehicleVelocity(
-              currentPacket.MotorDetails0?.CurrentRpmValue,
-              currentPacket.MotorDetails1?.CurrentRpmValue,
+              currentPacket.MotorDetails0?.MotorVelocity,
+              currentPacket.MotorDetails1?.MotorVelocity,
             ) * 0.5
           }
         />
