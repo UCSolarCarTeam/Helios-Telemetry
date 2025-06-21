@@ -61,6 +61,8 @@ export class SocketIO implements SocketIOType {
     this.io.emit("carConnect", data); // Emit the event to all connected clients
   }
   public broadcastRaceInfo(raceInfo: IRaceInfo) {
+    logger.info("Broadcasting raceInfo:", raceInfo);
+    console.log("Broadcasting raceInfo - clg:", raceInfo);
     this.io.emit("raceInfo", raceInfo);
   }
 

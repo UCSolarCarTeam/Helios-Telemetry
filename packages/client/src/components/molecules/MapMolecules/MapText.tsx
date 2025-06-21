@@ -19,7 +19,10 @@ function MapText() {
     raceInfo.totalDistance,
   );
 
+  // console.log("Received raceInfo on client");
   const onRaceInfo = useCallback((raceInfo: IRaceInfo) => {
+    /* eslint-disable no-console */
+    console.log("Received raceInfo on client");
     setRaceInfo(raceInfo);
   }, []);
 
