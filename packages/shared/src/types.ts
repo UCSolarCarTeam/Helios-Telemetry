@@ -266,7 +266,7 @@ const IMBMSType = t.exact(
   }),
 );
 
-const IMotorDetails0Type = t.exact(
+const IMotorDetailsType = t.exact(
   t.type({
     ActiveMotor: t.number,
     BEMF_D: t.number,
@@ -384,8 +384,8 @@ const ITelemetryDataType = t.exact(
     KeyMotor: IKeyMotorType,
     MBMS: IMBMSType,
     MPPT: IMPPTType,
-    MotorDetails0: IMotorDetails0Type,
-    MotorDetails1: IMotorDetails0Type,
+    MotorDetails0: IMotorDetailsType,
+    MotorDetails1: IMotorDetailsType,
     Pi: IPiType,
     ProximitySensors: IProximitySensorsType,
     Telemetry: ITelemetryType,
@@ -405,7 +405,7 @@ export type IBatteryFaultWarnings = t.TypeOf<typeof IBatteryFaultWarningsType>;
 export type IB3 = t.TypeOf<typeof IB3Type>;
 export type IKeyMotor = t.TypeOf<typeof IKeyMotorType>;
 export type IMBMS = t.TypeOf<typeof IMBMSType>;
-export type IMotorDetails0 = t.TypeOf<typeof IMotorDetails0Type>;
+export type IMotorDetails = t.TypeOf<typeof IMotorDetailsType>;
 export type IMPPT = t.TypeOf<typeof IMPPTType>;
 export type IPi = t.TypeOf<typeof IPiType>;
 export type IProximitySensors = t.TypeOf<typeof IProximitySensorsType>;
