@@ -207,9 +207,9 @@ export class LapController implements LapControllerType {
           distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
           energyConsumed: this.getEnergyConsumption(this.lastLapPackets),
           lapTime: this.calculateLapTime(this.lastLapPackets),
-          netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
+          netPowerOut: this.netPower(this.lastLapPackets),
           timeStamp: packet.TimeStamp,
-          totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
+          totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
           totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
         },
         timestamp: packet.TimeStamp,
@@ -454,6 +454,9 @@ export class LapController implements LapControllerType {
   }
 
   public netPower(packetArray: ITelemetryData[]): number {
+    if (!packetArray || packetArray.length === 0) {
+      return 0;
+    }
     return (
       this.getAveragePowerIn(packetArray) - this.getAveragePowerOut(packetArray)
     );

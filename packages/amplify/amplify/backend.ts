@@ -144,6 +144,17 @@ const driverDataTable = new dynamodb.Table(
   },
 );
 
+const gpsCalculatedLapDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "gps_lap_count_table",
+  {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    partitionKey: {name:"Rfid", type:dynamodb.AttributeType.STRING},
+    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
+    sortKey: {name:"timestamp", type:dynamodb.AttributeType.NUMBER}
+  }
+);
+
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
@@ -154,6 +165,7 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
     DRIVER_TABLE_NAME: driverDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
     PACKET_TABLE_NAME: packetDataTable.tableName,
+    GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName
   },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "TelemetryBackend" }),
@@ -311,6 +323,7 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
     `${packetDataTable.tableArn}/index/type-timestamp-index`,
     lapDataTable.tableArn,
     driverDataTable.tableArn,
+    gpsCalculatedLapDataTable.tableArn
   ],
 });
 
