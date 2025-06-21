@@ -7,12 +7,21 @@ import {
   topics,
 } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
-import { getSecrets } from "@/utils/getSecrets";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { validateTelemetryData } from "@shared/helios-types";
 
-const { packetTopic, pingTopic, pongTopic, telemetryToCarTopic } = topics;
+const {
+  carConnect,
+  carDisconnect,
+  packetTopic,
+  pingTopic,
+  pongTopic,
+  telemetryToCarTopic,
+} = topics;
+
+type Topics = (typeof topics)[keyof typeof topics];
+
 const logger = createLightweightApplicationLogger("SolarMQTTClient.ts");
 
 export class SolarMQTTClient implements SolarMQTTClientType {
@@ -70,37 +79,57 @@ export class SolarMQTTClient implements SolarMQTTClientType {
   public initializeListeners() {
     this.client.on("connect", () => {
       logger.info("MQTT Client connected");
-      this.client.subscribe([packetTopic, pongTopic], (error) => {
-        if (!error) {
-          //
-        } else {
-          logger.error("Subscription error: ", error);
-        }
-      });
+      this.client.subscribe(
+        [packetTopic, pongTopic, carDisconnect, carConnect],
+        (error) => {
+          if (!error) {
+            //
+          } else {
+            logger.error("Subscription error: ", error);
+          }
+        },
+      );
     });
 
-    this.client.on("message", (topic, message) => {
-      if (topic === pongTopic) {
-        logger.info("pong");
-        const serverToCarLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
-        this.backendController.carLatency = serverToCarLatency;
-        logger.info(this.backendController.carLatency.toString());
-        this.backendController.handleTelemetryToCar(serverToCarLatency);
-      } else if (topic === packetTopic) {
-        logger.info("Packet Received");
-        const packet = JSON.parse(message.toString());
-        try {
-          const validPacket = validateTelemetryData(packet);
-          this.backendController.handlePacketReceive(validPacket);
+    this.client.on("message", (topic: Topics, message) => {
+      logger.info("topic: ", topic);
+      switch (topic) {
+        case pongTopic:
+          const serverToCarLatency = (Date.now() - this.pingLastSent) / 2; // one-way time
+          this.backendController.carLatency = serverToCarLatency;
+          logger.info(this.backendController.carLatency.toString());
+          this.backendController.handleTelemetryToCar(serverToCarLatency);
+          break;
+        case packetTopic:
+          logger.info("Packet Received");
+          const packet = JSON.parse(message.toString());
+          try {
+            const validPacket = validateTelemetryData(packet);
+            this.backendController.handlePacketReceive(validPacket);
 
-          if (validPacket.Pi.Rfid) {
-            this.latestRfid = validPacket.Pi.Rfid.toString();
+            if (validPacket.Pi.Rfid) {
+              this.latestRfid = validPacket.Pi.Rfid.toString();
+            }
+          } catch (error) {
+            logger.error(`Invalid packet format: ${error.message}`);
           }
-        } catch (error) {
-          logger.error(`Invalid packet format: ${error.message}`);
-        }
-      } else {
-        logger.info("unknown topic: ", topic, "message: ", message.toString());
+          break;
+        case carConnect:
+          logger.info("car connected on mqtt client");
+          this.backendController.handleCarConnect();
+          break;
+        case carDisconnect:
+          logger.info("car disconnected on mqtt client");
+          this.backendController.handleCarDisconnect();
+          break;
+        default:
+          logger.info(
+            "unknown topic: ",
+            topic,
+            "message: ",
+            message.toString(),
+          );
+          break;
       }
     });
 
