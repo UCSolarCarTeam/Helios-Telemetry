@@ -27,12 +27,7 @@ import {
 } from "@shared/helios-types";
 
 import MapControls from "./MapControls";
-import {
-  Hydrated_Grand_Full_course,
-  TRACK_LIST,
-  mapCameraControls,
-} from "./MapSetup";
-import PacketMarker from "./PacketMarker";
+import { TRACK_LIST, mapCameraControls } from "./MapSetup";
 
 const { distance, fitBounds, isOutsideBounds, lerp } = mapCameraControls;
 // @ts-expect-error:next-line
@@ -94,13 +89,11 @@ export default function Map({
   const [mapStates, setMapStates] = useState({
     centered: true,
     currentCarLocation: carLocation,
+    isFullscreen: false,
     satelliteMode: false,
   });
   const [popupOpen, setPopupOpen] = useState(false);
   const [viewTracks, setViewTracks] = useState(TRACK_LIST.map(() => true));
-  const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
-    Hydrated_Grand_Full_course,
-  );
   const [mapControlsAdded, setMapControlsAdded] = useState(false);
 
   const mapRef = useRef<MapRef | undefined>(undefined);
@@ -167,15 +160,22 @@ export default function Map({
         map.getCenter().lng,
       );
       const speedFactor = 80;
+
+      const maxSpeed = 5;
+      const minSpeed = 1.5;
+      const rawSpeed = speedFactor * dist;
+      const speed = Math.min(Math.max(rawSpeed, minSpeed), maxSpeed);
       map.flyTo({
+        bearing: map.getBearing(),
         center: [carLocation.long, carLocation.lat],
         curve: 1, // Adjust the curve of the animation
         easing: (t) => t, // Easing function for the animation
-        speed: speedFactor * dist,
-        zoom: 16,
+        pitch: map.getPitch(),
+        speed,
+        zoom: mapStates.isFullscreen ? 20 : 14,
       });
     }
-  }, [carLocation, lapLocation, mapStates.centered]);
+  }, [carLocation, lapLocation, mapStates.centered, mapStates.isFullscreen]);
 
   const toggleMapStyle = useCallback(() => {
     setMapStates((prev) => ({ ...prev, satelliteMode: !prev.satelliteMode }));
@@ -184,29 +184,45 @@ export default function Map({
   const toggleCentred = useCallback(() => {
     setMapStates((prev) => ({ ...prev, centered: !prev.centered }));
   }, [setMapStates]);
-  const onMouseEnterDataPoint = useCallback(
-    (index: number) => {
-      setDataPoints((prevDataPoints) =>
-        prevDataPoints.map((point, i) =>
-          i === index ? { ...point, open: true } : point,
-        ),
-      );
+
+  const geojson: FeatureCollection = {
+    features: [
+      {
+        geometry: {
+          coordinates: [lapLocation.long, lapLocation.lat],
+          type: "Point",
+        },
+        properties: { title: "Finish Line" },
+        type: "Feature",
+      },
+    ],
+    type: "FeatureCollection",
+  };
+
+  const layerStyle: LayerProps = {
+    id: "finish-line",
+    paint: {
+      "circle-color": "#B94A6C",
+      "circle-opacity": 0.8,
+      "circle-radius": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        10,
+        15,
+        10,
+        20,
+        150,
+      ],
+      "circle-stroke-color": "#9C0534",
+      "circle-stroke-width": 2,
     },
-    [setDataPoints],
-  );
-  const onMouseLeaveDataPoint = useCallback(
-    (index: number) => {
-      setDataPoints((prevDataPoints) =>
-        prevDataPoints.map((point, i) =>
-          i === index ? { ...point, open: false } : point,
-        ),
-      );
-    },
-    [setDataPoints],
-  );
+    type: "circle",
+  };
 
   return (
-    <div className="relative size-full">
+    <div className="relative size-full" id="map-container">
       <ReactMapGL
         boxZoom={false}
         doubleClickZoom={false}
@@ -226,7 +242,9 @@ export default function Map({
           if (!mapRef.current) return;
           fitBounds(mapRef.current, carLocation, lapLocation);
         }}
-        onMove={(evt) => setViewState(evt.viewState)}
+        onMove={(evt) => {
+          setViewState(evt.viewState);
+        }}
         ref={(instance) => {
           if (instance) {
             mapRef.current = instance;
@@ -260,39 +278,37 @@ export default function Map({
         >
           <Image
             alt="map-pin"
-            height={50}
+            height={mapStates.isFullscreen ? 100 : 50}
             onMouseEnter={() => setPopupOpen(true)}
             onMouseLeave={() => setPopupOpen(false)}
             src={HeliosModel}
             style={{
               transform: `rotate(${calculateBearing(mapStates.currentCarLocation, carLocation)}deg)`,
             }}
-            width={20}
+            width={mapStates.isFullscreen ? 60 : 20}
           />
         </Marker>
         <Marker
-          latitude={lapLocation.lat}
-          longitude={lapLocation.long}
-          style={{
-            color: mapStates.satelliteMode
-              ? "white"
-              : darkMode
-                ? "white"
-                : "black",
-          }}
+          latitude={lapLocation.lat + 0.00001}
+          longitude={lapLocation.long + 0.00003}
         >
-          <SportsScoreIcon />
-        </Marker>
-        {dataPoints.map((packetMarker, index) => (
-          <PacketMarker
-            index={index}
-            key={packetMarker.data.TimeStamp}
-            onMouseEnterDataPoint={onMouseEnterDataPoint}
-            onMouseLeaveDataPoint={onMouseLeaveDataPoint}
-            packetMarker={packetMarker}
-            setDataPoints={setDataPoints}
+          <SportsScoreIcon
+            style={{
+              color: mapStates.satelliteMode
+                ? "white"
+                : darkMode
+                  ? "white"
+                  : "black",
+            }}
+            sx={{ fontSize: mapStates.isFullscreen ? "200px" : "40px" }}
           />
-        ))}
+        </Marker>
+        {mapStates.isFullscreen && (
+          <Source data={geojson} id="finish-line-source" type="geojson">
+            <Layer {...layerStyle} />
+          </Source>
+        )}
+
         {TRACK_LIST.map(({ layerProps, sourceProps }, index) => {
           if (!viewTracks[index]) return null;
           return (

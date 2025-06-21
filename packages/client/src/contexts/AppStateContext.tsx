@@ -73,7 +73,7 @@ export function AppStateContextProvider({ children }: Props) {
     displayLoading: true,
     error: false,
     favourites: [],
-    lapCoords: { lat: 37.001949324, long: -86.366554059 },
+    lapCoords: { lat: 51.081021, long: -114.136084 },
     loading: true,
     playbackDateTime: {
       date: null,
