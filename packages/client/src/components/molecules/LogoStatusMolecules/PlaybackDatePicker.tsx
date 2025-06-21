@@ -173,7 +173,7 @@ function PlaybackDatePicker() {
     const startTimeUTC = Math.floor(startDateTime.getTime());
     const endTimeUTC = Math.floor(endDateTime.getTime());
 
-    const maxInterval = 10 * 60 * 1000; // 10 minutes in ms
+    const maxInterval = 60 * 60 * 1000; // 60 minutes in ms
     if (endTimeUTC - startTimeUTC > maxInterval) {
       notifications.show({
         color: "red",
