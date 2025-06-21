@@ -8,6 +8,7 @@ import {
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import {
+  FINISH_LINE_LOCATION,
   calculateVehicleVelocity,
   haversineDistance,
 } from "@shared/helios-types";
@@ -56,10 +57,7 @@ export class LapController implements LapControllerType {
     totalDistance: 0,
   };
 
-  public finishLineLocation: Coords = {
-    lat: 37.001949324,
-    long: -86.366554059,
-  };
+  public finishLineLocation: Coords = FINISH_LINE_LOCATION;
 
   public lapDebounceLocation: Coords = {
     // 0.05 = 0.05 km = 50 meters

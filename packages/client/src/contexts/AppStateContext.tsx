@@ -11,7 +11,7 @@ import {
 } from "react";
 
 import type { IPlaybackDateTime } from "@/components/molecules/LogoStatusMolecules/PlaybackDatePicker";
-import type { Coords } from "@shared/helios-types";
+import { type Coords, FINISH_LINE_LOCATION } from "@shared/helios-types";
 
 interface Props {
   children: ReactNode | ReactNode[];
@@ -73,7 +73,7 @@ export function AppStateContextProvider({ children }: Props) {
     displayLoading: true,
     error: false,
     favourites: [],
-    lapCoords: { lat: 37.001949324, long: -86.366554059 },
+    lapCoords: FINISH_LINE_LOCATION,
     loading: true,
     playbackDateTime: {
       date: null,
