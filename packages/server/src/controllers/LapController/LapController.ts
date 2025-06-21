@@ -188,7 +188,7 @@ export class LapController implements LapControllerType {
 
       // update last lap packet
       const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
-        ?.Battery.BatteryPack.PackAmphours as number;
+        ?.Battery.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
         this.lastLapPackets,
       );
@@ -285,8 +285,8 @@ export class LapController implements LapControllerType {
     const sumAverageLapSpeed = lastLapPackets.reduce(
       (sum: number, packet: ITelemetryData) => {
         const vehicleVelocity = calculateVehicleVelocity(
-          packet.MotorDetails0.CurrentRpmValue as number,
-          packet.MotorDetails1.CurrentRpmValue as number,
+          packet.MotorDetails0.MotorVelocity as number,
+          packet.MotorDetails1.MotorVelocity as number,
         );
         return vehicleVelocity !== undefined ? sum + vehicleVelocity : sum;
       },
@@ -302,7 +302,7 @@ export class LapController implements LapControllerType {
     }
 
     const sumAveragePack = lastLapPackets.reduce((sum, packet) => {
-      const packCurrent = packet.Battery?.BatteryPack.PackCurrent;
+      const packCurrent = packet.Battery?.PackCurrent;
       return packCurrent !== undefined ? sum + packCurrent : sum;
     }, 0);
 
@@ -445,9 +445,7 @@ export class LapController implements LapControllerType {
     return Math.abs(
       packetArray.reduce(
         (sum, curr) =>
-          sum +
-          curr.Battery.BatteryPack.PackCurrent *
-            curr.Battery.BatteryPack.PackVoltage,
+          sum + curr.Battery.PackCurrent * curr.Battery.PackVoltage,
         0,
       ) / packetArray.length,
     );

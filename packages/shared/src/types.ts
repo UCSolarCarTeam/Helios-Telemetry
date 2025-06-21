@@ -486,3 +486,27 @@ export interface IRaceInfo {
   timeLeft: number;
   totalDistance: number;
 }
+
+export interface IPlaybackDynamoResponse {
+  data: ITelemetryData;
+  id: string;
+  timestamp: number;
+}
+
+export interface IFormattedLapData {
+  data: {
+    ampHours: number;
+    averagePackCurrent: number;
+    averageSpeed: number;
+    batterySecondsRemaining: number;
+    distance: number;
+    energyConsumed: number;
+    lapTime: number;
+    netPowerOut: number;
+    timeStamp: string;
+    totalPowerIn: number;
+    totalPowerOut: number;
+  };
+  timestamp: number;
+  Rfid: string;
+}
