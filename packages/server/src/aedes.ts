@@ -10,6 +10,22 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 const logger = createLightweightApplicationLogger("aedes.ts");
 const port = process.env.MQTT_SERVER_PORT || 1883;
 
+const notifyHeliosDisconnect = {
+  cmd: "publish",
+  dup: false, // Not a duplicate
+  payload: Buffer.from("Client has disconnected"), // Message content
+  qos: 0, // No delivery guarantee
+  retain: true, // Do retain the message
+  topic: "carDisconnect",
+} as const satisfies PublishPacket;
+const notifyHeliosConnect = {
+  cmd: "publish",
+  dup: false, // Not a duplicate
+  payload: Buffer.from("Aedes has connected to the vehicle"), // Message content
+  qos: 0, // No delivery guarantee
+  retain: true, // Do retain the message
+  topic: "carConnect",
+} as const satisfies PublishPacket;
 class MqttError extends Error {
   returnCode: number;
 
@@ -21,23 +37,6 @@ class MqttError extends Error {
     Object.setPrototypeOf(this, MqttError.prototype);
   }
 }
-const notifyHeliosDisconnect: PublishPacket = {
-  cmd: "publish",
-  dup: false, // Not a duplicate
-  payload: Buffer.from("Client has disconnected"), // Message content
-  qos: 0, // No delivery guarantee
-  retain: true, // Do retain the message
-  topic: "carDisconnect",
-};
-const notifyHeliosConnect = {
-  cmd: "publish",
-  dup: false, // Not a duplicate
-  payload: Buffer.from("Aedes has connected to the vehicle"), // Message content
-  qos: 0, // No delivery guarantee
-  retain: true, // Do retain the message
-  topic: "carConnect",
-} as const satisfies PublishPacket;
-
 const aedes: Aedes = new Aedes();
 aedes.on("clientDisconnect", () => {
   logger.info("client disconnected");
