@@ -106,11 +106,8 @@ export class LapController implements LapControllerType {
     }
   }
 
-  public calculateRaceDistance(motorDetails0: number, motorDetails1: number) {
-    const vehicleVelocity = calculateVehicleVelocity(
-      motorDetails0,
-      motorDetails1,
-    );
+  public calculateRaceDistance(motor0Speed: number, motor1Speed: number) {
+    const vehicleVelocity = calculateVehicleVelocity(motor0Speed, motor1Speed);
 
     const currentTime = Date.now();
     if (this.raceInfo.prevTime !== 0 && this.raceInfo.raceDay < 3) {
@@ -166,8 +163,8 @@ export class LapController implements LapControllerType {
   }
 
   public async handlePacket(packet: ITelemetryData) {
-    const motorDetails0 = packet.MotorDetails0.CurrentRpmValue;
-    const motorDetails1 = packet.MotorDetails1.CurrentRpmValue;
+    const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
+    const motorDetails1 = packet.MotorDetails1.VehicleVelocity;
     if (this.raceInfo.raceDay >= 3)
       // also include if !packet.B3.RaceMode
       this.cleanUp(); // clean up after the last race day
@@ -396,17 +393,17 @@ export class LapController implements LapControllerType {
           // arrayPower += packet['mppt' + mppt + 'arrayvoltage'] *
           //               packet['mppt' + mppt + 'arraycurrent'];
           arrayPower +=
-            (packet.MPPT0?.ArrayVoltage as number) *
-            (packet.MPPT0?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt0Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt0Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT1?.ArrayVoltage as number) *
-            (packet.MPPT1?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt1Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt1Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT2?.ArrayVoltage as number) *
-            (packet.MPPT2?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt2Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt2Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT3?.ArrayVoltage as number) *
-            (packet.MPPT3?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt3Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt3Ch1ArrayVoltage as number);
         }
         return arrayPower;
       })
