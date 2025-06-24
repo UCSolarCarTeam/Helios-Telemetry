@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import I_PIS, { I_PISField } from "@/objects/PIS/PIS.interface";
+import I_PIS from "@/objects/PIS/PIS.interface";
 
 export const useFavouriteLookupTable = (
   dataArray: I_PIS[],
@@ -11,39 +11,34 @@ export const useFavouriteLookupTable = (
     for (const data of dataArray) {
       if (!data) continue;
 
-      if (data.Unit0 || data.Unit1) {
-        // Handle MPPT
-        for (const unitKey of Object.keys(data)) {
-          const unit = data[unitKey] as Record<string, I_PISField[]>;
-          if (!unit) continue;
+      const flatten = (obj: I_PIS, prefix = "") => {
+        for (const key in obj) {
+          const value = obj[key];
+          const path = prefix ? `${prefix}.${key}` : key;
 
-          for (const channelKey of Object.keys(unit)) {
-            const channel = unit[channelKey];
-            if (!channel) continue;
-            for (const field of channel) {
-              table[field.name] = () => {
-                const value = field.data[0]?.value;
-                if (typeof value === "boolean") return value ? "T" : "F";
-                return value;
-              };
-            }
-          }
-        }
-      } else {
-        // Handle non-MPPT structures
-        for (const sectionKey of Object.keys(data)) {
-          const section = data[sectionKey] as I_PISField[];
-          if (!section) continue;
-
-          for (const field of section) {
-            table[field.name] = () => {
-              const value = field.data[0]?.value;
+          if (
+            value !== null &&
+            typeof value === "object" &&
+            !Array.isArray(value)
+          ) {
+            flatten(value, path);
+          } else {
+            table[path] = () => {
+              if (Array.isArray(value)) return undefined;
               if (typeof value === "boolean") return value ? "T" : "F";
-              return value;
+              if (
+                typeof value === "string" ||
+                typeof value === "number" ||
+                typeof value === "undefined"
+              )
+                return value;
+              return undefined;
             };
           }
         }
-      }
+      };
+
+      flatten(data);
     }
 
     return table;

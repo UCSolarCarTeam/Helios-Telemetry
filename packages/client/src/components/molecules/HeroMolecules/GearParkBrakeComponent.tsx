@@ -1,14 +1,12 @@
-import Image from "next/image";
-
 import ParkingBrakeIcon from "@/components/atoms/ParkingBreakIcon";
 import { usePacket } from "@/contexts/PacketContext";
 
 function GearParkBrakeComponent() {
   const { currentPacket } = usePacket();
   const selectedCSS = "font-bold text-helios";
-  const reverse = currentPacket.B3.Reverse;
-  const forward = !currentPacket.B3.Reverse;
-  const brake = currentPacket.B3.BrakeSwitch;
+  const reverse = currentPacket.B3.ReverseDigital;
+  const forward = !currentPacket.B3.ReverseDigital;
+  const brake = currentPacket.B3.BrakeSwitchDigital;
   return (
     <>
       <div className="flex flex-col items-center">
