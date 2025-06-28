@@ -62,7 +62,10 @@ function handleDownloadCSV(csv: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.setAttribute("download", "playback_data.csv");
+  a.setAttribute(
+    "download",
+    `Helios Packet Data - ${new Date().toLocaleDateString()}.csv`,
+  );
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -121,7 +124,7 @@ function PlaybackDatePicker() {
     if (endTimeUTC - startTimeUTC > maxInterval) {
       notifications.show({
         color: "red",
-        message: "Please select a range of maximum 10 minutes.",
+        message: `Please select a range of maximum ${maxInterval / 1000 / 60} minutes.`,
         title: "Error",
       });
       setLoading(false);
@@ -155,7 +158,12 @@ function PlaybackDatePicker() {
       fetchPlaybackData();
     }
   }, [currentAppState.playbackSwitch]);
-
+  const updatePlaybackTime: React.Dispatch<
+    React.SetStateAction<IPlaybackDateTime>
+  > = (time) => {
+    setLoading(false);
+    setPlaybackDateTime(time);
+  };
   return (
     <>
       {currentAppState.playbackSwitch && (
@@ -175,7 +183,7 @@ function PlaybackDatePicker() {
                 <DatePickerColumn
                   fetchPlaybackData={fetchPlaybackData}
                   playbackDateTime={playbackDateTime}
-                  setPlaybackDateTime={setPlaybackDateTime}
+                  setPlaybackDateTime={updatePlaybackTime}
                 />
                 <DatePickerResultColumn
                   loading={loading}
