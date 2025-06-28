@@ -244,7 +244,7 @@ export class LapController implements LapControllerType {
         packet.Telemetry.GpsLatitude,
         packet.Telemetry.GpsLongitude,
         this.lapDebounceLocation.lat,
-        this.lapDebounceLocation.long,
+        this.lapDebounceLocation.long,.
       ) <= 0.01; // 0.01 km = 10 m
 
     if (inDebounceZone && !this.passedDebouncedCheckpoint)
