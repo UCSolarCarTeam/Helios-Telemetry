@@ -35,6 +35,7 @@ if (!process.env.DRIVER_TABLE_NAME) {
 
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
+const gpsTableName = process.env.GPS_TABLE_NAME;
 const driverTableName = process.env.DRIVER_TABLE_NAME;
 
 const logger = createLightweightApplicationLogger("DynamoDB.ts");
@@ -43,6 +44,7 @@ export class DynamoDB implements DynamoDBtypes {
   backendController: BackendController;
   lapTableName: string;
   packetTableName: string;
+  gpsTableName: string;
   driverTableName: string;
   packetTableIndexName: string = "type-timestamp-index";
 
@@ -53,6 +55,7 @@ export class DynamoDB implements DynamoDBtypes {
       this.client = DynamoDBDocumentClient.from(rawClient);
       this.lapTableName = lapTableName;
       this.packetTableName = packetTableName;
+      this.gpsTableName = gpsTableName;
       this.driverTableName = driverTableName;
     } catch (error) {
       logger.error("Error connecting to dynamo client");
@@ -190,6 +193,32 @@ export class DynamoDB implements DynamoDBtypes {
       };
     } catch (error) {
       logger.error("Error inserting playback table data");
+      throw new Error(error);
+    }
+  }
+
+  // function for inserting lap timestamp via geofence into its table
+  public async insertIntoGpsLapCountTable(
+    rfid: string,
+    timestamp: number,
+  ): Promise<GenericResponse> {
+    try {
+      const command = new PutCommand({
+        Item: {
+          Rfid: rfid,
+          id: uuidv4(),
+          timestamp: timestamp,
+          type: "gps-lap",
+        },
+        TableName: this.gpsTableName,
+      });
+      const response = await this.client.send(command);
+      return {
+        httpsStatusCode: response.$metadata.httpStatusCode,
+        requestId: response.$metadata.requestId,
+      };
+    } catch (error) {
+      logger.error("Error inserting gps table data");
       throw new Error(error);
     }
   }
