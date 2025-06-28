@@ -232,6 +232,7 @@ export class DynamoDB implements DynamoDBtypes {
       const command = new PutCommand({
         Item: {
           Rfid: packet.Rfid ?? "unknown driver",
+          data: packet.data,
           id: uuidv4(),
           timestamp: packet.timestamp,
           type: "lap",
