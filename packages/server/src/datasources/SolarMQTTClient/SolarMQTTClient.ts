@@ -101,7 +101,6 @@ export class SolarMQTTClient implements SolarMQTTClientType {
           this.backendController.handleTelemetryToCar(serverToCarLatency);
           break;
         case packetTopic:
-          logger.info("Packet Received");
           const packet = JSON.parse(message.toString());
           try {
             const validPacket = validateTelemetryData(packet);

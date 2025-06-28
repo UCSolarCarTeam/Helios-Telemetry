@@ -60,13 +60,13 @@ export class LapController implements LapControllerType {
   public finishLineLocation: Coords = FINISH_LINE_LOCATION;
 
   public lapDebounceLocation: Coords = {
-    // 0.05 = 0.05 km = 50 meters
+    // debounce so that it doesnt just count every checklap as a function
     lat:
       this.finishLineLocation.lat -
-      calculateOffset(0.05, this.finishLineLocation.lat).latOffset,
+      calculateOffset(0.01, this.finishLineLocation.lat).latOffset,
     long:
       this.finishLineLocation.long -
-      calculateOffset(0.05, this.finishLineLocation.lat).longOffset,
+      calculateOffset(0.01, this.finishLineLocation.lat).longOffset,
   };
 
   private timerInterval: NodeJS.Timeout;
@@ -186,6 +186,7 @@ export class LapController implements LapControllerType {
     }
 
     if (this.checkLap(packet) && this.lastLapPackets.length > 5) {
+      logger.info("lap completed for geofence");
       this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
     }
 
@@ -260,7 +261,7 @@ export class LapController implements LapControllerType {
         packet.Telemetry.GpsLongitude,
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
-      ) <= 0.01; // 0.01 km = 10 m
+      ) <= 0.03; // 0.01 km = 10 m
 
     let lapHappened = false;
     const checkDebounce = this.checkDebounce(packet);

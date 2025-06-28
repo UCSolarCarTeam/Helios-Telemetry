@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { Marker, Popup } from "react-map-gl";
 
-import SportsScoreIcon from "@mui/icons-material/SportsScore";
+import { FiberManualRecordOutlined } from "@mui/icons-material";
 
 import type { PacketMarkerData } from "./Map";
 
@@ -19,8 +19,8 @@ export default function PacketMarker(props: {
     <>
       {open && <Popup {...markerCoords}>{data.TimeStamp}</Popup>}
       <Marker {...markerCoords}>
-        <SportsScoreIcon
-          height={50}
+        <FiberManualRecordOutlined
+          height={30}
           onMouseEnter={() => onMouseEnterDataPoint(index)}
           onMouseLeave={() => onMouseLeaveDataPoint(index)}
         />
