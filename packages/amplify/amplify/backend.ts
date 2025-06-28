@@ -118,7 +118,7 @@ const packetDataTable = new dynamodb.Table(
   {
     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
+    removalPolicy: cdk.RemovalPolicy.DESTROY,
     sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
   },
 );
@@ -307,7 +307,7 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   "Aedes - Allow inbound traffic on port 1883",
 );
 
-//Give DynamoDB Permissions to hte packet data and lap data
+// Give DynamoDB Permissions to hte packet data and lap data
 const dynamoDbAccessPolicy = new iam.PolicyStatement({
   actions: [
     "dynamodb:PutItem",
