@@ -25,19 +25,19 @@ if (!process.env.LAP_TABLE_NAME) {
   throw new Error("Lap table name not defined");
 }
 
-// if (!process.env.PACKET_TABLE_NAME) {
-//   throw new Error("Packet table name not defined");
-// }
+if (!process.env.PACKET_TABLE_NAME) {
+  throw new Error("Packet table name not defined");
+}
 
 if (!process.env.DRIVER_TABLE_NAME) {
   throw new Error("Driver table name not defined");
 }
 
-if (!process.env.GPS_TABLE_NAME) {
-  throw new Error("GPS lap table name not defined");
-}
+// if (!process.env.GPS_TABLE_NAME) {
+//   throw new Error("GPS lap table name not defined");
+// }
 
-const packetTableName = "";
+const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
 const gpsTableName = process.env.GPS_TABLE_NAME;
 const driverTableName = process.env.DRIVER_TABLE_NAME;
