@@ -23,99 +23,101 @@ export interface IDriverNameUpdate {
   Rfid: string;
 }
 
-enum Motor {
-  RightMotor = 1,
-  LeftMotor = 0,
-}
-
-// the codec: smaller data types which make up the large io-ts type for incoming packets (ITelemetryDataType)
-const IB3Type = t.exact(
+const IContactorType = t.exact(
   t.type({
-    Acceleration: t.number,
-    BrakeLightSignalOut: t.boolean,
-    BrakeSwitch: t.boolean,
-    DaytimeRunningLightSignalOut: t.boolean,
-    ForwardIn: t.boolean,
-    ForwardSwitchIn: t.boolean,
-    HandbrakeSwitch: t.boolean,
-    HazardLightsIn: t.boolean,
-    HeadightsSwitchIn: t.boolean,
-    HeadlightSignalOut: t.boolean,
-    HornSignalOut: t.boolean,
-    HornSwitchIn: t.boolean,
-    Lap: t.boolean,
-    LeftSignalIn: t.boolean,
-    LeftSignalOut: t.boolean,
-    MotorReset: t.boolean,
-    Neutral: t.boolean,
-    RaceMode: t.boolean,
-    RegenBraking: t.number,
-    Reverse: t.boolean,
-    RightSignalIn: t.boolean,
-    RightSignalOut: t.boolean,
-    ZoomZoom: t.boolean,
+    ArrayBPSError: t.boolean,
+    ArrayChargeCurrent: t.number,
+    ArrayContactorClosed: t.boolean,
+    ArrayContactorClosing: t.boolean,
+    ArrayContactorError: t.boolean,
+    ArrayHeartbeat: t.boolean,
+    ArrayLineCurrent: t.number,
+    ArrayPrechargerClosed: t.boolean,
+    ArrayPrechargerClosing: t.boolean,
+    ArrayPrechargerError: t.boolean,
+    ChargeBPSError: t.boolean,
+    ChargeChargeCurrent: t.number,
+    ChargeContactorClosed: t.boolean,
+    ChargeContactorClosing: t.boolean,
+    ChargeContactorError: t.boolean,
+    ChargeHeartbeat: t.boolean,
+    ChargeLineCurrent: t.number,
+    ChargePrechargerClosed: t.boolean,
+    ChargePrechargerClosing: t.boolean,
+    ChargePrechargerError: t.boolean,
+    CommonChargeCurrent: t.number,
+    CommonContactorClosed: t.boolean,
+    CommonContactorClosing: t.boolean,
+    CommonContactorError: t.boolean,
+    CommonContactorOpeningError: t.boolean,
+    CommonHeartbeat: t.boolean,
+    CommonLineCurrent: t.number,
+    CommonPrechargerClosed: t.boolean,
+    CommonPrechargerClosing: t.boolean,
+    CommonPrechargerError: t.boolean,
+    LvBpsError: t.boolean,
+    LvChargeCurrent: t.number,
+    LvContactorClosed: t.boolean,
+    LvContactorClosing: t.boolean,
+    LvContactorError: t.boolean,
+    LvHeartbeat: t.boolean,
+    LvLineCurrent: t.number,
+    LvPrechargerClosed: t.boolean,
+    LvPrechargerClosing: t.boolean,
+    LvPrechargerError: t.boolean,
+    MotorBPSError: t.boolean,
+    MotorChargeCurrent: t.number,
+    MotorContactorClosed: t.boolean,
+    MotorContactorClosing: t.boolean,
+    MotorContactorError: t.boolean,
+    MotorHeartbeat: t.boolean,
+    MotorLineCurrent: t.number,
+    MotorPrechargerClosed: t.boolean,
+    MotorPrechargerClosing: t.boolean,
+    MotorPrechargerError: t.boolean,
   }),
 );
 
-const IBatteryCellType = t.exact(
+const IBatteryType = t.exact(
   t.type({
+    AlwaysOnSignalStatus: t.boolean,
     AverageCellVoltage: t.number,
-    HighCellVoltage: t.number,
-    HighCellVoltageId: t.number,
-    LowCellVoltage: t.number,
-    LowCellVoltageId: t.number,
-    PopulatedCells: t.number,
-  }),
-);
-
-const IBatteryFanType = t.exact(
-  t.type({
+    AverageTemperature: t.number,
+    BmuAlive: t.number,
+    ChargeRelayEnabled: t.boolean,
+    ChargerSafetyEnabled: t.boolean,
+    DischargeRelayEnabled: t.boolean,
     FanSpeed: t.number,
     FanVoltage: t.number,
-    RequestedFanSpeed: t.number,
-  }),
-);
-
-const IBatteryPackType = t.exact(
-  t.type({
+    HighCellVoltage: t.number,
+    HighCellVoltageId: t.number,
+    HighTemperature: t.number,
+    HighThermistorId: t.number,
     Input12V: t.number,
+    InternalTemperature: t.number,
+    IsChargingSignalStatus: t.boolean,
+    IsReadySignalStatus: t.boolean,
+    LowCellVoltage: t.number,
+    LowCellVoltageId: t.number,
+    LowTemperature: t.number,
+    LowThermistorId: t.number,
+    MalfunctionIndicatorActive: t.boolean,
+    MaximumCellVoltage: t.number,
+    MaximumPackVoltage: t.number,
+    MinimumCellVoltage: t.number,
+    MinimumPackVoltage: t.number,
+    MultiPurposeInputSignalStatus: t.boolean,
     PackAmphours: t.number,
     PackCurrent: t.number,
     PackDepthOfDischarge: t.number,
     PackStateOfCharge: t.number,
     PackVoltage: t.number,
+    PopulatedCells: t.number,
+    RequestedFanSpeed: t.number,
   }),
 );
 
-const IBatteryTemperatureType = t.exact(
-  t.type({
-    AverageTemperature: t.number,
-    HighTemperature: t.number,
-    InternalTemperature: t.number,
-    LowTemperature: t.number,
-  }),
-);
-
-const IBatteryFaultsWarningsType = t.exact(
-  t.type({
-    CclReducedDueToAlternateCurrentLimit: t.boolean,
-    CclReducedDueToChargerLatch: t.boolean,
-    CclReducedDueToHighCellResistance: t.boolean,
-    CclReducedDueToHighCellVoltage: t.boolean,
-    CclReducedDueToHighPackVoltage: t.boolean,
-    CclReducedDueToHighSoc: t.boolean,
-    CclReducedDueToTemperature: t.boolean,
-    DclAndCclReducedDueToCommunicationFailsafe: t.boolean,
-    DclAndCclReducedDueToVoltageFailsafe: t.boolean,
-    DclReducedDueToHighCellResistance: t.boolean,
-    DclReducedDueToLowCellVoltage: t.boolean,
-    DclReducedDueToLowPackVoltage: t.boolean,
-    DclReducedDueToLowSoc: t.boolean,
-    DclReducedDueToTemperature: t.boolean,
-  }),
-);
-
-const IBatteryFaultsErrorsType = t.exact(
+const IBatteryFaultErrorsType = t.exact(
   t.type({
     AlwaysOnSupplyFault: t.boolean,
     CanbusCommunicationFault: t.boolean,
@@ -141,196 +143,203 @@ const IBatteryFaultsErrorsType = t.exact(
   }),
 );
 
-const IBatteryType = t.exact(
+const IBatteryFaultWarningsType = t.exact(
   t.type({
-    AlwaysOnSignalStatus: t.boolean,
-    BatteryCell: IBatteryCellType,
-    BatteryFan: IBatteryFanType,
-    BatteryPack: IBatteryPackType,
-    BatteryTemperature: IBatteryTemperatureType,
-    BmuAlive: t.number,
-    ChargeRelayEnabled: t.boolean,
-    ChargerSafetyEnabled: t.boolean,
-    DischargeRelayEnabled: t.boolean,
-    HighThermistorId: t.number,
-    IsChargingSignalStatus: t.boolean,
-    IsReadySignalStatus: t.boolean,
-    LowThermistorId: t.number,
-    MalfunctionIndicatorActive: t.boolean,
-    MultiPurposeInputSignalStatus: t.boolean,
+    CclReducedDueToAlternateCurrentLimit: t.boolean,
+    CclReducedDueToChargerLatch: t.boolean,
+    CclReducedDueToHighCellResistance: t.boolean,
+    CclReducedDueToHighCellVoltage: t.boolean,
+    CclReducedDueToHighPackVoltage: t.boolean,
+    CclReducedDueToHighSoc: t.boolean,
+    CclReducedDueToTemperature: t.boolean,
+    DclAndCclReducedDueToCommunicationFailsafe: t.boolean,
+    DclAndCclReducedDueToVoltageFailsafe: t.boolean,
+    DclReducedDueToHighCellResistance: t.boolean,
+    DclReducedDueToLowCellVoltage: t.boolean,
+    DclReducedDueToLowPackVoltage: t.boolean,
+    DclReducedDueToLowSoc: t.boolean,
+    DclReducedDueToTemperature: t.boolean,
   }),
 );
 
 const IBatteryFaultsType = t.exact(
   t.type({
-    Errors: IBatteryFaultsErrorsType,
-    Warnings: IBatteryFaultsWarningsType,
+    Errors: IBatteryFaultErrorsType,
+    Warnings: IBatteryFaultWarningsType,
+  }),
+);
+
+const IB3Type = t.exact(
+  t.type({
+    Acceleration: t.number,
+    B3Heartbeat: t.boolean,
+    BrakeLightSignalStatus: t.boolean,
+    BrakeSwitchDigital: t.boolean,
+    DaytimeRunningLightSignalStatus: t.boolean,
+    ForwardDigital: t.boolean,
+    HandbrakeSwitchDigital: t.boolean,
+    HazardLightsInput: t.boolean,
+    HeadightsSwitchInput: t.boolean,
+    HeadlightSignalStatus: t.boolean,
+    HornSignalStatus: t.boolean,
+    HornSwitchDigital: t.boolean,
+    LapDigital: t.boolean,
+    LeftSignalInput: t.boolean,
+    LeftSignalStatus: t.boolean,
+    MotorResetDigital: t.boolean,
+    NeutralDigital: t.boolean,
+    RaceModeDigital: t.boolean,
+    RegenBraking: t.number,
+    ReverseDigital: t.boolean,
+    RightSignalInput: t.boolean,
+    RightSignalStatus: t.boolean,
   }),
 );
 
 const IKeyMotorType = t.exact(
   t.type({
-    ControlMode: t.boolean,
-    DebugMode: t.boolean,
-    MotorMode: t.boolean,
-    MotorSetpoint: t.number,
-    SoftwareEnable: t.boolean,
+    BusCurrentOut: t.number,
+    KeyMotorVelocity: t.number,
+    MotorCurrent: t.number,
   }),
 );
 
-const IMbmsType = t.exact(
+const IMBMSType = t.exact(
   t.type({
-    AllowCharge: t.boolean,
-    AllowDischarge: t.boolean,
-    ArrayContactorError: t.boolean,
-    ArrayContactorState: t.boolean,
-    ArrayCurrent: t.number,
-    ArrayHighTemperatureCurrentTrip: t.boolean,
-    ArrayVoltage: t.number,
-    AuxillaryBatteryVoltage: t.number,
-    ChargeContactorError: t.boolean,
-    ChargeContactorState: t.boolean,
-    ChargeCurrent: t.number,
-    ChargeHighTemperatureCurrentTrip: t.boolean,
+    AbattDisable: t.boolean,
+    ArrayContactorCommand: t.boolean,
+    ArrayHeartbeatDeadTrip: t.boolean,
+    ArrayHighCurrentTrip: t.boolean,
+    ArrayHighCurrentWarning: t.boolean,
+    AuxiliaryBatteryVoltage: t.number,
+    CanOc12VWarning: t.boolean,
+    ChargeContactorCommand: t.boolean,
+    ChargeEnable: t.boolean,
+    ChargeHeartbeatDeadTrip: t.boolean,
+    ChargeHighCurrentTrip: t.boolean,
+    ChargeHighCurrentWarning: t.boolean,
+    ChargeSafety: t.boolean,
     ChargeShouldTrip: t.boolean,
-    ChargeVoltage: t.number,
-    CommonContactorError: t.boolean,
-    CommonContactorState: t.boolean,
-    CommonCurrent: t.number,
+    ChgFault: t.boolean,
+    ChgLvEn: t.boolean,
+    ChgOn: t.boolean,
+    CommonContactorCommand: t.boolean,
+    CommonHeartbeatDeadTrip: t.boolean,
+    CommonHighCurrentTrip: t.boolean,
+    CommonHighCurrentWarning: t.boolean,
+    ContactorConnectedUnexpectedlyTrip: t.boolean,
     ContactorDisconnectedUnexpectedlyTrip: t.boolean,
+    DcdcFault: t.boolean,
+    DcdcOn: t.boolean,
+    DischargeEnable: t.boolean,
     DischargeShouldTrip: t.boolean,
+    En1: t.boolean,
+    EsdEnabledTrip: t.boolean,
+    ExternalShutdown: t.boolean,
+    Heartbeat: t.boolean,
     HighCellVoltageTrip: t.boolean,
-    HighCommonCurrentTrip: t.boolean,
-    HighVoltageEnableState: t.boolean,
+    HighCellVoltageWarning: t.boolean,
+    HighTemperatureTrip: t.boolean,
+    HighTemperatureWarning: t.boolean,
+    Key: t.boolean,
     LowCellVoltageTrip: t.boolean,
-    LvContactorError: t.boolean,
-    LvContactorState: t.boolean,
-    LvCurrent: t.number,
-    LvHighTemperatureCurrentTrip: t.boolean,
-    LvVoltage: t.number,
-    MotorContactorError: t.boolean,
-    MotorContactorState: t.boolean,
-    MotorCurrent: t.number,
-    MotorHighTemperatureCurrentTrip: t.boolean,
-    MotorVoltage: t.number,
+    LowCellVoltageWarning: t.boolean,
+    LowTemperatureTrip: t.boolean,
+    LowTemperatureWarning: t.boolean,
+    LvContactorCommand: t.boolean,
+    LvHeartbeatDeadTrip: t.boolean,
+    LvHighCurrentTrip: t.boolean,
+    LvHighCurrentWarning: t.boolean,
+    MainPowerSwitch: t.boolean,
+    MotorContactorCommand: t.boolean,
+    MotorHeartbeatDeadTrip: t.boolean,
+    MotorHighCurrentTrip: t.boolean,
+    MotorHighCurrentWarning: t.boolean,
+    MpsDisabledTrip: t.boolean,
     OrionCanReceivedRecently: t.boolean,
     OrionMessageTimeoutTrip: t.boolean,
     ProtectionTrip: t.boolean,
+    StartupState: t.number,
     StrobeBmsLight: t.boolean,
-  }),
-);
-
-const IMPPTType = t.exact(
-  t.type({
-    ArrayCurrent: t.number,
-    ArrayVoltage: t.number,
-    BatteryVoltage: t.number,
-    ChannelNumber: t.number,
-    IsAlive: t.boolean,
-    Temperature: t.number,
-  }),
-);
-
-const IMotorErrorsType = t.exact(
-  t.type({
-    CanCommsTimeoutError: t.boolean,
-    CanSendError: t.boolean,
-    ControllerDataReadingTimeout: t.boolean,
-    CpuOverload: t.boolean,
-    CpuTempTooHigh: t.boolean,
-    DcOvervoltageError: t.boolean,
-    DcUndervoltageError: t.boolean,
-    DclinkTempTooHigh: t.boolean,
-    DoubleCanIdOnBus: t.boolean,
-    ErrorInDclinkCommunication: t.boolean,
-    ErrorReadingEncoder: t.boolean,
-    ErrorReadingTempSensor: t.boolean,
-    HallTempTooHigh: t.boolean,
-    HwEnableNotSet: t.boolean,
-    InitError: t.boolean,
-    InvalidHallSector: t.boolean,
-    InvalidHallSensorSequence: t.boolean,
-    Inverter1FaultError: t.boolean,
-    Inverter1OvercurrentError: t.boolean,
-    Inverter1TempTooHigh: t.boolean,
-    Inverter2FaultError: t.boolean,
-    Inverter2OvercurrentError: t.boolean,
-    Inverter2TempTooHigh: t.boolean,
-    Inverter3FaultError: t.boolean,
-    Inverter3OvercurrentError: t.boolean,
-    Inverter3TempTooHigh: t.boolean,
-    Inverter4FaultError: t.boolean,
-    Inverter4OvercurrentError: t.boolean,
-    Inverter4TempTooHigh: t.boolean,
-    Inverter5FaultError: t.boolean,
-    Inverter5OvercurrentError: t.boolean,
-    Inverter5TempTooHigh: t.boolean,
-    Inverter6FaultError: t.boolean,
-    Inverter6OvercurrentError: t.boolean,
-    Inverter6TempTooHigh: t.boolean,
-    LostFramesOnCanBusError: t.boolean,
-    MotorStalled: t.boolean,
-    OverspeedError: t.boolean,
-    PositionSensorReadingError: t.boolean,
-    SettingsNotFound: t.boolean,
-    ZeroPositionOffsetNotSet: t.boolean,
-  }),
-);
-
-const IMotorWarningsType = t.exact(
-  t.type({
-    CanCommsTimeoutWarning: t.boolean,
-    CanSendWarning: t.boolean,
-    CpuOverload: t.boolean,
-    CpuTemperatureVeryHigh: t.boolean,
-    DcOvervoltageWarning: t.boolean,
-    DcUndervoltageWarning: t.boolean,
-    DclinkTemperatureVeryHigh: t.boolean,
-    DelayInDclinkCommunication: t.boolean,
-    DelayInReadingPosSensor: t.boolean,
-    DelayInReadingTempSensor: t.boolean,
-    HallTemperatureVeryHigh: t.boolean,
-    Inverter1FaultWarning: t.boolean,
-    Inverter1OverCurrentWarning: t.boolean,
-    Inverter1TempVeryHigh: t.boolean,
-    Inverter2FaultWarning: t.boolean,
-    Inverter2OverCurrentWarning: t.boolean,
-    Inverter2TempVeryHigh: t.boolean,
-    Inverter3FaultWarning: t.boolean,
-    Inverter3OverCurrentWarning: t.boolean,
-    Inverter3TempVeryHigh: t.boolean,
-    Inverter4FaultWarning: t.boolean,
-    Inverter4OverCurrentWarning: t.boolean,
-    Inverter4TempVeryHigh: t.boolean,
-    Inverter5FaultWarning: t.boolean,
-    Inverter5OverCurrentWarning: t.boolean,
-    Inverter5TempVeryHigh: t.boolean,
-    Inverter6FaultWarning: t.boolean,
-    Inverter6OverCurrentWarning: t.boolean,
-    Inverter6TempVeryHigh: t.boolean,
-    LostFramesOnCanBusWarning: t.boolean,
-    MotorAboutToStall: t.boolean,
-    OverspeedWarning: t.boolean,
-    StartAtHighRpm: t.boolean,
-    TorqueLimited: t.boolean,
+    SystemState: t.number,
+    ThreeAOc: t.boolean,
   }),
 );
 
 const IMotorDetailsType = t.exact(
   t.type({
-    AbsoluteAngle: t.number,
-    ControlMode: t.boolean,
-    ControlValue: t.number,
-    CurrentMotorPower: t.number,
-    CurrentMotorTorque: t.number,
-    CurrentRpmValue: t.number,
-    DebugMode: t.boolean,
-    InverterPeakCurrent: t.number,
-    MotorErrors: IMotorErrorsType,
-    MotorMode: t.boolean,
+    ActiveMotor: t.number,
+    BEMF_D: t.number,
+    BEMF_Q: t.number,
+    BusCurrent: t.number,
+    BusVoltage: t.number,
+    DC_Bus_Ah: t.number,
+    DspBoardTemperature: t.number,
+    ErrorFlags: t.number,
+    HeatsinkTemperature: t.number,
+    Id: t.number,
+    Iq: t.number,
+    LimitFlags: t.number,
+    MotorId: t.number,
     MotorTemperature: t.number,
-    MotorWarnings: IMotorWarningsType,
-    SoftwareEnable: t.boolean,
+    MotorVelocity: t.number,
+    Odometer: t.number,
+    PhaseCurrentB: t.number,
+    PhaseCurrentC: t.number,
+    RxErrorCount: t.number,
+    SerialNumber: t.number,
+    SlipSpeed: t.number,
+    Supply15V: t.number,
+    Supply1V9: t.number,
+    Supply3V3: t.number,
+    TritiumId: t.number,
+    TxErrorCount: t.number,
+    Vd: t.number,
+    VehicleVelocity: t.number,
+    Vq: t.number,
+  }),
+);
+
+const IMPPTType = t.exact(
+  t.type({
+    Mppt0Ch0ArrayCurrent: t.number,
+    Mppt0Ch0ArrayVoltage: t.number,
+    Mppt0Ch0BatteryVoltage: t.number,
+    Mppt0Ch0UnitTemperature: t.number,
+    Mppt0Ch1ArrayCurrent: t.number,
+    Mppt0Ch1ArrayVoltage: t.number,
+    Mppt0Ch1BatteryVoltage: t.number,
+    Mppt0Ch1UnitTemperature: t.number,
+    Mppt1Ch0ArrayCurrent: t.number,
+    Mppt1Ch0ArrayVoltage: t.number,
+    Mppt1Ch0BatteryVoltage: t.number,
+    Mppt1Ch0UnitTemperature: t.number,
+    Mppt1Ch1ArrayCurrent: t.number,
+    Mppt1Ch1ArrayVoltage: t.number,
+    Mppt1Ch1BatteryVoltage: t.number,
+    Mppt1Ch1UnitTemperature: t.number,
+    Mppt2Ch0ArrayCurrent: t.number,
+    Mppt2Ch0ArrayVoltage: t.number,
+    Mppt2Ch0BatteryVoltage: t.number,
+    Mppt2Ch0UnitTemperature: t.number,
+    Mppt2Ch1ArrayCurrent: t.number,
+    Mppt2Ch1ArrayVoltage: t.number,
+    Mppt2Ch1BatteryVoltage: t.number,
+    Mppt2Ch1UnitTemperature: t.number,
+    Mppt3Ch0ArrayCurrent: t.number,
+    Mppt3Ch0ArrayVoltage: t.number,
+    Mppt3Ch0BatteryVoltage: t.number,
+    Mppt3Ch0UnitTemperature: t.number,
+    Mppt3Ch1ArrayCurrent: t.number,
+    Mppt3Ch1ArrayVoltage: t.number,
+    Mppt3Ch1BatteryVoltage: t.number,
+    Mppt3Ch1UnitTemperature: t.number,
+  }),
+);
+
+const IPiType = t.exact(
+  t.type({
+    Rfid: t.string,
   }),
 );
 
@@ -371,19 +380,13 @@ export const ITelemetryDataType = t.exact(
     B3: IB3Type,
     Battery: IBatteryType,
     BatteryFaults: IBatteryFaultsType,
+    Contactor: IContactorType,
     KeyMotor: IKeyMotorType,
-    MBMS: IMbmsType,
-    MPPT0: IMPPTType,
-    MPPT1: IMPPTType,
-    MPPT2: IMPPTType,
-    MPPT3: IMPPTType,
+    MBMS: IMBMSType,
+    MPPT: IMPPTType,
     MotorDetails0: IMotorDetailsType,
     MotorDetails1: IMotorDetailsType,
-    Pi: t.exact(
-      t.type({
-        Rfid: t.string,
-      }),
-    ),
+    Pi: IPiType,
     ProximitySensors: IProximitySensorsType,
     Telemetry: ITelemetryType,
     TimeStamp: t.number,
@@ -391,7 +394,23 @@ export const ITelemetryDataType = t.exact(
   }),
 );
 
+// the codec: smaller data types which make up the large io-ts type for incoming packets (ITelemetryDataType)
+
 export type ITelemetryData = t.TypeOf<typeof ITelemetryDataType>;
+export type IContactor = t.TypeOf<typeof IContactorType>;
+export type IBattery = t.TypeOf<typeof IBatteryType>;
+export type IBatteryFaults = t.TypeOf<typeof IBatteryFaultsType>;
+export type IBatteryFaultErrors = t.TypeOf<typeof IBatteryFaultErrorsType>;
+export type IBatteryFaultWarnings = t.TypeOf<typeof IBatteryFaultWarningsType>;
+export type IB3 = t.TypeOf<typeof IB3Type>;
+export type IKeyMotor = t.TypeOf<typeof IKeyMotorType>;
+export type IMBMS = t.TypeOf<typeof IMBMSType>;
+export type IMotorDetails = t.TypeOf<typeof IMotorDetailsType>;
+export type IMPPT = t.TypeOf<typeof IMPPTType>;
+export type IPi = t.TypeOf<typeof IPiType>;
+export type IProximitySensors = t.TypeOf<typeof IProximitySensorsType>;
+export type ITelemetry = t.TypeOf<typeof ITelemetryType>;
+// the codec: large io-ts type for incoming packets (ITelemetryDataType)
 
 //old data type definitions
 export interface IDriverData {
@@ -458,313 +477,22 @@ export class LapData {
   lapsRemaining = -1;
   averageSpeed = -1;
 }
-
-export interface IPi {
-  Rfid: string;
+export interface IRaceInfo {
+  distance: number;
+  lapNumber: number;
+  prevTime: number;
+  raceDates: Date[];
+  raceDay: number;
+  timeLeft: number;
+  totalDistance: number;
 }
 
-export interface IB3 {
-  Acceleration: number;
-  BrakeLightSignalOut: boolean;
-  BrakeSwitch: boolean;
-  DaytimeRunningLightSignalOut: boolean;
-  ForwardIn: boolean;
-  ForwardSwitchIn: boolean;
-  HandbrakeSwitch: boolean;
-  HazardLightsIn: boolean;
-  HeadightsSwitchIn: boolean;
-  HeadlightSignalOut: boolean;
-  HornSignalOut: boolean;
-  HornSwitchIn: boolean;
-  Lap: boolean;
-  LeftSignalIn: boolean;
-  LeftSignalOut: boolean;
-  MotorReset: boolean;
-  Neutral: boolean;
-  RaceMode: boolean;
-  RegenBraking: number;
-  Reverse: boolean;
-  RightSignalIn: boolean;
-  RightSignalOut: boolean;
-  ZoomZoom: boolean;
+export interface IPlaybackDynamoResponse {
+  data: ITelemetryData;
+  id: string;
+  timestamp: number;
 }
 
-export interface IBattery {
-  AlwaysOnSignalStatus: boolean;
-  BatteryCell: IBatteryCell;
-  BatteryFan: IBatteryFan;
-  BatteryPack: IBatteryPack;
-  BatteryTemperature: IBatteryTemperature;
-  BmuAlive: number;
-  ChargeRelayEnabled: boolean;
-  ChargerSafetyEnabled: boolean;
-  DischargeRelayEnabled: boolean;
-  HighThermistorId: number;
-  IsChargingSignalStatus: boolean;
-  IsReadySignalStatus: boolean;
-  LowThermistorId: number;
-  MalfunctionIndicatorActive: boolean;
-  MultiPurposeInputSignalStatus: boolean;
-}
-
-export interface IBatteryCell {
-  AverageCellVoltage: number;
-  HighCellVoltage: number;
-  HighCellVoltageId: number;
-  LowCellVoltage: number;
-  LowCellVoltageId: number;
-  PopulatedCells: number;
-}
-
-export interface IBatteryFan {
-  FanSpeed: number;
-  FanVoltage: number;
-  RequestedFanSpeed: number;
-}
-
-export interface IBatteryPack {
-  Input12V: number;
-  PackAmphours: number;
-  PackCurrent: number;
-  PackDepthOfDischarge: number;
-  PackStateOfCharge: number;
-  PackVoltage: number;
-}
-
-export interface IBatteryTemperature {
-  LowTemperature: number;
-  AverageTemperature: number;
-  InternalTemperature: number;
-  HighTemperature: number;
-}
-
-export interface IBatteryFaults {
-  Warnings: IBatteryFaultsWarnings;
-  Errors: IBatteryFaultsErrors;
-}
-
-export interface IBatteryFaultsErrors {
-  AlwaysOnSupplyFault: boolean;
-  CanbusCommunicationFault: boolean;
-  ChargeLimitEnforcementFault: boolean;
-  ChargerSafetyRelayFault: boolean;
-  CurrentSensorFault: boolean;
-  DischargeLimitEnforcementFault: boolean;
-  FanMonitorFault: boolean;
-  HighVoltageIsolationFault: boolean;
-  InternalCommunicationFault: boolean;
-  InternalConversionFault: boolean;
-  InternalLogicFault: boolean;
-  InternalMemoryFault: boolean;
-  InternalThermistorFault: boolean;
-  LowCellVoltageFault: boolean;
-  OpenWiringFault: boolean;
-  PackVoltageSensorFault: boolean;
-  PowerSupply12VFault: boolean;
-  ThermistorFault: boolean;
-  VoltageRedundancyFault: boolean;
-  WeakCellFault: boolean;
-  WeakPackFault: boolean;
-}
-
-export interface IBatteryFaultsWarnings {
-  CclReducedDueToAlternateCurrentLimit: boolean;
-  CclReducedDueToChargerLatch: boolean;
-  CclReducedDueToHighCellResistance: boolean;
-  CclReducedDueToHighCellVoltage: boolean;
-  CclReducedDueToHighPackVoltage: boolean;
-  CclReducedDueToHighSoc: boolean;
-  CclReducedDueToTemperature: boolean;
-  DclAndCclReducedDueToCommunicationFailsafe: boolean;
-  DclAndCclReducedDueToVoltageFailsafe: boolean;
-  DclReducedDueToHighCellResistance: boolean;
-  DclReducedDueToLowCellVoltage: boolean;
-  DclReducedDueToLowPackVoltage: boolean;
-  DclReducedDueToLowSoc: boolean;
-  DclReducedDueToTemperature: boolean;
-}
-
-export interface IKeyMotor {
-  ControlMode: boolean;
-  DebugMode: boolean;
-  MotorMode: boolean;
-  MotorSetpoint: number;
-  SoftwareEnable: boolean;
-}
-
-export interface IMbms {
-  AllowCharge: boolean;
-  AllowDischarge: boolean;
-  ArrayContactorError: boolean;
-  ArrayContactorState: boolean;
-  ArrayCurrent: number;
-  ArrayHighTemperatureCurrentTrip: boolean;
-  ArrayVoltage: number;
-  AuxillaryBatteryVoltage: number;
-  ChargeContactorError: boolean;
-  ChargeContactorState: boolean;
-  ChargeCurrent: number;
-  ChargeHighTemperatureCurrentTrip: boolean;
-  ChargeShouldTrip: boolean;
-  ChargeVoltage: number;
-  CommonContactorError: boolean;
-  CommonContactorState: boolean;
-  CommonCurrent: number;
-  ContactorDisconnectedUnexpectedlyTrip: boolean;
-  DischargeShouldTrip: boolean;
-  HighCellVoltageTrip: boolean;
-  HighCommonCurrentTrip: boolean;
-  HighVoltageEnableState: boolean;
-  LowCellVoltageTrip: boolean;
-  LvContactorError: boolean;
-  LvContactorState: boolean;
-  LvCurrent: number;
-  LvHighTemperatureCurrentTrip: boolean;
-  LvVoltage: number;
-  MotorContactorError: boolean;
-  MotorContactorState: boolean;
-  MotorCurrent: number;
-  MotorHighTemperatureCurrentTrip: boolean;
-  MotorVoltage: number;
-  OrionCanReceivedRecently: boolean;
-  OrionMessageTimeoutTrip: boolean;
-  ProtectionTrip: boolean;
-  StrobeBmsLight: boolean;
-}
-
-export interface IMPPT {
-  ArrayCurrent: number;
-  ArrayVoltage: number;
-  BatteryVoltage: number;
-  ChannelNumber: number;
-  IsAlive: boolean;
-  Temperature: number;
-}
-
-export interface IMotorDetails {
-  AbsoluteAngle: number;
-  ControlMode: boolean;
-  ControlValue: number;
-  CurrentMotorPower: number;
-  CurrentMotorTorque: number;
-  CurrentRpmValue: number;
-  DebugMode: boolean;
-  InverterPeakCurrent: number;
-  MotorErrors: IMotorErrors;
-  MotorWarnings: IMotorWarnings;
-  MotorMode: boolean;
-  MotorTemperature: number;
-  SoftwareEnable: boolean;
-}
-
-export interface IMotorErrors {
-  CanCommsTimeoutError: boolean;
-  CanSendError: boolean;
-  ControllerDataReadingTimeout: boolean;
-  CpuOverload: boolean;
-  CpuTempTooHigh: boolean;
-  DclinkTempTooHigh: boolean;
-  DcOvervoltageError: boolean;
-  DcUndervoltageError: boolean;
-  DoubleCanIdOnBus: boolean;
-  ErrorInDclinkCommunication: boolean;
-  ErrorReadingEncoder: boolean;
-  ErrorReadingTempSensor: boolean;
-  HallTempTooHigh: boolean;
-  HwEnableNotSet: boolean;
-  InitError: boolean;
-  InvalidHallSector: boolean;
-  InvalidHallSensorSequence: boolean;
-  Inverter1FaultError: boolean;
-  Inverter1OvercurrentError: boolean;
-  Inverter1TempTooHigh: boolean;
-  Inverter2FaultError: boolean;
-  Inverter2OvercurrentError: boolean;
-  Inverter2TempTooHigh: boolean;
-  Inverter3FaultError: boolean;
-  Inverter3OvercurrentError: boolean;
-  Inverter3TempTooHigh: boolean;
-  Inverter4FaultError: boolean;
-  Inverter4OvercurrentError: boolean;
-  Inverter4TempTooHigh: boolean;
-  Inverter5FaultError: boolean;
-  Inverter5OvercurrentError: boolean;
-  Inverter5TempTooHigh: boolean;
-  Inverter6FaultError: boolean;
-  Inverter6OvercurrentError: boolean;
-  Inverter6TempTooHigh: boolean;
-  LostFramesOnCanBusError: boolean;
-  MotorStalled: boolean;
-  OverspeedError: boolean;
-  PositionSensorReadingError: boolean;
-  SettingsNotFound: boolean;
-  ZeroPositionOffsetNotSet: boolean;
-}
-
-export interface IMotorWarnings {
-  CanCommsTimeoutWarning: boolean;
-  CanSendWarning: boolean;
-  CpuOverload: boolean;
-  CpuTemperatureVeryHigh: boolean;
-  DclinkTemperatureVeryHigh: boolean;
-  DcOvervoltageWarning: boolean;
-  DcUndervoltageWarning: boolean;
-  DelayInDcLinkCommunication: boolean;
-  DelayInReadingPosSensor: boolean;
-  DelayInReadingTempSensor: boolean;
-  HallTemperatureVeryHigh: boolean;
-  Inverter1OverCurrentWarning: boolean;
-  Inverter1FaultWarning: boolean;
-  Inverter1TempVeryHigh: boolean;
-  Inverter2FaultWarning: boolean;
-  Inverter2OverCurrentWarning: boolean;
-  Inverter2TempVeryHigh: boolean;
-  Inverter3FaultWarning: boolean;
-  Inverter3OverCurrentWarning: boolean;
-  Inverter3TempVeryHigh: boolean;
-  Inverter4FaultWarning: boolean;
-  Inverter4OverCurrentWarning: boolean;
-  Inverter4TempVeryHigh: boolean;
-  Inverter5FaultWarning: boolean;
-  Inverter5OverCurrentWarning: boolean;
-  Inverter5TempVeryHigh: boolean;
-  Inverter6FaultWarning: boolean;
-  Inverter6OverCurrentWarning: boolean;
-  Inverter6TempVeryHigh: boolean;
-  LostFramesOnCanBusWarning: boolean;
-  MotorAboutToStall: boolean;
-  OverspeedWarning: boolean;
-  StartAtHighRpm: boolean;
-  TorqueLimited: boolean;
-}
-
-export interface IProximitySensors {
-  ProximitySensor1: number;
-  ProximitySensor2: number;
-  ProximitySensor3: number;
-  ProximitySensor4: number;
-}
-
-export interface ITelemetry {
-  GpsAdditionalFlags: number;
-  GpsDay: number;
-  GpsFixStatusFlags: number;
-  GpsHour: number;
-  GpsLatitude: number;
-  GpsLongitude: number;
-  GpsMinute: number;
-  GpsMonth: number;
-  GpsSecond: number;
-  GpsValidityFlags: number;
-  GpsYear: number;
-  MpuAccelerationX: number;
-  MpuAccelerationY: number;
-  MpuAccelerationZ: number;
-  MpuRotationX: number;
-  MpuRotationY: number;
-  MpuRotationZ: number;
-  MpuTemperature: number;
-}
 export interface IFormattedLapData {
   data: {
     ampHours: number;
@@ -781,20 +509,4 @@ export interface IFormattedLapData {
   };
   timestamp: number;
   Rfid: string;
-}
-
-export interface IPlaybackDynamoResponse {
-  data: ITelemetryData;
-  id: string;
-  timestamp: number;
-}
-
-export interface IRaceInfo {
-  distance: number;
-  lapNumber: number;
-  prevTime: number;
-  raceDates: Date[];
-  raceDay: number;
-  timeLeft: number;
-  totalDistance: number;
 }

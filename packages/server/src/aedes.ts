@@ -1,6 +1,8 @@
-import { getSecrets } from "./utils/getSecrets";
-
-import Aedes, { type AuthenticateError, type Client } from "aedes";
+import Aedes, {
+  type AuthenticateError,
+  type Client,
+  PublishPacket,
+} from "aedes";
 import { createServer } from "net";
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
@@ -8,6 +10,22 @@ import { createLightweightApplicationLogger } from "@/utils/logger";
 const logger = createLightweightApplicationLogger("aedes.ts");
 const port = process.env.MQTT_SERVER_PORT || 1883;
 
+const notifyHeliosDisconnect = {
+  cmd: "publish",
+  dup: false, // Not a duplicate
+  payload: Buffer.from("Client has disconnected"), // Message content
+  qos: 0, // No delivery guarantee
+  retain: true, // Do retain the message
+  topic: "carDisconnect",
+} as const satisfies PublishPacket;
+const notifyHeliosConnect = {
+  cmd: "publish",
+  dup: false, // Not a duplicate
+  payload: Buffer.from("Aedes has connected to the vehicle"), // Message content
+  qos: 0, // No delivery guarantee
+  retain: true, // Do retain the message
+  topic: "carConnect",
+} as const satisfies PublishPacket;
 class MqttError extends Error {
   returnCode: number;
 
@@ -19,8 +37,11 @@ class MqttError extends Error {
     Object.setPrototypeOf(this, MqttError.prototype);
   }
 }
-
 const aedes: Aedes = new Aedes();
+aedes.on("clientDisconnect", () => {
+  logger.info("client disconnected");
+  aedes.publish(notifyHeliosDisconnect, () => {});
+});
 // Authentication function
 aedes.authenticate = function (
   client: Client,
@@ -47,6 +68,9 @@ aedes.authenticate = function (
   if (username === validUsername && password.toString() === validPassword) {
     done(null, true); // Authentication successful
     logger.info(`MQTT Client ${client.id} successfully authenticated!`);
+    aedes.publish(notifyHeliosConnect, (err) =>
+      logger.error(err?.message || "Failed to publish connect message"),
+    );
   } else {
     const error = new MqttError("Auth error", 4); // Use MqttError with returnCode
     done(error, false); // Authentication failed

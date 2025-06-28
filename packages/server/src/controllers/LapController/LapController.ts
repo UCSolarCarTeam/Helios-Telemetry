@@ -106,11 +106,8 @@ export class LapController implements LapControllerType {
     }
   }
 
-  public calculateRaceDistance(motorDetails0: number, motorDetails1: number) {
-    const vehicleVelocity = calculateVehicleVelocity(
-      motorDetails0,
-      motorDetails1,
-    );
+  public calculateRaceDistance(motor0Speed: number, motor1Speed: number) {
+    const vehicleVelocity = calculateVehicleVelocity(motor0Speed, motor1Speed);
 
     const currentTime = Date.now();
     if (this.raceInfo.prevTime !== 0 && this.raceInfo.raceDay < 3) {
@@ -160,14 +157,23 @@ export class LapController implements LapControllerType {
     }
   }
 
+  // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
     await this.backendController.dynamoDB.insertLapData(lapData);
   }
 
+  // this function is for calling when lap completes via geofence
+  public async handleGeofenceLap(rfid: string, timestamp: number) {
+    await this.backendController.dynamoDB.insertIntoGpsLapCountTable(
+      rfid,
+      timestamp,
+    );
+  }
+
   public async handlePacket(packet: ITelemetryData) {
-    const motorDetails0 = packet.MotorDetails0.CurrentRpmValue;
-    const motorDetails1 = packet.MotorDetails1.CurrentRpmValue;
+    const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
+    const motorDetails1 = packet.MotorDetails1.VehicleVelocity;
     if (this.raceInfo.raceDay >= 3)
       // also include if !packet.B3.RaceMode
       this.cleanUp(); // clean up after the last race day
@@ -181,14 +187,18 @@ export class LapController implements LapControllerType {
       this.calculateRaceDistance(motorDetails0, motorDetails1);
     }
 
-    if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
+    if (this.checkLap(packet) && this.lastLapPackets.length > 5) {
+      this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
+    }
+
+    if (packet.B3.LapDigital && this.lastLapPackets.length > 5) {
       await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
       // update last lap packet
       const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
-        ?.Battery.BatteryPack.PackAmphours as number;
+        ?.Battery.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
         this.lastLapPackets,
       );
@@ -214,6 +224,8 @@ export class LapController implements LapControllerType {
         },
         timestamp: packet.TimeStamp,
       };
+
+      logger.info("Lap data inserted into database: ", lapData);
 
       this.handleLapData(lapData);
       this.lastLapPackets = [];
@@ -285,8 +297,8 @@ export class LapController implements LapControllerType {
     const sumAverageLapSpeed = lastLapPackets.reduce(
       (sum: number, packet: ITelemetryData) => {
         const vehicleVelocity = calculateVehicleVelocity(
-          packet.MotorDetails0.CurrentRpmValue as number,
-          packet.MotorDetails1.CurrentRpmValue as number,
+          packet.MotorDetails0.MotorVelocity as number,
+          packet.MotorDetails1.MotorVelocity as number,
         );
         return vehicleVelocity !== undefined ? sum + vehicleVelocity : sum;
       },
@@ -302,7 +314,7 @@ export class LapController implements LapControllerType {
     }
 
     const sumAveragePack = lastLapPackets.reduce((sum, packet) => {
-      const packCurrent = packet.Battery?.BatteryPack.PackCurrent;
+      const packCurrent = packet.Battery?.PackCurrent;
       return packCurrent !== undefined ? sum + packCurrent : sum;
     }, 0);
 
@@ -328,37 +340,33 @@ export class LapController implements LapControllerType {
     packetArray: ITelemetryData[],
     motorIndex: number,
   ): number {
-    // The Motor's Odometer resets every time a motor trips or the car power cycles
-    let totalDistanceTraveled = 0;
+    if (packetArray.length < 2) return 0;
 
-    for (let i = 0; i < packetArray.length; i++) {
-      totalDistanceTraveled += (packetArray[i]?.[`MotorDetails${motorIndex}`]
-        ?.CurrentRpmValue *
-        0.15 *
-        0.5) as number;
+    let totalDistance = 0;
+    let lastOdometer: number | undefined = undefined;
 
-      // Check if the motor had reset, keep a tally of the distance travelled
-      // if (
-      //   this.checkIfMotorReset(
-      //     packetArray[i]?.[`MotorDetails${odometerIndex}`]?.Odometer as number,
-      //     motorDistanceTraveledSession,
-      //   )
-      // ) {
-      //   totalDistanceTraveled += motorDistanceTraveledSession;
-      // }
+    for (const packet of packetArray) {
+      const motor = packet[`MotorDetails${motorIndex}`];
+      const odometer = motor?.Odometer;
 
-      // motorDistanceTraveledSession = packetArray[i]?.[
-      //   `MotorDetails${odometerIndex}`
-      // ]?.Odometer as number;
+      if (typeof odometer !== "number") continue;
+
+      if (lastOdometer === undefined) {
+        lastOdometer = odometer;
+        continue;
+      }
+
+      if (odometer >= lastOdometer) {
+        totalDistance += odometer - lastOdometer;
+      } else {
+        // odometer reset detected
+      }
+
+      lastOdometer = odometer;
     }
-    // totalDistanceTraveled += motorDistanceTraveledSession;
-    // // Remove the initial distance
-    // totalDistanceTraveled -= packetArray[0]?.[`MotorDetails${odometerIndex}`]
-    //   ?.Odometer as number;
-    // // Convert to kilometers (odometer reports as meters)
-    // totalDistanceTraveled /= 1000;
 
-    return totalDistanceTraveled;
+    // convert m to km
+    return totalDistance / 1000;
   }
 
   public getDistanceTravelled(packetArray: ITelemetryData[]) {
@@ -385,7 +393,6 @@ export class LapController implements LapControllerType {
 
     // Define constants
     const mpptCount = 4;
-    const motorCount = 2;
 
     // Get the sum of the average array power of all MPPTs
     const mpptPowerIn = packetArray
@@ -396,44 +403,47 @@ export class LapController implements LapControllerType {
           // arrayPower += packet['mppt' + mppt + 'arrayvoltage'] *
           //               packet['mppt' + mppt + 'arraycurrent'];
           arrayPower +=
-            (packet.MPPT0?.ArrayVoltage as number) *
-            (packet.MPPT0?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt0Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt0Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT1?.ArrayVoltage as number) *
-            (packet.MPPT1?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt1Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt1Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT2?.ArrayVoltage as number) *
-            (packet.MPPT2?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt2Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt2Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT3?.ArrayVoltage as number) *
-            (packet.MPPT3?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt3Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt3Ch1ArrayVoltage as number);
         }
         return arrayPower;
       })
       .reduce((sum, curr) => sum + curr / packetArray.length, 0);
 
     // Get the sum of the regen of all motors
-    const regenPowerIn = packetArray
-      .map((packet) => {
-        let regen = 0;
-        for (let motor = 0; motor < motorCount; motor++) {
-          // let busCurrent = packet['motor' + motor + 'buscurrent'];
-          // let busVoltage = packet['motor' + motor + 'busvoltage'];
-          const busCurrent = packet.KeyMotor[motor]?.BusCurrent;
-          const busVoltage = packet.KeyMotor[motor]?.BusVoltage;
+    const regenPowerSum = packetArray.reduce((sum, packet) => {
+      let regenPower = 0;
 
-          // Filter out any values with busCurrent >= 0
-          if (busCurrent && busCurrent >= 0) {
-            continue;
-          }
+      const motorDetails = [packet.MotorDetails0, packet.MotorDetails1];
 
-          regen += (busCurrent as number) * (busVoltage as number);
+      for (const motor of motorDetails) {
+        const current = motor?.BusCurrent;
+        const voltage = motor?.BusVoltage;
+
+        if (
+          typeof current === "number" &&
+          typeof voltage === "number" &&
+          current < 0
+        ) {
+          regenPower += current * voltage;
         }
-        return regen;
-      })
-      .reduce((sum, curr) => sum + curr / packetArray.length, 0);
+      }
 
-    return Math.abs(mpptPowerIn + regenPowerIn);
+      return sum + regenPower;
+    }, 0);
+
+    const avgRegenPower = regenPowerSum / packetArray.length;
+
+    return Math.abs(mpptPowerIn + avgRegenPower);
   }
 
   public getAveragePowerOut(packetArray: ITelemetryData[]): number {
@@ -445,9 +455,7 @@ export class LapController implements LapControllerType {
     return Math.abs(
       packetArray.reduce(
         (sum, curr) =>
-          sum +
-          curr.Battery.BatteryPack.PackCurrent *
-            curr.Battery.BatteryPack.PackVoltage,
+          sum + curr.Battery.PackCurrent * curr.Battery.PackVoltage,
         0,
       ) / packetArray.length,
     );

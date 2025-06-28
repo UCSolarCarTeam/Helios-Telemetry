@@ -2,7 +2,7 @@ import { usePacket } from "@/contexts/PacketContext";
 
 function BatteryIconComponent() {
   const { currentPacket } = usePacket();
-  const batteryLevel = currentPacket.Battery.BatteryPack.PackStateOfCharge;
+  const batteryLevel = currentPacket.Battery.PackStateOfCharge;
 
   return (
     <div className="col-span-3 grid w-full pr-2">

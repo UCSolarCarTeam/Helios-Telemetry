@@ -8,14 +8,16 @@ export const options: IClientOptions = {
   protocol: "tcp",
   protocolVersion: 3,
   username: process.env.MQTT_USERNAME,
-};
+} as const;
 
 export const topics = {
+  carConnect: "carConnect",
+  carDisconnect: "carDisconnect",
   packetTopic: "packet",
   pingTopic: "ping",
   pongTopic: "pong",
   telemetryToCarTopic: "telemetryToCar",
-};
+} as const;
 
 export interface SolarMQTTClientType {
   client: MqttClient;

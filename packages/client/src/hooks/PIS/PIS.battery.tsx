@@ -1,3 +1,7 @@
+import {
+  FaultLocations,
+  ISeverity,
+} from "@/components/molecules/HeroMolecules/HeroTypes";
 import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
@@ -5,250 +9,25 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 
 const Battery = (): I_PIS => {
   const { currentPacket } = usePacket();
-  const { Battery, MBMS } = currentPacket;
-  const { BatteryCell, BatteryFan, BatteryPack, BatteryTemperature } =
-    currentPacket?.Battery;
+  const { Battery } = currentPacket;
   //  Battery will now have be split into the faults and the warning and here we will simply show what everything means
   const data = {
-    Cell: [
+    BatteryDetails: [
       {
         data: [
           {
-            max: 100,
-            min: 0,
-            unit: UnitType.VOLTAGE,
-            value: BatteryCell?.LowCellVoltage,
+            value: Battery?.AlwaysOnSignalStatus,
           },
-          { value: BatteryCell?.LowCellVoltageId },
-          {
-            max: 100,
-            min: 0,
-            unit: UnitType.VOLTAGE,
-            value: BatteryCell?.HighCellVoltage,
-          },
-          { value: BatteryCell?.HighCellVoltageId },
         ],
-        fstring: "%s (%s) - %s (%s)",
-        name: "Battery Cell Voltage",
+        name: "Always on Signal Status",
       },
       {
         data: [
           {
-            max: 100,
-            min: 0,
-            unit: UnitType.VOLTAGE,
-            value: BatteryCell?.AverageCellVoltage,
+            value: Battery?.BmuAlive,
           },
         ],
-        name: "Battery Average Voltage",
-      },
-      {
-        data: [{ max: 100, min: 0, value: BatteryCell?.PopulatedCells }],
-        name: "Battery Populated Cells",
-      },
-    ] as I_PISField[],
-
-    Fan: [
-      {
-        data: [
-          {
-            max: 100,
-            min: 0,
-            unit: UnitType.VOLTAGE,
-            value: BatteryFan.FanVoltage,
-          },
-        ],
-        name: "Fan Voltage",
-      },
-      {
-        data: [{ max: 100, min: 0, value: BatteryFan?.FanSpeed }],
-        name: "Fan Speed",
-      },
-      {
-        data: [
-          {
-            max: 100,
-            min: 0,
-            unit: UnitType.VOLTAGE,
-            value: BatteryFan?.RequestedFanSpeed,
-          },
-        ],
-        name: "Requested Fan Speed",
-      },
-    ] as I_PISField[],
-
-    MBMS: [
-      {
-        data: [{ value: MBMS?.AllowCharge }],
-        name: "Allow Charge",
-      },
-      {
-        data: [{ value: MBMS?.AllowDischarge }],
-        name: "Allow Discharge",
-      },
-      {
-        data: [{ value: MBMS?.ArrayContactorError }],
-        name: "Array Contactor Error",
-      },
-      {
-        data: [{ value: MBMS?.ArrayContactorState }],
-        name: "Array Contractor State",
-      },
-      {
-        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.ArrayCurrent }],
-        name: "Array Current",
-      },
-      {
-        data: [{ value: MBMS?.ArrayHighTemperatureCurrentTrip }],
-        name: "Array High Temperature Current Trip",
-      },
-      //TODO: Units V or mV
-      {
-        data: [{ value: MBMS?.ArrayVoltage }],
-        name: "Array Voltage",
-      },
-      // TODO: Units V or mV
-      {
-        data: [
-          { unit: UnitType.MILLIVOLTS, value: MBMS?.AuxillaryBatteryVoltage },
-        ],
-        name: "Auxillary Battery Voltage",
-      },
-      {
-        data: [{ value: MBMS?.ChargeContactorError }],
-        name: "Charge Contactor Error",
-      },
-      {
-        data: [{ value: MBMS?.ChargeContactorState }],
-        name: "Charge Contactor State",
-      },
-      // TODO: Units A, or mA
-      {
-        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.ChargeCurrent }],
-        name: "Charge Current",
-      },
-      {
-        data: [{ value: MBMS?.ChargeHighTemperatureCurrentTrip }],
-        name: "Charge High Temperature Current Trip",
-      },
-      {
-        data: [{ value: MBMS?.ChargeShouldTrip }],
-        name: "Charge Should Trip",
-      },
-
-      // TODO: Units V or mV
-      {
-        data: [{ unit: UnitType.VOLTAGE, value: MBMS?.ChargeVoltage }],
-        name: "Charge Voltage",
-      },
-      {
-        data: [{ value: MBMS?.CommonContactorError }],
-        name: "Common Contactor Error",
-      },
-      {
-        data: [{ value: MBMS?.CommonContactorState }],
-        name: "Common Contactor State",
-      },
-      // TODO: Units A or mA
-      {
-        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.CommonCurrent }],
-        name: "Common Current",
-      },
-      {
-        data: [{ value: MBMS?.ContactorDisconnectedUnexpectedlyTrip }],
-        name: "ContactorDisconnectedUnexpectedlyTrip",
-      },
-      {
-        data: [{ value: MBMS?.DischargeShouldTrip }],
-        name: "Discharge Should Trip",
-      },
-      {
-        data: [{ value: MBMS?.HighCellVoltageTrip }],
-        name: "High Cell Voltage Trip",
-      },
-      {
-        data: [{ value: MBMS?.HighCommonCurrentTrip }],
-        name: "High Common Current Trip",
-      },
-      {
-        data: [{ value: MBMS?.HighVoltageEnableState }],
-        name: "High Voltage Enable State",
-      },
-      {
-        data: [{ value: MBMS?.LowCellVoltageTrip }],
-        name: "Low Cell Voltage Trip",
-      },
-      {
-        data: [{ value: MBMS?.LvContactorError }],
-        name: "Lv Contactor Error",
-      },
-      {
-        data: [{ value: MBMS?.LvContactorState }],
-        name: "Lv Contactor State",
-      },
-      // TODO: Units, A or mA
-      { data: [{ value: MBMS?.LvCurrent }], name: "Lv Current" },
-      {
-        data: [{ value: MBMS?.LvHighTemperatureCurrentTrip }],
-        name: "Lv High Temperature Current Trip",
-      },
-      // TODO: Units, V or mV
-      {
-        data: [{ value: MBMS?.LvVoltage }],
-        name: "Lv Voltage",
-      },
-      {
-        data: [{ value: MBMS?.MotorContactorError }],
-        name: "Motor Contactor Error",
-      },
-      {
-        data: [{ value: MBMS?.MotorContactorState }],
-        name: "Motor Contactor State",
-      },
-      // TODO: Units A or mA
-      {
-        data: [{ unit: UnitType.AMPERAGE, value: MBMS?.MotorCurrent }],
-        name: "Motor Current",
-      },
-      {
-        data: [{ value: MBMS?.MotorHighTemperatureCurrentTrip }],
-        name: "Motor High Temperature Current Trip",
-      },
-      // TODO: Units V or mV
-      {
-        data: [{ value: MBMS?.MotorVoltage }],
-        name: "Motor Voltage",
-      },
-      {
-        data: [{ value: MBMS?.OrionCanReceivedRecently }],
-        name: "Orion CAN Received Recently",
-      },
-      {
-        data: [{ value: MBMS?.OrionMessageTimeoutTrip }],
-        name: "Orion Message Timeout Trip",
-      },
-      {
-        data: [{ value: MBMS?.ProtectionTrip }],
-        name: "Protection Trip",
-      },
-      {
-        data: [{ value: MBMS?.StrobeBmsLight }],
-        name: " Strobe BMS Light",
-      },
-    ] as I_PISField[],
-
-    MBMSRelayStatusFlags: [
-      {
-        data: [{ expectedBool: true, value: Battery?.BmuAlive }],
-        name: "Heartbeat", //this is the bigger heartbeat
-      },
-      {
-        data: [
-          {
-            value: Battery?.DischargeRelayEnabled,
-          },
-        ],
-        name: "Discharge Relay Enabled",
+        name: "Bmu Alive",
       },
       {
         data: [
@@ -264,23 +43,15 @@ const Battery = (): I_PIS => {
             value: Battery?.ChargerSafetyEnabled,
           },
         ],
-        name: "Charger Safety Enabled",
+        name: "Charge Safety Enabled",
       },
       {
         data: [
           {
-            value: Battery?.MultiPurposeInputSignalStatus,
+            value: Battery?.DischargeRelayEnabled,
           },
         ],
-        name: "Multipurpose Input Signal",
-      },
-      {
-        data: [
-          {
-            value: Battery?.IsReadySignalStatus,
-          },
-        ],
-        name: "Is Ready",
+        name: "Discharge Relay Enabled",
       },
       {
         data: [
@@ -288,7 +59,15 @@ const Battery = (): I_PIS => {
             value: Battery?.IsChargingSignalStatus,
           },
         ],
-        name: "Is Charging",
+        name: "Is Charging Signal Status",
+      },
+      {
+        data: [
+          {
+            value: Battery?.IsReadySignalStatus,
+          },
+        ],
+        name: "Is Ready Signal Status",
       },
       {
         data: [
@@ -301,10 +80,522 @@ const Battery = (): I_PIS => {
       {
         data: [
           {
-            value: Battery?.AlwaysOnSignalStatus,
+            value: Battery?.MultiPurposeInputSignalStatus,
           },
         ],
-        name: "Always On",
+        name: "Multipurpose Input Signal Status",
+      },
+    ] as I_PISField[],
+    BatteryFaults: {
+      ErrorFlags: [
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.InternalCommunicationFault,
+            },
+          ],
+          isFault: true,
+          name: "Internal Communication Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.InternalConversionFault,
+            },
+          ],
+          isFault: true,
+          name: "Internal Conversion Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.WeakCellFault,
+            },
+          ],
+          isFault: true,
+          name: "Weak Cell Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.LowCellVoltageFault,
+            },
+          ],
+          isFault: true,
+          name: "Low Cell Voltage Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.OpenWiringFault,
+            },
+          ],
+          isFault: true,
+          name: "Open Wiring Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.CurrentSensorFault,
+            },
+          ],
+          isFault: true,
+          name: "Current Sensor Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.PackVoltageSensorFault,
+            },
+          ],
+          isFault: true,
+          name: "Pack Voltage Sensor Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.WeakPackFault,
+            },
+          ],
+          isFault: true,
+          name: "Weak Pack Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.VoltageRedundancyFault,
+            },
+          ],
+          isFault: true,
+          name: "Voltage Redundancy Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.FanMonitorFault,
+            },
+          ],
+          isFault: true,
+          name: "Fan Monitor Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.ThermistorFault,
+            },
+          ],
+          isFault: true,
+          name: "Thermistor Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.CanbusCommunicationFault,
+            },
+          ],
+          isFault: true,
+          name: "CANBUS Communications Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.AlwaysOnSupplyFault,
+            },
+          ],
+          isFault: true,
+          name: "Always On Supply Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.HighVoltageIsolationFault,
+            },
+          ],
+          isFault: true,
+          name: "High Voltage Isolation Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.PowerSupply12VFault,
+            },
+          ],
+          isFault: true,
+          name: "12V Power Supply Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.ChargeLimitEnforcementFault,
+            },
+          ],
+          isFault: true,
+          name: "Charge Limit Enforcement Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.ChargerSafetyRelayFault,
+            },
+          ],
+          isFault: true,
+          name: "Charge Safety Relay Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors
+                  .DischargeLimitEnforcementFault,
+            },
+          ],
+          isFault: true,
+          name: "Discharge Limit Enforcement Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.ChargerSafetyRelayFault,
+            },
+          ],
+          isFault: true,
+          name: "Charger Safety Relay Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.InternalMemoryFault,
+            },
+          ],
+          isFault: true,
+          name: "Internal Memory Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Errors.InternalThermistorFault,
+            },
+          ],
+          isFault: true,
+          name: "Internal Thermistors Fault",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value: currentPacket?.BatteryFaults.Errors.InternalLogicFault,
+            },
+          ],
+          isFault: true,
+          name: "Internal Logic Fault",
+        },
+      ],
+      WarningFlags: [
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings.DclReducedDueToLowSoc,
+            },
+          ],
+          isFault: true,
+          name: "Dcl Reduced Due To Low Soc",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .DclReducedDueToHighCellResistance,
+            },
+          ],
+          isFault: true,
+          name: "Dcl Reduced Due to HighCell Resistance",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .DclReducedDueToTemperature,
+            },
+          ],
+          isFault: true,
+          name: "Dcl Reduced Due to Temperature",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .DclReducedDueToLowCellVoltage,
+            },
+          ],
+          isFault: true,
+          name: "Dcl Reduced Due to Low Cell Voltage",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .DclReducedDueToLowPackVoltage,
+            },
+          ],
+          isFault: true,
+          name: "Dcl Reduced Due to Low Pack Voltage",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .DclAndCclReducedDueToVoltageFailsafe,
+            },
+          ],
+          isFault: true,
+          name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.ERROR,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .DclAndCclReducedDueToCommunicationFailsafe,
+            },
+          ],
+          isFault: true,
+          name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings.CclReducedDueToHighSoc,
+            },
+          ],
+          isFault: true,
+          name: "Ccl Reduced Due to High Soc",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .CclReducedDueToHighCellResistance,
+            },
+          ],
+          isFault: true,
+          name: "Ccl Reduced to High Cell Resistance",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .CclReducedDueToTemperature,
+            },
+          ],
+          isFault: true,
+          name: "Ccl Reduced Due to Temperature",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .CclReducedDueToHighCellVoltage,
+            },
+          ],
+          isFault: true,
+          name: "Ccl Reduced Due to High Cell Voltage",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .CclReducedDueToHighPackVoltage,
+            },
+          ],
+          isFault: true,
+          name: "Ccl Reduced Due to High Pack Voltage",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .CclReducedDueToChargerLatch,
+            },
+          ],
+          isFault: true,
+          name: "Ccl Reduced Due to Charger Latch",
+        },
+        {
+          data: [
+            {
+              indicationLocation: FaultLocations.BATTERY,
+              severity: ISeverity.WARNING,
+              value:
+                currentPacket?.BatteryFaults.Warnings
+                  .CclReducedDueToAlternateCurrentLimit,
+            },
+          ],
+          isFault: true,
+          name: "Ccl Reduced Due to Alternate Current Limit",
+        },
+      ],
+    },
+    Cell: [
+      {
+        data: [
+          {
+            max: 100,
+            min: 0,
+            unit: UnitType.VOLTAGE,
+            value: Battery?.LowCellVoltage,
+          },
+          { value: Battery?.LowCellVoltageId },
+          {
+            max: 100,
+            min: 0,
+            unit: UnitType.VOLTAGE,
+            value: Battery?.HighCellVoltage,
+          },
+          { value: Battery?.HighCellVoltageId },
+        ],
+        fstring: "%s (%s) - %s (%s)",
+        name: "Battery Cell Voltage",
+      },
+      {
+        data: [
+          {
+            max: 100,
+            min: 0,
+            unit: UnitType.VOLTAGE,
+            value: Battery?.AverageCellVoltage,
+          },
+        ],
+        name: "Battery Average Voltage",
+      },
+      {
+        data: [{ max: 100, min: 0, value: Battery?.PopulatedCells }],
+        name: "Battery Populated Cells",
+      },
+      {
+        data: [{ value: Battery?.MaximumCellVoltage }],
+        name: "Maximum Cell Voltage",
+      },
+      {
+        data: [{ value: Battery?.MinimumCellVoltage }],
+        name: "Minimum Cell Voltage",
+      },
+    ] as I_PISField[],
+
+    Fan: [
+      {
+        data: [
+          {
+            max: 100,
+            min: 0,
+            unit: UnitType.VOLTAGE,
+            value: Battery?.FanVoltage,
+          },
+        ],
+        name: "Fan Voltage",
+      },
+      {
+        data: [{ max: 100, min: 0, value: Battery?.FanSpeed }],
+        name: "Fan Speed",
+      },
+      {
+        data: [
+          {
+            max: 100,
+            min: 0,
+            unit: UnitType.VOLTAGE,
+            value: Battery?.RequestedFanSpeed,
+          },
+        ],
+        name: "Requested Fan Speed",
       },
     ] as I_PISField[],
 
@@ -315,7 +606,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.AMPERAGE,
-            value: BatteryPack?.PackCurrent,
+            value: Battery?.PackCurrent,
           },
         ],
         name: "Pack Current",
@@ -326,7 +617,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: BatteryPack?.PackVoltage,
+            value: Battery?.PackVoltage,
           },
         ],
         name: "Pack Voltage",
@@ -337,7 +628,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.AMPHOUR,
-            value: BatteryPack?.PackAmphours,
+            value: Battery?.PackAmphours,
           },
         ],
         name: "Pack Amphours",
@@ -348,7 +639,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: "%",
-            value: BatteryPack?.PackStateOfCharge,
+            value: Battery?.PackStateOfCharge,
           },
         ],
         name: "Pack State of Charge",
@@ -359,7 +650,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: "%",
-            value: BatteryPack?.PackDepthOfDischarge,
+            value: Battery?.PackDepthOfDischarge,
           },
         ],
         name: "Pack Depth of Discharge",
@@ -370,10 +661,18 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.VOLTAGE,
-            value: BatteryPack?.Input12V,
+            value: Battery?.Input12V,
           },
         ],
         name: "12V Input Voltage",
+      },
+      {
+        data: [{ value: Battery?.MaximumPackVoltage }],
+        name: "Maximum Pack Voltage",
+      },
+      {
+        data: [{ value: Battery?.MinimumPackVoltage }],
+        name: "Minimum Pack Voltage",
       },
     ] as I_PISField[],
 
@@ -385,7 +684,7 @@ const Battery = (): I_PIS => {
             max: 25,
             min: 10,
             unit: UnitType.TEMP,
-            value: BatteryTemperature?.LowTemperature,
+            value: Battery?.LowTemperature,
           },
           {
             hover: "Low Cell ID",
@@ -396,7 +695,7 @@ const Battery = (): I_PIS => {
             max: 75,
             min: 50,
             unit: UnitType.TEMP,
-            value: BatteryTemperature?.HighTemperature,
+            value: Battery?.HighTemperature,
           },
           {
             hover: "High Cell ID",
@@ -412,7 +711,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.TEMP,
-            value: BatteryTemperature?.AverageTemperature,
+            value: Battery?.AverageTemperature,
           },
         ],
         name: "Average Temperature",
@@ -423,7 +722,7 @@ const Battery = (): I_PIS => {
             max: 100,
             min: 0,
             unit: UnitType.TEMP,
-            value: BatteryTemperature?.InternalTemperature,
+            value: Battery?.InternalTemperature,
           },
         ],
         name: "Internal Temperature",
