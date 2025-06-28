@@ -33,6 +33,10 @@ if (!process.env.DRIVER_TABLE_NAME) {
   throw new Error("Driver table name not defined");
 }
 
+if (!process.env.GPS_TABLE_NAME) {
+  throw new Error("GPS lap table name not defined");
+}
+
 const packetTableName = process.env.PACKET_TABLE_NAME;
 const lapTableName = process.env.LAP_TABLE_NAME;
 const gpsTableName = process.env.GPS_TABLE_NAME;
@@ -205,8 +209,7 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new PutCommand({
         Item: {
-          Rfid: rfid,
-          id: uuidv4(),
+          Rfid: rfid ?? "unknown driver",
           timestamp: timestamp,
           type: "gps-lap",
         },
@@ -228,8 +231,8 @@ export class DynamoDB implements DynamoDBtypes {
     try {
       const command = new PutCommand({
         Item: {
-          Rfid: packet.Rfid,
-          data: packet,
+          Rfid: packet.Rfid ?? "unknown driver",
+          data: packet.data,
           id: uuidv4(),
           timestamp: packet.timestamp,
           type: "lap",

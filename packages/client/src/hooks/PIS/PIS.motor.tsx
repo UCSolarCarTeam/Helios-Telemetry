@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
@@ -160,6 +161,57 @@ const Motor = (): I_PIS => {
       {
         data: [{ value: MotorDetails0?.Vq }],
         name: "Vq",
+      },
+    ] as unknown as I_PISField[],
+
+    MotorFaults: [
+      {
+        data: [
+          {
+            value: MotorDetails0?.ErrorFlags,
+          },
+        ],
+        name: "Error Flag Raised In Left Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails0?.RxErrorCount,
+          },
+        ],
+        name: "Rx Error Raised In Left Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails0?.TxErrorCount,
+          },
+        ],
+        name: "Tx Error Raised In Left Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails1?.ErrorFlags,
+          },
+        ],
+        name: "Error Flag Raised In Right Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails1?.RxErrorCount,
+          },
+        ],
+        name: "Rx Error Raised In Right Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails1?.TxErrorCount,
+          },
+        ],
+        name: "Tx Error Raised In Right Motor",
       },
     ] as unknown as I_PISField[],
 
