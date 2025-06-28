@@ -112,16 +112,16 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
 
-// const packetDataTable = new dynamodb.Table(
-//   TelemetryBackendStack,
-//   "packet_data_table",
-//   {
-//     billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-//     partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-//     removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-//     sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
-//   },
-// );
+const packetDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "packet_data_table",
+  {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
+  },
+);
 
 const lapDataTable = new dynamodb.Table(
   TelemetryBackendStack,
@@ -165,7 +165,7 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
     DRIVER_TABLE_NAME: driverDataTable.tableName,
     GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
-    // PACKET_TABLE_NAME: packetDataTable.tableName,
+    PACKET_TABLE_NAME: packetDataTable.tableName,
   },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "TelemetryBackend" }),
@@ -319,8 +319,8 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
   effect: iam.Effect.ALLOW,
 
   resources: [
-    // packetDataTable.tableArn,
-    // `${packetDataTable.tableArn}/index/type-timestamp-index`,
+    packetDataTable.tableArn,
+    `${packetDataTable.tableArn}/index/type-timestamp-index`,
     lapDataTable.tableArn,
     driverDataTable.tableArn,
     gpsCalculatedLapDataTable.tableArn,
