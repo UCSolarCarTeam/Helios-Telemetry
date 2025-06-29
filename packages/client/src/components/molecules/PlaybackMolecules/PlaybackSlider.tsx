@@ -152,7 +152,7 @@ export default function PlaybackSlider() {
     return (
       <p className="text-gray-500 mt-3 text-center font-bold text-helios">
         Please select a valid date and time range before viewing playback data
-        (Note: Max interval is 10 minutes).
+        (Note: Max interval is 60 minutes).
       </p>
     );
   }
