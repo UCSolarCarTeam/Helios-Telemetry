@@ -7,8 +7,8 @@ import type I_PIS from "@/objects/PIS/PIS.interface";
 
 function BottomInformationContainer() {
   const { currentAppState, setCurrentAppState } = useAppState();
-  const { battery, motor, mppt } = usePIS();
-  const dataArray = [battery, motor, mppt].filter(
+  const { battery, mbms, motor, mppt } = usePIS();
+  const dataArray = [battery, motor, mppt, mbms].filter(
     (data) => data !== undefined,
   ) as I_PIS[];
   const lookupTable = useFavouriteLookupTable(dataArray);
