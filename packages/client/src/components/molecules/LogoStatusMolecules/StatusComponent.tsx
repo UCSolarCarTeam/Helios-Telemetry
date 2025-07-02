@@ -31,15 +31,24 @@ function PlaybackPickerComponent() {
 }
 
 function StatusComponent() {
-  const { currentAppState } = useAppState();
-  const { currentPacket } = usePacket();
-  const userConnection = currentAppState.socketConnected;
-  // TODO: change carConnection from socketIO.connected to carConnection.connected
-  const carConnection = currentAppState.mqttConnected;
-  const colorTheme = currentAppState.darkMode ? "#FFFFFF" : "#000000";
-  // Maybe server should have a reference to the last packet received from the vehicle.
-  const packetTime = currentAppState.socketConnected
-    ? new Date(currentPacket.TimeStamp).toLocaleString()
+  const {
+    currentAppState: {
+      carLatency,
+      connectionType,
+      darkMode,
+      mqttConnected,
+      socketConnected,
+      userLatency,
+    },
+  } = useAppState();
+  const {
+    currentPacket: { TimeStamp },
+  } = usePacket();
+  const userConnection = socketConnected;
+  const carConnection = mqttConnected;
+  const colorTheme = darkMode ? "#FFFFFF" : "#000000";
+  const packetTime = userConnection
+    ? new Date(TimeStamp).toLocaleString()
     : "DISCONNECTED";
 
   return (
@@ -51,7 +60,7 @@ function StatusComponent() {
             color={colorTheme}
             height="20px"
             isConnected={userConnection}
-            latency={currentAppState.userLatency}
+            latency={userLatency}
             width="15px"
           />
           <AWSIcon color={colorTheme} height="25px" width="25px" />
@@ -59,7 +68,7 @@ function StatusComponent() {
             color={colorTheme}
             height="20px"
             isConnected={carConnection}
-            latency={currentAppState.carLatency}
+            latency={carLatency}
             width="15px"
           />
           <CarIcon color={colorTheme} height="25px" width="25px" />
@@ -74,9 +83,9 @@ function StatusComponent() {
           Connection:
         </h5>
         <h5 className="text-text-gray dark:text-text-gray-dark text-nowrap pb-2 text-xs underline decoration-primary decoration-1 underline-offset-4">
-          {currentAppState.connectionType}
+          {connectionType}
         </h5>
-        {currentAppState.connectionType === CONNECTIONTYPES.DEMO && (
+        {connectionType === CONNECTIONTYPES.DEMO && (
           <h5
             className={twMerge(
               "dark:text-text-gray-dark align-center items-center pb-1 text-lg font-bold text-helios",

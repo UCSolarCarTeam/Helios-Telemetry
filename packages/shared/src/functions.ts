@@ -483,3 +483,56 @@ export function haversineDistance(
   const d = R * c;
   return d;
 }
+
+export function flattenObject(
+  obj: Record<string, unknown>,
+  prefix = "",
+): Record<string, string | number | boolean | null> {
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) => {
+      const newKey = prefix ? `${prefix}.${key}` : key;
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        Object.assign(
+          acc,
+          flattenObject(value as Record<string, unknown>, newKey),
+        );
+      } else {
+        acc[newKey] = value as string | number | boolean | null;
+      }
+      return acc;
+    },
+    {} as Record<string, string | number | boolean | null>,
+  );
+}
+
+export function convertToCSV(jsonArray: ITelemetryData[]): string {
+  // Flatten all objects (CSV uses a flat structure)
+  const flatObjects = jsonArray.map((obj) => flattenObject(obj));
+
+  // Get all the field names (headers)
+  const headers = Array.from(
+    new Set(flatObjects.flatMap((obj) => Object.keys(obj))),
+  );
+
+  // Create the CSV rows
+  const csvRows = [
+    headers.join(","), // header row
+    ...flatObjects.map((obj) =>
+      headers
+        .map((key) => {
+          const value = obj[key];
+          if (typeof value === "string") {
+            return `"${value.replace(/"/g, '""')}"`; // escape quotes
+          }
+          return value ?? "";
+        })
+        .join(","),
+    ),
+  ];
+
+  return csvRows.join("\n");
+}
