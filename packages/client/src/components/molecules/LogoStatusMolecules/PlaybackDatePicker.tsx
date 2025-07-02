@@ -62,7 +62,10 @@ function handleDownloadCSV(csv: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.setAttribute("download", "playback_data.csv");
+  a.setAttribute(
+    "download",
+    `Helios Packet Data - ${new Date().toLocaleDateString()}.csv`,
+  );
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
