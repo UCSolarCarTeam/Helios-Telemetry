@@ -44,3 +44,6 @@ amplifyconfiguration.json
 
 #databases
 packages/server/database.sqlite
+
+# terraform 
+packages/infra/.terraform/**
