@@ -88,11 +88,12 @@ function FieldDataFormatter(props: FieldDataFormatterProps): JSX.Element {
 
 type FieldPrinterProps = {
   field: I_PISField;
+  fieldPath: string;
 };
 
 function FieldPrinter(props: FieldPrinterProps): JSX.Element {
   const { setCurrentAppState } = useAppState();
-  const { field } = props;
+  const { field, fieldPath } = props;
 
   const handleAddToFavourites = useCallback(() => {
     const storedFavourites = localStorage.getItem("favourites");
@@ -100,21 +101,18 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
       ? (JSON.parse(storedFavourites) as string[])
       : [];
 
-    if (
-      !parsedFavourites.some((fav) => fav === field.name) &&
-      typeof field.name === "string"
-    ) {
-      if (parsedFavourites.length === 8 && typeof field.name === "string") {
+    if (!parsedFavourites.includes(fieldPath)) {
+      if (parsedFavourites.length === 8) {
         parsedFavourites.shift();
       }
-      parsedFavourites.push(field.name);
+      parsedFavourites.push(fieldPath);
       setCurrentAppState((prev) => ({
         ...prev,
         favourites: parsedFavourites,
       }));
       localStorage.setItem("favourites", JSON.stringify(parsedFavourites));
     }
-  }, [field.name, setCurrentAppState]);
+  }, [fieldPath, setCurrentAppState]);
 
   if (
     field.fstring !== undefined &&
@@ -151,6 +149,7 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
 type FieldsPrinterProps = {
   fields: I_PISField[];
   depth?: number;
+  basePath: string; // NEW
 };
 
 function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
@@ -170,23 +169,30 @@ function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
       className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-x-hidden ${getMaxHeightClass()}`}
     >
       {fields.map((field, index) => (
-        <FieldPrinter field={field} key={index} />
+        <FieldPrinter
+          field={field}
+          fieldPath={`${basePath}.${field.name}`}
+          key={index}
+        />
       ))}
     </div>
   );
 }
+
 type PIStransformerProps = {
   root: I_PIS;
   depth?: number;
+  path?: string[];
 };
 
 function PISTransformer(props: PIStransformerProps): JSX.Element {
-  const { depth = 0, root } = props;
+  const { depth = 0, path = [], root } = props;
+
   const formatKey = (key: string): string => {
     return key
-      .replace(/([a-z])([A-Z])/g, "$1 $2") // Add space between lowercase and uppercase
-      .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2") // Add space between consecutive uppercase followed by lowercase
-      .replace(/([a-zA-Z])(\d)/g, "$1 $2"); // Add space between letters and numbers
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+      .replace(/([a-zA-Z])(\d)/g, "$1 $2");
   };
 
   return (
@@ -194,6 +200,8 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
       <div className="flex size-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[350px]">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
+          const newPath = [...path, key]; // Track path
+
           return (
             <div className={`flex flex-col`} id={key} key={index}>
               <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
@@ -205,10 +213,19 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
                   {formatKey(key)}
                 </p>
               </div>
+
               {Array.isArray(value) ? (
-                <FieldsPrinter depth={depth + 1} fields={value} />
+                <FieldsPrinter
+                  basePath={newPath.join(".")}
+                  depth={depth + 1}
+                  fields={value}
+                />
               ) : (
-                <PISTransformer depth={depth + 1} root={value as I_PIS} />
+                <PISTransformer
+                  depth={depth + 1}
+                  path={newPath}
+                  root={value as I_PIS}
+                />
               )}
             </div>
           );
