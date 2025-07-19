@@ -57,15 +57,30 @@ const createDateTime = (time: Date, year: number, month: number, day: number) =>
     time.getSeconds(),
   );
 
-function handleDownloadCSV(csv: string) {
+function handleDownloadCSV(csv: string, playbackDateTime: IPlaybackDateTime) {
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.setAttribute(
-    "download",
-    `Helios Packet Data - ${new Date().toLocaleDateString()}.csv`,
-  );
+  const now = new Date();
+  const dateStr = now.toLocaleDateString().replace(/\//g, "-");
+  // Use the selected playback start and end times for the filename
+  const start = playbackDateTime?.startTime
+    ? playbackDateTime.startTime
+    : new Date();
+  const end = playbackDateTime?.endTime ? playbackDateTime.endTime : new Date();
+
+  const formatTime = (date: Date) =>
+    date
+      .toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+      .replace(/:/g, "-");
+
+  const timeStr = `${formatTime(start)}_to_${formatTime(end)}`;
+  a.setAttribute("download", `Helios Packet Data - ${dateStr} ${timeStr}.csv`);
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -158,6 +173,7 @@ function PlaybackDatePicker() {
       fetchPlaybackData();
     }
   }, [currentAppState.playbackSwitch]);
+
   const updatePlaybackTime: React.Dispatch<
     React.SetStateAction<IPlaybackDateTime>
   > = (time) => {
@@ -196,7 +212,10 @@ function PlaybackDatePicker() {
                   <button
                     className="absolute right-7 top-5"
                     onClick={() =>
-                      handleDownloadCSV(convertToCSV(playbackData))
+                      handleDownloadCSV(
+                        convertToCSV(playbackData),
+                        playbackDateTime,
+                      )
                     }
                   >
                     <FileDownloadOutlinedIcon />
