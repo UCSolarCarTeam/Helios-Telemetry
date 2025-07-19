@@ -71,13 +71,10 @@ function handleDownloadCSV(csv: string, playbackDateTime: IPlaybackDateTime) {
   const end = playbackDateTime?.endTime ? playbackDateTime.endTime : new Date();
 
   const formatTime = (date: Date) =>
-    date
-      .toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      })
-      .replace(/:/g, "-");
+    date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   const timeStr = `${formatTime(start)}_to_${formatTime(end)}`;
   a.setAttribute("download", `Helios Packet Data - ${dateStr} ${timeStr}.csv`);
