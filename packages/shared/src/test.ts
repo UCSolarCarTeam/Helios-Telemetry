@@ -1,21 +1,17 @@
 import axios from "axios";
-import { IBMSRelayStatusFlags } from "./protoTypes";
 import { generateFakeTelemetryData } from "./functions";
-const {
-  Battery: { BMSRelayStatusFlags: iBMSRelayStatusFlags_ },
-} = generateFakeTelemetryData();
+import { B3 as B3Proto } from "./protoTypes";
+const { B3 } = generateFakeTelemetryData();
 async function sendData() {
   try {
-    const iBMSRelayStatusFlags = IBMSRelayStatusFlags.create(
-      iBMSRelayStatusFlags_,
-    );
-    const bytes = IBMSRelayStatusFlags.encode(iBMSRelayStatusFlags).finish();
+    const payload = B3Proto.create(B3);
+    const bytes = B3Proto.encode(payload).finish();
     const { data } = await axios.post("http://localhost:8000/receive", bytes, {
       headers: { "Content-Type": "application/octet-stream" },
       responseType: "arraybuffer",
     });
 
-    const decodedObject = IBMSRelayStatusFlags.decode(data);
+    const decodedObject = B3Proto.decode(data);
     console.log(decodedObject);
   } catch (error) {
     console.error("Error occurred:", error);

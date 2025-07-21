@@ -1,7 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Coords, ITelemetryData, ITelemetryDataType } from "./types";
-import { isRight } from "fp-ts/Either";
-import { type ValidationError } from "io-ts";
+import { Coords, ITelemetryData } from "./types";
 
 /**
  * This file generates fake telemetry data for testing purposes on the demo mode
@@ -301,11 +299,9 @@ export function generateFakeTelemetryData(): ITelemetryData {
     },
     MotorDetails0: {
       ActiveMotor: faker.number.int({ max: 100, min: 0 }),
-      BEMF_D: faker.number.int({ max: 100, min: 0 }),
-      BEMF_Q: faker.number.int({ max: 100, min: 0 }),
       BusCurrent: faker.number.int({ max: 100, min: 0 }),
       BusVoltage: faker.number.int({ max: 100, min: 0 }),
-      DC_Bus_Ah: faker.number.int({ max: 100, min: 0 }),
+      DCBusAh: faker.number.int({ max: 100, min: 0 }),
       DspBoardTemperature: faker.number.int({ max: 100, min: 0 }),
       ErrorFlags: faker.number.int({ max: 100, min: 0 }),
       HeatsinkTemperature: faker.number.int({ max: 100, min: 0 }),
@@ -329,14 +325,14 @@ export function generateFakeTelemetryData(): ITelemetryData {
       Vd: faker.number.int({ max: 100, min: 0 }),
       VehicleVelocity: faker.number.int({ max: 100, min: 0 }),
       Vq: faker.number.int({ max: 100, min: 0 }),
+      bemfD: faker.number.int({ max: 100, min: 0 }),
+      bemfQ: faker.number.int({ max: 100, min: 0 }),
     },
     MotorDetails1: {
       ActiveMotor: faker.number.int({ max: 100, min: 0 }),
-      BEMF_D: faker.number.int({ max: 100, min: 0 }),
-      BEMF_Q: faker.number.int({ max: 100, min: 0 }),
       BusCurrent: faker.number.int({ max: 100, min: 0 }),
       BusVoltage: faker.number.int({ max: 100, min: 0 }),
-      DC_Bus_Ah: faker.number.int({ max: 100, min: 0 }),
+      DCBusAh: faker.number.int({ max: 100, min: 0 }),
       DspBoardTemperature: faker.number.int({ max: 100, min: 0 }),
       ErrorFlags: faker.number.int({ max: 100, min: 0 }),
       HeatsinkTemperature: faker.number.int({ max: 100, min: 0 }),
@@ -360,6 +356,8 @@ export function generateFakeTelemetryData(): ITelemetryData {
       Vd: faker.number.int({ max: 100, min: 0 }),
       VehicleVelocity: faker.number.int({ max: 100, min: 0 }),
       Vq: faker.number.int({ max: 100, min: 0 }),
+      bemfD: faker.number.int({ max: 100, min: 0 }),
+      bemfQ: faker.number.int({ max: 100, min: 0 }),
     },
     Pi: {
       Rfid: faker.number.int({ max: 100, min: 0 }).toString(),
@@ -411,35 +409,6 @@ export function generateFakeTelemetryData(): ITelemetryData {
     TimeStamp: Math.round(faker.date.recent().getTime() / 1000),
     Title: faker.lorem.words(2),
   };
-}
-
-// this is a helper function to format the validation errors if there
-// is an error in the telemetry data that is being sent
-function formatValidationErrors(errors: ValidationError[]): string {
-  return errors
-    .map((error) => {
-      const path = error.context
-        .map(({ key }) => key)
-        .filter(Boolean)
-        .join(".");
-      const expectedType =
-        error.context[error.context.length - 1]?.type.name ??
-        "error getting expected type";
-      const actualValue = JSON.stringify(error.value);
-      return `An invalid value of ${actualValue} was supplied to ${path} (expected type: ${expectedType}). Hint: if you received a value of undefined, it is likely the field is missing from the packet`;
-    })
-    .join(", ");
-}
-
-// using the we match the structure of the telemetry data that is coming in from the car
-// and we validate it against the ITelemetryDataType
-export function validateTelemetryData(packet: unknown) {
-  const validationResult = ITelemetryDataType.decode(packet);
-  if (isRight(validationResult)) {
-    return validationResult.right;
-  }
-  const errorMessages = formatValidationErrors(validationResult.left);
-  throw new Error(errorMessages);
 }
 
 // calculateBearing calculates the bearing from start to end coordinates

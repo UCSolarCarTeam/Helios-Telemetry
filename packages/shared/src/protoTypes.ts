@@ -7,190 +7,28 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
-export const protobufPackage = "";
+export const protobufPackage = "telemetry";
 
-export enum Motor {
-  LeftMotor = 0,
-  RightMotor = 1,
-  UNRECOGNIZED = -1,
+export interface BatteryFaultWarnings {
+  CclReducedDueToAlternateCurrentLimit: boolean;
+  CclReducedDueToChargerLatch: boolean;
+  CclReducedDueToHighCellResistance: boolean;
+  CclReducedDueToHighCellVoltage: boolean;
+  CclReducedDueToHighPackVoltage: boolean;
+  CclReducedDueToHighSoc: boolean;
+  CclReducedDueToTemperature: boolean;
+  DclAndCclReducedDueToCommunicationFailsafe: boolean;
+  DclAndCclReducedDueToVoltageFailsafe: boolean;
+  DclReducedDueToHighCellResistance: boolean;
+  DclReducedDueToLowCellVoltage: boolean;
+  DclReducedDueToLowPackVoltage: boolean;
+  DclReducedDueToLowSoc: boolean;
+  DclReducedDueToTemperature: boolean;
 }
 
-export function motorFromJSON(object: any): Motor {
-  switch (object) {
-    case 0:
-    case "LeftMotor":
-      return Motor.LeftMotor;
-    case 1:
-    case "RightMotor":
-      return Motor.RightMotor;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return Motor.UNRECOGNIZED;
-  }
-}
-
-export function motorToJSON(object: Motor): string {
-  switch (object) {
-    case Motor.LeftMotor:
-      return "LeftMotor";
-    case Motor.RightMotor:
-      return "RightMotor";
-    case Motor.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
-export interface CoordUpdateResponse {
-  coords?: Coords | undefined;
-  error?: Error | undefined;
-}
-
-export interface Coords {
-  lat: number;
-  long: number;
-}
-
-export interface Error {
-  error: string;
-  invalidFields: string[];
-}
-
-export interface CoordInfoUpdate {
-  lat: string;
-  long: string;
-  password: string;
-}
-
-export interface ITelemetryData {
-  AuxBms: IAuxBms | undefined;
-  Battery: IBattery | undefined;
-  BatteryFaults: IBatteryFault | undefined;
-  Ccs: ICcs | undefined;
-  DriverControls: IDriverControls | undefined;
-  KeyMotor: IKeyMotor[];
-  Lights: ILights | undefined;
-  MPPT: IMPPT[];
-  MotorDetails: IMotorDetail[];
-  MotorFaults: IMotorFault[];
-  PacketTitle: string;
-  TimeStamp: number;
-}
-
-export interface ILapData {
-  ampHours: number;
-  averagePackCurrent: number;
-  averageSpeed: number;
-  batterySecondsRemaining: number;
-  distance: number;
-  lapTime: number;
-  netPowerOut: number;
-  timeStamp: number;
-  totalPowerIn: number;
-  totalPowerOut: number;
-}
-
-export interface IAuxBms {
-  AllowCharge: boolean;
-  AllowDischarge: boolean;
-  AuxBmsAlive: boolean;
-  AuxVoltage: number;
-  ChargeContactorError: boolean;
-  ChargeNotClosedDueToHighCurrent: boolean;
-  ChargeOpenButShouldBeClosed: boolean;
-  ChargeShouldTrip: boolean;
-  ChargeTripDueToHighCellVoltage: boolean;
-  ChargeTripDueToHighTemperatureAndCurrent: boolean;
-  ChargeTripDueToPackCurrent: boolean;
-  CommonContactorError: boolean;
-  DischargeContactorError: boolean;
-  DischargeNotClosedDueToHighCurrent: boolean;
-  DischargeOpenButShouldBeClosed: boolean;
-  DischargeShouldTrip: boolean;
-  DischargeTripDueToHighTemperatureAndCurrent: boolean;
-  DischargeTripDueToLowCellVoltage: boolean;
-  DischargeTripDueToPackCurrent: boolean;
-  HighVoltageEnableState: boolean;
-  OrionCANReceivedRecently: boolean;
-  PrechargeState: string;
-  ProtectionTrip: boolean;
-  StrobeBmsLight: boolean;
-  TripDueToOrionMessageTimeout: boolean;
-}
-
-export interface IKeyMotor {
-  Alive: boolean;
-  BusCurrent: number;
-  BusVoltage: number;
-  SetCurrent: number;
-  SetVelocity: number;
-  VehicleVelocity: number;
-}
-
-export interface IMotorDetail {
-  BackEmf: number;
-  DcBusAmpHours: number;
-  DspBoardTemp: number;
-  HeatSinkTemp: number;
-  MotorCurrentImaginary: number;
-  MotorCurrentReal: number;
-  MotorTemp: number;
-  MotorVoltageImaginary: number;
-  MotorVoltageReal: number;
-  Odometer: number;
-  PhaseBCurrent: number;
-  PhaseCCurrent: number;
-  SlipSpeed: number;
-  VoltageRail15VSupply: number;
-  VoltageRail1VSupply: number;
-  VoltageRail3VSupply: number;
-}
-
-export interface IDriverControls {
-  Acceleration: number;
-  Alive: boolean;
-  Aux: boolean;
-  Brakes: boolean;
-  Forward: boolean;
-  Hazard: boolean;
-  HeadlightsHigh: boolean;
-  HeadlightsLow: boolean;
-  HeadlightsOff: boolean;
-  Horn: boolean;
-  Interior: boolean;
-  Lap: boolean;
-  NextSong: boolean;
-  PrevSong: boolean;
-  PushToTalk: boolean;
-  RegenBraking: number;
-  Reset: boolean;
-  Reverse: boolean;
-  SignalLeft: boolean;
-  SignalRight: boolean;
-  VolumeDown: boolean;
-  VolumeUp: boolean;
-}
-
-export interface ILights {
-  Alive: boolean;
-  BmsStrobeLight: boolean;
-  Brakes: boolean;
-  HighBeams: boolean;
-  LeftSignal: boolean;
-  LowBeams: boolean;
-  RightSignal: boolean;
-}
-
-export interface IBatteryFault {
-  ErrorFlags: IBatteryErrorFlags | undefined;
-  LimitFlags: IBatteryLimitFlags | undefined;
-}
-
-export interface IBatteryErrorFlags {
-  PowerSupplyFault: boolean;
+export interface BatteryFaultErrors {
   AlwaysOnSupplyFault: boolean;
-  CANBUSCommunicationsFault: boolean;
+  CanbusCommunicationFault: boolean;
   ChargeLimitEnforcementFault: boolean;
   ChargerSafetyRelayFault: boolean;
   CurrentSensorFault: boolean;
@@ -201,90 +39,50 @@ export interface IBatteryErrorFlags {
   InternalConversionFault: boolean;
   InternalLogicFault: boolean;
   InternalMemoryFault: boolean;
-  InternalThermistorsFault: boolean;
+  InternalThermistorFault: boolean;
   LowCellVoltageFault: boolean;
   OpenWiringFault: boolean;
   PackVoltageSensorFault: boolean;
+  PowerSupply12VFault: boolean;
   ThermistorFault: boolean;
   VoltageRedundancyFault: boolean;
   WeakCellFault: boolean;
   WeakPackFault: boolean;
 }
 
-export interface IBatteryLimitFlags {
-  CclReducedDueToAlternateCurrentLimit: boolean;
-  CclReducedDueToChargerLatch: boolean;
-  CclReducedDueToHighCellResistance: boolean;
-  CclReducedDueToHighCellVoltage: boolean;
-  CclReducedDueToHighPackVoltage: boolean;
-  CclReducedDueToHighSoc: boolean;
-  CclReducedDueToTemperature: boolean;
-  DclReducedDueToHighCellResistance: boolean;
-  DclReducedDueToLowCellVoltage: boolean;
-  DclReducedDueToLowPackVoltage: boolean;
-  DclReducedDueToLowSoc: boolean;
-  DclReducedDueToTemperature: boolean;
-  DclandCclReducedDueToCommunicationFailsafe: boolean;
-  DclandCclReducedDueToVoltageFailsafe: boolean;
+export interface BatteryFaults {
+  Errors: BatteryFaultErrors | undefined;
+  Warnings: BatteryFaultWarnings | undefined;
 }
 
-export interface ICcs {
-  CcsAlive: boolean;
-}
-
-export interface IMPPT {
-  Alive: boolean;
-  ArrayCurrent: number;
-  ArrayVoltage: number;
-  BatteryVoltage: number;
-  Temperature: number;
-}
-
-export interface IMotorFault {
-  ErrorFlags: IMotorErrorFlags | undefined;
-  LimitFlags: IMotorLimitFlags | undefined;
-  RxErrorCount: number;
-  TxErrorCount: number;
-}
-
-export interface IMotorErrorFlags {
-  BadMotorPositionHallSequence: boolean;
-  ConfigReadError: boolean;
-  DcBusOverVoltage: boolean;
-  DesaturationFault: boolean;
-  MotorOverSpeed: boolean;
-  SoftwareOverCurrent: boolean;
-  Wail15VUnderVoltageLockOut: boolean;
-  WatchdogCausedLastReset: boolean;
-}
-
-export interface IMotorLimitFlags {
-  BusCurrent: boolean;
-  BusVoltageLower: boolean;
-  BusVoltageUpper: boolean;
-  IpmOrMotorTemperature: boolean;
-  MotorCurrent: boolean;
-  OutputVoltagePwm: boolean;
-  Velocity: boolean;
-}
-
-export interface IBattery {
-  InputVoltage: number;
-  Alive: boolean;
+export interface BatteryStatus {
+  AlwaysOnSignalStatus: boolean;
   AverageCellVoltage: number;
   AverageTemperature: number;
-  BMSRelayStatusFlags: IBMSRelayStatusFlags | undefined;
+  BmuAlive: number;
+  ChargeRelayEnabled: boolean;
+  ChargerSafetyEnabled: boolean;
+  DischargeRelayEnabled: boolean;
   FanSpeed: number;
   FanVoltage: number;
   HighCellVoltage: number;
   HighCellVoltageId: number;
   HighTemperature: number;
   HighThermistorId: number;
+  Input12V: number;
   InternalTemperature: number;
+  IsChargingSignalStatus: boolean;
+  IsReadySignalStatus: boolean;
   LowCellVoltage: number;
   LowCellVoltageId: number;
   LowTemperature: number;
   LowThermistorId: number;
+  MalfunctionIndicatorActive: boolean;
+  MaximumCellVoltage: number;
+  MaximumPackVoltage: number;
+  MinimumCellVoltage: number;
+  MinimumPackVoltage: number;
+  MultiPurposeInputSignalStatus: boolean;
   PackAmphours: number;
   PackCurrent: number;
   PackDepthOfDischarge: number;
@@ -294,2868 +92,267 @@ export interface IBattery {
   RequestedFanSpeed: number;
 }
 
-export interface IBMSRelayStatusFlags {
-  AlwaysOnSignalStatus: boolean;
-  ChargeRelayEnabled: boolean;
-  ChargerSafetyEnabled: boolean;
-  DischargeRelayEnabled: boolean;
-  IsChargingSignalStatus: boolean;
-  IsReadySignalStatus: boolean;
-  MalfunctionIndicatorActive: boolean;
-  MultiPurposeInputSignalStatus: boolean;
+export interface B3 {
+  Acceleration: number;
+  B3Heartbeat: boolean;
+  BrakeLightSignalStatus: boolean;
+  BrakeSwitchDigital: boolean;
+  DaytimeRunningLightSignalStatus: boolean;
+  ForwardDigital: boolean;
+  HandbrakeSwitchDigital: boolean;
+  HazardLightsInput: boolean;
+  HeadightsSwitchInput: boolean;
+  HeadlightSignalStatus: boolean;
+  HornSignalStatus: boolean;
+  HornSwitchDigital: boolean;
+  LapDigital: boolean;
+  LeftSignalInput: boolean;
+  LeftSignalStatus: boolean;
+  MotorResetDigital: boolean;
+  NeutralDigital: boolean;
+  RaceModeDigital: boolean;
+  RegenBraking: number;
+  ReverseDigital: boolean;
+  RightSignalInput: boolean;
+  RightSignalStatus: boolean;
 }
 
-function createBaseCoordUpdateResponse(): CoordUpdateResponse {
-  return { coords: undefined, error: undefined };
+export interface KeyMotor {
+  BusCurrentOut: number;
+  KeyMotorVelocity: number;
+  MotorCurrent: number;
 }
 
-export const CoordUpdateResponse: MessageFns<CoordUpdateResponse> = {
-  encode(message: CoordUpdateResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.coords !== undefined) {
-      Coords.encode(message.coords, writer.uint32(10).fork()).join();
-    }
-    if (message.error !== undefined) {
-      Error.encode(message.error, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): CoordUpdateResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCoordUpdateResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.coords = Coords.decode(reader, reader.uint32());
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.error = Error.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CoordUpdateResponse {
-    return {
-      coords: isSet(object.coords) ? Coords.fromJSON(object.coords) : undefined,
-      error: isSet(object.error) ? Error.fromJSON(object.error) : undefined,
-    };
-  },
-
-  toJSON(message: CoordUpdateResponse): unknown {
-    const obj: any = {};
-    if (message.coords !== undefined) {
-      obj.coords = Coords.toJSON(message.coords);
-    }
-    if (message.error !== undefined) {
-      obj.error = Error.toJSON(message.error);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CoordUpdateResponse>, I>>(base?: I): CoordUpdateResponse {
-    return CoordUpdateResponse.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<CoordUpdateResponse>, I>>(object: I): CoordUpdateResponse {
-    const message = createBaseCoordUpdateResponse();
-    message.coords = (object.coords !== undefined && object.coords !== null)
-      ? Coords.fromPartial(object.coords)
-      : undefined;
-    message.error = (object.error !== undefined && object.error !== null) ? Error.fromPartial(object.error) : undefined;
-    return message;
-  },
-};
-
-function createBaseCoords(): Coords {
-  return { lat: 0, long: 0 };
+export interface MBMS {
+  AbattDisable: boolean;
+  ArrayContactorCommand: boolean;
+  ArrayHeartbeatDeadTrip: boolean;
+  ArrayHighCurrentTrip: boolean;
+  ArrayHighCurrentWarning: boolean;
+  AuxiliaryBatteryVoltage: number;
+  CanOc12VWarning: boolean;
+  ChargeContactorCommand: boolean;
+  ChargeEnable: boolean;
+  ChargeHeartbeatDeadTrip: boolean;
+  ChargeHighCurrentTrip: boolean;
+  ChargeHighCurrentWarning: boolean;
+  ChargeSafety: boolean;
+  ChargeShouldTrip: boolean;
+  ChgFault: boolean;
+  ChgLvEn: boolean;
+  ChgOn: boolean;
+  CommonContactorCommand: boolean;
+  CommonHeartbeatDeadTrip: boolean;
+  CommonHighCurrentTrip: boolean;
+  CommonHighCurrentWarning: boolean;
+  ContactorConnectedUnexpectedlyTrip: boolean;
+  ContactorDisconnectedUnexpectedlyTrip: boolean;
+  DcdcFault: boolean;
+  DcdcOn: boolean;
+  DischargeEnable: boolean;
+  DischargeShouldTrip: boolean;
+  En1: boolean;
+  EsdEnabledTrip: boolean;
+  ExternalShutdown: boolean;
+  Heartbeat: boolean;
+  HighCellVoltageTrip: boolean;
+  HighCellVoltageWarning: boolean;
+  HighTemperatureTrip: boolean;
+  HighTemperatureWarning: boolean;
+  Key: boolean;
+  LowCellVoltageTrip: boolean;
+  LowCellVoltageWarning: boolean;
+  LowTemperatureTrip: boolean;
+  LowTemperatureWarning: boolean;
+  LvContactorCommand: boolean;
+  LvHeartbeatDeadTrip: boolean;
+  LvHighCurrentTrip: boolean;
+  LvHighCurrentWarning: boolean;
+  MainPowerSwitch: boolean;
+  MotorContactorCommand: boolean;
+  MotorHeartbeatDeadTrip: boolean;
+  MotorHighCurrentTrip: boolean;
+  MotorHighCurrentWarning: boolean;
+  MpsDisabledTrip: boolean;
+  OrionCanReceivedRecently: boolean;
+  OrionMessageTimeoutTrip: boolean;
+  ProtectionTrip: boolean;
+  StartupState: number;
+  StrobeBmsLight: boolean;
+  SystemState: number;
+  ThreeAOc: boolean;
 }
 
-export const Coords: MessageFns<Coords> = {
-  encode(message: Coords, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.lat !== 0) {
-      writer.uint32(9).double(message.lat);
-    }
-    if (message.long !== 0) {
-      writer.uint32(17).double(message.long);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): Coords {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCoords();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.lat = reader.double();
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.long = reader.double();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Coords {
-    return {
-      lat: isSet(object.lat) ? globalThis.Number(object.lat) : 0,
-      long: isSet(object.long) ? globalThis.Number(object.long) : 0,
-    };
-  },
-
-  toJSON(message: Coords): unknown {
-    const obj: any = {};
-    if (message.lat !== 0) {
-      obj.lat = message.lat;
-    }
-    if (message.long !== 0) {
-      obj.long = message.long;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Coords>, I>>(base?: I): Coords {
-    return Coords.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<Coords>, I>>(object: I): Coords {
-    const message = createBaseCoords();
-    message.lat = object.lat ?? 0;
-    message.long = object.long ?? 0;
-    return message;
-  },
-};
-
-function createBaseError(): Error {
-  return { error: "", invalidFields: [] };
+export interface MotorDetails {
+  ActiveMotor: number;
+  bemfD: number;
+  bemfQ: number;
+  BusCurrent: number;
+  BusVoltage: number;
+  DCBusAh: number;
+  DspBoardTemperature: number;
+  ErrorFlags: number;
+  HeatsinkTemperature: number;
+  Id: number;
+  Iq: number;
+  LimitFlags: number;
+  MotorId: number;
+  MotorTemperature: number;
+  MotorVelocity: number;
+  Odometer: number;
+  PhaseCurrentB: number;
+  PhaseCurrentC: number;
+  RxErrorCount: number;
+  SerialNumber: number;
+  SlipSpeed: number;
+  Supply15V: number;
+  Supply1V9: number;
+  Supply3V3: number;
+  TritiumId: number;
+  TxErrorCount: number;
+  Vd: number;
+  VehicleVelocity: number;
+  Vq: number;
 }
 
-export const Error: MessageFns<Error> = {
-  encode(message: Error, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.error !== "") {
-      writer.uint32(10).string(message.error);
-    }
-    for (const v of message.invalidFields) {
-      writer.uint32(18).string(v!);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): Error {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseError();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.error = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.invalidFields.push(reader.string());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Error {
-    return {
-      error: isSet(object.error) ? globalThis.String(object.error) : "",
-      invalidFields: globalThis.Array.isArray(object?.invalidFields)
-        ? object.invalidFields.map((e: any) => globalThis.String(e))
-        : [],
-    };
-  },
-
-  toJSON(message: Error): unknown {
-    const obj: any = {};
-    if (message.error !== "") {
-      obj.error = message.error;
-    }
-    if (message.invalidFields?.length) {
-      obj.invalidFields = message.invalidFields;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Error>, I>>(base?: I): Error {
-    return Error.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<Error>, I>>(object: I): Error {
-    const message = createBaseError();
-    message.error = object.error ?? "";
-    message.invalidFields = object.invalidFields?.map((e) => e) || [];
-    return message;
-  },
-};
-
-function createBaseCoordInfoUpdate(): CoordInfoUpdate {
-  return { lat: "", long: "", password: "" };
+export interface MPPT {
+  Mppt0Ch0ArrayCurrent: number;
+  Mppt0Ch0ArrayVoltage: number;
+  Mppt0Ch0BatteryVoltage: number;
+  Mppt0Ch0UnitTemperature: number;
+  Mppt0Ch1ArrayCurrent: number;
+  Mppt0Ch1ArrayVoltage: number;
+  Mppt0Ch1BatteryVoltage: number;
+  Mppt0Ch1UnitTemperature: number;
+  Mppt1Ch0ArrayCurrent: number;
+  Mppt1Ch0ArrayVoltage: number;
+  Mppt1Ch0BatteryVoltage: number;
+  Mppt1Ch0UnitTemperature: number;
+  Mppt1Ch1ArrayCurrent: number;
+  Mppt1Ch1ArrayVoltage: number;
+  Mppt1Ch1BatteryVoltage: number;
+  Mppt1Ch1UnitTemperature: number;
+  Mppt2Ch0ArrayCurrent: number;
+  Mppt2Ch0ArrayVoltage: number;
+  Mppt2Ch0BatteryVoltage: number;
+  Mppt2Ch0UnitTemperature: number;
+  Mppt2Ch1ArrayCurrent: number;
+  Mppt2Ch1ArrayVoltage: number;
+  Mppt2Ch1BatteryVoltage: number;
+  Mppt2Ch1UnitTemperature: number;
+  Mppt3Ch0ArrayCurrent: number;
+  Mppt3Ch0ArrayVoltage: number;
+  Mppt3Ch0BatteryVoltage: number;
+  Mppt3Ch0UnitTemperature: number;
+  Mppt3Ch1ArrayCurrent: number;
+  Mppt3Ch1ArrayVoltage: number;
+  Mppt3Ch1BatteryVoltage: number;
+  Mppt3Ch1UnitTemperature: number;
 }
 
-export const CoordInfoUpdate: MessageFns<CoordInfoUpdate> = {
-  encode(message: CoordInfoUpdate, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.lat !== "") {
-      writer.uint32(10).string(message.lat);
-    }
-    if (message.long !== "") {
-      writer.uint32(18).string(message.long);
-    }
-    if (message.password !== "") {
-      writer.uint32(26).string(message.password);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): CoordInfoUpdate {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCoordInfoUpdate();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.lat = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.long = reader.string();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.password = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CoordInfoUpdate {
-    return {
-      lat: isSet(object.lat) ? globalThis.String(object.lat) : "",
-      long: isSet(object.long) ? globalThis.String(object.long) : "",
-      password: isSet(object.password) ? globalThis.String(object.password) : "",
-    };
-  },
-
-  toJSON(message: CoordInfoUpdate): unknown {
-    const obj: any = {};
-    if (message.lat !== "") {
-      obj.lat = message.lat;
-    }
-    if (message.long !== "") {
-      obj.long = message.long;
-    }
-    if (message.password !== "") {
-      obj.password = message.password;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CoordInfoUpdate>, I>>(base?: I): CoordInfoUpdate {
-    return CoordInfoUpdate.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<CoordInfoUpdate>, I>>(object: I): CoordInfoUpdate {
-    const message = createBaseCoordInfoUpdate();
-    message.lat = object.lat ?? "";
-    message.long = object.long ?? "";
-    message.password = object.password ?? "";
-    return message;
-  },
-};
-
-function createBaseITelemetryData(): ITelemetryData {
-  return {
-    AuxBms: undefined,
-    Battery: undefined,
-    BatteryFaults: undefined,
-    Ccs: undefined,
-    DriverControls: undefined,
-    KeyMotor: [],
-    Lights: undefined,
-    MPPT: [],
-    MotorDetails: [],
-    MotorFaults: [],
-    PacketTitle: "",
-    TimeStamp: 0,
-  };
+export interface ContactorStatus {
+  ArrayBPSError: boolean;
+  ArrayChargeCurrent: number;
+  ArrayContactorClosed: boolean;
+  ArrayContactorClosing: boolean;
+  ArrayContactorError: boolean;
+  ArrayHeartbeat: boolean;
+  ArrayLineCurrent: number;
+  ArrayPrechargerClosed: boolean;
+  ArrayPrechargerClosing: boolean;
+  ArrayPrechargerError: boolean;
+  ChargeBPSError: boolean;
+  ChargeChargeCurrent: number;
+  ChargeContactorClosed: boolean;
+  ChargeContactorClosing: boolean;
+  ChargeContactorError: boolean;
+  ChargeHeartbeat: boolean;
+  ChargeLineCurrent: number;
+  ChargePrechargerClosed: boolean;
+  ChargePrechargerClosing: boolean;
+  ChargePrechargerError: boolean;
+  CommonChargeCurrent: number;
+  CommonContactorClosed: boolean;
+  CommonContactorClosing: boolean;
+  CommonContactorError: boolean;
+  CommonContactorOpeningError: boolean;
+  CommonHeartbeat: boolean;
+  CommonLineCurrent: number;
+  CommonPrechargerClosed: boolean;
+  CommonPrechargerClosing: boolean;
+  CommonPrechargerError: boolean;
+  LvBpsError: boolean;
+  LvChargeCurrent: number;
+  LvContactorClosed: boolean;
+  LvContactorClosing: boolean;
+  LvContactorError: boolean;
+  LvHeartbeat: boolean;
+  LvLineCurrent: number;
+  LvPrechargerClosed: boolean;
+  LvPrechargerClosing: boolean;
+  LvPrechargerError: boolean;
+  MotorBPSError: boolean;
+  MotorChargeCurrent: number;
+  MotorContactorClosed: boolean;
+  MotorContactorClosing: boolean;
+  MotorContactorError: boolean;
+  MotorHeartbeat: boolean;
+  MotorLineCurrent: number;
+  MotorPrechargerClosed: boolean;
+  MotorPrechargerClosing: boolean;
+  MotorPrechargerError: boolean;
 }
 
-export const ITelemetryData: MessageFns<ITelemetryData> = {
-  encode(message: ITelemetryData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.AuxBms !== undefined) {
-      IAuxBms.encode(message.AuxBms, writer.uint32(10).fork()).join();
-    }
-    if (message.Battery !== undefined) {
-      IBattery.encode(message.Battery, writer.uint32(18).fork()).join();
-    }
-    if (message.BatteryFaults !== undefined) {
-      IBatteryFault.encode(message.BatteryFaults, writer.uint32(26).fork()).join();
-    }
-    if (message.Ccs !== undefined) {
-      ICcs.encode(message.Ccs, writer.uint32(34).fork()).join();
-    }
-    if (message.DriverControls !== undefined) {
-      IDriverControls.encode(message.DriverControls, writer.uint32(42).fork()).join();
-    }
-    for (const v of message.KeyMotor) {
-      IKeyMotor.encode(v!, writer.uint32(50).fork()).join();
-    }
-    if (message.Lights !== undefined) {
-      ILights.encode(message.Lights, writer.uint32(58).fork()).join();
-    }
-    for (const v of message.MPPT) {
-      IMPPT.encode(v!, writer.uint32(66).fork()).join();
-    }
-    for (const v of message.MotorDetails) {
-      IMotorDetail.encode(v!, writer.uint32(74).fork()).join();
-    }
-    for (const v of message.MotorFaults) {
-      IMotorFault.encode(v!, writer.uint32(82).fork()).join();
-    }
-    if (message.PacketTitle !== "") {
-      writer.uint32(90).string(message.PacketTitle);
-    }
-    if (message.TimeStamp !== 0) {
-      writer.uint32(96).int64(message.TimeStamp);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ITelemetryData {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseITelemetryData();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.AuxBms = IAuxBms.decode(reader, reader.uint32());
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.Battery = IBattery.decode(reader, reader.uint32());
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.BatteryFaults = IBatteryFault.decode(reader, reader.uint32());
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.Ccs = ICcs.decode(reader, reader.uint32());
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
-          message.DriverControls = IDriverControls.decode(reader, reader.uint32());
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          message.KeyMotor.push(IKeyMotor.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 7: {
-          if (tag !== 58) {
-            break;
-          }
-
-          message.Lights = ILights.decode(reader, reader.uint32());
-          continue;
-        }
-        case 8: {
-          if (tag !== 66) {
-            break;
-          }
-
-          message.MPPT.push(IMPPT.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 9: {
-          if (tag !== 74) {
-            break;
-          }
-
-          message.MotorDetails.push(IMotorDetail.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 10: {
-          if (tag !== 82) {
-            break;
-          }
-
-          message.MotorFaults.push(IMotorFault.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 11: {
-          if (tag !== 90) {
-            break;
-          }
-
-          message.PacketTitle = reader.string();
-          continue;
-        }
-        case 12: {
-          if (tag !== 96) {
-            break;
-          }
-
-          message.TimeStamp = longToNumber(reader.int64());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ITelemetryData {
-    return {
-      AuxBms: isSet(object.AuxBms) ? IAuxBms.fromJSON(object.AuxBms) : undefined,
-      Battery: isSet(object.Battery) ? IBattery.fromJSON(object.Battery) : undefined,
-      BatteryFaults: isSet(object.BatteryFaults) ? IBatteryFault.fromJSON(object.BatteryFaults) : undefined,
-      Ccs: isSet(object.Ccs) ? ICcs.fromJSON(object.Ccs) : undefined,
-      DriverControls: isSet(object.DriverControls) ? IDriverControls.fromJSON(object.DriverControls) : undefined,
-      KeyMotor: globalThis.Array.isArray(object?.KeyMotor)
-        ? object.KeyMotor.map((e: any) => IKeyMotor.fromJSON(e))
-        : [],
-      Lights: isSet(object.Lights) ? ILights.fromJSON(object.Lights) : undefined,
-      MPPT: globalThis.Array.isArray(object?.MPPT) ? object.MPPT.map((e: any) => IMPPT.fromJSON(e)) : [],
-      MotorDetails: globalThis.Array.isArray(object?.MotorDetails)
-        ? object.MotorDetails.map((e: any) => IMotorDetail.fromJSON(e))
-        : [],
-      MotorFaults: globalThis.Array.isArray(object?.MotorFaults)
-        ? object.MotorFaults.map((e: any) => IMotorFault.fromJSON(e))
-        : [],
-      PacketTitle: isSet(object.PacketTitle) ? globalThis.String(object.PacketTitle) : "",
-      TimeStamp: isSet(object.TimeStamp) ? globalThis.Number(object.TimeStamp) : 0,
-    };
-  },
-
-  toJSON(message: ITelemetryData): unknown {
-    const obj: any = {};
-    if (message.AuxBms !== undefined) {
-      obj.AuxBms = IAuxBms.toJSON(message.AuxBms);
-    }
-    if (message.Battery !== undefined) {
-      obj.Battery = IBattery.toJSON(message.Battery);
-    }
-    if (message.BatteryFaults !== undefined) {
-      obj.BatteryFaults = IBatteryFault.toJSON(message.BatteryFaults);
-    }
-    if (message.Ccs !== undefined) {
-      obj.Ccs = ICcs.toJSON(message.Ccs);
-    }
-    if (message.DriverControls !== undefined) {
-      obj.DriverControls = IDriverControls.toJSON(message.DriverControls);
-    }
-    if (message.KeyMotor?.length) {
-      obj.KeyMotor = message.KeyMotor.map((e) => IKeyMotor.toJSON(e));
-    }
-    if (message.Lights !== undefined) {
-      obj.Lights = ILights.toJSON(message.Lights);
-    }
-    if (message.MPPT?.length) {
-      obj.MPPT = message.MPPT.map((e) => IMPPT.toJSON(e));
-    }
-    if (message.MotorDetails?.length) {
-      obj.MotorDetails = message.MotorDetails.map((e) => IMotorDetail.toJSON(e));
-    }
-    if (message.MotorFaults?.length) {
-      obj.MotorFaults = message.MotorFaults.map((e) => IMotorFault.toJSON(e));
-    }
-    if (message.PacketTitle !== "") {
-      obj.PacketTitle = message.PacketTitle;
-    }
-    if (message.TimeStamp !== 0) {
-      obj.TimeStamp = Math.round(message.TimeStamp);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ITelemetryData>, I>>(base?: I): ITelemetryData {
-    return ITelemetryData.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ITelemetryData>, I>>(object: I): ITelemetryData {
-    const message = createBaseITelemetryData();
-    message.AuxBms = (object.AuxBms !== undefined && object.AuxBms !== null)
-      ? IAuxBms.fromPartial(object.AuxBms)
-      : undefined;
-    message.Battery = (object.Battery !== undefined && object.Battery !== null)
-      ? IBattery.fromPartial(object.Battery)
-      : undefined;
-    message.BatteryFaults = (object.BatteryFaults !== undefined && object.BatteryFaults !== null)
-      ? IBatteryFault.fromPartial(object.BatteryFaults)
-      : undefined;
-    message.Ccs = (object.Ccs !== undefined && object.Ccs !== null) ? ICcs.fromPartial(object.Ccs) : undefined;
-    message.DriverControls = (object.DriverControls !== undefined && object.DriverControls !== null)
-      ? IDriverControls.fromPartial(object.DriverControls)
-      : undefined;
-    message.KeyMotor = object.KeyMotor?.map((e) => IKeyMotor.fromPartial(e)) || [];
-    message.Lights = (object.Lights !== undefined && object.Lights !== null)
-      ? ILights.fromPartial(object.Lights)
-      : undefined;
-    message.MPPT = object.MPPT?.map((e) => IMPPT.fromPartial(e)) || [];
-    message.MotorDetails = object.MotorDetails?.map((e) => IMotorDetail.fromPartial(e)) || [];
-    message.MotorFaults = object.MotorFaults?.map((e) => IMotorFault.fromPartial(e)) || [];
-    message.PacketTitle = object.PacketTitle ?? "";
-    message.TimeStamp = object.TimeStamp ?? 0;
-    return message;
-  },
-};
-
-function createBaseILapData(): ILapData {
-  return {
-    ampHours: 0,
-    averagePackCurrent: 0,
-    averageSpeed: 0,
-    batterySecondsRemaining: 0,
-    distance: 0,
-    lapTime: 0,
-    netPowerOut: 0,
-    timeStamp: 0,
-    totalPowerIn: 0,
-    totalPowerOut: 0,
-  };
+export interface Pi {
+  Rfid: string;
 }
 
-export const ILapData: MessageFns<ILapData> = {
-  encode(message: ILapData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.ampHours !== 0) {
-      writer.uint32(9).double(message.ampHours);
-    }
-    if (message.averagePackCurrent !== 0) {
-      writer.uint32(17).double(message.averagePackCurrent);
-    }
-    if (message.averageSpeed !== 0) {
-      writer.uint32(25).double(message.averageSpeed);
-    }
-    if (message.batterySecondsRemaining !== 0) {
-      writer.uint32(33).double(message.batterySecondsRemaining);
-    }
-    if (message.distance !== 0) {
-      writer.uint32(41).double(message.distance);
-    }
-    if (message.lapTime !== 0) {
-      writer.uint32(49).double(message.lapTime);
-    }
-    if (message.netPowerOut !== 0) {
-      writer.uint32(57).double(message.netPowerOut);
-    }
-    if (message.timeStamp !== 0) {
-      writer.uint32(64).int64(message.timeStamp);
-    }
-    if (message.totalPowerIn !== 0) {
-      writer.uint32(73).double(message.totalPowerIn);
-    }
-    if (message.totalPowerOut !== 0) {
-      writer.uint32(81).double(message.totalPowerOut);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ILapData {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseILapData();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.ampHours = reader.double();
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.averagePackCurrent = reader.double();
-          continue;
-        }
-        case 3: {
-          if (tag !== 25) {
-            break;
-          }
-
-          message.averageSpeed = reader.double();
-          continue;
-        }
-        case 4: {
-          if (tag !== 33) {
-            break;
-          }
-
-          message.batterySecondsRemaining = reader.double();
-          continue;
-        }
-        case 5: {
-          if (tag !== 41) {
-            break;
-          }
-
-          message.distance = reader.double();
-          continue;
-        }
-        case 6: {
-          if (tag !== 49) {
-            break;
-          }
-
-          message.lapTime = reader.double();
-          continue;
-        }
-        case 7: {
-          if (tag !== 57) {
-            break;
-          }
-
-          message.netPowerOut = reader.double();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.timeStamp = longToNumber(reader.int64());
-          continue;
-        }
-        case 9: {
-          if (tag !== 73) {
-            break;
-          }
-
-          message.totalPowerIn = reader.double();
-          continue;
-        }
-        case 10: {
-          if (tag !== 81) {
-            break;
-          }
-
-          message.totalPowerOut = reader.double();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ILapData {
-    return {
-      ampHours: isSet(object.ampHours) ? globalThis.Number(object.ampHours) : 0,
-      averagePackCurrent: isSet(object.averagePackCurrent) ? globalThis.Number(object.averagePackCurrent) : 0,
-      averageSpeed: isSet(object.averageSpeed) ? globalThis.Number(object.averageSpeed) : 0,
-      batterySecondsRemaining: isSet(object.batterySecondsRemaining)
-        ? globalThis.Number(object.batterySecondsRemaining)
-        : 0,
-      distance: isSet(object.distance) ? globalThis.Number(object.distance) : 0,
-      lapTime: isSet(object.lapTime) ? globalThis.Number(object.lapTime) : 0,
-      netPowerOut: isSet(object.netPowerOut) ? globalThis.Number(object.netPowerOut) : 0,
-      timeStamp: isSet(object.timeStamp) ? globalThis.Number(object.timeStamp) : 0,
-      totalPowerIn: isSet(object.totalPowerIn) ? globalThis.Number(object.totalPowerIn) : 0,
-      totalPowerOut: isSet(object.totalPowerOut) ? globalThis.Number(object.totalPowerOut) : 0,
-    };
-  },
-
-  toJSON(message: ILapData): unknown {
-    const obj: any = {};
-    if (message.ampHours !== 0) {
-      obj.ampHours = message.ampHours;
-    }
-    if (message.averagePackCurrent !== 0) {
-      obj.averagePackCurrent = message.averagePackCurrent;
-    }
-    if (message.averageSpeed !== 0) {
-      obj.averageSpeed = message.averageSpeed;
-    }
-    if (message.batterySecondsRemaining !== 0) {
-      obj.batterySecondsRemaining = message.batterySecondsRemaining;
-    }
-    if (message.distance !== 0) {
-      obj.distance = message.distance;
-    }
-    if (message.lapTime !== 0) {
-      obj.lapTime = message.lapTime;
-    }
-    if (message.netPowerOut !== 0) {
-      obj.netPowerOut = message.netPowerOut;
-    }
-    if (message.timeStamp !== 0) {
-      obj.timeStamp = Math.round(message.timeStamp);
-    }
-    if (message.totalPowerIn !== 0) {
-      obj.totalPowerIn = message.totalPowerIn;
-    }
-    if (message.totalPowerOut !== 0) {
-      obj.totalPowerOut = message.totalPowerOut;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ILapData>, I>>(base?: I): ILapData {
-    return ILapData.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ILapData>, I>>(object: I): ILapData {
-    const message = createBaseILapData();
-    message.ampHours = object.ampHours ?? 0;
-    message.averagePackCurrent = object.averagePackCurrent ?? 0;
-    message.averageSpeed = object.averageSpeed ?? 0;
-    message.batterySecondsRemaining = object.batterySecondsRemaining ?? 0;
-    message.distance = object.distance ?? 0;
-    message.lapTime = object.lapTime ?? 0;
-    message.netPowerOut = object.netPowerOut ?? 0;
-    message.timeStamp = object.timeStamp ?? 0;
-    message.totalPowerIn = object.totalPowerIn ?? 0;
-    message.totalPowerOut = object.totalPowerOut ?? 0;
-    return message;
-  },
-};
-
-function createBaseIAuxBms(): IAuxBms {
-  return {
-    AllowCharge: false,
-    AllowDischarge: false,
-    AuxBmsAlive: false,
-    AuxVoltage: 0,
-    ChargeContactorError: false,
-    ChargeNotClosedDueToHighCurrent: false,
-    ChargeOpenButShouldBeClosed: false,
-    ChargeShouldTrip: false,
-    ChargeTripDueToHighCellVoltage: false,
-    ChargeTripDueToHighTemperatureAndCurrent: false,
-    ChargeTripDueToPackCurrent: false,
-    CommonContactorError: false,
-    DischargeContactorError: false,
-    DischargeNotClosedDueToHighCurrent: false,
-    DischargeOpenButShouldBeClosed: false,
-    DischargeShouldTrip: false,
-    DischargeTripDueToHighTemperatureAndCurrent: false,
-    DischargeTripDueToLowCellVoltage: false,
-    DischargeTripDueToPackCurrent: false,
-    HighVoltageEnableState: false,
-    OrionCANReceivedRecently: false,
-    PrechargeState: "",
-    ProtectionTrip: false,
-    StrobeBmsLight: false,
-    TripDueToOrionMessageTimeout: false,
-  };
+export interface ProximitySensors {
+  ProximitySensor1: number;
+  ProximitySensor2: number;
+  ProximitySensor3: number;
+  ProximitySensor4: number;
 }
 
-export const IAuxBms: MessageFns<IAuxBms> = {
-  encode(message: IAuxBms, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.AllowCharge !== false) {
-      writer.uint32(8).bool(message.AllowCharge);
-    }
-    if (message.AllowDischarge !== false) {
-      writer.uint32(16).bool(message.AllowDischarge);
-    }
-    if (message.AuxBmsAlive !== false) {
-      writer.uint32(24).bool(message.AuxBmsAlive);
-    }
-    if (message.AuxVoltage !== 0) {
-      writer.uint32(33).double(message.AuxVoltage);
-    }
-    if (message.ChargeContactorError !== false) {
-      writer.uint32(40).bool(message.ChargeContactorError);
-    }
-    if (message.ChargeNotClosedDueToHighCurrent !== false) {
-      writer.uint32(48).bool(message.ChargeNotClosedDueToHighCurrent);
-    }
-    if (message.ChargeOpenButShouldBeClosed !== false) {
-      writer.uint32(56).bool(message.ChargeOpenButShouldBeClosed);
-    }
-    if (message.ChargeShouldTrip !== false) {
-      writer.uint32(64).bool(message.ChargeShouldTrip);
-    }
-    if (message.ChargeTripDueToHighCellVoltage !== false) {
-      writer.uint32(72).bool(message.ChargeTripDueToHighCellVoltage);
-    }
-    if (message.ChargeTripDueToHighTemperatureAndCurrent !== false) {
-      writer.uint32(80).bool(message.ChargeTripDueToHighTemperatureAndCurrent);
-    }
-    if (message.ChargeTripDueToPackCurrent !== false) {
-      writer.uint32(88).bool(message.ChargeTripDueToPackCurrent);
-    }
-    if (message.CommonContactorError !== false) {
-      writer.uint32(96).bool(message.CommonContactorError);
-    }
-    if (message.DischargeContactorError !== false) {
-      writer.uint32(104).bool(message.DischargeContactorError);
-    }
-    if (message.DischargeNotClosedDueToHighCurrent !== false) {
-      writer.uint32(112).bool(message.DischargeNotClosedDueToHighCurrent);
-    }
-    if (message.DischargeOpenButShouldBeClosed !== false) {
-      writer.uint32(120).bool(message.DischargeOpenButShouldBeClosed);
-    }
-    if (message.DischargeShouldTrip !== false) {
-      writer.uint32(128).bool(message.DischargeShouldTrip);
-    }
-    if (message.DischargeTripDueToHighTemperatureAndCurrent !== false) {
-      writer.uint32(136).bool(message.DischargeTripDueToHighTemperatureAndCurrent);
-    }
-    if (message.DischargeTripDueToLowCellVoltage !== false) {
-      writer.uint32(144).bool(message.DischargeTripDueToLowCellVoltage);
-    }
-    if (message.DischargeTripDueToPackCurrent !== false) {
-      writer.uint32(152).bool(message.DischargeTripDueToPackCurrent);
-    }
-    if (message.HighVoltageEnableState !== false) {
-      writer.uint32(160).bool(message.HighVoltageEnableState);
-    }
-    if (message.OrionCANReceivedRecently !== false) {
-      writer.uint32(168).bool(message.OrionCANReceivedRecently);
-    }
-    if (message.PrechargeState !== "") {
-      writer.uint32(178).string(message.PrechargeState);
-    }
-    if (message.ProtectionTrip !== false) {
-      writer.uint32(184).bool(message.ProtectionTrip);
-    }
-    if (message.StrobeBmsLight !== false) {
-      writer.uint32(192).bool(message.StrobeBmsLight);
-    }
-    if (message.TripDueToOrionMessageTimeout !== false) {
-      writer.uint32(200).bool(message.TripDueToOrionMessageTimeout);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IAuxBms {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIAuxBms();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.AllowCharge = reader.bool();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.AllowDischarge = reader.bool();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.AuxBmsAlive = reader.bool();
-          continue;
-        }
-        case 4: {
-          if (tag !== 33) {
-            break;
-          }
-
-          message.AuxVoltage = reader.double();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.ChargeContactorError = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.ChargeNotClosedDueToHighCurrent = reader.bool();
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.ChargeOpenButShouldBeClosed = reader.bool();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.ChargeShouldTrip = reader.bool();
-          continue;
-        }
-        case 9: {
-          if (tag !== 72) {
-            break;
-          }
-
-          message.ChargeTripDueToHighCellVoltage = reader.bool();
-          continue;
-        }
-        case 10: {
-          if (tag !== 80) {
-            break;
-          }
-
-          message.ChargeTripDueToHighTemperatureAndCurrent = reader.bool();
-          continue;
-        }
-        case 11: {
-          if (tag !== 88) {
-            break;
-          }
-
-          message.ChargeTripDueToPackCurrent = reader.bool();
-          continue;
-        }
-        case 12: {
-          if (tag !== 96) {
-            break;
-          }
-
-          message.CommonContactorError = reader.bool();
-          continue;
-        }
-        case 13: {
-          if (tag !== 104) {
-            break;
-          }
-
-          message.DischargeContactorError = reader.bool();
-          continue;
-        }
-        case 14: {
-          if (tag !== 112) {
-            break;
-          }
-
-          message.DischargeNotClosedDueToHighCurrent = reader.bool();
-          continue;
-        }
-        case 15: {
-          if (tag !== 120) {
-            break;
-          }
-
-          message.DischargeOpenButShouldBeClosed = reader.bool();
-          continue;
-        }
-        case 16: {
-          if (tag !== 128) {
-            break;
-          }
-
-          message.DischargeShouldTrip = reader.bool();
-          continue;
-        }
-        case 17: {
-          if (tag !== 136) {
-            break;
-          }
-
-          message.DischargeTripDueToHighTemperatureAndCurrent = reader.bool();
-          continue;
-        }
-        case 18: {
-          if (tag !== 144) {
-            break;
-          }
-
-          message.DischargeTripDueToLowCellVoltage = reader.bool();
-          continue;
-        }
-        case 19: {
-          if (tag !== 152) {
-            break;
-          }
-
-          message.DischargeTripDueToPackCurrent = reader.bool();
-          continue;
-        }
-        case 20: {
-          if (tag !== 160) {
-            break;
-          }
-
-          message.HighVoltageEnableState = reader.bool();
-          continue;
-        }
-        case 21: {
-          if (tag !== 168) {
-            break;
-          }
-
-          message.OrionCANReceivedRecently = reader.bool();
-          continue;
-        }
-        case 22: {
-          if (tag !== 178) {
-            break;
-          }
-
-          message.PrechargeState = reader.string();
-          continue;
-        }
-        case 23: {
-          if (tag !== 184) {
-            break;
-          }
-
-          message.ProtectionTrip = reader.bool();
-          continue;
-        }
-        case 24: {
-          if (tag !== 192) {
-            break;
-          }
-
-          message.StrobeBmsLight = reader.bool();
-          continue;
-        }
-        case 25: {
-          if (tag !== 200) {
-            break;
-          }
-
-          message.TripDueToOrionMessageTimeout = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IAuxBms {
-    return {
-      AllowCharge: isSet(object.AllowCharge) ? globalThis.Boolean(object.AllowCharge) : false,
-      AllowDischarge: isSet(object.AllowDischarge) ? globalThis.Boolean(object.AllowDischarge) : false,
-      AuxBmsAlive: isSet(object.AuxBmsAlive) ? globalThis.Boolean(object.AuxBmsAlive) : false,
-      AuxVoltage: isSet(object.AuxVoltage) ? globalThis.Number(object.AuxVoltage) : 0,
-      ChargeContactorError: isSet(object.ChargeContactorError)
-        ? globalThis.Boolean(object.ChargeContactorError)
-        : false,
-      ChargeNotClosedDueToHighCurrent: isSet(object.ChargeNotClosedDueToHighCurrent)
-        ? globalThis.Boolean(object.ChargeNotClosedDueToHighCurrent)
-        : false,
-      ChargeOpenButShouldBeClosed: isSet(object.ChargeOpenButShouldBeClosed)
-        ? globalThis.Boolean(object.ChargeOpenButShouldBeClosed)
-        : false,
-      ChargeShouldTrip: isSet(object.ChargeShouldTrip) ? globalThis.Boolean(object.ChargeShouldTrip) : false,
-      ChargeTripDueToHighCellVoltage: isSet(object.ChargeTripDueToHighCellVoltage)
-        ? globalThis.Boolean(object.ChargeTripDueToHighCellVoltage)
-        : false,
-      ChargeTripDueToHighTemperatureAndCurrent: isSet(object.ChargeTripDueToHighTemperatureAndCurrent)
-        ? globalThis.Boolean(object.ChargeTripDueToHighTemperatureAndCurrent)
-        : false,
-      ChargeTripDueToPackCurrent: isSet(object.ChargeTripDueToPackCurrent)
-        ? globalThis.Boolean(object.ChargeTripDueToPackCurrent)
-        : false,
-      CommonContactorError: isSet(object.CommonContactorError)
-        ? globalThis.Boolean(object.CommonContactorError)
-        : false,
-      DischargeContactorError: isSet(object.DischargeContactorError)
-        ? globalThis.Boolean(object.DischargeContactorError)
-        : false,
-      DischargeNotClosedDueToHighCurrent: isSet(object.DischargeNotClosedDueToHighCurrent)
-        ? globalThis.Boolean(object.DischargeNotClosedDueToHighCurrent)
-        : false,
-      DischargeOpenButShouldBeClosed: isSet(object.DischargeOpenButShouldBeClosed)
-        ? globalThis.Boolean(object.DischargeOpenButShouldBeClosed)
-        : false,
-      DischargeShouldTrip: isSet(object.DischargeShouldTrip) ? globalThis.Boolean(object.DischargeShouldTrip) : false,
-      DischargeTripDueToHighTemperatureAndCurrent: isSet(object.DischargeTripDueToHighTemperatureAndCurrent)
-        ? globalThis.Boolean(object.DischargeTripDueToHighTemperatureAndCurrent)
-        : false,
-      DischargeTripDueToLowCellVoltage: isSet(object.DischargeTripDueToLowCellVoltage)
-        ? globalThis.Boolean(object.DischargeTripDueToLowCellVoltage)
-        : false,
-      DischargeTripDueToPackCurrent: isSet(object.DischargeTripDueToPackCurrent)
-        ? globalThis.Boolean(object.DischargeTripDueToPackCurrent)
-        : false,
-      HighVoltageEnableState: isSet(object.HighVoltageEnableState)
-        ? globalThis.Boolean(object.HighVoltageEnableState)
-        : false,
-      OrionCANReceivedRecently: isSet(object.OrionCANReceivedRecently)
-        ? globalThis.Boolean(object.OrionCANReceivedRecently)
-        : false,
-      PrechargeState: isSet(object.PrechargeState) ? globalThis.String(object.PrechargeState) : "",
-      ProtectionTrip: isSet(object.ProtectionTrip) ? globalThis.Boolean(object.ProtectionTrip) : false,
-      StrobeBmsLight: isSet(object.StrobeBmsLight) ? globalThis.Boolean(object.StrobeBmsLight) : false,
-      TripDueToOrionMessageTimeout: isSet(object.TripDueToOrionMessageTimeout)
-        ? globalThis.Boolean(object.TripDueToOrionMessageTimeout)
-        : false,
-    };
-  },
-
-  toJSON(message: IAuxBms): unknown {
-    const obj: any = {};
-    if (message.AllowCharge !== false) {
-      obj.AllowCharge = message.AllowCharge;
-    }
-    if (message.AllowDischarge !== false) {
-      obj.AllowDischarge = message.AllowDischarge;
-    }
-    if (message.AuxBmsAlive !== false) {
-      obj.AuxBmsAlive = message.AuxBmsAlive;
-    }
-    if (message.AuxVoltage !== 0) {
-      obj.AuxVoltage = message.AuxVoltage;
-    }
-    if (message.ChargeContactorError !== false) {
-      obj.ChargeContactorError = message.ChargeContactorError;
-    }
-    if (message.ChargeNotClosedDueToHighCurrent !== false) {
-      obj.ChargeNotClosedDueToHighCurrent = message.ChargeNotClosedDueToHighCurrent;
-    }
-    if (message.ChargeOpenButShouldBeClosed !== false) {
-      obj.ChargeOpenButShouldBeClosed = message.ChargeOpenButShouldBeClosed;
-    }
-    if (message.ChargeShouldTrip !== false) {
-      obj.ChargeShouldTrip = message.ChargeShouldTrip;
-    }
-    if (message.ChargeTripDueToHighCellVoltage !== false) {
-      obj.ChargeTripDueToHighCellVoltage = message.ChargeTripDueToHighCellVoltage;
-    }
-    if (message.ChargeTripDueToHighTemperatureAndCurrent !== false) {
-      obj.ChargeTripDueToHighTemperatureAndCurrent = message.ChargeTripDueToHighTemperatureAndCurrent;
-    }
-    if (message.ChargeTripDueToPackCurrent !== false) {
-      obj.ChargeTripDueToPackCurrent = message.ChargeTripDueToPackCurrent;
-    }
-    if (message.CommonContactorError !== false) {
-      obj.CommonContactorError = message.CommonContactorError;
-    }
-    if (message.DischargeContactorError !== false) {
-      obj.DischargeContactorError = message.DischargeContactorError;
-    }
-    if (message.DischargeNotClosedDueToHighCurrent !== false) {
-      obj.DischargeNotClosedDueToHighCurrent = message.DischargeNotClosedDueToHighCurrent;
-    }
-    if (message.DischargeOpenButShouldBeClosed !== false) {
-      obj.DischargeOpenButShouldBeClosed = message.DischargeOpenButShouldBeClosed;
-    }
-    if (message.DischargeShouldTrip !== false) {
-      obj.DischargeShouldTrip = message.DischargeShouldTrip;
-    }
-    if (message.DischargeTripDueToHighTemperatureAndCurrent !== false) {
-      obj.DischargeTripDueToHighTemperatureAndCurrent = message.DischargeTripDueToHighTemperatureAndCurrent;
-    }
-    if (message.DischargeTripDueToLowCellVoltage !== false) {
-      obj.DischargeTripDueToLowCellVoltage = message.DischargeTripDueToLowCellVoltage;
-    }
-    if (message.DischargeTripDueToPackCurrent !== false) {
-      obj.DischargeTripDueToPackCurrent = message.DischargeTripDueToPackCurrent;
-    }
-    if (message.HighVoltageEnableState !== false) {
-      obj.HighVoltageEnableState = message.HighVoltageEnableState;
-    }
-    if (message.OrionCANReceivedRecently !== false) {
-      obj.OrionCANReceivedRecently = message.OrionCANReceivedRecently;
-    }
-    if (message.PrechargeState !== "") {
-      obj.PrechargeState = message.PrechargeState;
-    }
-    if (message.ProtectionTrip !== false) {
-      obj.ProtectionTrip = message.ProtectionTrip;
-    }
-    if (message.StrobeBmsLight !== false) {
-      obj.StrobeBmsLight = message.StrobeBmsLight;
-    }
-    if (message.TripDueToOrionMessageTimeout !== false) {
-      obj.TripDueToOrionMessageTimeout = message.TripDueToOrionMessageTimeout;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IAuxBms>, I>>(base?: I): IAuxBms {
-    return IAuxBms.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IAuxBms>, I>>(object: I): IAuxBms {
-    const message = createBaseIAuxBms();
-    message.AllowCharge = object.AllowCharge ?? false;
-    message.AllowDischarge = object.AllowDischarge ?? false;
-    message.AuxBmsAlive = object.AuxBmsAlive ?? false;
-    message.AuxVoltage = object.AuxVoltage ?? 0;
-    message.ChargeContactorError = object.ChargeContactorError ?? false;
-    message.ChargeNotClosedDueToHighCurrent = object.ChargeNotClosedDueToHighCurrent ?? false;
-    message.ChargeOpenButShouldBeClosed = object.ChargeOpenButShouldBeClosed ?? false;
-    message.ChargeShouldTrip = object.ChargeShouldTrip ?? false;
-    message.ChargeTripDueToHighCellVoltage = object.ChargeTripDueToHighCellVoltage ?? false;
-    message.ChargeTripDueToHighTemperatureAndCurrent = object.ChargeTripDueToHighTemperatureAndCurrent ?? false;
-    message.ChargeTripDueToPackCurrent = object.ChargeTripDueToPackCurrent ?? false;
-    message.CommonContactorError = object.CommonContactorError ?? false;
-    message.DischargeContactorError = object.DischargeContactorError ?? false;
-    message.DischargeNotClosedDueToHighCurrent = object.DischargeNotClosedDueToHighCurrent ?? false;
-    message.DischargeOpenButShouldBeClosed = object.DischargeOpenButShouldBeClosed ?? false;
-    message.DischargeShouldTrip = object.DischargeShouldTrip ?? false;
-    message.DischargeTripDueToHighTemperatureAndCurrent = object.DischargeTripDueToHighTemperatureAndCurrent ?? false;
-    message.DischargeTripDueToLowCellVoltage = object.DischargeTripDueToLowCellVoltage ?? false;
-    message.DischargeTripDueToPackCurrent = object.DischargeTripDueToPackCurrent ?? false;
-    message.HighVoltageEnableState = object.HighVoltageEnableState ?? false;
-    message.OrionCANReceivedRecently = object.OrionCANReceivedRecently ?? false;
-    message.PrechargeState = object.PrechargeState ?? "";
-    message.ProtectionTrip = object.ProtectionTrip ?? false;
-    message.StrobeBmsLight = object.StrobeBmsLight ?? false;
-    message.TripDueToOrionMessageTimeout = object.TripDueToOrionMessageTimeout ?? false;
-    return message;
-  },
-};
-
-function createBaseIKeyMotor(): IKeyMotor {
-  return { Alive: false, BusCurrent: 0, BusVoltage: 0, SetCurrent: 0, SetVelocity: 0, VehicleVelocity: 0 };
+export interface Telemetry {
+  GpsAdditionalFlags: number;
+  GpsDay: number;
+  GpsFixStatusFlags: number;
+  GpsHour: number;
+  GpsLatitude: number;
+  GpsLongitude: number;
+  GpsMinute: number;
+  GpsMonth: number;
+  GpsSecond: number;
+  GpsValidityFlags: number;
+  GpsYear: number;
+  MpuAccelerationX: number;
+  MpuAccelerationY: number;
+  MpuAccelerationZ: number;
+  MpuRotationX: number;
+  MpuRotationY: number;
+  MpuRotationZ: number;
+  MpuTemperature: number;
 }
 
-export const IKeyMotor: MessageFns<IKeyMotor> = {
-  encode(message: IKeyMotor, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.Alive !== false) {
-      writer.uint32(8).bool(message.Alive);
-    }
-    if (message.BusCurrent !== 0) {
-      writer.uint32(17).double(message.BusCurrent);
-    }
-    if (message.BusVoltage !== 0) {
-      writer.uint32(25).double(message.BusVoltage);
-    }
-    if (message.SetCurrent !== 0) {
-      writer.uint32(33).double(message.SetCurrent);
-    }
-    if (message.SetVelocity !== 0) {
-      writer.uint32(41).double(message.SetVelocity);
-    }
-    if (message.VehicleVelocity !== 0) {
-      writer.uint32(49).double(message.VehicleVelocity);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IKeyMotor {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIKeyMotor();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.Alive = reader.bool();
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.BusCurrent = reader.double();
-          continue;
-        }
-        case 3: {
-          if (tag !== 25) {
-            break;
-          }
-
-          message.BusVoltage = reader.double();
-          continue;
-        }
-        case 4: {
-          if (tag !== 33) {
-            break;
-          }
-
-          message.SetCurrent = reader.double();
-          continue;
-        }
-        case 5: {
-          if (tag !== 41) {
-            break;
-          }
-
-          message.SetVelocity = reader.double();
-          continue;
-        }
-        case 6: {
-          if (tag !== 49) {
-            break;
-          }
-
-          message.VehicleVelocity = reader.double();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IKeyMotor {
-    return {
-      Alive: isSet(object.Alive) ? globalThis.Boolean(object.Alive) : false,
-      BusCurrent: isSet(object.BusCurrent) ? globalThis.Number(object.BusCurrent) : 0,
-      BusVoltage: isSet(object.BusVoltage) ? globalThis.Number(object.BusVoltage) : 0,
-      SetCurrent: isSet(object.SetCurrent) ? globalThis.Number(object.SetCurrent) : 0,
-      SetVelocity: isSet(object.SetVelocity) ? globalThis.Number(object.SetVelocity) : 0,
-      VehicleVelocity: isSet(object.VehicleVelocity) ? globalThis.Number(object.VehicleVelocity) : 0,
-    };
-  },
-
-  toJSON(message: IKeyMotor): unknown {
-    const obj: any = {};
-    if (message.Alive !== false) {
-      obj.Alive = message.Alive;
-    }
-    if (message.BusCurrent !== 0) {
-      obj.BusCurrent = message.BusCurrent;
-    }
-    if (message.BusVoltage !== 0) {
-      obj.BusVoltage = message.BusVoltage;
-    }
-    if (message.SetCurrent !== 0) {
-      obj.SetCurrent = message.SetCurrent;
-    }
-    if (message.SetVelocity !== 0) {
-      obj.SetVelocity = message.SetVelocity;
-    }
-    if (message.VehicleVelocity !== 0) {
-      obj.VehicleVelocity = message.VehicleVelocity;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IKeyMotor>, I>>(base?: I): IKeyMotor {
-    return IKeyMotor.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IKeyMotor>, I>>(object: I): IKeyMotor {
-    const message = createBaseIKeyMotor();
-    message.Alive = object.Alive ?? false;
-    message.BusCurrent = object.BusCurrent ?? 0;
-    message.BusVoltage = object.BusVoltage ?? 0;
-    message.SetCurrent = object.SetCurrent ?? 0;
-    message.SetVelocity = object.SetVelocity ?? 0;
-    message.VehicleVelocity = object.VehicleVelocity ?? 0;
-    return message;
-  },
-};
-
-function createBaseIMotorDetail(): IMotorDetail {
-  return {
-    BackEmf: 0,
-    DcBusAmpHours: 0,
-    DspBoardTemp: 0,
-    HeatSinkTemp: 0,
-    MotorCurrentImaginary: 0,
-    MotorCurrentReal: 0,
-    MotorTemp: 0,
-    MotorVoltageImaginary: 0,
-    MotorVoltageReal: 0,
-    Odometer: 0,
-    PhaseBCurrent: 0,
-    PhaseCCurrent: 0,
-    SlipSpeed: 0,
-    VoltageRail15VSupply: 0,
-    VoltageRail1VSupply: 0,
-    VoltageRail3VSupply: 0,
-  };
+export interface TelemetryData {
+  B3: B3 | undefined;
+  Battery: BatteryStatus | undefined;
+  BatteryFaults: BatteryFaults | undefined;
+  Contactor: ContactorStatus | undefined;
+  KeyMotor: KeyMotor | undefined;
+  MBMS: MBMS | undefined;
+  MPPT: MPPT | undefined;
+  MotorDetails0: MotorDetails | undefined;
+  MotorDetails1: MotorDetails | undefined;
+  Pi: Pi | undefined;
+  ProximitySensors: ProximitySensors | undefined;
+  Telemetry: Telemetry | undefined;
+  TimeStamp: number;
+  Title: string;
 }
 
-export const IMotorDetail: MessageFns<IMotorDetail> = {
-  encode(message: IMotorDetail, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.BackEmf !== 0) {
-      writer.uint32(9).double(message.BackEmf);
-    }
-    if (message.DcBusAmpHours !== 0) {
-      writer.uint32(17).double(message.DcBusAmpHours);
-    }
-    if (message.DspBoardTemp !== 0) {
-      writer.uint32(25).double(message.DspBoardTemp);
-    }
-    if (message.HeatSinkTemp !== 0) {
-      writer.uint32(33).double(message.HeatSinkTemp);
-    }
-    if (message.MotorCurrentImaginary !== 0) {
-      writer.uint32(41).double(message.MotorCurrentImaginary);
-    }
-    if (message.MotorCurrentReal !== 0) {
-      writer.uint32(49).double(message.MotorCurrentReal);
-    }
-    if (message.MotorTemp !== 0) {
-      writer.uint32(57).double(message.MotorTemp);
-    }
-    if (message.MotorVoltageImaginary !== 0) {
-      writer.uint32(65).double(message.MotorVoltageImaginary);
-    }
-    if (message.MotorVoltageReal !== 0) {
-      writer.uint32(73).double(message.MotorVoltageReal);
-    }
-    if (message.Odometer !== 0) {
-      writer.uint32(81).double(message.Odometer);
-    }
-    if (message.PhaseBCurrent !== 0) {
-      writer.uint32(89).double(message.PhaseBCurrent);
-    }
-    if (message.PhaseCCurrent !== 0) {
-      writer.uint32(97).double(message.PhaseCCurrent);
-    }
-    if (message.SlipSpeed !== 0) {
-      writer.uint32(105).double(message.SlipSpeed);
-    }
-    if (message.VoltageRail15VSupply !== 0) {
-      writer.uint32(113).double(message.VoltageRail15VSupply);
-    }
-    if (message.VoltageRail1VSupply !== 0) {
-      writer.uint32(121).double(message.VoltageRail1VSupply);
-    }
-    if (message.VoltageRail3VSupply !== 0) {
-      writer.uint32(129).double(message.VoltageRail3VSupply);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IMotorDetail {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIMotorDetail();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.BackEmf = reader.double();
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.DcBusAmpHours = reader.double();
-          continue;
-        }
-        case 3: {
-          if (tag !== 25) {
-            break;
-          }
-
-          message.DspBoardTemp = reader.double();
-          continue;
-        }
-        case 4: {
-          if (tag !== 33) {
-            break;
-          }
-
-          message.HeatSinkTemp = reader.double();
-          continue;
-        }
-        case 5: {
-          if (tag !== 41) {
-            break;
-          }
-
-          message.MotorCurrentImaginary = reader.double();
-          continue;
-        }
-        case 6: {
-          if (tag !== 49) {
-            break;
-          }
-
-          message.MotorCurrentReal = reader.double();
-          continue;
-        }
-        case 7: {
-          if (tag !== 57) {
-            break;
-          }
-
-          message.MotorTemp = reader.double();
-          continue;
-        }
-        case 8: {
-          if (tag !== 65) {
-            break;
-          }
-
-          message.MotorVoltageImaginary = reader.double();
-          continue;
-        }
-        case 9: {
-          if (tag !== 73) {
-            break;
-          }
-
-          message.MotorVoltageReal = reader.double();
-          continue;
-        }
-        case 10: {
-          if (tag !== 81) {
-            break;
-          }
-
-          message.Odometer = reader.double();
-          continue;
-        }
-        case 11: {
-          if (tag !== 89) {
-            break;
-          }
-
-          message.PhaseBCurrent = reader.double();
-          continue;
-        }
-        case 12: {
-          if (tag !== 97) {
-            break;
-          }
-
-          message.PhaseCCurrent = reader.double();
-          continue;
-        }
-        case 13: {
-          if (tag !== 105) {
-            break;
-          }
-
-          message.SlipSpeed = reader.double();
-          continue;
-        }
-        case 14: {
-          if (tag !== 113) {
-            break;
-          }
-
-          message.VoltageRail15VSupply = reader.double();
-          continue;
-        }
-        case 15: {
-          if (tag !== 121) {
-            break;
-          }
-
-          message.VoltageRail1VSupply = reader.double();
-          continue;
-        }
-        case 16: {
-          if (tag !== 129) {
-            break;
-          }
-
-          message.VoltageRail3VSupply = reader.double();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IMotorDetail {
-    return {
-      BackEmf: isSet(object.BackEmf) ? globalThis.Number(object.BackEmf) : 0,
-      DcBusAmpHours: isSet(object.DcBusAmpHours) ? globalThis.Number(object.DcBusAmpHours) : 0,
-      DspBoardTemp: isSet(object.DspBoardTemp) ? globalThis.Number(object.DspBoardTemp) : 0,
-      HeatSinkTemp: isSet(object.HeatSinkTemp) ? globalThis.Number(object.HeatSinkTemp) : 0,
-      MotorCurrentImaginary: isSet(object.MotorCurrentImaginary) ? globalThis.Number(object.MotorCurrentImaginary) : 0,
-      MotorCurrentReal: isSet(object.MotorCurrentReal) ? globalThis.Number(object.MotorCurrentReal) : 0,
-      MotorTemp: isSet(object.MotorTemp) ? globalThis.Number(object.MotorTemp) : 0,
-      MotorVoltageImaginary: isSet(object.MotorVoltageImaginary) ? globalThis.Number(object.MotorVoltageImaginary) : 0,
-      MotorVoltageReal: isSet(object.MotorVoltageReal) ? globalThis.Number(object.MotorVoltageReal) : 0,
-      Odometer: isSet(object.Odometer) ? globalThis.Number(object.Odometer) : 0,
-      PhaseBCurrent: isSet(object.PhaseBCurrent) ? globalThis.Number(object.PhaseBCurrent) : 0,
-      PhaseCCurrent: isSet(object.PhaseCCurrent) ? globalThis.Number(object.PhaseCCurrent) : 0,
-      SlipSpeed: isSet(object.SlipSpeed) ? globalThis.Number(object.SlipSpeed) : 0,
-      VoltageRail15VSupply: isSet(object.VoltageRail15VSupply) ? globalThis.Number(object.VoltageRail15VSupply) : 0,
-      VoltageRail1VSupply: isSet(object.VoltageRail1VSupply) ? globalThis.Number(object.VoltageRail1VSupply) : 0,
-      VoltageRail3VSupply: isSet(object.VoltageRail3VSupply) ? globalThis.Number(object.VoltageRail3VSupply) : 0,
-    };
-  },
-
-  toJSON(message: IMotorDetail): unknown {
-    const obj: any = {};
-    if (message.BackEmf !== 0) {
-      obj.BackEmf = message.BackEmf;
-    }
-    if (message.DcBusAmpHours !== 0) {
-      obj.DcBusAmpHours = message.DcBusAmpHours;
-    }
-    if (message.DspBoardTemp !== 0) {
-      obj.DspBoardTemp = message.DspBoardTemp;
-    }
-    if (message.HeatSinkTemp !== 0) {
-      obj.HeatSinkTemp = message.HeatSinkTemp;
-    }
-    if (message.MotorCurrentImaginary !== 0) {
-      obj.MotorCurrentImaginary = message.MotorCurrentImaginary;
-    }
-    if (message.MotorCurrentReal !== 0) {
-      obj.MotorCurrentReal = message.MotorCurrentReal;
-    }
-    if (message.MotorTemp !== 0) {
-      obj.MotorTemp = message.MotorTemp;
-    }
-    if (message.MotorVoltageImaginary !== 0) {
-      obj.MotorVoltageImaginary = message.MotorVoltageImaginary;
-    }
-    if (message.MotorVoltageReal !== 0) {
-      obj.MotorVoltageReal = message.MotorVoltageReal;
-    }
-    if (message.Odometer !== 0) {
-      obj.Odometer = message.Odometer;
-    }
-    if (message.PhaseBCurrent !== 0) {
-      obj.PhaseBCurrent = message.PhaseBCurrent;
-    }
-    if (message.PhaseCCurrent !== 0) {
-      obj.PhaseCCurrent = message.PhaseCCurrent;
-    }
-    if (message.SlipSpeed !== 0) {
-      obj.SlipSpeed = message.SlipSpeed;
-    }
-    if (message.VoltageRail15VSupply !== 0) {
-      obj.VoltageRail15VSupply = message.VoltageRail15VSupply;
-    }
-    if (message.VoltageRail1VSupply !== 0) {
-      obj.VoltageRail1VSupply = message.VoltageRail1VSupply;
-    }
-    if (message.VoltageRail3VSupply !== 0) {
-      obj.VoltageRail3VSupply = message.VoltageRail3VSupply;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IMotorDetail>, I>>(base?: I): IMotorDetail {
-    return IMotorDetail.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IMotorDetail>, I>>(object: I): IMotorDetail {
-    const message = createBaseIMotorDetail();
-    message.BackEmf = object.BackEmf ?? 0;
-    message.DcBusAmpHours = object.DcBusAmpHours ?? 0;
-    message.DspBoardTemp = object.DspBoardTemp ?? 0;
-    message.HeatSinkTemp = object.HeatSinkTemp ?? 0;
-    message.MotorCurrentImaginary = object.MotorCurrentImaginary ?? 0;
-    message.MotorCurrentReal = object.MotorCurrentReal ?? 0;
-    message.MotorTemp = object.MotorTemp ?? 0;
-    message.MotorVoltageImaginary = object.MotorVoltageImaginary ?? 0;
-    message.MotorVoltageReal = object.MotorVoltageReal ?? 0;
-    message.Odometer = object.Odometer ?? 0;
-    message.PhaseBCurrent = object.PhaseBCurrent ?? 0;
-    message.PhaseCCurrent = object.PhaseCCurrent ?? 0;
-    message.SlipSpeed = object.SlipSpeed ?? 0;
-    message.VoltageRail15VSupply = object.VoltageRail15VSupply ?? 0;
-    message.VoltageRail1VSupply = object.VoltageRail1VSupply ?? 0;
-    message.VoltageRail3VSupply = object.VoltageRail3VSupply ?? 0;
-    return message;
-  },
-};
-
-function createBaseIDriverControls(): IDriverControls {
-  return {
-    Acceleration: 0,
-    Alive: false,
-    Aux: false,
-    Brakes: false,
-    Forward: false,
-    Hazard: false,
-    HeadlightsHigh: false,
-    HeadlightsLow: false,
-    HeadlightsOff: false,
-    Horn: false,
-    Interior: false,
-    Lap: false,
-    NextSong: false,
-    PrevSong: false,
-    PushToTalk: false,
-    RegenBraking: 0,
-    Reset: false,
-    Reverse: false,
-    SignalLeft: false,
-    SignalRight: false,
-    VolumeDown: false,
-    VolumeUp: false,
-  };
-}
-
-export const IDriverControls: MessageFns<IDriverControls> = {
-  encode(message: IDriverControls, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.Acceleration !== 0) {
-      writer.uint32(9).double(message.Acceleration);
-    }
-    if (message.Alive !== false) {
-      writer.uint32(16).bool(message.Alive);
-    }
-    if (message.Aux !== false) {
-      writer.uint32(24).bool(message.Aux);
-    }
-    if (message.Brakes !== false) {
-      writer.uint32(32).bool(message.Brakes);
-    }
-    if (message.Forward !== false) {
-      writer.uint32(40).bool(message.Forward);
-    }
-    if (message.Hazard !== false) {
-      writer.uint32(48).bool(message.Hazard);
-    }
-    if (message.HeadlightsHigh !== false) {
-      writer.uint32(56).bool(message.HeadlightsHigh);
-    }
-    if (message.HeadlightsLow !== false) {
-      writer.uint32(64).bool(message.HeadlightsLow);
-    }
-    if (message.HeadlightsOff !== false) {
-      writer.uint32(72).bool(message.HeadlightsOff);
-    }
-    if (message.Horn !== false) {
-      writer.uint32(80).bool(message.Horn);
-    }
-    if (message.Interior !== false) {
-      writer.uint32(88).bool(message.Interior);
-    }
-    if (message.Lap !== false) {
-      writer.uint32(96).bool(message.Lap);
-    }
-    if (message.NextSong !== false) {
-      writer.uint32(104).bool(message.NextSong);
-    }
-    if (message.PrevSong !== false) {
-      writer.uint32(112).bool(message.PrevSong);
-    }
-    if (message.PushToTalk !== false) {
-      writer.uint32(120).bool(message.PushToTalk);
-    }
-    if (message.RegenBraking !== 0) {
-      writer.uint32(129).double(message.RegenBraking);
-    }
-    if (message.Reset !== false) {
-      writer.uint32(136).bool(message.Reset);
-    }
-    if (message.Reverse !== false) {
-      writer.uint32(144).bool(message.Reverse);
-    }
-    if (message.SignalLeft !== false) {
-      writer.uint32(152).bool(message.SignalLeft);
-    }
-    if (message.SignalRight !== false) {
-      writer.uint32(160).bool(message.SignalRight);
-    }
-    if (message.VolumeDown !== false) {
-      writer.uint32(168).bool(message.VolumeDown);
-    }
-    if (message.VolumeUp !== false) {
-      writer.uint32(176).bool(message.VolumeUp);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IDriverControls {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIDriverControls();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.Acceleration = reader.double();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.Alive = reader.bool();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.Aux = reader.bool();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.Brakes = reader.bool();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.Forward = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.Hazard = reader.bool();
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.HeadlightsHigh = reader.bool();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.HeadlightsLow = reader.bool();
-          continue;
-        }
-        case 9: {
-          if (tag !== 72) {
-            break;
-          }
-
-          message.HeadlightsOff = reader.bool();
-          continue;
-        }
-        case 10: {
-          if (tag !== 80) {
-            break;
-          }
-
-          message.Horn = reader.bool();
-          continue;
-        }
-        case 11: {
-          if (tag !== 88) {
-            break;
-          }
-
-          message.Interior = reader.bool();
-          continue;
-        }
-        case 12: {
-          if (tag !== 96) {
-            break;
-          }
-
-          message.Lap = reader.bool();
-          continue;
-        }
-        case 13: {
-          if (tag !== 104) {
-            break;
-          }
-
-          message.NextSong = reader.bool();
-          continue;
-        }
-        case 14: {
-          if (tag !== 112) {
-            break;
-          }
-
-          message.PrevSong = reader.bool();
-          continue;
-        }
-        case 15: {
-          if (tag !== 120) {
-            break;
-          }
-
-          message.PushToTalk = reader.bool();
-          continue;
-        }
-        case 16: {
-          if (tag !== 129) {
-            break;
-          }
-
-          message.RegenBraking = reader.double();
-          continue;
-        }
-        case 17: {
-          if (tag !== 136) {
-            break;
-          }
-
-          message.Reset = reader.bool();
-          continue;
-        }
-        case 18: {
-          if (tag !== 144) {
-            break;
-          }
-
-          message.Reverse = reader.bool();
-          continue;
-        }
-        case 19: {
-          if (tag !== 152) {
-            break;
-          }
-
-          message.SignalLeft = reader.bool();
-          continue;
-        }
-        case 20: {
-          if (tag !== 160) {
-            break;
-          }
-
-          message.SignalRight = reader.bool();
-          continue;
-        }
-        case 21: {
-          if (tag !== 168) {
-            break;
-          }
-
-          message.VolumeDown = reader.bool();
-          continue;
-        }
-        case 22: {
-          if (tag !== 176) {
-            break;
-          }
-
-          message.VolumeUp = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IDriverControls {
-    return {
-      Acceleration: isSet(object.Acceleration) ? globalThis.Number(object.Acceleration) : 0,
-      Alive: isSet(object.Alive) ? globalThis.Boolean(object.Alive) : false,
-      Aux: isSet(object.Aux) ? globalThis.Boolean(object.Aux) : false,
-      Brakes: isSet(object.Brakes) ? globalThis.Boolean(object.Brakes) : false,
-      Forward: isSet(object.Forward) ? globalThis.Boolean(object.Forward) : false,
-      Hazard: isSet(object.Hazard) ? globalThis.Boolean(object.Hazard) : false,
-      HeadlightsHigh: isSet(object.HeadlightsHigh) ? globalThis.Boolean(object.HeadlightsHigh) : false,
-      HeadlightsLow: isSet(object.HeadlightsLow) ? globalThis.Boolean(object.HeadlightsLow) : false,
-      HeadlightsOff: isSet(object.HeadlightsOff) ? globalThis.Boolean(object.HeadlightsOff) : false,
-      Horn: isSet(object.Horn) ? globalThis.Boolean(object.Horn) : false,
-      Interior: isSet(object.Interior) ? globalThis.Boolean(object.Interior) : false,
-      Lap: isSet(object.Lap) ? globalThis.Boolean(object.Lap) : false,
-      NextSong: isSet(object.NextSong) ? globalThis.Boolean(object.NextSong) : false,
-      PrevSong: isSet(object.PrevSong) ? globalThis.Boolean(object.PrevSong) : false,
-      PushToTalk: isSet(object.PushToTalk) ? globalThis.Boolean(object.PushToTalk) : false,
-      RegenBraking: isSet(object.RegenBraking) ? globalThis.Number(object.RegenBraking) : 0,
-      Reset: isSet(object.Reset) ? globalThis.Boolean(object.Reset) : false,
-      Reverse: isSet(object.Reverse) ? globalThis.Boolean(object.Reverse) : false,
-      SignalLeft: isSet(object.SignalLeft) ? globalThis.Boolean(object.SignalLeft) : false,
-      SignalRight: isSet(object.SignalRight) ? globalThis.Boolean(object.SignalRight) : false,
-      VolumeDown: isSet(object.VolumeDown) ? globalThis.Boolean(object.VolumeDown) : false,
-      VolumeUp: isSet(object.VolumeUp) ? globalThis.Boolean(object.VolumeUp) : false,
-    };
-  },
-
-  toJSON(message: IDriverControls): unknown {
-    const obj: any = {};
-    if (message.Acceleration !== 0) {
-      obj.Acceleration = message.Acceleration;
-    }
-    if (message.Alive !== false) {
-      obj.Alive = message.Alive;
-    }
-    if (message.Aux !== false) {
-      obj.Aux = message.Aux;
-    }
-    if (message.Brakes !== false) {
-      obj.Brakes = message.Brakes;
-    }
-    if (message.Forward !== false) {
-      obj.Forward = message.Forward;
-    }
-    if (message.Hazard !== false) {
-      obj.Hazard = message.Hazard;
-    }
-    if (message.HeadlightsHigh !== false) {
-      obj.HeadlightsHigh = message.HeadlightsHigh;
-    }
-    if (message.HeadlightsLow !== false) {
-      obj.HeadlightsLow = message.HeadlightsLow;
-    }
-    if (message.HeadlightsOff !== false) {
-      obj.HeadlightsOff = message.HeadlightsOff;
-    }
-    if (message.Horn !== false) {
-      obj.Horn = message.Horn;
-    }
-    if (message.Interior !== false) {
-      obj.Interior = message.Interior;
-    }
-    if (message.Lap !== false) {
-      obj.Lap = message.Lap;
-    }
-    if (message.NextSong !== false) {
-      obj.NextSong = message.NextSong;
-    }
-    if (message.PrevSong !== false) {
-      obj.PrevSong = message.PrevSong;
-    }
-    if (message.PushToTalk !== false) {
-      obj.PushToTalk = message.PushToTalk;
-    }
-    if (message.RegenBraking !== 0) {
-      obj.RegenBraking = message.RegenBraking;
-    }
-    if (message.Reset !== false) {
-      obj.Reset = message.Reset;
-    }
-    if (message.Reverse !== false) {
-      obj.Reverse = message.Reverse;
-    }
-    if (message.SignalLeft !== false) {
-      obj.SignalLeft = message.SignalLeft;
-    }
-    if (message.SignalRight !== false) {
-      obj.SignalRight = message.SignalRight;
-    }
-    if (message.VolumeDown !== false) {
-      obj.VolumeDown = message.VolumeDown;
-    }
-    if (message.VolumeUp !== false) {
-      obj.VolumeUp = message.VolumeUp;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IDriverControls>, I>>(base?: I): IDriverControls {
-    return IDriverControls.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IDriverControls>, I>>(object: I): IDriverControls {
-    const message = createBaseIDriverControls();
-    message.Acceleration = object.Acceleration ?? 0;
-    message.Alive = object.Alive ?? false;
-    message.Aux = object.Aux ?? false;
-    message.Brakes = object.Brakes ?? false;
-    message.Forward = object.Forward ?? false;
-    message.Hazard = object.Hazard ?? false;
-    message.HeadlightsHigh = object.HeadlightsHigh ?? false;
-    message.HeadlightsLow = object.HeadlightsLow ?? false;
-    message.HeadlightsOff = object.HeadlightsOff ?? false;
-    message.Horn = object.Horn ?? false;
-    message.Interior = object.Interior ?? false;
-    message.Lap = object.Lap ?? false;
-    message.NextSong = object.NextSong ?? false;
-    message.PrevSong = object.PrevSong ?? false;
-    message.PushToTalk = object.PushToTalk ?? false;
-    message.RegenBraking = object.RegenBraking ?? 0;
-    message.Reset = object.Reset ?? false;
-    message.Reverse = object.Reverse ?? false;
-    message.SignalLeft = object.SignalLeft ?? false;
-    message.SignalRight = object.SignalRight ?? false;
-    message.VolumeDown = object.VolumeDown ?? false;
-    message.VolumeUp = object.VolumeUp ?? false;
-    return message;
-  },
-};
-
-function createBaseILights(): ILights {
-  return {
-    Alive: false,
-    BmsStrobeLight: false,
-    Brakes: false,
-    HighBeams: false,
-    LeftSignal: false,
-    LowBeams: false,
-    RightSignal: false,
-  };
-}
-
-export const ILights: MessageFns<ILights> = {
-  encode(message: ILights, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.Alive !== false) {
-      writer.uint32(8).bool(message.Alive);
-    }
-    if (message.BmsStrobeLight !== false) {
-      writer.uint32(16).bool(message.BmsStrobeLight);
-    }
-    if (message.Brakes !== false) {
-      writer.uint32(24).bool(message.Brakes);
-    }
-    if (message.HighBeams !== false) {
-      writer.uint32(32).bool(message.HighBeams);
-    }
-    if (message.LeftSignal !== false) {
-      writer.uint32(40).bool(message.LeftSignal);
-    }
-    if (message.LowBeams !== false) {
-      writer.uint32(48).bool(message.LowBeams);
-    }
-    if (message.RightSignal !== false) {
-      writer.uint32(56).bool(message.RightSignal);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ILights {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseILights();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.Alive = reader.bool();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.BmsStrobeLight = reader.bool();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.Brakes = reader.bool();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.HighBeams = reader.bool();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.LeftSignal = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.LowBeams = reader.bool();
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.RightSignal = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ILights {
-    return {
-      Alive: isSet(object.Alive) ? globalThis.Boolean(object.Alive) : false,
-      BmsStrobeLight: isSet(object.BmsStrobeLight) ? globalThis.Boolean(object.BmsStrobeLight) : false,
-      Brakes: isSet(object.Brakes) ? globalThis.Boolean(object.Brakes) : false,
-      HighBeams: isSet(object.HighBeams) ? globalThis.Boolean(object.HighBeams) : false,
-      LeftSignal: isSet(object.LeftSignal) ? globalThis.Boolean(object.LeftSignal) : false,
-      LowBeams: isSet(object.LowBeams) ? globalThis.Boolean(object.LowBeams) : false,
-      RightSignal: isSet(object.RightSignal) ? globalThis.Boolean(object.RightSignal) : false,
-    };
-  },
-
-  toJSON(message: ILights): unknown {
-    const obj: any = {};
-    if (message.Alive !== false) {
-      obj.Alive = message.Alive;
-    }
-    if (message.BmsStrobeLight !== false) {
-      obj.BmsStrobeLight = message.BmsStrobeLight;
-    }
-    if (message.Brakes !== false) {
-      obj.Brakes = message.Brakes;
-    }
-    if (message.HighBeams !== false) {
-      obj.HighBeams = message.HighBeams;
-    }
-    if (message.LeftSignal !== false) {
-      obj.LeftSignal = message.LeftSignal;
-    }
-    if (message.LowBeams !== false) {
-      obj.LowBeams = message.LowBeams;
-    }
-    if (message.RightSignal !== false) {
-      obj.RightSignal = message.RightSignal;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ILights>, I>>(base?: I): ILights {
-    return ILights.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ILights>, I>>(object: I): ILights {
-    const message = createBaseILights();
-    message.Alive = object.Alive ?? false;
-    message.BmsStrobeLight = object.BmsStrobeLight ?? false;
-    message.Brakes = object.Brakes ?? false;
-    message.HighBeams = object.HighBeams ?? false;
-    message.LeftSignal = object.LeftSignal ?? false;
-    message.LowBeams = object.LowBeams ?? false;
-    message.RightSignal = object.RightSignal ?? false;
-    return message;
-  },
-};
-
-function createBaseIBatteryFault(): IBatteryFault {
-  return { ErrorFlags: undefined, LimitFlags: undefined };
-}
-
-export const IBatteryFault: MessageFns<IBatteryFault> = {
-  encode(message: IBatteryFault, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.ErrorFlags !== undefined) {
-      IBatteryErrorFlags.encode(message.ErrorFlags, writer.uint32(10).fork()).join();
-    }
-    if (message.LimitFlags !== undefined) {
-      IBatteryLimitFlags.encode(message.LimitFlags, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IBatteryFault {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIBatteryFault();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.ErrorFlags = IBatteryErrorFlags.decode(reader, reader.uint32());
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.LimitFlags = IBatteryLimitFlags.decode(reader, reader.uint32());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IBatteryFault {
-    return {
-      ErrorFlags: isSet(object.ErrorFlags) ? IBatteryErrorFlags.fromJSON(object.ErrorFlags) : undefined,
-      LimitFlags: isSet(object.LimitFlags) ? IBatteryLimitFlags.fromJSON(object.LimitFlags) : undefined,
-    };
-  },
-
-  toJSON(message: IBatteryFault): unknown {
-    const obj: any = {};
-    if (message.ErrorFlags !== undefined) {
-      obj.ErrorFlags = IBatteryErrorFlags.toJSON(message.ErrorFlags);
-    }
-    if (message.LimitFlags !== undefined) {
-      obj.LimitFlags = IBatteryLimitFlags.toJSON(message.LimitFlags);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IBatteryFault>, I>>(base?: I): IBatteryFault {
-    return IBatteryFault.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IBatteryFault>, I>>(object: I): IBatteryFault {
-    const message = createBaseIBatteryFault();
-    message.ErrorFlags = (object.ErrorFlags !== undefined && object.ErrorFlags !== null)
-      ? IBatteryErrorFlags.fromPartial(object.ErrorFlags)
-      : undefined;
-    message.LimitFlags = (object.LimitFlags !== undefined && object.LimitFlags !== null)
-      ? IBatteryLimitFlags.fromPartial(object.LimitFlags)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseIBatteryErrorFlags(): IBatteryErrorFlags {
-  return {
-    PowerSupplyFault: false,
-    AlwaysOnSupplyFault: false,
-    CANBUSCommunicationsFault: false,
-    ChargeLimitEnforcementFault: false,
-    ChargerSafetyRelayFault: false,
-    CurrentSensorFault: false,
-    DischargeLimitEnforcementFault: false,
-    FanMonitorFault: false,
-    HighVoltageIsolationFault: false,
-    InternalCommunicationFault: false,
-    InternalConversionFault: false,
-    InternalLogicFault: false,
-    InternalMemoryFault: false,
-    InternalThermistorsFault: false,
-    LowCellVoltageFault: false,
-    OpenWiringFault: false,
-    PackVoltageSensorFault: false,
-    ThermistorFault: false,
-    VoltageRedundancyFault: false,
-    WeakCellFault: false,
-    WeakPackFault: false,
-  };
-}
-
-export const IBatteryErrorFlags: MessageFns<IBatteryErrorFlags> = {
-  encode(message: IBatteryErrorFlags, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.PowerSupplyFault !== false) {
-      writer.uint32(8).bool(message.PowerSupplyFault);
-    }
-    if (message.AlwaysOnSupplyFault !== false) {
-      writer.uint32(16).bool(message.AlwaysOnSupplyFault);
-    }
-    if (message.CANBUSCommunicationsFault !== false) {
-      writer.uint32(24).bool(message.CANBUSCommunicationsFault);
-    }
-    if (message.ChargeLimitEnforcementFault !== false) {
-      writer.uint32(32).bool(message.ChargeLimitEnforcementFault);
-    }
-    if (message.ChargerSafetyRelayFault !== false) {
-      writer.uint32(40).bool(message.ChargerSafetyRelayFault);
-    }
-    if (message.CurrentSensorFault !== false) {
-      writer.uint32(48).bool(message.CurrentSensorFault);
-    }
-    if (message.DischargeLimitEnforcementFault !== false) {
-      writer.uint32(56).bool(message.DischargeLimitEnforcementFault);
-    }
-    if (message.FanMonitorFault !== false) {
-      writer.uint32(64).bool(message.FanMonitorFault);
-    }
-    if (message.HighVoltageIsolationFault !== false) {
-      writer.uint32(72).bool(message.HighVoltageIsolationFault);
-    }
-    if (message.InternalCommunicationFault !== false) {
-      writer.uint32(80).bool(message.InternalCommunicationFault);
-    }
-    if (message.InternalConversionFault !== false) {
-      writer.uint32(88).bool(message.InternalConversionFault);
-    }
-    if (message.InternalLogicFault !== false) {
-      writer.uint32(96).bool(message.InternalLogicFault);
-    }
-    if (message.InternalMemoryFault !== false) {
-      writer.uint32(104).bool(message.InternalMemoryFault);
-    }
-    if (message.InternalThermistorsFault !== false) {
-      writer.uint32(112).bool(message.InternalThermistorsFault);
-    }
-    if (message.LowCellVoltageFault !== false) {
-      writer.uint32(120).bool(message.LowCellVoltageFault);
-    }
-    if (message.OpenWiringFault !== false) {
-      writer.uint32(128).bool(message.OpenWiringFault);
-    }
-    if (message.PackVoltageSensorFault !== false) {
-      writer.uint32(136).bool(message.PackVoltageSensorFault);
-    }
-    if (message.ThermistorFault !== false) {
-      writer.uint32(144).bool(message.ThermistorFault);
-    }
-    if (message.VoltageRedundancyFault !== false) {
-      writer.uint32(152).bool(message.VoltageRedundancyFault);
-    }
-    if (message.WeakCellFault !== false) {
-      writer.uint32(160).bool(message.WeakCellFault);
-    }
-    if (message.WeakPackFault !== false) {
-      writer.uint32(168).bool(message.WeakPackFault);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IBatteryErrorFlags {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIBatteryErrorFlags();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.PowerSupplyFault = reader.bool();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.AlwaysOnSupplyFault = reader.bool();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.CANBUSCommunicationsFault = reader.bool();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.ChargeLimitEnforcementFault = reader.bool();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.ChargerSafetyRelayFault = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.CurrentSensorFault = reader.bool();
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.DischargeLimitEnforcementFault = reader.bool();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.FanMonitorFault = reader.bool();
-          continue;
-        }
-        case 9: {
-          if (tag !== 72) {
-            break;
-          }
-
-          message.HighVoltageIsolationFault = reader.bool();
-          continue;
-        }
-        case 10: {
-          if (tag !== 80) {
-            break;
-          }
-
-          message.InternalCommunicationFault = reader.bool();
-          continue;
-        }
-        case 11: {
-          if (tag !== 88) {
-            break;
-          }
-
-          message.InternalConversionFault = reader.bool();
-          continue;
-        }
-        case 12: {
-          if (tag !== 96) {
-            break;
-          }
-
-          message.InternalLogicFault = reader.bool();
-          continue;
-        }
-        case 13: {
-          if (tag !== 104) {
-            break;
-          }
-
-          message.InternalMemoryFault = reader.bool();
-          continue;
-        }
-        case 14: {
-          if (tag !== 112) {
-            break;
-          }
-
-          message.InternalThermistorsFault = reader.bool();
-          continue;
-        }
-        case 15: {
-          if (tag !== 120) {
-            break;
-          }
-
-          message.LowCellVoltageFault = reader.bool();
-          continue;
-        }
-        case 16: {
-          if (tag !== 128) {
-            break;
-          }
-
-          message.OpenWiringFault = reader.bool();
-          continue;
-        }
-        case 17: {
-          if (tag !== 136) {
-            break;
-          }
-
-          message.PackVoltageSensorFault = reader.bool();
-          continue;
-        }
-        case 18: {
-          if (tag !== 144) {
-            break;
-          }
-
-          message.ThermistorFault = reader.bool();
-          continue;
-        }
-        case 19: {
-          if (tag !== 152) {
-            break;
-          }
-
-          message.VoltageRedundancyFault = reader.bool();
-          continue;
-        }
-        case 20: {
-          if (tag !== 160) {
-            break;
-          }
-
-          message.WeakCellFault = reader.bool();
-          continue;
-        }
-        case 21: {
-          if (tag !== 168) {
-            break;
-          }
-
-          message.WeakPackFault = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IBatteryErrorFlags {
-    return {
-      PowerSupplyFault: isSet(object.PowerSupplyFault) ? globalThis.Boolean(object.PowerSupplyFault) : false,
-      AlwaysOnSupplyFault: isSet(object.AlwaysOnSupplyFault) ? globalThis.Boolean(object.AlwaysOnSupplyFault) : false,
-      CANBUSCommunicationsFault: isSet(object.CANBUSCommunicationsFault)
-        ? globalThis.Boolean(object.CANBUSCommunicationsFault)
-        : false,
-      ChargeLimitEnforcementFault: isSet(object.ChargeLimitEnforcementFault)
-        ? globalThis.Boolean(object.ChargeLimitEnforcementFault)
-        : false,
-      ChargerSafetyRelayFault: isSet(object.ChargerSafetyRelayFault)
-        ? globalThis.Boolean(object.ChargerSafetyRelayFault)
-        : false,
-      CurrentSensorFault: isSet(object.CurrentSensorFault) ? globalThis.Boolean(object.CurrentSensorFault) : false,
-      DischargeLimitEnforcementFault: isSet(object.DischargeLimitEnforcementFault)
-        ? globalThis.Boolean(object.DischargeLimitEnforcementFault)
-        : false,
-      FanMonitorFault: isSet(object.FanMonitorFault) ? globalThis.Boolean(object.FanMonitorFault) : false,
-      HighVoltageIsolationFault: isSet(object.HighVoltageIsolationFault)
-        ? globalThis.Boolean(object.HighVoltageIsolationFault)
-        : false,
-      InternalCommunicationFault: isSet(object.InternalCommunicationFault)
-        ? globalThis.Boolean(object.InternalCommunicationFault)
-        : false,
-      InternalConversionFault: isSet(object.InternalConversionFault)
-        ? globalThis.Boolean(object.InternalConversionFault)
-        : false,
-      InternalLogicFault: isSet(object.InternalLogicFault) ? globalThis.Boolean(object.InternalLogicFault) : false,
-      InternalMemoryFault: isSet(object.InternalMemoryFault) ? globalThis.Boolean(object.InternalMemoryFault) : false,
-      InternalThermistorsFault: isSet(object.InternalThermistorsFault)
-        ? globalThis.Boolean(object.InternalThermistorsFault)
-        : false,
-      LowCellVoltageFault: isSet(object.LowCellVoltageFault) ? globalThis.Boolean(object.LowCellVoltageFault) : false,
-      OpenWiringFault: isSet(object.OpenWiringFault) ? globalThis.Boolean(object.OpenWiringFault) : false,
-      PackVoltageSensorFault: isSet(object.PackVoltageSensorFault)
-        ? globalThis.Boolean(object.PackVoltageSensorFault)
-        : false,
-      ThermistorFault: isSet(object.ThermistorFault) ? globalThis.Boolean(object.ThermistorFault) : false,
-      VoltageRedundancyFault: isSet(object.VoltageRedundancyFault)
-        ? globalThis.Boolean(object.VoltageRedundancyFault)
-        : false,
-      WeakCellFault: isSet(object.WeakCellFault) ? globalThis.Boolean(object.WeakCellFault) : false,
-      WeakPackFault: isSet(object.WeakPackFault) ? globalThis.Boolean(object.WeakPackFault) : false,
-    };
-  },
-
-  toJSON(message: IBatteryErrorFlags): unknown {
-    const obj: any = {};
-    if (message.PowerSupplyFault !== false) {
-      obj.PowerSupplyFault = message.PowerSupplyFault;
-    }
-    if (message.AlwaysOnSupplyFault !== false) {
-      obj.AlwaysOnSupplyFault = message.AlwaysOnSupplyFault;
-    }
-    if (message.CANBUSCommunicationsFault !== false) {
-      obj.CANBUSCommunicationsFault = message.CANBUSCommunicationsFault;
-    }
-    if (message.ChargeLimitEnforcementFault !== false) {
-      obj.ChargeLimitEnforcementFault = message.ChargeLimitEnforcementFault;
-    }
-    if (message.ChargerSafetyRelayFault !== false) {
-      obj.ChargerSafetyRelayFault = message.ChargerSafetyRelayFault;
-    }
-    if (message.CurrentSensorFault !== false) {
-      obj.CurrentSensorFault = message.CurrentSensorFault;
-    }
-    if (message.DischargeLimitEnforcementFault !== false) {
-      obj.DischargeLimitEnforcementFault = message.DischargeLimitEnforcementFault;
-    }
-    if (message.FanMonitorFault !== false) {
-      obj.FanMonitorFault = message.FanMonitorFault;
-    }
-    if (message.HighVoltageIsolationFault !== false) {
-      obj.HighVoltageIsolationFault = message.HighVoltageIsolationFault;
-    }
-    if (message.InternalCommunicationFault !== false) {
-      obj.InternalCommunicationFault = message.InternalCommunicationFault;
-    }
-    if (message.InternalConversionFault !== false) {
-      obj.InternalConversionFault = message.InternalConversionFault;
-    }
-    if (message.InternalLogicFault !== false) {
-      obj.InternalLogicFault = message.InternalLogicFault;
-    }
-    if (message.InternalMemoryFault !== false) {
-      obj.InternalMemoryFault = message.InternalMemoryFault;
-    }
-    if (message.InternalThermistorsFault !== false) {
-      obj.InternalThermistorsFault = message.InternalThermistorsFault;
-    }
-    if (message.LowCellVoltageFault !== false) {
-      obj.LowCellVoltageFault = message.LowCellVoltageFault;
-    }
-    if (message.OpenWiringFault !== false) {
-      obj.OpenWiringFault = message.OpenWiringFault;
-    }
-    if (message.PackVoltageSensorFault !== false) {
-      obj.PackVoltageSensorFault = message.PackVoltageSensorFault;
-    }
-    if (message.ThermistorFault !== false) {
-      obj.ThermistorFault = message.ThermistorFault;
-    }
-    if (message.VoltageRedundancyFault !== false) {
-      obj.VoltageRedundancyFault = message.VoltageRedundancyFault;
-    }
-    if (message.WeakCellFault !== false) {
-      obj.WeakCellFault = message.WeakCellFault;
-    }
-    if (message.WeakPackFault !== false) {
-      obj.WeakPackFault = message.WeakPackFault;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IBatteryErrorFlags>, I>>(base?: I): IBatteryErrorFlags {
-    return IBatteryErrorFlags.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IBatteryErrorFlags>, I>>(object: I): IBatteryErrorFlags {
-    const message = createBaseIBatteryErrorFlags();
-    message.PowerSupplyFault = object.PowerSupplyFault ?? false;
-    message.AlwaysOnSupplyFault = object.AlwaysOnSupplyFault ?? false;
-    message.CANBUSCommunicationsFault = object.CANBUSCommunicationsFault ?? false;
-    message.ChargeLimitEnforcementFault = object.ChargeLimitEnforcementFault ?? false;
-    message.ChargerSafetyRelayFault = object.ChargerSafetyRelayFault ?? false;
-    message.CurrentSensorFault = object.CurrentSensorFault ?? false;
-    message.DischargeLimitEnforcementFault = object.DischargeLimitEnforcementFault ?? false;
-    message.FanMonitorFault = object.FanMonitorFault ?? false;
-    message.HighVoltageIsolationFault = object.HighVoltageIsolationFault ?? false;
-    message.InternalCommunicationFault = object.InternalCommunicationFault ?? false;
-    message.InternalConversionFault = object.InternalConversionFault ?? false;
-    message.InternalLogicFault = object.InternalLogicFault ?? false;
-    message.InternalMemoryFault = object.InternalMemoryFault ?? false;
-    message.InternalThermistorsFault = object.InternalThermistorsFault ?? false;
-    message.LowCellVoltageFault = object.LowCellVoltageFault ?? false;
-    message.OpenWiringFault = object.OpenWiringFault ?? false;
-    message.PackVoltageSensorFault = object.PackVoltageSensorFault ?? false;
-    message.ThermistorFault = object.ThermistorFault ?? false;
-    message.VoltageRedundancyFault = object.VoltageRedundancyFault ?? false;
-    message.WeakCellFault = object.WeakCellFault ?? false;
-    message.WeakPackFault = object.WeakPackFault ?? false;
-    return message;
-  },
-};
-
-function createBaseIBatteryLimitFlags(): IBatteryLimitFlags {
+function createBaseBatteryFaultWarnings(): BatteryFaultWarnings {
   return {
     CclReducedDueToAlternateCurrentLimit: false,
     CclReducedDueToChargerLatch: false,
@@ -3164,18 +361,21 @@ function createBaseIBatteryLimitFlags(): IBatteryLimitFlags {
     CclReducedDueToHighPackVoltage: false,
     CclReducedDueToHighSoc: false,
     CclReducedDueToTemperature: false,
+    DclAndCclReducedDueToCommunicationFailsafe: false,
+    DclAndCclReducedDueToVoltageFailsafe: false,
     DclReducedDueToHighCellResistance: false,
     DclReducedDueToLowCellVoltage: false,
     DclReducedDueToLowPackVoltage: false,
     DclReducedDueToLowSoc: false,
     DclReducedDueToTemperature: false,
-    DclandCclReducedDueToCommunicationFailsafe: false,
-    DclandCclReducedDueToVoltageFailsafe: false,
   };
 }
 
-export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
-  encode(message: IBatteryLimitFlags, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const BatteryFaultWarnings: MessageFns<BatteryFaultWarnings> = {
+  encode(
+    message: BatteryFaultWarnings,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.CclReducedDueToAlternateCurrentLimit !== false) {
       writer.uint32(8).bool(message.CclReducedDueToAlternateCurrentLimit);
     }
@@ -3197,34 +397,40 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
     if (message.CclReducedDueToTemperature !== false) {
       writer.uint32(56).bool(message.CclReducedDueToTemperature);
     }
+    if (message.DclAndCclReducedDueToCommunicationFailsafe !== false) {
+      writer
+        .uint32(64)
+        .bool(message.DclAndCclReducedDueToCommunicationFailsafe);
+    }
+    if (message.DclAndCclReducedDueToVoltageFailsafe !== false) {
+      writer.uint32(72).bool(message.DclAndCclReducedDueToVoltageFailsafe);
+    }
     if (message.DclReducedDueToHighCellResistance !== false) {
-      writer.uint32(64).bool(message.DclReducedDueToHighCellResistance);
+      writer.uint32(80).bool(message.DclReducedDueToHighCellResistance);
     }
     if (message.DclReducedDueToLowCellVoltage !== false) {
-      writer.uint32(72).bool(message.DclReducedDueToLowCellVoltage);
+      writer.uint32(88).bool(message.DclReducedDueToLowCellVoltage);
     }
     if (message.DclReducedDueToLowPackVoltage !== false) {
-      writer.uint32(80).bool(message.DclReducedDueToLowPackVoltage);
+      writer.uint32(96).bool(message.DclReducedDueToLowPackVoltage);
     }
     if (message.DclReducedDueToLowSoc !== false) {
-      writer.uint32(88).bool(message.DclReducedDueToLowSoc);
+      writer.uint32(104).bool(message.DclReducedDueToLowSoc);
     }
     if (message.DclReducedDueToTemperature !== false) {
-      writer.uint32(96).bool(message.DclReducedDueToTemperature);
-    }
-    if (message.DclandCclReducedDueToCommunicationFailsafe !== false) {
-      writer.uint32(104).bool(message.DclandCclReducedDueToCommunicationFailsafe);
-    }
-    if (message.DclandCclReducedDueToVoltageFailsafe !== false) {
-      writer.uint32(112).bool(message.DclandCclReducedDueToVoltageFailsafe);
+      writer.uint32(112).bool(message.DclReducedDueToTemperature);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): IBatteryLimitFlags {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): BatteryFaultWarnings {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIBatteryLimitFlags();
+    const message = createBaseBatteryFaultWarnings();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3289,7 +495,7 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
             break;
           }
 
-          message.DclReducedDueToHighCellResistance = reader.bool();
+          message.DclAndCclReducedDueToCommunicationFailsafe = reader.bool();
           continue;
         }
         case 9: {
@@ -3297,7 +503,7 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
             break;
           }
 
-          message.DclReducedDueToLowCellVoltage = reader.bool();
+          message.DclAndCclReducedDueToVoltageFailsafe = reader.bool();
           continue;
         }
         case 10: {
@@ -3305,7 +511,7 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
             break;
           }
 
-          message.DclReducedDueToLowPackVoltage = reader.bool();
+          message.DclReducedDueToHighCellResistance = reader.bool();
           continue;
         }
         case 11: {
@@ -3313,7 +519,7 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
             break;
           }
 
-          message.DclReducedDueToLowSoc = reader.bool();
+          message.DclReducedDueToLowCellVoltage = reader.bool();
           continue;
         }
         case 12: {
@@ -3321,7 +527,7 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
             break;
           }
 
-          message.DclReducedDueToTemperature = reader.bool();
+          message.DclReducedDueToLowPackVoltage = reader.bool();
           continue;
         }
         case 13: {
@@ -3329,7 +535,7 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
             break;
           }
 
-          message.DclandCclReducedDueToCommunicationFailsafe = reader.bool();
+          message.DclReducedDueToLowSoc = reader.bool();
           continue;
         }
         case 14: {
@@ -3337,7 +543,7 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
             break;
           }
 
-          message.DclandCclReducedDueToVoltageFailsafe = reader.bool();
+          message.DclReducedDueToTemperature = reader.bool();
           continue;
         }
       }
@@ -3349,21 +555,29 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
     return message;
   },
 
-  fromJSON(object: any): IBatteryLimitFlags {
+  fromJSON(object: any): BatteryFaultWarnings {
     return {
-      CclReducedDueToAlternateCurrentLimit: isSet(object.CclReducedDueToAlternateCurrentLimit)
+      CclReducedDueToAlternateCurrentLimit: isSet(
+        object.CclReducedDueToAlternateCurrentLimit,
+      )
         ? globalThis.Boolean(object.CclReducedDueToAlternateCurrentLimit)
         : false,
       CclReducedDueToChargerLatch: isSet(object.CclReducedDueToChargerLatch)
         ? globalThis.Boolean(object.CclReducedDueToChargerLatch)
         : false,
-      CclReducedDueToHighCellResistance: isSet(object.CclReducedDueToHighCellResistance)
+      CclReducedDueToHighCellResistance: isSet(
+        object.CclReducedDueToHighCellResistance,
+      )
         ? globalThis.Boolean(object.CclReducedDueToHighCellResistance)
         : false,
-      CclReducedDueToHighCellVoltage: isSet(object.CclReducedDueToHighCellVoltage)
+      CclReducedDueToHighCellVoltage: isSet(
+        object.CclReducedDueToHighCellVoltage,
+      )
         ? globalThis.Boolean(object.CclReducedDueToHighCellVoltage)
         : false,
-      CclReducedDueToHighPackVoltage: isSet(object.CclReducedDueToHighPackVoltage)
+      CclReducedDueToHighPackVoltage: isSet(
+        object.CclReducedDueToHighPackVoltage,
+      )
         ? globalThis.Boolean(object.CclReducedDueToHighPackVoltage)
         : false,
       CclReducedDueToHighSoc: isSet(object.CclReducedDueToHighSoc)
@@ -3372,7 +586,19 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
       CclReducedDueToTemperature: isSet(object.CclReducedDueToTemperature)
         ? globalThis.Boolean(object.CclReducedDueToTemperature)
         : false,
-      DclReducedDueToHighCellResistance: isSet(object.DclReducedDueToHighCellResistance)
+      DclAndCclReducedDueToCommunicationFailsafe: isSet(
+        object.DclAndCclReducedDueToCommunicationFailsafe,
+      )
+        ? globalThis.Boolean(object.DclAndCclReducedDueToCommunicationFailsafe)
+        : false,
+      DclAndCclReducedDueToVoltageFailsafe: isSet(
+        object.DclAndCclReducedDueToVoltageFailsafe,
+      )
+        ? globalThis.Boolean(object.DclAndCclReducedDueToVoltageFailsafe)
+        : false,
+      DclReducedDueToHighCellResistance: isSet(
+        object.DclReducedDueToHighCellResistance,
+      )
         ? globalThis.Boolean(object.DclReducedDueToHighCellResistance)
         : false,
       DclReducedDueToLowCellVoltage: isSet(object.DclReducedDueToLowCellVoltage)
@@ -3387,31 +613,29 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
       DclReducedDueToTemperature: isSet(object.DclReducedDueToTemperature)
         ? globalThis.Boolean(object.DclReducedDueToTemperature)
         : false,
-      DclandCclReducedDueToCommunicationFailsafe: isSet(object.DclandCclReducedDueToCommunicationFailsafe)
-        ? globalThis.Boolean(object.DclandCclReducedDueToCommunicationFailsafe)
-        : false,
-      DclandCclReducedDueToVoltageFailsafe: isSet(object.DclandCclReducedDueToVoltageFailsafe)
-        ? globalThis.Boolean(object.DclandCclReducedDueToVoltageFailsafe)
-        : false,
     };
   },
 
-  toJSON(message: IBatteryLimitFlags): unknown {
+  toJSON(message: BatteryFaultWarnings): unknown {
     const obj: any = {};
     if (message.CclReducedDueToAlternateCurrentLimit !== false) {
-      obj.CclReducedDueToAlternateCurrentLimit = message.CclReducedDueToAlternateCurrentLimit;
+      obj.CclReducedDueToAlternateCurrentLimit =
+        message.CclReducedDueToAlternateCurrentLimit;
     }
     if (message.CclReducedDueToChargerLatch !== false) {
       obj.CclReducedDueToChargerLatch = message.CclReducedDueToChargerLatch;
     }
     if (message.CclReducedDueToHighCellResistance !== false) {
-      obj.CclReducedDueToHighCellResistance = message.CclReducedDueToHighCellResistance;
+      obj.CclReducedDueToHighCellResistance =
+        message.CclReducedDueToHighCellResistance;
     }
     if (message.CclReducedDueToHighCellVoltage !== false) {
-      obj.CclReducedDueToHighCellVoltage = message.CclReducedDueToHighCellVoltage;
+      obj.CclReducedDueToHighCellVoltage =
+        message.CclReducedDueToHighCellVoltage;
     }
     if (message.CclReducedDueToHighPackVoltage !== false) {
-      obj.CclReducedDueToHighPackVoltage = message.CclReducedDueToHighPackVoltage;
+      obj.CclReducedDueToHighPackVoltage =
+        message.CclReducedDueToHighPackVoltage;
     }
     if (message.CclReducedDueToHighSoc !== false) {
       obj.CclReducedDueToHighSoc = message.CclReducedDueToHighSoc;
@@ -3419,8 +643,17 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
     if (message.CclReducedDueToTemperature !== false) {
       obj.CclReducedDueToTemperature = message.CclReducedDueToTemperature;
     }
+    if (message.DclAndCclReducedDueToCommunicationFailsafe !== false) {
+      obj.DclAndCclReducedDueToCommunicationFailsafe =
+        message.DclAndCclReducedDueToCommunicationFailsafe;
+    }
+    if (message.DclAndCclReducedDueToVoltageFailsafe !== false) {
+      obj.DclAndCclReducedDueToVoltageFailsafe =
+        message.DclAndCclReducedDueToVoltageFailsafe;
+    }
     if (message.DclReducedDueToHighCellResistance !== false) {
-      obj.DclReducedDueToHighCellResistance = message.DclReducedDueToHighCellResistance;
+      obj.DclReducedDueToHighCellResistance =
+        message.DclReducedDueToHighCellResistance;
     }
     if (message.DclReducedDueToLowCellVoltage !== false) {
       obj.DclReducedDueToLowCellVoltage = message.DclReducedDueToLowCellVoltage;
@@ -3434,54 +667,153 @@ export const IBatteryLimitFlags: MessageFns<IBatteryLimitFlags> = {
     if (message.DclReducedDueToTemperature !== false) {
       obj.DclReducedDueToTemperature = message.DclReducedDueToTemperature;
     }
-    if (message.DclandCclReducedDueToCommunicationFailsafe !== false) {
-      obj.DclandCclReducedDueToCommunicationFailsafe = message.DclandCclReducedDueToCommunicationFailsafe;
-    }
-    if (message.DclandCclReducedDueToVoltageFailsafe !== false) {
-      obj.DclandCclReducedDueToVoltageFailsafe = message.DclandCclReducedDueToVoltageFailsafe;
-    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<IBatteryLimitFlags>, I>>(base?: I): IBatteryLimitFlags {
-    return IBatteryLimitFlags.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<BatteryFaultWarnings>, I>>(
+    base?: I,
+  ): BatteryFaultWarnings {
+    return BatteryFaultWarnings.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<IBatteryLimitFlags>, I>>(object: I): IBatteryLimitFlags {
-    const message = createBaseIBatteryLimitFlags();
-    message.CclReducedDueToAlternateCurrentLimit = object.CclReducedDueToAlternateCurrentLimit ?? false;
-    message.CclReducedDueToChargerLatch = object.CclReducedDueToChargerLatch ?? false;
-    message.CclReducedDueToHighCellResistance = object.CclReducedDueToHighCellResistance ?? false;
-    message.CclReducedDueToHighCellVoltage = object.CclReducedDueToHighCellVoltage ?? false;
-    message.CclReducedDueToHighPackVoltage = object.CclReducedDueToHighPackVoltage ?? false;
+  fromPartial<I extends Exact<DeepPartial<BatteryFaultWarnings>, I>>(
+    object: I,
+  ): BatteryFaultWarnings {
+    const message = createBaseBatteryFaultWarnings();
+    message.CclReducedDueToAlternateCurrentLimit =
+      object.CclReducedDueToAlternateCurrentLimit ?? false;
+    message.CclReducedDueToChargerLatch =
+      object.CclReducedDueToChargerLatch ?? false;
+    message.CclReducedDueToHighCellResistance =
+      object.CclReducedDueToHighCellResistance ?? false;
+    message.CclReducedDueToHighCellVoltage =
+      object.CclReducedDueToHighCellVoltage ?? false;
+    message.CclReducedDueToHighPackVoltage =
+      object.CclReducedDueToHighPackVoltage ?? false;
     message.CclReducedDueToHighSoc = object.CclReducedDueToHighSoc ?? false;
-    message.CclReducedDueToTemperature = object.CclReducedDueToTemperature ?? false;
-    message.DclReducedDueToHighCellResistance = object.DclReducedDueToHighCellResistance ?? false;
-    message.DclReducedDueToLowCellVoltage = object.DclReducedDueToLowCellVoltage ?? false;
-    message.DclReducedDueToLowPackVoltage = object.DclReducedDueToLowPackVoltage ?? false;
+    message.CclReducedDueToTemperature =
+      object.CclReducedDueToTemperature ?? false;
+    message.DclAndCclReducedDueToCommunicationFailsafe =
+      object.DclAndCclReducedDueToCommunicationFailsafe ?? false;
+    message.DclAndCclReducedDueToVoltageFailsafe =
+      object.DclAndCclReducedDueToVoltageFailsafe ?? false;
+    message.DclReducedDueToHighCellResistance =
+      object.DclReducedDueToHighCellResistance ?? false;
+    message.DclReducedDueToLowCellVoltage =
+      object.DclReducedDueToLowCellVoltage ?? false;
+    message.DclReducedDueToLowPackVoltage =
+      object.DclReducedDueToLowPackVoltage ?? false;
     message.DclReducedDueToLowSoc = object.DclReducedDueToLowSoc ?? false;
-    message.DclReducedDueToTemperature = object.DclReducedDueToTemperature ?? false;
-    message.DclandCclReducedDueToCommunicationFailsafe = object.DclandCclReducedDueToCommunicationFailsafe ?? false;
-    message.DclandCclReducedDueToVoltageFailsafe = object.DclandCclReducedDueToVoltageFailsafe ?? false;
+    message.DclReducedDueToTemperature =
+      object.DclReducedDueToTemperature ?? false;
     return message;
   },
 };
 
-function createBaseICcs(): ICcs {
-  return { CcsAlive: false };
+function createBaseBatteryFaultErrors(): BatteryFaultErrors {
+  return {
+    AlwaysOnSupplyFault: false,
+    CanbusCommunicationFault: false,
+    ChargeLimitEnforcementFault: false,
+    ChargerSafetyRelayFault: false,
+    CurrentSensorFault: false,
+    DischargeLimitEnforcementFault: false,
+    FanMonitorFault: false,
+    HighVoltageIsolationFault: false,
+    InternalCommunicationFault: false,
+    InternalConversionFault: false,
+    InternalLogicFault: false,
+    InternalMemoryFault: false,
+    InternalThermistorFault: false,
+    LowCellVoltageFault: false,
+    OpenWiringFault: false,
+    PackVoltageSensorFault: false,
+    PowerSupply12VFault: false,
+    ThermistorFault: false,
+    VoltageRedundancyFault: false,
+    WeakCellFault: false,
+    WeakPackFault: false,
+  };
 }
 
-export const ICcs: MessageFns<ICcs> = {
-  encode(message: ICcs, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.CcsAlive !== false) {
-      writer.uint32(8).bool(message.CcsAlive);
+export const BatteryFaultErrors: MessageFns<BatteryFaultErrors> = {
+  encode(
+    message: BatteryFaultErrors,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.AlwaysOnSupplyFault !== false) {
+      writer.uint32(8).bool(message.AlwaysOnSupplyFault);
+    }
+    if (message.CanbusCommunicationFault !== false) {
+      writer.uint32(16).bool(message.CanbusCommunicationFault);
+    }
+    if (message.ChargeLimitEnforcementFault !== false) {
+      writer.uint32(24).bool(message.ChargeLimitEnforcementFault);
+    }
+    if (message.ChargerSafetyRelayFault !== false) {
+      writer.uint32(32).bool(message.ChargerSafetyRelayFault);
+    }
+    if (message.CurrentSensorFault !== false) {
+      writer.uint32(40).bool(message.CurrentSensorFault);
+    }
+    if (message.DischargeLimitEnforcementFault !== false) {
+      writer.uint32(48).bool(message.DischargeLimitEnforcementFault);
+    }
+    if (message.FanMonitorFault !== false) {
+      writer.uint32(56).bool(message.FanMonitorFault);
+    }
+    if (message.HighVoltageIsolationFault !== false) {
+      writer.uint32(64).bool(message.HighVoltageIsolationFault);
+    }
+    if (message.InternalCommunicationFault !== false) {
+      writer.uint32(72).bool(message.InternalCommunicationFault);
+    }
+    if (message.InternalConversionFault !== false) {
+      writer.uint32(80).bool(message.InternalConversionFault);
+    }
+    if (message.InternalLogicFault !== false) {
+      writer.uint32(88).bool(message.InternalLogicFault);
+    }
+    if (message.InternalMemoryFault !== false) {
+      writer.uint32(96).bool(message.InternalMemoryFault);
+    }
+    if (message.InternalThermistorFault !== false) {
+      writer.uint32(104).bool(message.InternalThermistorFault);
+    }
+    if (message.LowCellVoltageFault !== false) {
+      writer.uint32(112).bool(message.LowCellVoltageFault);
+    }
+    if (message.OpenWiringFault !== false) {
+      writer.uint32(120).bool(message.OpenWiringFault);
+    }
+    if (message.PackVoltageSensorFault !== false) {
+      writer.uint32(128).bool(message.PackVoltageSensorFault);
+    }
+    if (message.PowerSupply12VFault !== false) {
+      writer.uint32(136).bool(message.PowerSupply12VFault);
+    }
+    if (message.ThermistorFault !== false) {
+      writer.uint32(144).bool(message.ThermistorFault);
+    }
+    if (message.VoltageRedundancyFault !== false) {
+      writer.uint32(152).bool(message.VoltageRedundancyFault);
+    }
+    if (message.WeakCellFault !== false) {
+      writer.uint32(160).bool(message.WeakCellFault);
+    }
+    if (message.WeakPackFault !== false) {
+      writer.uint32(168).bool(message.WeakPackFault);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): ICcs {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): BatteryFaultErrors {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseICcs();
+    const message = createBaseBatteryFaultErrors();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3490,109 +822,167 @@ export const ICcs: MessageFns<ICcs> = {
             break;
           }
 
-          message.CcsAlive = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ICcs {
-    return { CcsAlive: isSet(object.CcsAlive) ? globalThis.Boolean(object.CcsAlive) : false };
-  },
-
-  toJSON(message: ICcs): unknown {
-    const obj: any = {};
-    if (message.CcsAlive !== false) {
-      obj.CcsAlive = message.CcsAlive;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ICcs>, I>>(base?: I): ICcs {
-    return ICcs.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ICcs>, I>>(object: I): ICcs {
-    const message = createBaseICcs();
-    message.CcsAlive = object.CcsAlive ?? false;
-    return message;
-  },
-};
-
-function createBaseIMPPT(): IMPPT {
-  return { Alive: false, ArrayCurrent: 0, ArrayVoltage: 0, BatteryVoltage: 0, Temperature: 0 };
-}
-
-export const IMPPT: MessageFns<IMPPT> = {
-  encode(message: IMPPT, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.Alive !== false) {
-      writer.uint32(8).bool(message.Alive);
-    }
-    if (message.ArrayCurrent !== 0) {
-      writer.uint32(17).double(message.ArrayCurrent);
-    }
-    if (message.ArrayVoltage !== 0) {
-      writer.uint32(25).double(message.ArrayVoltage);
-    }
-    if (message.BatteryVoltage !== 0) {
-      writer.uint32(33).double(message.BatteryVoltage);
-    }
-    if (message.Temperature !== 0) {
-      writer.uint32(41).double(message.Temperature);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IMPPT {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIMPPT();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.Alive = reader.bool();
+          message.AlwaysOnSupplyFault = reader.bool();
           continue;
         }
         case 2: {
-          if (tag !== 17) {
+          if (tag !== 16) {
             break;
           }
 
-          message.ArrayCurrent = reader.double();
+          message.CanbusCommunicationFault = reader.bool();
           continue;
         }
         case 3: {
-          if (tag !== 25) {
+          if (tag !== 24) {
             break;
           }
 
-          message.ArrayVoltage = reader.double();
+          message.ChargeLimitEnforcementFault = reader.bool();
           continue;
         }
         case 4: {
-          if (tag !== 33) {
+          if (tag !== 32) {
             break;
           }
 
-          message.BatteryVoltage = reader.double();
+          message.ChargerSafetyRelayFault = reader.bool();
           continue;
         }
         case 5: {
-          if (tag !== 41) {
+          if (tag !== 40) {
             break;
           }
 
-          message.Temperature = reader.double();
+          message.CurrentSensorFault = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.DischargeLimitEnforcementFault = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.FanMonitorFault = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.HighVoltageIsolationFault = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.InternalCommunicationFault = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.InternalConversionFault = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.InternalLogicFault = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.InternalMemoryFault = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.InternalThermistorFault = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.LowCellVoltageFault = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.OpenWiringFault = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 128) {
+            break;
+          }
+
+          message.PackVoltageSensorFault = reader.bool();
+          continue;
+        }
+        case 17: {
+          if (tag !== 136) {
+            break;
+          }
+
+          message.PowerSupply12VFault = reader.bool();
+          continue;
+        }
+        case 18: {
+          if (tag !== 144) {
+            break;
+          }
+
+          message.ThermistorFault = reader.bool();
+          continue;
+        }
+        case 19: {
+          if (tag !== 152) {
+            break;
+          }
+
+          message.VoltageRedundancyFault = reader.bool();
+          continue;
+        }
+        case 20: {
+          if (tag !== 160) {
+            break;
+          }
+
+          message.WeakCellFault = reader.bool();
+          continue;
+        }
+        case 21: {
+          if (tag !== 168) {
+            break;
+          }
+
+          message.WeakPackFault = reader.bool();
           continue;
         }
       }
@@ -3604,75 +994,212 @@ export const IMPPT: MessageFns<IMPPT> = {
     return message;
   },
 
-  fromJSON(object: any): IMPPT {
+  fromJSON(object: any): BatteryFaultErrors {
     return {
-      Alive: isSet(object.Alive) ? globalThis.Boolean(object.Alive) : false,
-      ArrayCurrent: isSet(object.ArrayCurrent) ? globalThis.Number(object.ArrayCurrent) : 0,
-      ArrayVoltage: isSet(object.ArrayVoltage) ? globalThis.Number(object.ArrayVoltage) : 0,
-      BatteryVoltage: isSet(object.BatteryVoltage) ? globalThis.Number(object.BatteryVoltage) : 0,
-      Temperature: isSet(object.Temperature) ? globalThis.Number(object.Temperature) : 0,
+      AlwaysOnSupplyFault: isSet(object.AlwaysOnSupplyFault)
+        ? globalThis.Boolean(object.AlwaysOnSupplyFault)
+        : false,
+      CanbusCommunicationFault: isSet(object.CanbusCommunicationFault)
+        ? globalThis.Boolean(object.CanbusCommunicationFault)
+        : false,
+      ChargeLimitEnforcementFault: isSet(object.ChargeLimitEnforcementFault)
+        ? globalThis.Boolean(object.ChargeLimitEnforcementFault)
+        : false,
+      ChargerSafetyRelayFault: isSet(object.ChargerSafetyRelayFault)
+        ? globalThis.Boolean(object.ChargerSafetyRelayFault)
+        : false,
+      CurrentSensorFault: isSet(object.CurrentSensorFault)
+        ? globalThis.Boolean(object.CurrentSensorFault)
+        : false,
+      DischargeLimitEnforcementFault: isSet(
+        object.DischargeLimitEnforcementFault,
+      )
+        ? globalThis.Boolean(object.DischargeLimitEnforcementFault)
+        : false,
+      FanMonitorFault: isSet(object.FanMonitorFault)
+        ? globalThis.Boolean(object.FanMonitorFault)
+        : false,
+      HighVoltageIsolationFault: isSet(object.HighVoltageIsolationFault)
+        ? globalThis.Boolean(object.HighVoltageIsolationFault)
+        : false,
+      InternalCommunicationFault: isSet(object.InternalCommunicationFault)
+        ? globalThis.Boolean(object.InternalCommunicationFault)
+        : false,
+      InternalConversionFault: isSet(object.InternalConversionFault)
+        ? globalThis.Boolean(object.InternalConversionFault)
+        : false,
+      InternalLogicFault: isSet(object.InternalLogicFault)
+        ? globalThis.Boolean(object.InternalLogicFault)
+        : false,
+      InternalMemoryFault: isSet(object.InternalMemoryFault)
+        ? globalThis.Boolean(object.InternalMemoryFault)
+        : false,
+      InternalThermistorFault: isSet(object.InternalThermistorFault)
+        ? globalThis.Boolean(object.InternalThermistorFault)
+        : false,
+      LowCellVoltageFault: isSet(object.LowCellVoltageFault)
+        ? globalThis.Boolean(object.LowCellVoltageFault)
+        : false,
+      OpenWiringFault: isSet(object.OpenWiringFault)
+        ? globalThis.Boolean(object.OpenWiringFault)
+        : false,
+      PackVoltageSensorFault: isSet(object.PackVoltageSensorFault)
+        ? globalThis.Boolean(object.PackVoltageSensorFault)
+        : false,
+      PowerSupply12VFault: isSet(object.PowerSupply12VFault)
+        ? globalThis.Boolean(object.PowerSupply12VFault)
+        : false,
+      ThermistorFault: isSet(object.ThermistorFault)
+        ? globalThis.Boolean(object.ThermistorFault)
+        : false,
+      VoltageRedundancyFault: isSet(object.VoltageRedundancyFault)
+        ? globalThis.Boolean(object.VoltageRedundancyFault)
+        : false,
+      WeakCellFault: isSet(object.WeakCellFault)
+        ? globalThis.Boolean(object.WeakCellFault)
+        : false,
+      WeakPackFault: isSet(object.WeakPackFault)
+        ? globalThis.Boolean(object.WeakPackFault)
+        : false,
     };
   },
 
-  toJSON(message: IMPPT): unknown {
+  toJSON(message: BatteryFaultErrors): unknown {
     const obj: any = {};
-    if (message.Alive !== false) {
-      obj.Alive = message.Alive;
+    if (message.AlwaysOnSupplyFault !== false) {
+      obj.AlwaysOnSupplyFault = message.AlwaysOnSupplyFault;
     }
-    if (message.ArrayCurrent !== 0) {
-      obj.ArrayCurrent = message.ArrayCurrent;
+    if (message.CanbusCommunicationFault !== false) {
+      obj.CanbusCommunicationFault = message.CanbusCommunicationFault;
     }
-    if (message.ArrayVoltage !== 0) {
-      obj.ArrayVoltage = message.ArrayVoltage;
+    if (message.ChargeLimitEnforcementFault !== false) {
+      obj.ChargeLimitEnforcementFault = message.ChargeLimitEnforcementFault;
     }
-    if (message.BatteryVoltage !== 0) {
-      obj.BatteryVoltage = message.BatteryVoltage;
+    if (message.ChargerSafetyRelayFault !== false) {
+      obj.ChargerSafetyRelayFault = message.ChargerSafetyRelayFault;
     }
-    if (message.Temperature !== 0) {
-      obj.Temperature = message.Temperature;
+    if (message.CurrentSensorFault !== false) {
+      obj.CurrentSensorFault = message.CurrentSensorFault;
+    }
+    if (message.DischargeLimitEnforcementFault !== false) {
+      obj.DischargeLimitEnforcementFault =
+        message.DischargeLimitEnforcementFault;
+    }
+    if (message.FanMonitorFault !== false) {
+      obj.FanMonitorFault = message.FanMonitorFault;
+    }
+    if (message.HighVoltageIsolationFault !== false) {
+      obj.HighVoltageIsolationFault = message.HighVoltageIsolationFault;
+    }
+    if (message.InternalCommunicationFault !== false) {
+      obj.InternalCommunicationFault = message.InternalCommunicationFault;
+    }
+    if (message.InternalConversionFault !== false) {
+      obj.InternalConversionFault = message.InternalConversionFault;
+    }
+    if (message.InternalLogicFault !== false) {
+      obj.InternalLogicFault = message.InternalLogicFault;
+    }
+    if (message.InternalMemoryFault !== false) {
+      obj.InternalMemoryFault = message.InternalMemoryFault;
+    }
+    if (message.InternalThermistorFault !== false) {
+      obj.InternalThermistorFault = message.InternalThermistorFault;
+    }
+    if (message.LowCellVoltageFault !== false) {
+      obj.LowCellVoltageFault = message.LowCellVoltageFault;
+    }
+    if (message.OpenWiringFault !== false) {
+      obj.OpenWiringFault = message.OpenWiringFault;
+    }
+    if (message.PackVoltageSensorFault !== false) {
+      obj.PackVoltageSensorFault = message.PackVoltageSensorFault;
+    }
+    if (message.PowerSupply12VFault !== false) {
+      obj.PowerSupply12VFault = message.PowerSupply12VFault;
+    }
+    if (message.ThermistorFault !== false) {
+      obj.ThermistorFault = message.ThermistorFault;
+    }
+    if (message.VoltageRedundancyFault !== false) {
+      obj.VoltageRedundancyFault = message.VoltageRedundancyFault;
+    }
+    if (message.WeakCellFault !== false) {
+      obj.WeakCellFault = message.WeakCellFault;
+    }
+    if (message.WeakPackFault !== false) {
+      obj.WeakPackFault = message.WeakPackFault;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<IMPPT>, I>>(base?: I): IMPPT {
-    return IMPPT.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<BatteryFaultErrors>, I>>(
+    base?: I,
+  ): BatteryFaultErrors {
+    return BatteryFaultErrors.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<IMPPT>, I>>(object: I): IMPPT {
-    const message = createBaseIMPPT();
-    message.Alive = object.Alive ?? false;
-    message.ArrayCurrent = object.ArrayCurrent ?? 0;
-    message.ArrayVoltage = object.ArrayVoltage ?? 0;
-    message.BatteryVoltage = object.BatteryVoltage ?? 0;
-    message.Temperature = object.Temperature ?? 0;
+  fromPartial<I extends Exact<DeepPartial<BatteryFaultErrors>, I>>(
+    object: I,
+  ): BatteryFaultErrors {
+    const message = createBaseBatteryFaultErrors();
+    message.AlwaysOnSupplyFault = object.AlwaysOnSupplyFault ?? false;
+    message.CanbusCommunicationFault = object.CanbusCommunicationFault ?? false;
+    message.ChargeLimitEnforcementFault =
+      object.ChargeLimitEnforcementFault ?? false;
+    message.ChargerSafetyRelayFault = object.ChargerSafetyRelayFault ?? false;
+    message.CurrentSensorFault = object.CurrentSensorFault ?? false;
+    message.DischargeLimitEnforcementFault =
+      object.DischargeLimitEnforcementFault ?? false;
+    message.FanMonitorFault = object.FanMonitorFault ?? false;
+    message.HighVoltageIsolationFault =
+      object.HighVoltageIsolationFault ?? false;
+    message.InternalCommunicationFault =
+      object.InternalCommunicationFault ?? false;
+    message.InternalConversionFault = object.InternalConversionFault ?? false;
+    message.InternalLogicFault = object.InternalLogicFault ?? false;
+    message.InternalMemoryFault = object.InternalMemoryFault ?? false;
+    message.InternalThermistorFault = object.InternalThermistorFault ?? false;
+    message.LowCellVoltageFault = object.LowCellVoltageFault ?? false;
+    message.OpenWiringFault = object.OpenWiringFault ?? false;
+    message.PackVoltageSensorFault = object.PackVoltageSensorFault ?? false;
+    message.PowerSupply12VFault = object.PowerSupply12VFault ?? false;
+    message.ThermistorFault = object.ThermistorFault ?? false;
+    message.VoltageRedundancyFault = object.VoltageRedundancyFault ?? false;
+    message.WeakCellFault = object.WeakCellFault ?? false;
+    message.WeakPackFault = object.WeakPackFault ?? false;
     return message;
   },
 };
 
-function createBaseIMotorFault(): IMotorFault {
-  return { ErrorFlags: undefined, LimitFlags: undefined, RxErrorCount: 0, TxErrorCount: 0 };
+function createBaseBatteryFaults(): BatteryFaults {
+  return { Errors: undefined, Warnings: undefined };
 }
 
-export const IMotorFault: MessageFns<IMotorFault> = {
-  encode(message: IMotorFault, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.ErrorFlags !== undefined) {
-      IMotorErrorFlags.encode(message.ErrorFlags, writer.uint32(10).fork()).join();
+export const BatteryFaults: MessageFns<BatteryFaults> = {
+  encode(
+    message: BatteryFaults,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.Errors !== undefined) {
+      BatteryFaultErrors.encode(
+        message.Errors,
+        writer.uint32(10).fork(),
+      ).join();
     }
-    if (message.LimitFlags !== undefined) {
-      IMotorLimitFlags.encode(message.LimitFlags, writer.uint32(18).fork()).join();
-    }
-    if (message.RxErrorCount !== 0) {
-      writer.uint32(24).int32(message.RxErrorCount);
-    }
-    if (message.TxErrorCount !== 0) {
-      writer.uint32(32).int32(message.TxErrorCount);
+    if (message.Warnings !== undefined) {
+      BatteryFaultWarnings.encode(
+        message.Warnings,
+        writer.uint32(18).fork(),
+      ).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): IMotorFault {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatteryFaults {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIMotorFault();
+    const message = createBaseBatteryFaults();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3681,7 +1208,7 @@ export const IMotorFault: MessageFns<IMotorFault> = {
             break;
           }
 
-          message.ErrorFlags = IMotorErrorFlags.decode(reader, reader.uint32());
+          message.Errors = BatteryFaultErrors.decode(reader, reader.uint32());
           continue;
         }
         case 2: {
@@ -3689,23 +1216,10 @@ export const IMotorFault: MessageFns<IMotorFault> = {
             break;
           }
 
-          message.LimitFlags = IMotorLimitFlags.decode(reader, reader.uint32());
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.RxErrorCount = reader.int32();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.TxErrorCount = reader.int32();
+          message.Warnings = BatteryFaultWarnings.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         }
       }
@@ -3717,420 +1231,78 @@ export const IMotorFault: MessageFns<IMotorFault> = {
     return message;
   },
 
-  fromJSON(object: any): IMotorFault {
+  fromJSON(object: any): BatteryFaults {
     return {
-      ErrorFlags: isSet(object.ErrorFlags) ? IMotorErrorFlags.fromJSON(object.ErrorFlags) : undefined,
-      LimitFlags: isSet(object.LimitFlags) ? IMotorLimitFlags.fromJSON(object.LimitFlags) : undefined,
-      RxErrorCount: isSet(object.RxErrorCount) ? globalThis.Number(object.RxErrorCount) : 0,
-      TxErrorCount: isSet(object.TxErrorCount) ? globalThis.Number(object.TxErrorCount) : 0,
+      Errors: isSet(object.Errors)
+        ? BatteryFaultErrors.fromJSON(object.Errors)
+        : undefined,
+      Warnings: isSet(object.Warnings)
+        ? BatteryFaultWarnings.fromJSON(object.Warnings)
+        : undefined,
     };
   },
 
-  toJSON(message: IMotorFault): unknown {
+  toJSON(message: BatteryFaults): unknown {
     const obj: any = {};
-    if (message.ErrorFlags !== undefined) {
-      obj.ErrorFlags = IMotorErrorFlags.toJSON(message.ErrorFlags);
+    if (message.Errors !== undefined) {
+      obj.Errors = BatteryFaultErrors.toJSON(message.Errors);
     }
-    if (message.LimitFlags !== undefined) {
-      obj.LimitFlags = IMotorLimitFlags.toJSON(message.LimitFlags);
-    }
-    if (message.RxErrorCount !== 0) {
-      obj.RxErrorCount = Math.round(message.RxErrorCount);
-    }
-    if (message.TxErrorCount !== 0) {
-      obj.TxErrorCount = Math.round(message.TxErrorCount);
+    if (message.Warnings !== undefined) {
+      obj.Warnings = BatteryFaultWarnings.toJSON(message.Warnings);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<IMotorFault>, I>>(base?: I): IMotorFault {
-    return IMotorFault.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<BatteryFaults>, I>>(
+    base?: I,
+  ): BatteryFaults {
+    return BatteryFaults.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<IMotorFault>, I>>(object: I): IMotorFault {
-    const message = createBaseIMotorFault();
-    message.ErrorFlags = (object.ErrorFlags !== undefined && object.ErrorFlags !== null)
-      ? IMotorErrorFlags.fromPartial(object.ErrorFlags)
-      : undefined;
-    message.LimitFlags = (object.LimitFlags !== undefined && object.LimitFlags !== null)
-      ? IMotorLimitFlags.fromPartial(object.LimitFlags)
-      : undefined;
-    message.RxErrorCount = object.RxErrorCount ?? 0;
-    message.TxErrorCount = object.TxErrorCount ?? 0;
+  fromPartial<I extends Exact<DeepPartial<BatteryFaults>, I>>(
+    object: I,
+  ): BatteryFaults {
+    const message = createBaseBatteryFaults();
+    message.Errors =
+      object.Errors !== undefined && object.Errors !== null
+        ? BatteryFaultErrors.fromPartial(object.Errors)
+        : undefined;
+    message.Warnings =
+      object.Warnings !== undefined && object.Warnings !== null
+        ? BatteryFaultWarnings.fromPartial(object.Warnings)
+        : undefined;
     return message;
   },
 };
 
-function createBaseIMotorErrorFlags(): IMotorErrorFlags {
+function createBaseBatteryStatus(): BatteryStatus {
   return {
-    BadMotorPositionHallSequence: false,
-    ConfigReadError: false,
-    DcBusOverVoltage: false,
-    DesaturationFault: false,
-    MotorOverSpeed: false,
-    SoftwareOverCurrent: false,
-    Wail15VUnderVoltageLockOut: false,
-    WatchdogCausedLastReset: false,
-  };
-}
-
-export const IMotorErrorFlags: MessageFns<IMotorErrorFlags> = {
-  encode(message: IMotorErrorFlags, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.BadMotorPositionHallSequence !== false) {
-      writer.uint32(8).bool(message.BadMotorPositionHallSequence);
-    }
-    if (message.ConfigReadError !== false) {
-      writer.uint32(16).bool(message.ConfigReadError);
-    }
-    if (message.DcBusOverVoltage !== false) {
-      writer.uint32(24).bool(message.DcBusOverVoltage);
-    }
-    if (message.DesaturationFault !== false) {
-      writer.uint32(32).bool(message.DesaturationFault);
-    }
-    if (message.MotorOverSpeed !== false) {
-      writer.uint32(40).bool(message.MotorOverSpeed);
-    }
-    if (message.SoftwareOverCurrent !== false) {
-      writer.uint32(48).bool(message.SoftwareOverCurrent);
-    }
-    if (message.Wail15VUnderVoltageLockOut !== false) {
-      writer.uint32(56).bool(message.Wail15VUnderVoltageLockOut);
-    }
-    if (message.WatchdogCausedLastReset !== false) {
-      writer.uint32(64).bool(message.WatchdogCausedLastReset);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IMotorErrorFlags {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIMotorErrorFlags();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.BadMotorPositionHallSequence = reader.bool();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.ConfigReadError = reader.bool();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.DcBusOverVoltage = reader.bool();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.DesaturationFault = reader.bool();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.MotorOverSpeed = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.SoftwareOverCurrent = reader.bool();
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.Wail15VUnderVoltageLockOut = reader.bool();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.WatchdogCausedLastReset = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IMotorErrorFlags {
-    return {
-      BadMotorPositionHallSequence: isSet(object.BadMotorPositionHallSequence)
-        ? globalThis.Boolean(object.BadMotorPositionHallSequence)
-        : false,
-      ConfigReadError: isSet(object.ConfigReadError) ? globalThis.Boolean(object.ConfigReadError) : false,
-      DcBusOverVoltage: isSet(object.DcBusOverVoltage) ? globalThis.Boolean(object.DcBusOverVoltage) : false,
-      DesaturationFault: isSet(object.DesaturationFault) ? globalThis.Boolean(object.DesaturationFault) : false,
-      MotorOverSpeed: isSet(object.MotorOverSpeed) ? globalThis.Boolean(object.MotorOverSpeed) : false,
-      SoftwareOverCurrent: isSet(object.SoftwareOverCurrent) ? globalThis.Boolean(object.SoftwareOverCurrent) : false,
-      Wail15VUnderVoltageLockOut: isSet(object.Wail15VUnderVoltageLockOut)
-        ? globalThis.Boolean(object.Wail15VUnderVoltageLockOut)
-        : false,
-      WatchdogCausedLastReset: isSet(object.WatchdogCausedLastReset)
-        ? globalThis.Boolean(object.WatchdogCausedLastReset)
-        : false,
-    };
-  },
-
-  toJSON(message: IMotorErrorFlags): unknown {
-    const obj: any = {};
-    if (message.BadMotorPositionHallSequence !== false) {
-      obj.BadMotorPositionHallSequence = message.BadMotorPositionHallSequence;
-    }
-    if (message.ConfigReadError !== false) {
-      obj.ConfigReadError = message.ConfigReadError;
-    }
-    if (message.DcBusOverVoltage !== false) {
-      obj.DcBusOverVoltage = message.DcBusOverVoltage;
-    }
-    if (message.DesaturationFault !== false) {
-      obj.DesaturationFault = message.DesaturationFault;
-    }
-    if (message.MotorOverSpeed !== false) {
-      obj.MotorOverSpeed = message.MotorOverSpeed;
-    }
-    if (message.SoftwareOverCurrent !== false) {
-      obj.SoftwareOverCurrent = message.SoftwareOverCurrent;
-    }
-    if (message.Wail15VUnderVoltageLockOut !== false) {
-      obj.Wail15VUnderVoltageLockOut = message.Wail15VUnderVoltageLockOut;
-    }
-    if (message.WatchdogCausedLastReset !== false) {
-      obj.WatchdogCausedLastReset = message.WatchdogCausedLastReset;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IMotorErrorFlags>, I>>(base?: I): IMotorErrorFlags {
-    return IMotorErrorFlags.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IMotorErrorFlags>, I>>(object: I): IMotorErrorFlags {
-    const message = createBaseIMotorErrorFlags();
-    message.BadMotorPositionHallSequence = object.BadMotorPositionHallSequence ?? false;
-    message.ConfigReadError = object.ConfigReadError ?? false;
-    message.DcBusOverVoltage = object.DcBusOverVoltage ?? false;
-    message.DesaturationFault = object.DesaturationFault ?? false;
-    message.MotorOverSpeed = object.MotorOverSpeed ?? false;
-    message.SoftwareOverCurrent = object.SoftwareOverCurrent ?? false;
-    message.Wail15VUnderVoltageLockOut = object.Wail15VUnderVoltageLockOut ?? false;
-    message.WatchdogCausedLastReset = object.WatchdogCausedLastReset ?? false;
-    return message;
-  },
-};
-
-function createBaseIMotorLimitFlags(): IMotorLimitFlags {
-  return {
-    BusCurrent: false,
-    BusVoltageLower: false,
-    BusVoltageUpper: false,
-    IpmOrMotorTemperature: false,
-    MotorCurrent: false,
-    OutputVoltagePwm: false,
-    Velocity: false,
-  };
-}
-
-export const IMotorLimitFlags: MessageFns<IMotorLimitFlags> = {
-  encode(message: IMotorLimitFlags, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.BusCurrent !== false) {
-      writer.uint32(8).bool(message.BusCurrent);
-    }
-    if (message.BusVoltageLower !== false) {
-      writer.uint32(16).bool(message.BusVoltageLower);
-    }
-    if (message.BusVoltageUpper !== false) {
-      writer.uint32(24).bool(message.BusVoltageUpper);
-    }
-    if (message.IpmOrMotorTemperature !== false) {
-      writer.uint32(32).bool(message.IpmOrMotorTemperature);
-    }
-    if (message.MotorCurrent !== false) {
-      writer.uint32(40).bool(message.MotorCurrent);
-    }
-    if (message.OutputVoltagePwm !== false) {
-      writer.uint32(48).bool(message.OutputVoltagePwm);
-    }
-    if (message.Velocity !== false) {
-      writer.uint32(56).bool(message.Velocity);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): IMotorLimitFlags {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIMotorLimitFlags();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.BusCurrent = reader.bool();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.BusVoltageLower = reader.bool();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.BusVoltageUpper = reader.bool();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.IpmOrMotorTemperature = reader.bool();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.MotorCurrent = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.OutputVoltagePwm = reader.bool();
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.Velocity = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): IMotorLimitFlags {
-    return {
-      BusCurrent: isSet(object.BusCurrent) ? globalThis.Boolean(object.BusCurrent) : false,
-      BusVoltageLower: isSet(object.BusVoltageLower) ? globalThis.Boolean(object.BusVoltageLower) : false,
-      BusVoltageUpper: isSet(object.BusVoltageUpper) ? globalThis.Boolean(object.BusVoltageUpper) : false,
-      IpmOrMotorTemperature: isSet(object.IpmOrMotorTemperature)
-        ? globalThis.Boolean(object.IpmOrMotorTemperature)
-        : false,
-      MotorCurrent: isSet(object.MotorCurrent) ? globalThis.Boolean(object.MotorCurrent) : false,
-      OutputVoltagePwm: isSet(object.OutputVoltagePwm) ? globalThis.Boolean(object.OutputVoltagePwm) : false,
-      Velocity: isSet(object.Velocity) ? globalThis.Boolean(object.Velocity) : false,
-    };
-  },
-
-  toJSON(message: IMotorLimitFlags): unknown {
-    const obj: any = {};
-    if (message.BusCurrent !== false) {
-      obj.BusCurrent = message.BusCurrent;
-    }
-    if (message.BusVoltageLower !== false) {
-      obj.BusVoltageLower = message.BusVoltageLower;
-    }
-    if (message.BusVoltageUpper !== false) {
-      obj.BusVoltageUpper = message.BusVoltageUpper;
-    }
-    if (message.IpmOrMotorTemperature !== false) {
-      obj.IpmOrMotorTemperature = message.IpmOrMotorTemperature;
-    }
-    if (message.MotorCurrent !== false) {
-      obj.MotorCurrent = message.MotorCurrent;
-    }
-    if (message.OutputVoltagePwm !== false) {
-      obj.OutputVoltagePwm = message.OutputVoltagePwm;
-    }
-    if (message.Velocity !== false) {
-      obj.Velocity = message.Velocity;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<IMotorLimitFlags>, I>>(base?: I): IMotorLimitFlags {
-    return IMotorLimitFlags.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<IMotorLimitFlags>, I>>(object: I): IMotorLimitFlags {
-    const message = createBaseIMotorLimitFlags();
-    message.BusCurrent = object.BusCurrent ?? false;
-    message.BusVoltageLower = object.BusVoltageLower ?? false;
-    message.BusVoltageUpper = object.BusVoltageUpper ?? false;
-    message.IpmOrMotorTemperature = object.IpmOrMotorTemperature ?? false;
-    message.MotorCurrent = object.MotorCurrent ?? false;
-    message.OutputVoltagePwm = object.OutputVoltagePwm ?? false;
-    message.Velocity = object.Velocity ?? false;
-    return message;
-  },
-};
-
-function createBaseIBattery(): IBattery {
-  return {
-    InputVoltage: 0,
-    Alive: false,
+    AlwaysOnSignalStatus: false,
     AverageCellVoltage: 0,
     AverageTemperature: 0,
-    BMSRelayStatusFlags: undefined,
+    BmuAlive: 0,
+    ChargeRelayEnabled: false,
+    ChargerSafetyEnabled: false,
+    DischargeRelayEnabled: false,
     FanSpeed: 0,
     FanVoltage: 0,
     HighCellVoltage: 0,
     HighCellVoltageId: 0,
     HighTemperature: 0,
     HighThermistorId: 0,
+    Input12V: 0,
     InternalTemperature: 0,
+    IsChargingSignalStatus: false,
+    IsReadySignalStatus: false,
     LowCellVoltage: 0,
     LowCellVoltageId: 0,
     LowTemperature: 0,
     LowThermistorId: 0,
+    MalfunctionIndicatorActive: false,
+    MaximumCellVoltage: 0,
+    MaximumPackVoltage: 0,
+    MinimumCellVoltage: 0,
+    MinimumPackVoltage: 0,
+    MultiPurposeInputSignalStatus: false,
     PackAmphours: 0,
     PackCurrent: 0,
     PackDepthOfDischarge: 0,
@@ -4141,205 +1313,242 @@ function createBaseIBattery(): IBattery {
   };
 }
 
-export const IBattery: MessageFns<IBattery> = {
-  encode(message: IBattery, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.InputVoltage !== 0) {
-      writer.uint32(9).double(message.InputVoltage);
-    }
-    if (message.Alive !== false) {
-      writer.uint32(16).bool(message.Alive);
+export const BatteryStatus: MessageFns<BatteryStatus> = {
+  encode(
+    message: BatteryStatus,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.AlwaysOnSignalStatus !== false) {
+      writer.uint32(8).bool(message.AlwaysOnSignalStatus);
     }
     if (message.AverageCellVoltage !== 0) {
-      writer.uint32(25).double(message.AverageCellVoltage);
+      writer.uint32(21).float(message.AverageCellVoltage);
     }
     if (message.AverageTemperature !== 0) {
-      writer.uint32(33).double(message.AverageTemperature);
+      writer.uint32(29).float(message.AverageTemperature);
     }
-    if (message.BMSRelayStatusFlags !== undefined) {
-      IBMSRelayStatusFlags.encode(message.BMSRelayStatusFlags, writer.uint32(42).fork()).join();
+    if (message.BmuAlive !== 0) {
+      writer.uint32(37).float(message.BmuAlive);
+    }
+    if (message.ChargeRelayEnabled !== false) {
+      writer.uint32(40).bool(message.ChargeRelayEnabled);
+    }
+    if (message.ChargerSafetyEnabled !== false) {
+      writer.uint32(48).bool(message.ChargerSafetyEnabled);
+    }
+    if (message.DischargeRelayEnabled !== false) {
+      writer.uint32(56).bool(message.DischargeRelayEnabled);
     }
     if (message.FanSpeed !== 0) {
-      writer.uint32(49).double(message.FanSpeed);
+      writer.uint32(69).float(message.FanSpeed);
     }
     if (message.FanVoltage !== 0) {
-      writer.uint32(57).double(message.FanVoltage);
+      writer.uint32(77).float(message.FanVoltage);
     }
     if (message.HighCellVoltage !== 0) {
-      writer.uint32(65).double(message.HighCellVoltage);
+      writer.uint32(85).float(message.HighCellVoltage);
     }
     if (message.HighCellVoltageId !== 0) {
-      writer.uint32(72).int32(message.HighCellVoltageId);
+      writer.uint32(93).float(message.HighCellVoltageId);
     }
     if (message.HighTemperature !== 0) {
-      writer.uint32(81).double(message.HighTemperature);
+      writer.uint32(101).float(message.HighTemperature);
     }
     if (message.HighThermistorId !== 0) {
-      writer.uint32(88).int32(message.HighThermistorId);
+      writer.uint32(109).float(message.HighThermistorId);
+    }
+    if (message.Input12V !== 0) {
+      writer.uint32(117).float(message.Input12V);
     }
     if (message.InternalTemperature !== 0) {
-      writer.uint32(97).double(message.InternalTemperature);
+      writer.uint32(125).float(message.InternalTemperature);
+    }
+    if (message.IsChargingSignalStatus !== false) {
+      writer.uint32(128).bool(message.IsChargingSignalStatus);
+    }
+    if (message.IsReadySignalStatus !== false) {
+      writer.uint32(136).bool(message.IsReadySignalStatus);
     }
     if (message.LowCellVoltage !== 0) {
-      writer.uint32(105).double(message.LowCellVoltage);
+      writer.uint32(149).float(message.LowCellVoltage);
     }
     if (message.LowCellVoltageId !== 0) {
-      writer.uint32(112).int32(message.LowCellVoltageId);
+      writer.uint32(157).float(message.LowCellVoltageId);
     }
     if (message.LowTemperature !== 0) {
-      writer.uint32(121).double(message.LowTemperature);
+      writer.uint32(165).float(message.LowTemperature);
     }
     if (message.LowThermistorId !== 0) {
-      writer.uint32(128).int32(message.LowThermistorId);
+      writer.uint32(173).float(message.LowThermistorId);
+    }
+    if (message.MalfunctionIndicatorActive !== false) {
+      writer.uint32(176).bool(message.MalfunctionIndicatorActive);
+    }
+    if (message.MaximumCellVoltage !== 0) {
+      writer.uint32(189).float(message.MaximumCellVoltage);
+    }
+    if (message.MaximumPackVoltage !== 0) {
+      writer.uint32(197).float(message.MaximumPackVoltage);
+    }
+    if (message.MinimumCellVoltage !== 0) {
+      writer.uint32(205).float(message.MinimumCellVoltage);
+    }
+    if (message.MinimumPackVoltage !== 0) {
+      writer.uint32(213).float(message.MinimumPackVoltage);
+    }
+    if (message.MultiPurposeInputSignalStatus !== false) {
+      writer.uint32(216).bool(message.MultiPurposeInputSignalStatus);
     }
     if (message.PackAmphours !== 0) {
-      writer.uint32(137).double(message.PackAmphours);
+      writer.uint32(229).float(message.PackAmphours);
     }
     if (message.PackCurrent !== 0) {
-      writer.uint32(145).double(message.PackCurrent);
+      writer.uint32(237).float(message.PackCurrent);
     }
     if (message.PackDepthOfDischarge !== 0) {
-      writer.uint32(153).double(message.PackDepthOfDischarge);
+      writer.uint32(245).float(message.PackDepthOfDischarge);
     }
     if (message.PackStateOfCharge !== 0) {
-      writer.uint32(161).double(message.PackStateOfCharge);
+      writer.uint32(253).float(message.PackStateOfCharge);
     }
     if (message.PackVoltage !== 0) {
-      writer.uint32(169).double(message.PackVoltage);
+      writer.uint32(261).float(message.PackVoltage);
     }
     if (message.PopulatedCells !== 0) {
-      writer.uint32(176).int32(message.PopulatedCells);
+      writer.uint32(269).float(message.PopulatedCells);
     }
     if (message.RequestedFanSpeed !== 0) {
-      writer.uint32(185).double(message.RequestedFanSpeed);
+      writer.uint32(277).float(message.RequestedFanSpeed);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): IBattery {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatteryStatus {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIBattery();
+    const message = createBaseBatteryStatus();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1: {
-          if (tag !== 9) {
+          if (tag !== 8) {
             break;
           }
 
-          message.InputVoltage = reader.double();
+          message.AlwaysOnSignalStatus = reader.bool();
           continue;
         }
         case 2: {
-          if (tag !== 16) {
+          if (tag !== 21) {
             break;
           }
 
-          message.Alive = reader.bool();
+          message.AverageCellVoltage = reader.float();
           continue;
         }
         case 3: {
-          if (tag !== 25) {
+          if (tag !== 29) {
             break;
           }
 
-          message.AverageCellVoltage = reader.double();
+          message.AverageTemperature = reader.float();
           continue;
         }
         case 4: {
-          if (tag !== 33) {
+          if (tag !== 37) {
             break;
           }
 
-          message.AverageTemperature = reader.double();
+          message.BmuAlive = reader.float();
           continue;
         }
         case 5: {
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.BMSRelayStatusFlags = IBMSRelayStatusFlags.decode(reader, reader.uint32());
+          message.ChargeRelayEnabled = reader.bool();
           continue;
         }
         case 6: {
-          if (tag !== 49) {
+          if (tag !== 48) {
             break;
           }
 
-          message.FanSpeed = reader.double();
+          message.ChargerSafetyEnabled = reader.bool();
           continue;
         }
         case 7: {
-          if (tag !== 57) {
+          if (tag !== 56) {
             break;
           }
 
-          message.FanVoltage = reader.double();
+          message.DischargeRelayEnabled = reader.bool();
           continue;
         }
         case 8: {
-          if (tag !== 65) {
+          if (tag !== 69) {
             break;
           }
 
-          message.HighCellVoltage = reader.double();
+          message.FanSpeed = reader.float();
           continue;
         }
         case 9: {
-          if (tag !== 72) {
+          if (tag !== 77) {
             break;
           }
 
-          message.HighCellVoltageId = reader.int32();
+          message.FanVoltage = reader.float();
           continue;
         }
         case 10: {
-          if (tag !== 81) {
+          if (tag !== 85) {
             break;
           }
 
-          message.HighTemperature = reader.double();
+          message.HighCellVoltage = reader.float();
           continue;
         }
         case 11: {
-          if (tag !== 88) {
+          if (tag !== 93) {
             break;
           }
 
-          message.HighThermistorId = reader.int32();
+          message.HighCellVoltageId = reader.float();
           continue;
         }
         case 12: {
-          if (tag !== 97) {
+          if (tag !== 101) {
             break;
           }
 
-          message.InternalTemperature = reader.double();
+          message.HighTemperature = reader.float();
           continue;
         }
         case 13: {
-          if (tag !== 105) {
+          if (tag !== 109) {
             break;
           }
 
-          message.LowCellVoltage = reader.double();
+          message.HighThermistorId = reader.float();
           continue;
         }
         case 14: {
-          if (tag !== 112) {
+          if (tag !== 117) {
             break;
           }
 
-          message.LowCellVoltageId = reader.int32();
+          message.Input12V = reader.float();
           continue;
         }
         case 15: {
-          if (tag !== 121) {
+          if (tag !== 125) {
             break;
           }
 
-          message.LowTemperature = reader.double();
+          message.InternalTemperature = reader.float();
           continue;
         }
         case 16: {
@@ -4347,47 +1556,47 @@ export const IBattery: MessageFns<IBattery> = {
             break;
           }
 
-          message.LowThermistorId = reader.int32();
+          message.IsChargingSignalStatus = reader.bool();
           continue;
         }
         case 17: {
-          if (tag !== 137) {
+          if (tag !== 136) {
             break;
           }
 
-          message.PackAmphours = reader.double();
+          message.IsReadySignalStatus = reader.bool();
           continue;
         }
         case 18: {
-          if (tag !== 145) {
+          if (tag !== 149) {
             break;
           }
 
-          message.PackCurrent = reader.double();
+          message.LowCellVoltage = reader.float();
           continue;
         }
         case 19: {
-          if (tag !== 153) {
+          if (tag !== 157) {
             break;
           }
 
-          message.PackDepthOfDischarge = reader.double();
+          message.LowCellVoltageId = reader.float();
           continue;
         }
         case 20: {
-          if (tag !== 161) {
+          if (tag !== 165) {
             break;
           }
 
-          message.PackStateOfCharge = reader.double();
+          message.LowTemperature = reader.float();
           continue;
         }
         case 21: {
-          if (tag !== 169) {
+          if (tag !== 173) {
             break;
           }
 
-          message.PackVoltage = reader.double();
+          message.LowThermistorId = reader.float();
           continue;
         }
         case 22: {
@@ -4395,15 +1604,103 @@ export const IBattery: MessageFns<IBattery> = {
             break;
           }
 
-          message.PopulatedCells = reader.int32();
+          message.MalfunctionIndicatorActive = reader.bool();
           continue;
         }
         case 23: {
-          if (tag !== 185) {
+          if (tag !== 189) {
             break;
           }
 
-          message.RequestedFanSpeed = reader.double();
+          message.MaximumCellVoltage = reader.float();
+          continue;
+        }
+        case 24: {
+          if (tag !== 197) {
+            break;
+          }
+
+          message.MaximumPackVoltage = reader.float();
+          continue;
+        }
+        case 25: {
+          if (tag !== 205) {
+            break;
+          }
+
+          message.MinimumCellVoltage = reader.float();
+          continue;
+        }
+        case 26: {
+          if (tag !== 213) {
+            break;
+          }
+
+          message.MinimumPackVoltage = reader.float();
+          continue;
+        }
+        case 27: {
+          if (tag !== 216) {
+            break;
+          }
+
+          message.MultiPurposeInputSignalStatus = reader.bool();
+          continue;
+        }
+        case 28: {
+          if (tag !== 229) {
+            break;
+          }
+
+          message.PackAmphours = reader.float();
+          continue;
+        }
+        case 29: {
+          if (tag !== 237) {
+            break;
+          }
+
+          message.PackCurrent = reader.float();
+          continue;
+        }
+        case 30: {
+          if (tag !== 245) {
+            break;
+          }
+
+          message.PackDepthOfDischarge = reader.float();
+          continue;
+        }
+        case 31: {
+          if (tag !== 253) {
+            break;
+          }
+
+          message.PackStateOfCharge = reader.float();
+          continue;
+        }
+        case 32: {
+          if (tag !== 261) {
+            break;
+          }
+
+          message.PackVoltage = reader.float();
+          continue;
+        }
+        case 33: {
+          if (tag !== 269) {
+            break;
+          }
+
+          message.PopulatedCells = reader.float();
+          continue;
+        }
+        case 34: {
+          if (tag !== 277) {
+            break;
+          }
+
+          message.RequestedFanSpeed = reader.float();
           continue;
         }
       }
@@ -4415,43 +1712,111 @@ export const IBattery: MessageFns<IBattery> = {
     return message;
   },
 
-  fromJSON(object: any): IBattery {
+  fromJSON(object: any): BatteryStatus {
     return {
-      InputVoltage: isSet(object.InputVoltage) ? globalThis.Number(object.InputVoltage) : 0,
-      Alive: isSet(object.Alive) ? globalThis.Boolean(object.Alive) : false,
-      AverageCellVoltage: isSet(object.AverageCellVoltage) ? globalThis.Number(object.AverageCellVoltage) : 0,
-      AverageTemperature: isSet(object.AverageTemperature) ? globalThis.Number(object.AverageTemperature) : 0,
-      BMSRelayStatusFlags: isSet(object.BMSRelayStatusFlags)
-        ? IBMSRelayStatusFlags.fromJSON(object.BMSRelayStatusFlags)
-        : undefined,
+      AlwaysOnSignalStatus: isSet(object.AlwaysOnSignalStatus)
+        ? globalThis.Boolean(object.AlwaysOnSignalStatus)
+        : false,
+      AverageCellVoltage: isSet(object.AverageCellVoltage)
+        ? globalThis.Number(object.AverageCellVoltage)
+        : 0,
+      AverageTemperature: isSet(object.AverageTemperature)
+        ? globalThis.Number(object.AverageTemperature)
+        : 0,
+      BmuAlive: isSet(object.BmuAlive) ? globalThis.Number(object.BmuAlive) : 0,
+      ChargeRelayEnabled: isSet(object.ChargeRelayEnabled)
+        ? globalThis.Boolean(object.ChargeRelayEnabled)
+        : false,
+      ChargerSafetyEnabled: isSet(object.ChargerSafetyEnabled)
+        ? globalThis.Boolean(object.ChargerSafetyEnabled)
+        : false,
+      DischargeRelayEnabled: isSet(object.DischargeRelayEnabled)
+        ? globalThis.Boolean(object.DischargeRelayEnabled)
+        : false,
       FanSpeed: isSet(object.FanSpeed) ? globalThis.Number(object.FanSpeed) : 0,
-      FanVoltage: isSet(object.FanVoltage) ? globalThis.Number(object.FanVoltage) : 0,
-      HighCellVoltage: isSet(object.HighCellVoltage) ? globalThis.Number(object.HighCellVoltage) : 0,
-      HighCellVoltageId: isSet(object.HighCellVoltageId) ? globalThis.Number(object.HighCellVoltageId) : 0,
-      HighTemperature: isSet(object.HighTemperature) ? globalThis.Number(object.HighTemperature) : 0,
-      HighThermistorId: isSet(object.HighThermistorId) ? globalThis.Number(object.HighThermistorId) : 0,
-      InternalTemperature: isSet(object.InternalTemperature) ? globalThis.Number(object.InternalTemperature) : 0,
-      LowCellVoltage: isSet(object.LowCellVoltage) ? globalThis.Number(object.LowCellVoltage) : 0,
-      LowCellVoltageId: isSet(object.LowCellVoltageId) ? globalThis.Number(object.LowCellVoltageId) : 0,
-      LowTemperature: isSet(object.LowTemperature) ? globalThis.Number(object.LowTemperature) : 0,
-      LowThermistorId: isSet(object.LowThermistorId) ? globalThis.Number(object.LowThermistorId) : 0,
-      PackAmphours: isSet(object.PackAmphours) ? globalThis.Number(object.PackAmphours) : 0,
-      PackCurrent: isSet(object.PackCurrent) ? globalThis.Number(object.PackCurrent) : 0,
-      PackDepthOfDischarge: isSet(object.PackDepthOfDischarge) ? globalThis.Number(object.PackDepthOfDischarge) : 0,
-      PackStateOfCharge: isSet(object.PackStateOfCharge) ? globalThis.Number(object.PackStateOfCharge) : 0,
-      PackVoltage: isSet(object.PackVoltage) ? globalThis.Number(object.PackVoltage) : 0,
-      PopulatedCells: isSet(object.PopulatedCells) ? globalThis.Number(object.PopulatedCells) : 0,
-      RequestedFanSpeed: isSet(object.RequestedFanSpeed) ? globalThis.Number(object.RequestedFanSpeed) : 0,
+      FanVoltage: isSet(object.FanVoltage)
+        ? globalThis.Number(object.FanVoltage)
+        : 0,
+      HighCellVoltage: isSet(object.HighCellVoltage)
+        ? globalThis.Number(object.HighCellVoltage)
+        : 0,
+      HighCellVoltageId: isSet(object.HighCellVoltageId)
+        ? globalThis.Number(object.HighCellVoltageId)
+        : 0,
+      HighTemperature: isSet(object.HighTemperature)
+        ? globalThis.Number(object.HighTemperature)
+        : 0,
+      HighThermistorId: isSet(object.HighThermistorId)
+        ? globalThis.Number(object.HighThermistorId)
+        : 0,
+      Input12V: isSet(object.Input12V) ? globalThis.Number(object.Input12V) : 0,
+      InternalTemperature: isSet(object.InternalTemperature)
+        ? globalThis.Number(object.InternalTemperature)
+        : 0,
+      IsChargingSignalStatus: isSet(object.IsChargingSignalStatus)
+        ? globalThis.Boolean(object.IsChargingSignalStatus)
+        : false,
+      IsReadySignalStatus: isSet(object.IsReadySignalStatus)
+        ? globalThis.Boolean(object.IsReadySignalStatus)
+        : false,
+      LowCellVoltage: isSet(object.LowCellVoltage)
+        ? globalThis.Number(object.LowCellVoltage)
+        : 0,
+      LowCellVoltageId: isSet(object.LowCellVoltageId)
+        ? globalThis.Number(object.LowCellVoltageId)
+        : 0,
+      LowTemperature: isSet(object.LowTemperature)
+        ? globalThis.Number(object.LowTemperature)
+        : 0,
+      LowThermistorId: isSet(object.LowThermistorId)
+        ? globalThis.Number(object.LowThermistorId)
+        : 0,
+      MalfunctionIndicatorActive: isSet(object.MalfunctionIndicatorActive)
+        ? globalThis.Boolean(object.MalfunctionIndicatorActive)
+        : false,
+      MaximumCellVoltage: isSet(object.MaximumCellVoltage)
+        ? globalThis.Number(object.MaximumCellVoltage)
+        : 0,
+      MaximumPackVoltage: isSet(object.MaximumPackVoltage)
+        ? globalThis.Number(object.MaximumPackVoltage)
+        : 0,
+      MinimumCellVoltage: isSet(object.MinimumCellVoltage)
+        ? globalThis.Number(object.MinimumCellVoltage)
+        : 0,
+      MinimumPackVoltage: isSet(object.MinimumPackVoltage)
+        ? globalThis.Number(object.MinimumPackVoltage)
+        : 0,
+      MultiPurposeInputSignalStatus: isSet(object.MultiPurposeInputSignalStatus)
+        ? globalThis.Boolean(object.MultiPurposeInputSignalStatus)
+        : false,
+      PackAmphours: isSet(object.PackAmphours)
+        ? globalThis.Number(object.PackAmphours)
+        : 0,
+      PackCurrent: isSet(object.PackCurrent)
+        ? globalThis.Number(object.PackCurrent)
+        : 0,
+      PackDepthOfDischarge: isSet(object.PackDepthOfDischarge)
+        ? globalThis.Number(object.PackDepthOfDischarge)
+        : 0,
+      PackStateOfCharge: isSet(object.PackStateOfCharge)
+        ? globalThis.Number(object.PackStateOfCharge)
+        : 0,
+      PackVoltage: isSet(object.PackVoltage)
+        ? globalThis.Number(object.PackVoltage)
+        : 0,
+      PopulatedCells: isSet(object.PopulatedCells)
+        ? globalThis.Number(object.PopulatedCells)
+        : 0,
+      RequestedFanSpeed: isSet(object.RequestedFanSpeed)
+        ? globalThis.Number(object.RequestedFanSpeed)
+        : 0,
     };
   },
 
-  toJSON(message: IBattery): unknown {
+  toJSON(message: BatteryStatus): unknown {
     const obj: any = {};
-    if (message.InputVoltage !== 0) {
-      obj.InputVoltage = message.InputVoltage;
-    }
-    if (message.Alive !== false) {
-      obj.Alive = message.Alive;
+    if (message.AlwaysOnSignalStatus !== false) {
+      obj.AlwaysOnSignalStatus = message.AlwaysOnSignalStatus;
     }
     if (message.AverageCellVoltage !== 0) {
       obj.AverageCellVoltage = message.AverageCellVoltage;
@@ -4459,8 +1824,17 @@ export const IBattery: MessageFns<IBattery> = {
     if (message.AverageTemperature !== 0) {
       obj.AverageTemperature = message.AverageTemperature;
     }
-    if (message.BMSRelayStatusFlags !== undefined) {
-      obj.BMSRelayStatusFlags = IBMSRelayStatusFlags.toJSON(message.BMSRelayStatusFlags);
+    if (message.BmuAlive !== 0) {
+      obj.BmuAlive = message.BmuAlive;
+    }
+    if (message.ChargeRelayEnabled !== false) {
+      obj.ChargeRelayEnabled = message.ChargeRelayEnabled;
+    }
+    if (message.ChargerSafetyEnabled !== false) {
+      obj.ChargerSafetyEnabled = message.ChargerSafetyEnabled;
+    }
+    if (message.DischargeRelayEnabled !== false) {
+      obj.DischargeRelayEnabled = message.DischargeRelayEnabled;
     }
     if (message.FanSpeed !== 0) {
       obj.FanSpeed = message.FanSpeed;
@@ -4472,28 +1846,55 @@ export const IBattery: MessageFns<IBattery> = {
       obj.HighCellVoltage = message.HighCellVoltage;
     }
     if (message.HighCellVoltageId !== 0) {
-      obj.HighCellVoltageId = Math.round(message.HighCellVoltageId);
+      obj.HighCellVoltageId = message.HighCellVoltageId;
     }
     if (message.HighTemperature !== 0) {
       obj.HighTemperature = message.HighTemperature;
     }
     if (message.HighThermistorId !== 0) {
-      obj.HighThermistorId = Math.round(message.HighThermistorId);
+      obj.HighThermistorId = message.HighThermistorId;
+    }
+    if (message.Input12V !== 0) {
+      obj.Input12V = message.Input12V;
     }
     if (message.InternalTemperature !== 0) {
       obj.InternalTemperature = message.InternalTemperature;
+    }
+    if (message.IsChargingSignalStatus !== false) {
+      obj.IsChargingSignalStatus = message.IsChargingSignalStatus;
+    }
+    if (message.IsReadySignalStatus !== false) {
+      obj.IsReadySignalStatus = message.IsReadySignalStatus;
     }
     if (message.LowCellVoltage !== 0) {
       obj.LowCellVoltage = message.LowCellVoltage;
     }
     if (message.LowCellVoltageId !== 0) {
-      obj.LowCellVoltageId = Math.round(message.LowCellVoltageId);
+      obj.LowCellVoltageId = message.LowCellVoltageId;
     }
     if (message.LowTemperature !== 0) {
       obj.LowTemperature = message.LowTemperature;
     }
     if (message.LowThermistorId !== 0) {
-      obj.LowThermistorId = Math.round(message.LowThermistorId);
+      obj.LowThermistorId = message.LowThermistorId;
+    }
+    if (message.MalfunctionIndicatorActive !== false) {
+      obj.MalfunctionIndicatorActive = message.MalfunctionIndicatorActive;
+    }
+    if (message.MaximumCellVoltage !== 0) {
+      obj.MaximumCellVoltage = message.MaximumCellVoltage;
+    }
+    if (message.MaximumPackVoltage !== 0) {
+      obj.MaximumPackVoltage = message.MaximumPackVoltage;
+    }
+    if (message.MinimumCellVoltage !== 0) {
+      obj.MinimumCellVoltage = message.MinimumCellVoltage;
+    }
+    if (message.MinimumPackVoltage !== 0) {
+      obj.MinimumPackVoltage = message.MinimumPackVoltage;
+    }
+    if (message.MultiPurposeInputSignalStatus !== false) {
+      obj.MultiPurposeInputSignalStatus = message.MultiPurposeInputSignalStatus;
     }
     if (message.PackAmphours !== 0) {
       obj.PackAmphours = message.PackAmphours;
@@ -4511,7 +1912,7 @@ export const IBattery: MessageFns<IBattery> = {
       obj.PackVoltage = message.PackVoltage;
     }
     if (message.PopulatedCells !== 0) {
-      obj.PopulatedCells = Math.round(message.PopulatedCells);
+      obj.PopulatedCells = message.PopulatedCells;
     }
     if (message.RequestedFanSpeed !== 0) {
       obj.RequestedFanSpeed = message.RequestedFanSpeed;
@@ -4519,29 +1920,44 @@ export const IBattery: MessageFns<IBattery> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<IBattery>, I>>(base?: I): IBattery {
-    return IBattery.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<BatteryStatus>, I>>(
+    base?: I,
+  ): BatteryStatus {
+    return BatteryStatus.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<IBattery>, I>>(object: I): IBattery {
-    const message = createBaseIBattery();
-    message.InputVoltage = object.InputVoltage ?? 0;
-    message.Alive = object.Alive ?? false;
+  fromPartial<I extends Exact<DeepPartial<BatteryStatus>, I>>(
+    object: I,
+  ): BatteryStatus {
+    const message = createBaseBatteryStatus();
+    message.AlwaysOnSignalStatus = object.AlwaysOnSignalStatus ?? false;
     message.AverageCellVoltage = object.AverageCellVoltage ?? 0;
     message.AverageTemperature = object.AverageTemperature ?? 0;
-    message.BMSRelayStatusFlags = (object.BMSRelayStatusFlags !== undefined && object.BMSRelayStatusFlags !== null)
-      ? IBMSRelayStatusFlags.fromPartial(object.BMSRelayStatusFlags)
-      : undefined;
+    message.BmuAlive = object.BmuAlive ?? 0;
+    message.ChargeRelayEnabled = object.ChargeRelayEnabled ?? false;
+    message.ChargerSafetyEnabled = object.ChargerSafetyEnabled ?? false;
+    message.DischargeRelayEnabled = object.DischargeRelayEnabled ?? false;
     message.FanSpeed = object.FanSpeed ?? 0;
     message.FanVoltage = object.FanVoltage ?? 0;
     message.HighCellVoltage = object.HighCellVoltage ?? 0;
     message.HighCellVoltageId = object.HighCellVoltageId ?? 0;
     message.HighTemperature = object.HighTemperature ?? 0;
     message.HighThermistorId = object.HighThermistorId ?? 0;
+    message.Input12V = object.Input12V ?? 0;
     message.InternalTemperature = object.InternalTemperature ?? 0;
+    message.IsChargingSignalStatus = object.IsChargingSignalStatus ?? false;
+    message.IsReadySignalStatus = object.IsReadySignalStatus ?? false;
     message.LowCellVoltage = object.LowCellVoltage ?? 0;
     message.LowCellVoltageId = object.LowCellVoltageId ?? 0;
     message.LowTemperature = object.LowTemperature ?? 0;
     message.LowThermistorId = object.LowThermistorId ?? 0;
+    message.MalfunctionIndicatorActive =
+      object.MalfunctionIndicatorActive ?? false;
+    message.MaximumCellVoltage = object.MaximumCellVoltage ?? 0;
+    message.MaximumPackVoltage = object.MaximumPackVoltage ?? 0;
+    message.MinimumCellVoltage = object.MinimumCellVoltage ?? 0;
+    message.MinimumPackVoltage = object.MinimumPackVoltage ?? 0;
+    message.MultiPurposeInputSignalStatus =
+      object.MultiPurposeInputSignalStatus ?? false;
     message.PackAmphours = object.PackAmphours ?? 0;
     message.PackCurrent = object.PackCurrent ?? 0;
     message.PackDepthOfDischarge = object.PackDepthOfDischarge ?? 0;
@@ -4553,61 +1969,118 @@ export const IBattery: MessageFns<IBattery> = {
   },
 };
 
-function createBaseIBMSRelayStatusFlags(): IBMSRelayStatusFlags {
+function createBaseB3(): B3 {
   return {
-    AlwaysOnSignalStatus: false,
-    ChargeRelayEnabled: false,
-    ChargerSafetyEnabled: false,
-    DischargeRelayEnabled: false,
-    IsChargingSignalStatus: false,
-    IsReadySignalStatus: false,
-    MalfunctionIndicatorActive: false,
-    MultiPurposeInputSignalStatus: false,
+    Acceleration: 0,
+    B3Heartbeat: false,
+    BrakeLightSignalStatus: false,
+    BrakeSwitchDigital: false,
+    DaytimeRunningLightSignalStatus: false,
+    ForwardDigital: false,
+    HandbrakeSwitchDigital: false,
+    HazardLightsInput: false,
+    HeadightsSwitchInput: false,
+    HeadlightSignalStatus: false,
+    HornSignalStatus: false,
+    HornSwitchDigital: false,
+    LapDigital: false,
+    LeftSignalInput: false,
+    LeftSignalStatus: false,
+    MotorResetDigital: false,
+    NeutralDigital: false,
+    RaceModeDigital: false,
+    RegenBraking: 0,
+    ReverseDigital: false,
+    RightSignalInput: false,
+    RightSignalStatus: false,
   };
 }
 
-export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
-  encode(message: IBMSRelayStatusFlags, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.AlwaysOnSignalStatus !== false) {
-      writer.uint32(8).bool(message.AlwaysOnSignalStatus);
+export const B3: MessageFns<B3> = {
+  encode(message: B3, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.Acceleration !== 0) {
+      writer.uint32(13).float(message.Acceleration);
     }
-    if (message.ChargeRelayEnabled !== false) {
-      writer.uint32(16).bool(message.ChargeRelayEnabled);
+    if (message.B3Heartbeat !== false) {
+      writer.uint32(16).bool(message.B3Heartbeat);
     }
-    if (message.ChargerSafetyEnabled !== false) {
-      writer.uint32(24).bool(message.ChargerSafetyEnabled);
+    if (message.BrakeLightSignalStatus !== false) {
+      writer.uint32(24).bool(message.BrakeLightSignalStatus);
     }
-    if (message.DischargeRelayEnabled !== false) {
-      writer.uint32(32).bool(message.DischargeRelayEnabled);
+    if (message.BrakeSwitchDigital !== false) {
+      writer.uint32(32).bool(message.BrakeSwitchDigital);
     }
-    if (message.IsChargingSignalStatus !== false) {
-      writer.uint32(40).bool(message.IsChargingSignalStatus);
+    if (message.DaytimeRunningLightSignalStatus !== false) {
+      writer.uint32(40).bool(message.DaytimeRunningLightSignalStatus);
     }
-    if (message.IsReadySignalStatus !== false) {
-      writer.uint32(48).bool(message.IsReadySignalStatus);
+    if (message.ForwardDigital !== false) {
+      writer.uint32(48).bool(message.ForwardDigital);
     }
-    if (message.MalfunctionIndicatorActive !== false) {
-      writer.uint32(56).bool(message.MalfunctionIndicatorActive);
+    if (message.HandbrakeSwitchDigital !== false) {
+      writer.uint32(56).bool(message.HandbrakeSwitchDigital);
     }
-    if (message.MultiPurposeInputSignalStatus !== false) {
-      writer.uint32(64).bool(message.MultiPurposeInputSignalStatus);
+    if (message.HazardLightsInput !== false) {
+      writer.uint32(64).bool(message.HazardLightsInput);
+    }
+    if (message.HeadightsSwitchInput !== false) {
+      writer.uint32(72).bool(message.HeadightsSwitchInput);
+    }
+    if (message.HeadlightSignalStatus !== false) {
+      writer.uint32(80).bool(message.HeadlightSignalStatus);
+    }
+    if (message.HornSignalStatus !== false) {
+      writer.uint32(88).bool(message.HornSignalStatus);
+    }
+    if (message.HornSwitchDigital !== false) {
+      writer.uint32(96).bool(message.HornSwitchDigital);
+    }
+    if (message.LapDigital !== false) {
+      writer.uint32(104).bool(message.LapDigital);
+    }
+    if (message.LeftSignalInput !== false) {
+      writer.uint32(112).bool(message.LeftSignalInput);
+    }
+    if (message.LeftSignalStatus !== false) {
+      writer.uint32(120).bool(message.LeftSignalStatus);
+    }
+    if (message.MotorResetDigital !== false) {
+      writer.uint32(128).bool(message.MotorResetDigital);
+    }
+    if (message.NeutralDigital !== false) {
+      writer.uint32(136).bool(message.NeutralDigital);
+    }
+    if (message.RaceModeDigital !== false) {
+      writer.uint32(144).bool(message.RaceModeDigital);
+    }
+    if (message.RegenBraking !== 0) {
+      writer.uint32(157).float(message.RegenBraking);
+    }
+    if (message.ReverseDigital !== false) {
+      writer.uint32(160).bool(message.ReverseDigital);
+    }
+    if (message.RightSignalInput !== false) {
+      writer.uint32(168).bool(message.RightSignalInput);
+    }
+    if (message.RightSignalStatus !== false) {
+      writer.uint32(176).bool(message.RightSignalStatus);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): IBMSRelayStatusFlags {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): B3 {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseIBMSRelayStatusFlags();
+    const message = createBaseB3();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1: {
-          if (tag !== 8) {
+          if (tag !== 13) {
             break;
           }
 
-          message.AlwaysOnSignalStatus = reader.bool();
+          message.Acceleration = reader.float();
           continue;
         }
         case 2: {
@@ -4615,7 +2088,7 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
             break;
           }
 
-          message.ChargeRelayEnabled = reader.bool();
+          message.B3Heartbeat = reader.bool();
           continue;
         }
         case 3: {
@@ -4623,7 +2096,7 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
             break;
           }
 
-          message.ChargerSafetyEnabled = reader.bool();
+          message.BrakeLightSignalStatus = reader.bool();
           continue;
         }
         case 4: {
@@ -4631,7 +2104,7 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
             break;
           }
 
-          message.DischargeRelayEnabled = reader.bool();
+          message.BrakeSwitchDigital = reader.bool();
           continue;
         }
         case 5: {
@@ -4639,7 +2112,7 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
             break;
           }
 
-          message.IsChargingSignalStatus = reader.bool();
+          message.DaytimeRunningLightSignalStatus = reader.bool();
           continue;
         }
         case 6: {
@@ -4647,7 +2120,7 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
             break;
           }
 
-          message.IsReadySignalStatus = reader.bool();
+          message.ForwardDigital = reader.bool();
           continue;
         }
         case 7: {
@@ -4655,7 +2128,7 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
             break;
           }
 
-          message.MalfunctionIndicatorActive = reader.bool();
+          message.HandbrakeSwitchDigital = reader.bool();
           continue;
         }
         case 8: {
@@ -4663,7 +2136,119 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
             break;
           }
 
-          message.MultiPurposeInputSignalStatus = reader.bool();
+          message.HazardLightsInput = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.HeadightsSwitchInput = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.HeadlightSignalStatus = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.HornSignalStatus = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.HornSwitchDigital = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.LapDigital = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.LeftSignalInput = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.LeftSignalStatus = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 128) {
+            break;
+          }
+
+          message.MotorResetDigital = reader.bool();
+          continue;
+        }
+        case 17: {
+          if (tag !== 136) {
+            break;
+          }
+
+          message.NeutralDigital = reader.bool();
+          continue;
+        }
+        case 18: {
+          if (tag !== 144) {
+            break;
+          }
+
+          message.RaceModeDigital = reader.bool();
+          continue;
+        }
+        case 19: {
+          if (tag !== 157) {
+            break;
+          }
+
+          message.RegenBraking = reader.float();
+          continue;
+        }
+        case 20: {
+          if (tag !== 160) {
+            break;
+          }
+
+          message.ReverseDigital = reader.bool();
+          continue;
+        }
+        case 21: {
+          if (tag !== 168) {
+            break;
+          }
+
+          message.RightSignalInput = reader.bool();
+          continue;
+        }
+        case 22: {
+          if (tag !== 176) {
+            break;
+          }
+
+          message.RightSignalStatus = reader.bool();
           continue;
         }
       }
@@ -4675,88 +2260,4625 @@ export const IBMSRelayStatusFlags: MessageFns<IBMSRelayStatusFlags> = {
     return message;
   },
 
-  fromJSON(object: any): IBMSRelayStatusFlags {
+  fromJSON(object: any): B3 {
     return {
-      AlwaysOnSignalStatus: isSet(object.AlwaysOnSignalStatus)
-        ? globalThis.Boolean(object.AlwaysOnSignalStatus)
+      Acceleration: isSet(object.Acceleration)
+        ? globalThis.Number(object.Acceleration)
+        : 0,
+      B3Heartbeat: isSet(object.B3Heartbeat)
+        ? globalThis.Boolean(object.B3Heartbeat)
         : false,
-      ChargeRelayEnabled: isSet(object.ChargeRelayEnabled) ? globalThis.Boolean(object.ChargeRelayEnabled) : false,
-      ChargerSafetyEnabled: isSet(object.ChargerSafetyEnabled)
-        ? globalThis.Boolean(object.ChargerSafetyEnabled)
+      BrakeLightSignalStatus: isSet(object.BrakeLightSignalStatus)
+        ? globalThis.Boolean(object.BrakeLightSignalStatus)
         : false,
-      DischargeRelayEnabled: isSet(object.DischargeRelayEnabled)
-        ? globalThis.Boolean(object.DischargeRelayEnabled)
+      BrakeSwitchDigital: isSet(object.BrakeSwitchDigital)
+        ? globalThis.Boolean(object.BrakeSwitchDigital)
         : false,
-      IsChargingSignalStatus: isSet(object.IsChargingSignalStatus)
-        ? globalThis.Boolean(object.IsChargingSignalStatus)
+      DaytimeRunningLightSignalStatus: isSet(
+        object.DaytimeRunningLightSignalStatus,
+      )
+        ? globalThis.Boolean(object.DaytimeRunningLightSignalStatus)
         : false,
-      IsReadySignalStatus: isSet(object.IsReadySignalStatus) ? globalThis.Boolean(object.IsReadySignalStatus) : false,
-      MalfunctionIndicatorActive: isSet(object.MalfunctionIndicatorActive)
-        ? globalThis.Boolean(object.MalfunctionIndicatorActive)
+      ForwardDigital: isSet(object.ForwardDigital)
+        ? globalThis.Boolean(object.ForwardDigital)
         : false,
-      MultiPurposeInputSignalStatus: isSet(object.MultiPurposeInputSignalStatus)
-        ? globalThis.Boolean(object.MultiPurposeInputSignalStatus)
+      HandbrakeSwitchDigital: isSet(object.HandbrakeSwitchDigital)
+        ? globalThis.Boolean(object.HandbrakeSwitchDigital)
+        : false,
+      HazardLightsInput: isSet(object.HazardLightsInput)
+        ? globalThis.Boolean(object.HazardLightsInput)
+        : false,
+      HeadightsSwitchInput: isSet(object.HeadightsSwitchInput)
+        ? globalThis.Boolean(object.HeadightsSwitchInput)
+        : false,
+      HeadlightSignalStatus: isSet(object.HeadlightSignalStatus)
+        ? globalThis.Boolean(object.HeadlightSignalStatus)
+        : false,
+      HornSignalStatus: isSet(object.HornSignalStatus)
+        ? globalThis.Boolean(object.HornSignalStatus)
+        : false,
+      HornSwitchDigital: isSet(object.HornSwitchDigital)
+        ? globalThis.Boolean(object.HornSwitchDigital)
+        : false,
+      LapDigital: isSet(object.LapDigital)
+        ? globalThis.Boolean(object.LapDigital)
+        : false,
+      LeftSignalInput: isSet(object.LeftSignalInput)
+        ? globalThis.Boolean(object.LeftSignalInput)
+        : false,
+      LeftSignalStatus: isSet(object.LeftSignalStatus)
+        ? globalThis.Boolean(object.LeftSignalStatus)
+        : false,
+      MotorResetDigital: isSet(object.MotorResetDigital)
+        ? globalThis.Boolean(object.MotorResetDigital)
+        : false,
+      NeutralDigital: isSet(object.NeutralDigital)
+        ? globalThis.Boolean(object.NeutralDigital)
+        : false,
+      RaceModeDigital: isSet(object.RaceModeDigital)
+        ? globalThis.Boolean(object.RaceModeDigital)
+        : false,
+      RegenBraking: isSet(object.RegenBraking)
+        ? globalThis.Number(object.RegenBraking)
+        : 0,
+      ReverseDigital: isSet(object.ReverseDigital)
+        ? globalThis.Boolean(object.ReverseDigital)
+        : false,
+      RightSignalInput: isSet(object.RightSignalInput)
+        ? globalThis.Boolean(object.RightSignalInput)
+        : false,
+      RightSignalStatus: isSet(object.RightSignalStatus)
+        ? globalThis.Boolean(object.RightSignalStatus)
         : false,
     };
   },
 
-  toJSON(message: IBMSRelayStatusFlags): unknown {
+  toJSON(message: B3): unknown {
     const obj: any = {};
-    if (message.AlwaysOnSignalStatus !== false) {
-      obj.AlwaysOnSignalStatus = message.AlwaysOnSignalStatus;
+    if (message.Acceleration !== 0) {
+      obj.Acceleration = message.Acceleration;
     }
-    if (message.ChargeRelayEnabled !== false) {
-      obj.ChargeRelayEnabled = message.ChargeRelayEnabled;
+    if (message.B3Heartbeat !== false) {
+      obj.B3Heartbeat = message.B3Heartbeat;
     }
-    if (message.ChargerSafetyEnabled !== false) {
-      obj.ChargerSafetyEnabled = message.ChargerSafetyEnabled;
+    if (message.BrakeLightSignalStatus !== false) {
+      obj.BrakeLightSignalStatus = message.BrakeLightSignalStatus;
     }
-    if (message.DischargeRelayEnabled !== false) {
-      obj.DischargeRelayEnabled = message.DischargeRelayEnabled;
+    if (message.BrakeSwitchDigital !== false) {
+      obj.BrakeSwitchDigital = message.BrakeSwitchDigital;
     }
-    if (message.IsChargingSignalStatus !== false) {
-      obj.IsChargingSignalStatus = message.IsChargingSignalStatus;
+    if (message.DaytimeRunningLightSignalStatus !== false) {
+      obj.DaytimeRunningLightSignalStatus =
+        message.DaytimeRunningLightSignalStatus;
     }
-    if (message.IsReadySignalStatus !== false) {
-      obj.IsReadySignalStatus = message.IsReadySignalStatus;
+    if (message.ForwardDigital !== false) {
+      obj.ForwardDigital = message.ForwardDigital;
     }
-    if (message.MalfunctionIndicatorActive !== false) {
-      obj.MalfunctionIndicatorActive = message.MalfunctionIndicatorActive;
+    if (message.HandbrakeSwitchDigital !== false) {
+      obj.HandbrakeSwitchDigital = message.HandbrakeSwitchDigital;
     }
-    if (message.MultiPurposeInputSignalStatus !== false) {
-      obj.MultiPurposeInputSignalStatus = message.MultiPurposeInputSignalStatus;
+    if (message.HazardLightsInput !== false) {
+      obj.HazardLightsInput = message.HazardLightsInput;
+    }
+    if (message.HeadightsSwitchInput !== false) {
+      obj.HeadightsSwitchInput = message.HeadightsSwitchInput;
+    }
+    if (message.HeadlightSignalStatus !== false) {
+      obj.HeadlightSignalStatus = message.HeadlightSignalStatus;
+    }
+    if (message.HornSignalStatus !== false) {
+      obj.HornSignalStatus = message.HornSignalStatus;
+    }
+    if (message.HornSwitchDigital !== false) {
+      obj.HornSwitchDigital = message.HornSwitchDigital;
+    }
+    if (message.LapDigital !== false) {
+      obj.LapDigital = message.LapDigital;
+    }
+    if (message.LeftSignalInput !== false) {
+      obj.LeftSignalInput = message.LeftSignalInput;
+    }
+    if (message.LeftSignalStatus !== false) {
+      obj.LeftSignalStatus = message.LeftSignalStatus;
+    }
+    if (message.MotorResetDigital !== false) {
+      obj.MotorResetDigital = message.MotorResetDigital;
+    }
+    if (message.NeutralDigital !== false) {
+      obj.NeutralDigital = message.NeutralDigital;
+    }
+    if (message.RaceModeDigital !== false) {
+      obj.RaceModeDigital = message.RaceModeDigital;
+    }
+    if (message.RegenBraking !== 0) {
+      obj.RegenBraking = message.RegenBraking;
+    }
+    if (message.ReverseDigital !== false) {
+      obj.ReverseDigital = message.ReverseDigital;
+    }
+    if (message.RightSignalInput !== false) {
+      obj.RightSignalInput = message.RightSignalInput;
+    }
+    if (message.RightSignalStatus !== false) {
+      obj.RightSignalStatus = message.RightSignalStatus;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<IBMSRelayStatusFlags>, I>>(base?: I): IBMSRelayStatusFlags {
-    return IBMSRelayStatusFlags.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<B3>, I>>(base?: I): B3 {
+    return B3.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<IBMSRelayStatusFlags>, I>>(object: I): IBMSRelayStatusFlags {
-    const message = createBaseIBMSRelayStatusFlags();
-    message.AlwaysOnSignalStatus = object.AlwaysOnSignalStatus ?? false;
-    message.ChargeRelayEnabled = object.ChargeRelayEnabled ?? false;
-    message.ChargerSafetyEnabled = object.ChargerSafetyEnabled ?? false;
-    message.DischargeRelayEnabled = object.DischargeRelayEnabled ?? false;
-    message.IsChargingSignalStatus = object.IsChargingSignalStatus ?? false;
-    message.IsReadySignalStatus = object.IsReadySignalStatus ?? false;
-    message.MalfunctionIndicatorActive = object.MalfunctionIndicatorActive ?? false;
-    message.MultiPurposeInputSignalStatus = object.MultiPurposeInputSignalStatus ?? false;
+  fromPartial<I extends Exact<DeepPartial<B3>, I>>(object: I): B3 {
+    const message = createBaseB3();
+    message.Acceleration = object.Acceleration ?? 0;
+    message.B3Heartbeat = object.B3Heartbeat ?? false;
+    message.BrakeLightSignalStatus = object.BrakeLightSignalStatus ?? false;
+    message.BrakeSwitchDigital = object.BrakeSwitchDigital ?? false;
+    message.DaytimeRunningLightSignalStatus =
+      object.DaytimeRunningLightSignalStatus ?? false;
+    message.ForwardDigital = object.ForwardDigital ?? false;
+    message.HandbrakeSwitchDigital = object.HandbrakeSwitchDigital ?? false;
+    message.HazardLightsInput = object.HazardLightsInput ?? false;
+    message.HeadightsSwitchInput = object.HeadightsSwitchInput ?? false;
+    message.HeadlightSignalStatus = object.HeadlightSignalStatus ?? false;
+    message.HornSignalStatus = object.HornSignalStatus ?? false;
+    message.HornSwitchDigital = object.HornSwitchDigital ?? false;
+    message.LapDigital = object.LapDigital ?? false;
+    message.LeftSignalInput = object.LeftSignalInput ?? false;
+    message.LeftSignalStatus = object.LeftSignalStatus ?? false;
+    message.MotorResetDigital = object.MotorResetDigital ?? false;
+    message.NeutralDigital = object.NeutralDigital ?? false;
+    message.RaceModeDigital = object.RaceModeDigital ?? false;
+    message.RegenBraking = object.RegenBraking ?? 0;
+    message.ReverseDigital = object.ReverseDigital ?? false;
+    message.RightSignalInput = object.RightSignalInput ?? false;
+    message.RightSignalStatus = object.RightSignalStatus ?? false;
     return message;
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+function createBaseKeyMotor(): KeyMotor {
+  return { BusCurrentOut: 0, KeyMotorVelocity: 0, MotorCurrent: 0 };
+}
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+export const KeyMotor: MessageFns<KeyMotor> = {
+  encode(
+    message: KeyMotor,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.BusCurrentOut !== 0) {
+      writer.uint32(13).float(message.BusCurrentOut);
+    }
+    if (message.KeyMotorVelocity !== 0) {
+      writer.uint32(21).float(message.KeyMotorVelocity);
+    }
+    if (message.MotorCurrent !== 0) {
+      writer.uint32(29).float(message.MotorCurrent);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): KeyMotor {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseKeyMotor();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.BusCurrentOut = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.KeyMotorVelocity = reader.float();
+          continue;
+        }
+        case 3: {
+          if (tag !== 29) {
+            break;
+          }
+
+          message.MotorCurrent = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): KeyMotor {
+    return {
+      BusCurrentOut: isSet(object.BusCurrentOut)
+        ? globalThis.Number(object.BusCurrentOut)
+        : 0,
+      KeyMotorVelocity: isSet(object.KeyMotorVelocity)
+        ? globalThis.Number(object.KeyMotorVelocity)
+        : 0,
+      MotorCurrent: isSet(object.MotorCurrent)
+        ? globalThis.Number(object.MotorCurrent)
+        : 0,
+    };
+  },
+
+  toJSON(message: KeyMotor): unknown {
+    const obj: any = {};
+    if (message.BusCurrentOut !== 0) {
+      obj.BusCurrentOut = message.BusCurrentOut;
+    }
+    if (message.KeyMotorVelocity !== 0) {
+      obj.KeyMotorVelocity = message.KeyMotorVelocity;
+    }
+    if (message.MotorCurrent !== 0) {
+      obj.MotorCurrent = message.MotorCurrent;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<KeyMotor>, I>>(base?: I): KeyMotor {
+    return KeyMotor.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<KeyMotor>, I>>(object: I): KeyMotor {
+    const message = createBaseKeyMotor();
+    message.BusCurrentOut = object.BusCurrentOut ?? 0;
+    message.KeyMotorVelocity = object.KeyMotorVelocity ?? 0;
+    message.MotorCurrent = object.MotorCurrent ?? 0;
+    return message;
+  },
+};
+
+function createBaseMBMS(): MBMS {
+  return {
+    AbattDisable: false,
+    ArrayContactorCommand: false,
+    ArrayHeartbeatDeadTrip: false,
+    ArrayHighCurrentTrip: false,
+    ArrayHighCurrentWarning: false,
+    AuxiliaryBatteryVoltage: 0,
+    CanOc12VWarning: false,
+    ChargeContactorCommand: false,
+    ChargeEnable: false,
+    ChargeHeartbeatDeadTrip: false,
+    ChargeHighCurrentTrip: false,
+    ChargeHighCurrentWarning: false,
+    ChargeSafety: false,
+    ChargeShouldTrip: false,
+    ChgFault: false,
+    ChgLvEn: false,
+    ChgOn: false,
+    CommonContactorCommand: false,
+    CommonHeartbeatDeadTrip: false,
+    CommonHighCurrentTrip: false,
+    CommonHighCurrentWarning: false,
+    ContactorConnectedUnexpectedlyTrip: false,
+    ContactorDisconnectedUnexpectedlyTrip: false,
+    DcdcFault: false,
+    DcdcOn: false,
+    DischargeEnable: false,
+    DischargeShouldTrip: false,
+    En1: false,
+    EsdEnabledTrip: false,
+    ExternalShutdown: false,
+    Heartbeat: false,
+    HighCellVoltageTrip: false,
+    HighCellVoltageWarning: false,
+    HighTemperatureTrip: false,
+    HighTemperatureWarning: false,
+    Key: false,
+    LowCellVoltageTrip: false,
+    LowCellVoltageWarning: false,
+    LowTemperatureTrip: false,
+    LowTemperatureWarning: false,
+    LvContactorCommand: false,
+    LvHeartbeatDeadTrip: false,
+    LvHighCurrentTrip: false,
+    LvHighCurrentWarning: false,
+    MainPowerSwitch: false,
+    MotorContactorCommand: false,
+    MotorHeartbeatDeadTrip: false,
+    MotorHighCurrentTrip: false,
+    MotorHighCurrentWarning: false,
+    MpsDisabledTrip: false,
+    OrionCanReceivedRecently: false,
+    OrionMessageTimeoutTrip: false,
+    ProtectionTrip: false,
+    StartupState: 0,
+    StrobeBmsLight: false,
+    SystemState: 0,
+    ThreeAOc: false,
+  };
+}
+
+export const MBMS: MessageFns<MBMS> = {
+  encode(
+    message: MBMS,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.AbattDisable !== false) {
+      writer.uint32(8).bool(message.AbattDisable);
+    }
+    if (message.ArrayContactorCommand !== false) {
+      writer.uint32(16).bool(message.ArrayContactorCommand);
+    }
+    if (message.ArrayHeartbeatDeadTrip !== false) {
+      writer.uint32(24).bool(message.ArrayHeartbeatDeadTrip);
+    }
+    if (message.ArrayHighCurrentTrip !== false) {
+      writer.uint32(32).bool(message.ArrayHighCurrentTrip);
+    }
+    if (message.ArrayHighCurrentWarning !== false) {
+      writer.uint32(40).bool(message.ArrayHighCurrentWarning);
+    }
+    if (message.AuxiliaryBatteryVoltage !== 0) {
+      writer.uint32(53).float(message.AuxiliaryBatteryVoltage);
+    }
+    if (message.CanOc12VWarning !== false) {
+      writer.uint32(56).bool(message.CanOc12VWarning);
+    }
+    if (message.ChargeContactorCommand !== false) {
+      writer.uint32(64).bool(message.ChargeContactorCommand);
+    }
+    if (message.ChargeEnable !== false) {
+      writer.uint32(72).bool(message.ChargeEnable);
+    }
+    if (message.ChargeHeartbeatDeadTrip !== false) {
+      writer.uint32(80).bool(message.ChargeHeartbeatDeadTrip);
+    }
+    if (message.ChargeHighCurrentTrip !== false) {
+      writer.uint32(88).bool(message.ChargeHighCurrentTrip);
+    }
+    if (message.ChargeHighCurrentWarning !== false) {
+      writer.uint32(96).bool(message.ChargeHighCurrentWarning);
+    }
+    if (message.ChargeSafety !== false) {
+      writer.uint32(104).bool(message.ChargeSafety);
+    }
+    if (message.ChargeShouldTrip !== false) {
+      writer.uint32(112).bool(message.ChargeShouldTrip);
+    }
+    if (message.ChgFault !== false) {
+      writer.uint32(120).bool(message.ChgFault);
+    }
+    if (message.ChgLvEn !== false) {
+      writer.uint32(128).bool(message.ChgLvEn);
+    }
+    if (message.ChgOn !== false) {
+      writer.uint32(136).bool(message.ChgOn);
+    }
+    if (message.CommonContactorCommand !== false) {
+      writer.uint32(144).bool(message.CommonContactorCommand);
+    }
+    if (message.CommonHeartbeatDeadTrip !== false) {
+      writer.uint32(152).bool(message.CommonHeartbeatDeadTrip);
+    }
+    if (message.CommonHighCurrentTrip !== false) {
+      writer.uint32(160).bool(message.CommonHighCurrentTrip);
+    }
+    if (message.CommonHighCurrentWarning !== false) {
+      writer.uint32(168).bool(message.CommonHighCurrentWarning);
+    }
+    if (message.ContactorConnectedUnexpectedlyTrip !== false) {
+      writer.uint32(176).bool(message.ContactorConnectedUnexpectedlyTrip);
+    }
+    if (message.ContactorDisconnectedUnexpectedlyTrip !== false) {
+      writer.uint32(184).bool(message.ContactorDisconnectedUnexpectedlyTrip);
+    }
+    if (message.DcdcFault !== false) {
+      writer.uint32(192).bool(message.DcdcFault);
+    }
+    if (message.DcdcOn !== false) {
+      writer.uint32(200).bool(message.DcdcOn);
+    }
+    if (message.DischargeEnable !== false) {
+      writer.uint32(208).bool(message.DischargeEnable);
+    }
+    if (message.DischargeShouldTrip !== false) {
+      writer.uint32(216).bool(message.DischargeShouldTrip);
+    }
+    if (message.En1 !== false) {
+      writer.uint32(224).bool(message.En1);
+    }
+    if (message.EsdEnabledTrip !== false) {
+      writer.uint32(232).bool(message.EsdEnabledTrip);
+    }
+    if (message.ExternalShutdown !== false) {
+      writer.uint32(240).bool(message.ExternalShutdown);
+    }
+    if (message.Heartbeat !== false) {
+      writer.uint32(248).bool(message.Heartbeat);
+    }
+    if (message.HighCellVoltageTrip !== false) {
+      writer.uint32(256).bool(message.HighCellVoltageTrip);
+    }
+    if (message.HighCellVoltageWarning !== false) {
+      writer.uint32(264).bool(message.HighCellVoltageWarning);
+    }
+    if (message.HighTemperatureTrip !== false) {
+      writer.uint32(272).bool(message.HighTemperatureTrip);
+    }
+    if (message.HighTemperatureWarning !== false) {
+      writer.uint32(280).bool(message.HighTemperatureWarning);
+    }
+    if (message.Key !== false) {
+      writer.uint32(288).bool(message.Key);
+    }
+    if (message.LowCellVoltageTrip !== false) {
+      writer.uint32(296).bool(message.LowCellVoltageTrip);
+    }
+    if (message.LowCellVoltageWarning !== false) {
+      writer.uint32(304).bool(message.LowCellVoltageWarning);
+    }
+    if (message.LowTemperatureTrip !== false) {
+      writer.uint32(312).bool(message.LowTemperatureTrip);
+    }
+    if (message.LowTemperatureWarning !== false) {
+      writer.uint32(320).bool(message.LowTemperatureWarning);
+    }
+    if (message.LvContactorCommand !== false) {
+      writer.uint32(328).bool(message.LvContactorCommand);
+    }
+    if (message.LvHeartbeatDeadTrip !== false) {
+      writer.uint32(336).bool(message.LvHeartbeatDeadTrip);
+    }
+    if (message.LvHighCurrentTrip !== false) {
+      writer.uint32(344).bool(message.LvHighCurrentTrip);
+    }
+    if (message.LvHighCurrentWarning !== false) {
+      writer.uint32(352).bool(message.LvHighCurrentWarning);
+    }
+    if (message.MainPowerSwitch !== false) {
+      writer.uint32(360).bool(message.MainPowerSwitch);
+    }
+    if (message.MotorContactorCommand !== false) {
+      writer.uint32(368).bool(message.MotorContactorCommand);
+    }
+    if (message.MotorHeartbeatDeadTrip !== false) {
+      writer.uint32(376).bool(message.MotorHeartbeatDeadTrip);
+    }
+    if (message.MotorHighCurrentTrip !== false) {
+      writer.uint32(384).bool(message.MotorHighCurrentTrip);
+    }
+    if (message.MotorHighCurrentWarning !== false) {
+      writer.uint32(392).bool(message.MotorHighCurrentWarning);
+    }
+    if (message.MpsDisabledTrip !== false) {
+      writer.uint32(400).bool(message.MpsDisabledTrip);
+    }
+    if (message.OrionCanReceivedRecently !== false) {
+      writer.uint32(408).bool(message.OrionCanReceivedRecently);
+    }
+    if (message.OrionMessageTimeoutTrip !== false) {
+      writer.uint32(416).bool(message.OrionMessageTimeoutTrip);
+    }
+    if (message.ProtectionTrip !== false) {
+      writer.uint32(424).bool(message.ProtectionTrip);
+    }
+    if (message.StartupState !== 0) {
+      writer.uint32(437).float(message.StartupState);
+    }
+    if (message.StrobeBmsLight !== false) {
+      writer.uint32(440).bool(message.StrobeBmsLight);
+    }
+    if (message.SystemState !== 0) {
+      writer.uint32(453).float(message.SystemState);
+    }
+    if (message.ThreeAOc !== false) {
+      writer.uint32(456).bool(message.ThreeAOc);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MBMS {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMBMS();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.AbattDisable = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.ArrayContactorCommand = reader.bool();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.ArrayHeartbeatDeadTrip = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.ArrayHighCurrentTrip = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.ArrayHighCurrentWarning = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 53) {
+            break;
+          }
+
+          message.AuxiliaryBatteryVoltage = reader.float();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.CanOc12VWarning = reader.bool();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.ChargeContactorCommand = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.ChargeEnable = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.ChargeHeartbeatDeadTrip = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.ChargeHighCurrentTrip = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 96) {
+            break;
+          }
+
+          message.ChargeHighCurrentWarning = reader.bool();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.ChargeSafety = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.ChargeShouldTrip = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.ChgFault = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 128) {
+            break;
+          }
+
+          message.ChgLvEn = reader.bool();
+          continue;
+        }
+        case 17: {
+          if (tag !== 136) {
+            break;
+          }
+
+          message.ChgOn = reader.bool();
+          continue;
+        }
+        case 18: {
+          if (tag !== 144) {
+            break;
+          }
+
+          message.CommonContactorCommand = reader.bool();
+          continue;
+        }
+        case 19: {
+          if (tag !== 152) {
+            break;
+          }
+
+          message.CommonHeartbeatDeadTrip = reader.bool();
+          continue;
+        }
+        case 20: {
+          if (tag !== 160) {
+            break;
+          }
+
+          message.CommonHighCurrentTrip = reader.bool();
+          continue;
+        }
+        case 21: {
+          if (tag !== 168) {
+            break;
+          }
+
+          message.CommonHighCurrentWarning = reader.bool();
+          continue;
+        }
+        case 22: {
+          if (tag !== 176) {
+            break;
+          }
+
+          message.ContactorConnectedUnexpectedlyTrip = reader.bool();
+          continue;
+        }
+        case 23: {
+          if (tag !== 184) {
+            break;
+          }
+
+          message.ContactorDisconnectedUnexpectedlyTrip = reader.bool();
+          continue;
+        }
+        case 24: {
+          if (tag !== 192) {
+            break;
+          }
+
+          message.DcdcFault = reader.bool();
+          continue;
+        }
+        case 25: {
+          if (tag !== 200) {
+            break;
+          }
+
+          message.DcdcOn = reader.bool();
+          continue;
+        }
+        case 26: {
+          if (tag !== 208) {
+            break;
+          }
+
+          message.DischargeEnable = reader.bool();
+          continue;
+        }
+        case 27: {
+          if (tag !== 216) {
+            break;
+          }
+
+          message.DischargeShouldTrip = reader.bool();
+          continue;
+        }
+        case 28: {
+          if (tag !== 224) {
+            break;
+          }
+
+          message.En1 = reader.bool();
+          continue;
+        }
+        case 29: {
+          if (tag !== 232) {
+            break;
+          }
+
+          message.EsdEnabledTrip = reader.bool();
+          continue;
+        }
+        case 30: {
+          if (tag !== 240) {
+            break;
+          }
+
+          message.ExternalShutdown = reader.bool();
+          continue;
+        }
+        case 31: {
+          if (tag !== 248) {
+            break;
+          }
+
+          message.Heartbeat = reader.bool();
+          continue;
+        }
+        case 32: {
+          if (tag !== 256) {
+            break;
+          }
+
+          message.HighCellVoltageTrip = reader.bool();
+          continue;
+        }
+        case 33: {
+          if (tag !== 264) {
+            break;
+          }
+
+          message.HighCellVoltageWarning = reader.bool();
+          continue;
+        }
+        case 34: {
+          if (tag !== 272) {
+            break;
+          }
+
+          message.HighTemperatureTrip = reader.bool();
+          continue;
+        }
+        case 35: {
+          if (tag !== 280) {
+            break;
+          }
+
+          message.HighTemperatureWarning = reader.bool();
+          continue;
+        }
+        case 36: {
+          if (tag !== 288) {
+            break;
+          }
+
+          message.Key = reader.bool();
+          continue;
+        }
+        case 37: {
+          if (tag !== 296) {
+            break;
+          }
+
+          message.LowCellVoltageTrip = reader.bool();
+          continue;
+        }
+        case 38: {
+          if (tag !== 304) {
+            break;
+          }
+
+          message.LowCellVoltageWarning = reader.bool();
+          continue;
+        }
+        case 39: {
+          if (tag !== 312) {
+            break;
+          }
+
+          message.LowTemperatureTrip = reader.bool();
+          continue;
+        }
+        case 40: {
+          if (tag !== 320) {
+            break;
+          }
+
+          message.LowTemperatureWarning = reader.bool();
+          continue;
+        }
+        case 41: {
+          if (tag !== 328) {
+            break;
+          }
+
+          message.LvContactorCommand = reader.bool();
+          continue;
+        }
+        case 42: {
+          if (tag !== 336) {
+            break;
+          }
+
+          message.LvHeartbeatDeadTrip = reader.bool();
+          continue;
+        }
+        case 43: {
+          if (tag !== 344) {
+            break;
+          }
+
+          message.LvHighCurrentTrip = reader.bool();
+          continue;
+        }
+        case 44: {
+          if (tag !== 352) {
+            break;
+          }
+
+          message.LvHighCurrentWarning = reader.bool();
+          continue;
+        }
+        case 45: {
+          if (tag !== 360) {
+            break;
+          }
+
+          message.MainPowerSwitch = reader.bool();
+          continue;
+        }
+        case 46: {
+          if (tag !== 368) {
+            break;
+          }
+
+          message.MotorContactorCommand = reader.bool();
+          continue;
+        }
+        case 47: {
+          if (tag !== 376) {
+            break;
+          }
+
+          message.MotorHeartbeatDeadTrip = reader.bool();
+          continue;
+        }
+        case 48: {
+          if (tag !== 384) {
+            break;
+          }
+
+          message.MotorHighCurrentTrip = reader.bool();
+          continue;
+        }
+        case 49: {
+          if (tag !== 392) {
+            break;
+          }
+
+          message.MotorHighCurrentWarning = reader.bool();
+          continue;
+        }
+        case 50: {
+          if (tag !== 400) {
+            break;
+          }
+
+          message.MpsDisabledTrip = reader.bool();
+          continue;
+        }
+        case 51: {
+          if (tag !== 408) {
+            break;
+          }
+
+          message.OrionCanReceivedRecently = reader.bool();
+          continue;
+        }
+        case 52: {
+          if (tag !== 416) {
+            break;
+          }
+
+          message.OrionMessageTimeoutTrip = reader.bool();
+          continue;
+        }
+        case 53: {
+          if (tag !== 424) {
+            break;
+          }
+
+          message.ProtectionTrip = reader.bool();
+          continue;
+        }
+        case 54: {
+          if (tag !== 437) {
+            break;
+          }
+
+          message.StartupState = reader.float();
+          continue;
+        }
+        case 55: {
+          if (tag !== 440) {
+            break;
+          }
+
+          message.StrobeBmsLight = reader.bool();
+          continue;
+        }
+        case 56: {
+          if (tag !== 453) {
+            break;
+          }
+
+          message.SystemState = reader.float();
+          continue;
+        }
+        case 57: {
+          if (tag !== 456) {
+            break;
+          }
+
+          message.ThreeAOc = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MBMS {
+    return {
+      AbattDisable: isSet(object.AbattDisable)
+        ? globalThis.Boolean(object.AbattDisable)
+        : false,
+      ArrayContactorCommand: isSet(object.ArrayContactorCommand)
+        ? globalThis.Boolean(object.ArrayContactorCommand)
+        : false,
+      ArrayHeartbeatDeadTrip: isSet(object.ArrayHeartbeatDeadTrip)
+        ? globalThis.Boolean(object.ArrayHeartbeatDeadTrip)
+        : false,
+      ArrayHighCurrentTrip: isSet(object.ArrayHighCurrentTrip)
+        ? globalThis.Boolean(object.ArrayHighCurrentTrip)
+        : false,
+      ArrayHighCurrentWarning: isSet(object.ArrayHighCurrentWarning)
+        ? globalThis.Boolean(object.ArrayHighCurrentWarning)
+        : false,
+      AuxiliaryBatteryVoltage: isSet(object.AuxiliaryBatteryVoltage)
+        ? globalThis.Number(object.AuxiliaryBatteryVoltage)
+        : 0,
+      CanOc12VWarning: isSet(object.CanOc12VWarning)
+        ? globalThis.Boolean(object.CanOc12VWarning)
+        : false,
+      ChargeContactorCommand: isSet(object.ChargeContactorCommand)
+        ? globalThis.Boolean(object.ChargeContactorCommand)
+        : false,
+      ChargeEnable: isSet(object.ChargeEnable)
+        ? globalThis.Boolean(object.ChargeEnable)
+        : false,
+      ChargeHeartbeatDeadTrip: isSet(object.ChargeHeartbeatDeadTrip)
+        ? globalThis.Boolean(object.ChargeHeartbeatDeadTrip)
+        : false,
+      ChargeHighCurrentTrip: isSet(object.ChargeHighCurrentTrip)
+        ? globalThis.Boolean(object.ChargeHighCurrentTrip)
+        : false,
+      ChargeHighCurrentWarning: isSet(object.ChargeHighCurrentWarning)
+        ? globalThis.Boolean(object.ChargeHighCurrentWarning)
+        : false,
+      ChargeSafety: isSet(object.ChargeSafety)
+        ? globalThis.Boolean(object.ChargeSafety)
+        : false,
+      ChargeShouldTrip: isSet(object.ChargeShouldTrip)
+        ? globalThis.Boolean(object.ChargeShouldTrip)
+        : false,
+      ChgFault: isSet(object.ChgFault)
+        ? globalThis.Boolean(object.ChgFault)
+        : false,
+      ChgLvEn: isSet(object.ChgLvEn)
+        ? globalThis.Boolean(object.ChgLvEn)
+        : false,
+      ChgOn: isSet(object.ChgOn) ? globalThis.Boolean(object.ChgOn) : false,
+      CommonContactorCommand: isSet(object.CommonContactorCommand)
+        ? globalThis.Boolean(object.CommonContactorCommand)
+        : false,
+      CommonHeartbeatDeadTrip: isSet(object.CommonHeartbeatDeadTrip)
+        ? globalThis.Boolean(object.CommonHeartbeatDeadTrip)
+        : false,
+      CommonHighCurrentTrip: isSet(object.CommonHighCurrentTrip)
+        ? globalThis.Boolean(object.CommonHighCurrentTrip)
+        : false,
+      CommonHighCurrentWarning: isSet(object.CommonHighCurrentWarning)
+        ? globalThis.Boolean(object.CommonHighCurrentWarning)
+        : false,
+      ContactorConnectedUnexpectedlyTrip: isSet(
+        object.ContactorConnectedUnexpectedlyTrip,
+      )
+        ? globalThis.Boolean(object.ContactorConnectedUnexpectedlyTrip)
+        : false,
+      ContactorDisconnectedUnexpectedlyTrip: isSet(
+        object.ContactorDisconnectedUnexpectedlyTrip,
+      )
+        ? globalThis.Boolean(object.ContactorDisconnectedUnexpectedlyTrip)
+        : false,
+      DcdcFault: isSet(object.DcdcFault)
+        ? globalThis.Boolean(object.DcdcFault)
+        : false,
+      DcdcOn: isSet(object.DcdcOn) ? globalThis.Boolean(object.DcdcOn) : false,
+      DischargeEnable: isSet(object.DischargeEnable)
+        ? globalThis.Boolean(object.DischargeEnable)
+        : false,
+      DischargeShouldTrip: isSet(object.DischargeShouldTrip)
+        ? globalThis.Boolean(object.DischargeShouldTrip)
+        : false,
+      En1: isSet(object.En1) ? globalThis.Boolean(object.En1) : false,
+      EsdEnabledTrip: isSet(object.EsdEnabledTrip)
+        ? globalThis.Boolean(object.EsdEnabledTrip)
+        : false,
+      ExternalShutdown: isSet(object.ExternalShutdown)
+        ? globalThis.Boolean(object.ExternalShutdown)
+        : false,
+      Heartbeat: isSet(object.Heartbeat)
+        ? globalThis.Boolean(object.Heartbeat)
+        : false,
+      HighCellVoltageTrip: isSet(object.HighCellVoltageTrip)
+        ? globalThis.Boolean(object.HighCellVoltageTrip)
+        : false,
+      HighCellVoltageWarning: isSet(object.HighCellVoltageWarning)
+        ? globalThis.Boolean(object.HighCellVoltageWarning)
+        : false,
+      HighTemperatureTrip: isSet(object.HighTemperatureTrip)
+        ? globalThis.Boolean(object.HighTemperatureTrip)
+        : false,
+      HighTemperatureWarning: isSet(object.HighTemperatureWarning)
+        ? globalThis.Boolean(object.HighTemperatureWarning)
+        : false,
+      Key: isSet(object.Key) ? globalThis.Boolean(object.Key) : false,
+      LowCellVoltageTrip: isSet(object.LowCellVoltageTrip)
+        ? globalThis.Boolean(object.LowCellVoltageTrip)
+        : false,
+      LowCellVoltageWarning: isSet(object.LowCellVoltageWarning)
+        ? globalThis.Boolean(object.LowCellVoltageWarning)
+        : false,
+      LowTemperatureTrip: isSet(object.LowTemperatureTrip)
+        ? globalThis.Boolean(object.LowTemperatureTrip)
+        : false,
+      LowTemperatureWarning: isSet(object.LowTemperatureWarning)
+        ? globalThis.Boolean(object.LowTemperatureWarning)
+        : false,
+      LvContactorCommand: isSet(object.LvContactorCommand)
+        ? globalThis.Boolean(object.LvContactorCommand)
+        : false,
+      LvHeartbeatDeadTrip: isSet(object.LvHeartbeatDeadTrip)
+        ? globalThis.Boolean(object.LvHeartbeatDeadTrip)
+        : false,
+      LvHighCurrentTrip: isSet(object.LvHighCurrentTrip)
+        ? globalThis.Boolean(object.LvHighCurrentTrip)
+        : false,
+      LvHighCurrentWarning: isSet(object.LvHighCurrentWarning)
+        ? globalThis.Boolean(object.LvHighCurrentWarning)
+        : false,
+      MainPowerSwitch: isSet(object.MainPowerSwitch)
+        ? globalThis.Boolean(object.MainPowerSwitch)
+        : false,
+      MotorContactorCommand: isSet(object.MotorContactorCommand)
+        ? globalThis.Boolean(object.MotorContactorCommand)
+        : false,
+      MotorHeartbeatDeadTrip: isSet(object.MotorHeartbeatDeadTrip)
+        ? globalThis.Boolean(object.MotorHeartbeatDeadTrip)
+        : false,
+      MotorHighCurrentTrip: isSet(object.MotorHighCurrentTrip)
+        ? globalThis.Boolean(object.MotorHighCurrentTrip)
+        : false,
+      MotorHighCurrentWarning: isSet(object.MotorHighCurrentWarning)
+        ? globalThis.Boolean(object.MotorHighCurrentWarning)
+        : false,
+      MpsDisabledTrip: isSet(object.MpsDisabledTrip)
+        ? globalThis.Boolean(object.MpsDisabledTrip)
+        : false,
+      OrionCanReceivedRecently: isSet(object.OrionCanReceivedRecently)
+        ? globalThis.Boolean(object.OrionCanReceivedRecently)
+        : false,
+      OrionMessageTimeoutTrip: isSet(object.OrionMessageTimeoutTrip)
+        ? globalThis.Boolean(object.OrionMessageTimeoutTrip)
+        : false,
+      ProtectionTrip: isSet(object.ProtectionTrip)
+        ? globalThis.Boolean(object.ProtectionTrip)
+        : false,
+      StartupState: isSet(object.StartupState)
+        ? globalThis.Number(object.StartupState)
+        : 0,
+      StrobeBmsLight: isSet(object.StrobeBmsLight)
+        ? globalThis.Boolean(object.StrobeBmsLight)
+        : false,
+      SystemState: isSet(object.SystemState)
+        ? globalThis.Number(object.SystemState)
+        : 0,
+      ThreeAOc: isSet(object.ThreeAOc)
+        ? globalThis.Boolean(object.ThreeAOc)
+        : false,
+    };
+  },
+
+  toJSON(message: MBMS): unknown {
+    const obj: any = {};
+    if (message.AbattDisable !== false) {
+      obj.AbattDisable = message.AbattDisable;
+    }
+    if (message.ArrayContactorCommand !== false) {
+      obj.ArrayContactorCommand = message.ArrayContactorCommand;
+    }
+    if (message.ArrayHeartbeatDeadTrip !== false) {
+      obj.ArrayHeartbeatDeadTrip = message.ArrayHeartbeatDeadTrip;
+    }
+    if (message.ArrayHighCurrentTrip !== false) {
+      obj.ArrayHighCurrentTrip = message.ArrayHighCurrentTrip;
+    }
+    if (message.ArrayHighCurrentWarning !== false) {
+      obj.ArrayHighCurrentWarning = message.ArrayHighCurrentWarning;
+    }
+    if (message.AuxiliaryBatteryVoltage !== 0) {
+      obj.AuxiliaryBatteryVoltage = message.AuxiliaryBatteryVoltage;
+    }
+    if (message.CanOc12VWarning !== false) {
+      obj.CanOc12VWarning = message.CanOc12VWarning;
+    }
+    if (message.ChargeContactorCommand !== false) {
+      obj.ChargeContactorCommand = message.ChargeContactorCommand;
+    }
+    if (message.ChargeEnable !== false) {
+      obj.ChargeEnable = message.ChargeEnable;
+    }
+    if (message.ChargeHeartbeatDeadTrip !== false) {
+      obj.ChargeHeartbeatDeadTrip = message.ChargeHeartbeatDeadTrip;
+    }
+    if (message.ChargeHighCurrentTrip !== false) {
+      obj.ChargeHighCurrentTrip = message.ChargeHighCurrentTrip;
+    }
+    if (message.ChargeHighCurrentWarning !== false) {
+      obj.ChargeHighCurrentWarning = message.ChargeHighCurrentWarning;
+    }
+    if (message.ChargeSafety !== false) {
+      obj.ChargeSafety = message.ChargeSafety;
+    }
+    if (message.ChargeShouldTrip !== false) {
+      obj.ChargeShouldTrip = message.ChargeShouldTrip;
+    }
+    if (message.ChgFault !== false) {
+      obj.ChgFault = message.ChgFault;
+    }
+    if (message.ChgLvEn !== false) {
+      obj.ChgLvEn = message.ChgLvEn;
+    }
+    if (message.ChgOn !== false) {
+      obj.ChgOn = message.ChgOn;
+    }
+    if (message.CommonContactorCommand !== false) {
+      obj.CommonContactorCommand = message.CommonContactorCommand;
+    }
+    if (message.CommonHeartbeatDeadTrip !== false) {
+      obj.CommonHeartbeatDeadTrip = message.CommonHeartbeatDeadTrip;
+    }
+    if (message.CommonHighCurrentTrip !== false) {
+      obj.CommonHighCurrentTrip = message.CommonHighCurrentTrip;
+    }
+    if (message.CommonHighCurrentWarning !== false) {
+      obj.CommonHighCurrentWarning = message.CommonHighCurrentWarning;
+    }
+    if (message.ContactorConnectedUnexpectedlyTrip !== false) {
+      obj.ContactorConnectedUnexpectedlyTrip =
+        message.ContactorConnectedUnexpectedlyTrip;
+    }
+    if (message.ContactorDisconnectedUnexpectedlyTrip !== false) {
+      obj.ContactorDisconnectedUnexpectedlyTrip =
+        message.ContactorDisconnectedUnexpectedlyTrip;
+    }
+    if (message.DcdcFault !== false) {
+      obj.DcdcFault = message.DcdcFault;
+    }
+    if (message.DcdcOn !== false) {
+      obj.DcdcOn = message.DcdcOn;
+    }
+    if (message.DischargeEnable !== false) {
+      obj.DischargeEnable = message.DischargeEnable;
+    }
+    if (message.DischargeShouldTrip !== false) {
+      obj.DischargeShouldTrip = message.DischargeShouldTrip;
+    }
+    if (message.En1 !== false) {
+      obj.En1 = message.En1;
+    }
+    if (message.EsdEnabledTrip !== false) {
+      obj.EsdEnabledTrip = message.EsdEnabledTrip;
+    }
+    if (message.ExternalShutdown !== false) {
+      obj.ExternalShutdown = message.ExternalShutdown;
+    }
+    if (message.Heartbeat !== false) {
+      obj.Heartbeat = message.Heartbeat;
+    }
+    if (message.HighCellVoltageTrip !== false) {
+      obj.HighCellVoltageTrip = message.HighCellVoltageTrip;
+    }
+    if (message.HighCellVoltageWarning !== false) {
+      obj.HighCellVoltageWarning = message.HighCellVoltageWarning;
+    }
+    if (message.HighTemperatureTrip !== false) {
+      obj.HighTemperatureTrip = message.HighTemperatureTrip;
+    }
+    if (message.HighTemperatureWarning !== false) {
+      obj.HighTemperatureWarning = message.HighTemperatureWarning;
+    }
+    if (message.Key !== false) {
+      obj.Key = message.Key;
+    }
+    if (message.LowCellVoltageTrip !== false) {
+      obj.LowCellVoltageTrip = message.LowCellVoltageTrip;
+    }
+    if (message.LowCellVoltageWarning !== false) {
+      obj.LowCellVoltageWarning = message.LowCellVoltageWarning;
+    }
+    if (message.LowTemperatureTrip !== false) {
+      obj.LowTemperatureTrip = message.LowTemperatureTrip;
+    }
+    if (message.LowTemperatureWarning !== false) {
+      obj.LowTemperatureWarning = message.LowTemperatureWarning;
+    }
+    if (message.LvContactorCommand !== false) {
+      obj.LvContactorCommand = message.LvContactorCommand;
+    }
+    if (message.LvHeartbeatDeadTrip !== false) {
+      obj.LvHeartbeatDeadTrip = message.LvHeartbeatDeadTrip;
+    }
+    if (message.LvHighCurrentTrip !== false) {
+      obj.LvHighCurrentTrip = message.LvHighCurrentTrip;
+    }
+    if (message.LvHighCurrentWarning !== false) {
+      obj.LvHighCurrentWarning = message.LvHighCurrentWarning;
+    }
+    if (message.MainPowerSwitch !== false) {
+      obj.MainPowerSwitch = message.MainPowerSwitch;
+    }
+    if (message.MotorContactorCommand !== false) {
+      obj.MotorContactorCommand = message.MotorContactorCommand;
+    }
+    if (message.MotorHeartbeatDeadTrip !== false) {
+      obj.MotorHeartbeatDeadTrip = message.MotorHeartbeatDeadTrip;
+    }
+    if (message.MotorHighCurrentTrip !== false) {
+      obj.MotorHighCurrentTrip = message.MotorHighCurrentTrip;
+    }
+    if (message.MotorHighCurrentWarning !== false) {
+      obj.MotorHighCurrentWarning = message.MotorHighCurrentWarning;
+    }
+    if (message.MpsDisabledTrip !== false) {
+      obj.MpsDisabledTrip = message.MpsDisabledTrip;
+    }
+    if (message.OrionCanReceivedRecently !== false) {
+      obj.OrionCanReceivedRecently = message.OrionCanReceivedRecently;
+    }
+    if (message.OrionMessageTimeoutTrip !== false) {
+      obj.OrionMessageTimeoutTrip = message.OrionMessageTimeoutTrip;
+    }
+    if (message.ProtectionTrip !== false) {
+      obj.ProtectionTrip = message.ProtectionTrip;
+    }
+    if (message.StartupState !== 0) {
+      obj.StartupState = message.StartupState;
+    }
+    if (message.StrobeBmsLight !== false) {
+      obj.StrobeBmsLight = message.StrobeBmsLight;
+    }
+    if (message.SystemState !== 0) {
+      obj.SystemState = message.SystemState;
+    }
+    if (message.ThreeAOc !== false) {
+      obj.ThreeAOc = message.ThreeAOc;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MBMS>, I>>(base?: I): MBMS {
+    return MBMS.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MBMS>, I>>(object: I): MBMS {
+    const message = createBaseMBMS();
+    message.AbattDisable = object.AbattDisable ?? false;
+    message.ArrayContactorCommand = object.ArrayContactorCommand ?? false;
+    message.ArrayHeartbeatDeadTrip = object.ArrayHeartbeatDeadTrip ?? false;
+    message.ArrayHighCurrentTrip = object.ArrayHighCurrentTrip ?? false;
+    message.ArrayHighCurrentWarning = object.ArrayHighCurrentWarning ?? false;
+    message.AuxiliaryBatteryVoltage = object.AuxiliaryBatteryVoltage ?? 0;
+    message.CanOc12VWarning = object.CanOc12VWarning ?? false;
+    message.ChargeContactorCommand = object.ChargeContactorCommand ?? false;
+    message.ChargeEnable = object.ChargeEnable ?? false;
+    message.ChargeHeartbeatDeadTrip = object.ChargeHeartbeatDeadTrip ?? false;
+    message.ChargeHighCurrentTrip = object.ChargeHighCurrentTrip ?? false;
+    message.ChargeHighCurrentWarning = object.ChargeHighCurrentWarning ?? false;
+    message.ChargeSafety = object.ChargeSafety ?? false;
+    message.ChargeShouldTrip = object.ChargeShouldTrip ?? false;
+    message.ChgFault = object.ChgFault ?? false;
+    message.ChgLvEn = object.ChgLvEn ?? false;
+    message.ChgOn = object.ChgOn ?? false;
+    message.CommonContactorCommand = object.CommonContactorCommand ?? false;
+    message.CommonHeartbeatDeadTrip = object.CommonHeartbeatDeadTrip ?? false;
+    message.CommonHighCurrentTrip = object.CommonHighCurrentTrip ?? false;
+    message.CommonHighCurrentWarning = object.CommonHighCurrentWarning ?? false;
+    message.ContactorConnectedUnexpectedlyTrip =
+      object.ContactorConnectedUnexpectedlyTrip ?? false;
+    message.ContactorDisconnectedUnexpectedlyTrip =
+      object.ContactorDisconnectedUnexpectedlyTrip ?? false;
+    message.DcdcFault = object.DcdcFault ?? false;
+    message.DcdcOn = object.DcdcOn ?? false;
+    message.DischargeEnable = object.DischargeEnable ?? false;
+    message.DischargeShouldTrip = object.DischargeShouldTrip ?? false;
+    message.En1 = object.En1 ?? false;
+    message.EsdEnabledTrip = object.EsdEnabledTrip ?? false;
+    message.ExternalShutdown = object.ExternalShutdown ?? false;
+    message.Heartbeat = object.Heartbeat ?? false;
+    message.HighCellVoltageTrip = object.HighCellVoltageTrip ?? false;
+    message.HighCellVoltageWarning = object.HighCellVoltageWarning ?? false;
+    message.HighTemperatureTrip = object.HighTemperatureTrip ?? false;
+    message.HighTemperatureWarning = object.HighTemperatureWarning ?? false;
+    message.Key = object.Key ?? false;
+    message.LowCellVoltageTrip = object.LowCellVoltageTrip ?? false;
+    message.LowCellVoltageWarning = object.LowCellVoltageWarning ?? false;
+    message.LowTemperatureTrip = object.LowTemperatureTrip ?? false;
+    message.LowTemperatureWarning = object.LowTemperatureWarning ?? false;
+    message.LvContactorCommand = object.LvContactorCommand ?? false;
+    message.LvHeartbeatDeadTrip = object.LvHeartbeatDeadTrip ?? false;
+    message.LvHighCurrentTrip = object.LvHighCurrentTrip ?? false;
+    message.LvHighCurrentWarning = object.LvHighCurrentWarning ?? false;
+    message.MainPowerSwitch = object.MainPowerSwitch ?? false;
+    message.MotorContactorCommand = object.MotorContactorCommand ?? false;
+    message.MotorHeartbeatDeadTrip = object.MotorHeartbeatDeadTrip ?? false;
+    message.MotorHighCurrentTrip = object.MotorHighCurrentTrip ?? false;
+    message.MotorHighCurrentWarning = object.MotorHighCurrentWarning ?? false;
+    message.MpsDisabledTrip = object.MpsDisabledTrip ?? false;
+    message.OrionCanReceivedRecently = object.OrionCanReceivedRecently ?? false;
+    message.OrionMessageTimeoutTrip = object.OrionMessageTimeoutTrip ?? false;
+    message.ProtectionTrip = object.ProtectionTrip ?? false;
+    message.StartupState = object.StartupState ?? 0;
+    message.StrobeBmsLight = object.StrobeBmsLight ?? false;
+    message.SystemState = object.SystemState ?? 0;
+    message.ThreeAOc = object.ThreeAOc ?? false;
+    return message;
+  },
+};
+
+function createBaseMotorDetails(): MotorDetails {
+  return {
+    ActiveMotor: 0,
+    bemfD: 0,
+    bemfQ: 0,
+    BusCurrent: 0,
+    BusVoltage: 0,
+    DCBusAh: 0,
+    DspBoardTemperature: 0,
+    ErrorFlags: 0,
+    HeatsinkTemperature: 0,
+    Id: 0,
+    Iq: 0,
+    LimitFlags: 0,
+    MotorId: 0,
+    MotorTemperature: 0,
+    MotorVelocity: 0,
+    Odometer: 0,
+    PhaseCurrentB: 0,
+    PhaseCurrentC: 0,
+    RxErrorCount: 0,
+    SerialNumber: 0,
+    SlipSpeed: 0,
+    Supply15V: 0,
+    Supply1V9: 0,
+    Supply3V3: 0,
+    TritiumId: 0,
+    TxErrorCount: 0,
+    Vd: 0,
+    VehicleVelocity: 0,
+    Vq: 0,
+  };
+}
+
+export const MotorDetails: MessageFns<MotorDetails> = {
+  encode(
+    message: MotorDetails,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.ActiveMotor !== 0) {
+      writer.uint32(13).float(message.ActiveMotor);
+    }
+    if (message.bemfD !== 0) {
+      writer.uint32(21).float(message.bemfD);
+    }
+    if (message.bemfQ !== 0) {
+      writer.uint32(29).float(message.bemfQ);
+    }
+    if (message.BusCurrent !== 0) {
+      writer.uint32(37).float(message.BusCurrent);
+    }
+    if (message.BusVoltage !== 0) {
+      writer.uint32(45).float(message.BusVoltage);
+    }
+    if (message.DCBusAh !== 0) {
+      writer.uint32(53).float(message.DCBusAh);
+    }
+    if (message.DspBoardTemperature !== 0) {
+      writer.uint32(61).float(message.DspBoardTemperature);
+    }
+    if (message.ErrorFlags !== 0) {
+      writer.uint32(69).float(message.ErrorFlags);
+    }
+    if (message.HeatsinkTemperature !== 0) {
+      writer.uint32(77).float(message.HeatsinkTemperature);
+    }
+    if (message.Id !== 0) {
+      writer.uint32(85).float(message.Id);
+    }
+    if (message.Iq !== 0) {
+      writer.uint32(93).float(message.Iq);
+    }
+    if (message.LimitFlags !== 0) {
+      writer.uint32(101).float(message.LimitFlags);
+    }
+    if (message.MotorId !== 0) {
+      writer.uint32(109).float(message.MotorId);
+    }
+    if (message.MotorTemperature !== 0) {
+      writer.uint32(117).float(message.MotorTemperature);
+    }
+    if (message.MotorVelocity !== 0) {
+      writer.uint32(125).float(message.MotorVelocity);
+    }
+    if (message.Odometer !== 0) {
+      writer.uint32(133).float(message.Odometer);
+    }
+    if (message.PhaseCurrentB !== 0) {
+      writer.uint32(141).float(message.PhaseCurrentB);
+    }
+    if (message.PhaseCurrentC !== 0) {
+      writer.uint32(149).float(message.PhaseCurrentC);
+    }
+    if (message.RxErrorCount !== 0) {
+      writer.uint32(157).float(message.RxErrorCount);
+    }
+    if (message.SerialNumber !== 0) {
+      writer.uint32(165).float(message.SerialNumber);
+    }
+    if (message.SlipSpeed !== 0) {
+      writer.uint32(173).float(message.SlipSpeed);
+    }
+    if (message.Supply15V !== 0) {
+      writer.uint32(181).float(message.Supply15V);
+    }
+    if (message.Supply1V9 !== 0) {
+      writer.uint32(189).float(message.Supply1V9);
+    }
+    if (message.Supply3V3 !== 0) {
+      writer.uint32(197).float(message.Supply3V3);
+    }
+    if (message.TritiumId !== 0) {
+      writer.uint32(205).float(message.TritiumId);
+    }
+    if (message.TxErrorCount !== 0) {
+      writer.uint32(213).float(message.TxErrorCount);
+    }
+    if (message.Vd !== 0) {
+      writer.uint32(221).float(message.Vd);
+    }
+    if (message.VehicleVelocity !== 0) {
+      writer.uint32(229).float(message.VehicleVelocity);
+    }
+    if (message.Vq !== 0) {
+      writer.uint32(237).float(message.Vq);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MotorDetails {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMotorDetails();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.ActiveMotor = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.bemfD = reader.float();
+          continue;
+        }
+        case 3: {
+          if (tag !== 29) {
+            break;
+          }
+
+          message.bemfQ = reader.float();
+          continue;
+        }
+        case 4: {
+          if (tag !== 37) {
+            break;
+          }
+
+          message.BusCurrent = reader.float();
+          continue;
+        }
+        case 5: {
+          if (tag !== 45) {
+            break;
+          }
+
+          message.BusVoltage = reader.float();
+          continue;
+        }
+        case 6: {
+          if (tag !== 53) {
+            break;
+          }
+
+          message.DCBusAh = reader.float();
+          continue;
+        }
+        case 7: {
+          if (tag !== 61) {
+            break;
+          }
+
+          message.DspBoardTemperature = reader.float();
+          continue;
+        }
+        case 8: {
+          if (tag !== 69) {
+            break;
+          }
+
+          message.ErrorFlags = reader.float();
+          continue;
+        }
+        case 9: {
+          if (tag !== 77) {
+            break;
+          }
+
+          message.HeatsinkTemperature = reader.float();
+          continue;
+        }
+        case 10: {
+          if (tag !== 85) {
+            break;
+          }
+
+          message.Id = reader.float();
+          continue;
+        }
+        case 11: {
+          if (tag !== 93) {
+            break;
+          }
+
+          message.Iq = reader.float();
+          continue;
+        }
+        case 12: {
+          if (tag !== 101) {
+            break;
+          }
+
+          message.LimitFlags = reader.float();
+          continue;
+        }
+        case 13: {
+          if (tag !== 109) {
+            break;
+          }
+
+          message.MotorId = reader.float();
+          continue;
+        }
+        case 14: {
+          if (tag !== 117) {
+            break;
+          }
+
+          message.MotorTemperature = reader.float();
+          continue;
+        }
+        case 15: {
+          if (tag !== 125) {
+            break;
+          }
+
+          message.MotorVelocity = reader.float();
+          continue;
+        }
+        case 16: {
+          if (tag !== 133) {
+            break;
+          }
+
+          message.Odometer = reader.float();
+          continue;
+        }
+        case 17: {
+          if (tag !== 141) {
+            break;
+          }
+
+          message.PhaseCurrentB = reader.float();
+          continue;
+        }
+        case 18: {
+          if (tag !== 149) {
+            break;
+          }
+
+          message.PhaseCurrentC = reader.float();
+          continue;
+        }
+        case 19: {
+          if (tag !== 157) {
+            break;
+          }
+
+          message.RxErrorCount = reader.float();
+          continue;
+        }
+        case 20: {
+          if (tag !== 165) {
+            break;
+          }
+
+          message.SerialNumber = reader.float();
+          continue;
+        }
+        case 21: {
+          if (tag !== 173) {
+            break;
+          }
+
+          message.SlipSpeed = reader.float();
+          continue;
+        }
+        case 22: {
+          if (tag !== 181) {
+            break;
+          }
+
+          message.Supply15V = reader.float();
+          continue;
+        }
+        case 23: {
+          if (tag !== 189) {
+            break;
+          }
+
+          message.Supply1V9 = reader.float();
+          continue;
+        }
+        case 24: {
+          if (tag !== 197) {
+            break;
+          }
+
+          message.Supply3V3 = reader.float();
+          continue;
+        }
+        case 25: {
+          if (tag !== 205) {
+            break;
+          }
+
+          message.TritiumId = reader.float();
+          continue;
+        }
+        case 26: {
+          if (tag !== 213) {
+            break;
+          }
+
+          message.TxErrorCount = reader.float();
+          continue;
+        }
+        case 27: {
+          if (tag !== 221) {
+            break;
+          }
+
+          message.Vd = reader.float();
+          continue;
+        }
+        case 28: {
+          if (tag !== 229) {
+            break;
+          }
+
+          message.VehicleVelocity = reader.float();
+          continue;
+        }
+        case 29: {
+          if (tag !== 237) {
+            break;
+          }
+
+          message.Vq = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MotorDetails {
+    return {
+      ActiveMotor: isSet(object.ActiveMotor)
+        ? globalThis.Number(object.ActiveMotor)
+        : 0,
+      bemfD: isSet(object.BEMFD) ? globalThis.Number(object.BEMFD) : 0,
+      bemfQ: isSet(object.BEMFQ) ? globalThis.Number(object.BEMFQ) : 0,
+      BusCurrent: isSet(object.BusCurrent)
+        ? globalThis.Number(object.BusCurrent)
+        : 0,
+      BusVoltage: isSet(object.BusVoltage)
+        ? globalThis.Number(object.BusVoltage)
+        : 0,
+      DCBusAh: isSet(object.DCBusAh) ? globalThis.Number(object.DCBusAh) : 0,
+      DspBoardTemperature: isSet(object.DspBoardTemperature)
+        ? globalThis.Number(object.DspBoardTemperature)
+        : 0,
+      ErrorFlags: isSet(object.ErrorFlags)
+        ? globalThis.Number(object.ErrorFlags)
+        : 0,
+      HeatsinkTemperature: isSet(object.HeatsinkTemperature)
+        ? globalThis.Number(object.HeatsinkTemperature)
+        : 0,
+      Id: isSet(object.Id) ? globalThis.Number(object.Id) : 0,
+      Iq: isSet(object.Iq) ? globalThis.Number(object.Iq) : 0,
+      LimitFlags: isSet(object.LimitFlags)
+        ? globalThis.Number(object.LimitFlags)
+        : 0,
+      MotorId: isSet(object.MotorId) ? globalThis.Number(object.MotorId) : 0,
+      MotorTemperature: isSet(object.MotorTemperature)
+        ? globalThis.Number(object.MotorTemperature)
+        : 0,
+      MotorVelocity: isSet(object.MotorVelocity)
+        ? globalThis.Number(object.MotorVelocity)
+        : 0,
+      Odometer: isSet(object.Odometer) ? globalThis.Number(object.Odometer) : 0,
+      PhaseCurrentB: isSet(object.PhaseCurrentB)
+        ? globalThis.Number(object.PhaseCurrentB)
+        : 0,
+      PhaseCurrentC: isSet(object.PhaseCurrentC)
+        ? globalThis.Number(object.PhaseCurrentC)
+        : 0,
+      RxErrorCount: isSet(object.RxErrorCount)
+        ? globalThis.Number(object.RxErrorCount)
+        : 0,
+      SerialNumber: isSet(object.SerialNumber)
+        ? globalThis.Number(object.SerialNumber)
+        : 0,
+      SlipSpeed: isSet(object.SlipSpeed)
+        ? globalThis.Number(object.SlipSpeed)
+        : 0,
+      Supply15V: isSet(object.Supply15V)
+        ? globalThis.Number(object.Supply15V)
+        : 0,
+      Supply1V9: isSet(object.Supply1V9)
+        ? globalThis.Number(object.Supply1V9)
+        : 0,
+      Supply3V3: isSet(object.Supply3V3)
+        ? globalThis.Number(object.Supply3V3)
+        : 0,
+      TritiumId: isSet(object.TritiumId)
+        ? globalThis.Number(object.TritiumId)
+        : 0,
+      TxErrorCount: isSet(object.TxErrorCount)
+        ? globalThis.Number(object.TxErrorCount)
+        : 0,
+      Vd: isSet(object.Vd) ? globalThis.Number(object.Vd) : 0,
+      VehicleVelocity: isSet(object.VehicleVelocity)
+        ? globalThis.Number(object.VehicleVelocity)
+        : 0,
+      Vq: isSet(object.Vq) ? globalThis.Number(object.Vq) : 0,
+    };
+  },
+
+  toJSON(message: MotorDetails): unknown {
+    const obj: any = {};
+    if (message.ActiveMotor !== 0) {
+      obj.ActiveMotor = message.ActiveMotor;
+    }
+    if (message.bemfD !== 0) {
+      obj.BEMFD = message.bemfD;
+    }
+    if (message.bemfQ !== 0) {
+      obj.BEMFQ = message.bemfQ;
+    }
+    if (message.BusCurrent !== 0) {
+      obj.BusCurrent = message.BusCurrent;
+    }
+    if (message.BusVoltage !== 0) {
+      obj.BusVoltage = message.BusVoltage;
+    }
+    if (message.DCBusAh !== 0) {
+      obj.DCBusAh = message.DCBusAh;
+    }
+    if (message.DspBoardTemperature !== 0) {
+      obj.DspBoardTemperature = message.DspBoardTemperature;
+    }
+    if (message.ErrorFlags !== 0) {
+      obj.ErrorFlags = message.ErrorFlags;
+    }
+    if (message.HeatsinkTemperature !== 0) {
+      obj.HeatsinkTemperature = message.HeatsinkTemperature;
+    }
+    if (message.Id !== 0) {
+      obj.Id = message.Id;
+    }
+    if (message.Iq !== 0) {
+      obj.Iq = message.Iq;
+    }
+    if (message.LimitFlags !== 0) {
+      obj.LimitFlags = message.LimitFlags;
+    }
+    if (message.MotorId !== 0) {
+      obj.MotorId = message.MotorId;
+    }
+    if (message.MotorTemperature !== 0) {
+      obj.MotorTemperature = message.MotorTemperature;
+    }
+    if (message.MotorVelocity !== 0) {
+      obj.MotorVelocity = message.MotorVelocity;
+    }
+    if (message.Odometer !== 0) {
+      obj.Odometer = message.Odometer;
+    }
+    if (message.PhaseCurrentB !== 0) {
+      obj.PhaseCurrentB = message.PhaseCurrentB;
+    }
+    if (message.PhaseCurrentC !== 0) {
+      obj.PhaseCurrentC = message.PhaseCurrentC;
+    }
+    if (message.RxErrorCount !== 0) {
+      obj.RxErrorCount = message.RxErrorCount;
+    }
+    if (message.SerialNumber !== 0) {
+      obj.SerialNumber = message.SerialNumber;
+    }
+    if (message.SlipSpeed !== 0) {
+      obj.SlipSpeed = message.SlipSpeed;
+    }
+    if (message.Supply15V !== 0) {
+      obj.Supply15V = message.Supply15V;
+    }
+    if (message.Supply1V9 !== 0) {
+      obj.Supply1V9 = message.Supply1V9;
+    }
+    if (message.Supply3V3 !== 0) {
+      obj.Supply3V3 = message.Supply3V3;
+    }
+    if (message.TritiumId !== 0) {
+      obj.TritiumId = message.TritiumId;
+    }
+    if (message.TxErrorCount !== 0) {
+      obj.TxErrorCount = message.TxErrorCount;
+    }
+    if (message.Vd !== 0) {
+      obj.Vd = message.Vd;
+    }
+    if (message.VehicleVelocity !== 0) {
+      obj.VehicleVelocity = message.VehicleVelocity;
+    }
+    if (message.Vq !== 0) {
+      obj.Vq = message.Vq;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MotorDetails>, I>>(
+    base?: I,
+  ): MotorDetails {
+    return MotorDetails.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MotorDetails>, I>>(
+    object: I,
+  ): MotorDetails {
+    const message = createBaseMotorDetails();
+    message.ActiveMotor = object.ActiveMotor ?? 0;
+    message.bemfD = object.bemfD ?? 0;
+    message.bemfQ = object.bemfQ ?? 0;
+    message.BusCurrent = object.BusCurrent ?? 0;
+    message.BusVoltage = object.BusVoltage ?? 0;
+    message.DCBusAh = object.DCBusAh ?? 0;
+    message.DspBoardTemperature = object.DspBoardTemperature ?? 0;
+    message.ErrorFlags = object.ErrorFlags ?? 0;
+    message.HeatsinkTemperature = object.HeatsinkTemperature ?? 0;
+    message.Id = object.Id ?? 0;
+    message.Iq = object.Iq ?? 0;
+    message.LimitFlags = object.LimitFlags ?? 0;
+    message.MotorId = object.MotorId ?? 0;
+    message.MotorTemperature = object.MotorTemperature ?? 0;
+    message.MotorVelocity = object.MotorVelocity ?? 0;
+    message.Odometer = object.Odometer ?? 0;
+    message.PhaseCurrentB = object.PhaseCurrentB ?? 0;
+    message.PhaseCurrentC = object.PhaseCurrentC ?? 0;
+    message.RxErrorCount = object.RxErrorCount ?? 0;
+    message.SerialNumber = object.SerialNumber ?? 0;
+    message.SlipSpeed = object.SlipSpeed ?? 0;
+    message.Supply15V = object.Supply15V ?? 0;
+    message.Supply1V9 = object.Supply1V9 ?? 0;
+    message.Supply3V3 = object.Supply3V3 ?? 0;
+    message.TritiumId = object.TritiumId ?? 0;
+    message.TxErrorCount = object.TxErrorCount ?? 0;
+    message.Vd = object.Vd ?? 0;
+    message.VehicleVelocity = object.VehicleVelocity ?? 0;
+    message.Vq = object.Vq ?? 0;
+    return message;
+  },
+};
+
+function createBaseMPPT(): MPPT {
+  return {
+    Mppt0Ch0ArrayCurrent: 0,
+    Mppt0Ch0ArrayVoltage: 0,
+    Mppt0Ch0BatteryVoltage: 0,
+    Mppt0Ch0UnitTemperature: 0,
+    Mppt0Ch1ArrayCurrent: 0,
+    Mppt0Ch1ArrayVoltage: 0,
+    Mppt0Ch1BatteryVoltage: 0,
+    Mppt0Ch1UnitTemperature: 0,
+    Mppt1Ch0ArrayCurrent: 0,
+    Mppt1Ch0ArrayVoltage: 0,
+    Mppt1Ch0BatteryVoltage: 0,
+    Mppt1Ch0UnitTemperature: 0,
+    Mppt1Ch1ArrayCurrent: 0,
+    Mppt1Ch1ArrayVoltage: 0,
+    Mppt1Ch1BatteryVoltage: 0,
+    Mppt1Ch1UnitTemperature: 0,
+    Mppt2Ch0ArrayCurrent: 0,
+    Mppt2Ch0ArrayVoltage: 0,
+    Mppt2Ch0BatteryVoltage: 0,
+    Mppt2Ch0UnitTemperature: 0,
+    Mppt2Ch1ArrayCurrent: 0,
+    Mppt2Ch1ArrayVoltage: 0,
+    Mppt2Ch1BatteryVoltage: 0,
+    Mppt2Ch1UnitTemperature: 0,
+    Mppt3Ch0ArrayCurrent: 0,
+    Mppt3Ch0ArrayVoltage: 0,
+    Mppt3Ch0BatteryVoltage: 0,
+    Mppt3Ch0UnitTemperature: 0,
+    Mppt3Ch1ArrayCurrent: 0,
+    Mppt3Ch1ArrayVoltage: 0,
+    Mppt3Ch1BatteryVoltage: 0,
+    Mppt3Ch1UnitTemperature: 0,
+  };
+}
+
+export const MPPT: MessageFns<MPPT> = {
+  encode(
+    message: MPPT,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.Mppt0Ch0ArrayCurrent !== 0) {
+      writer.uint32(13).float(message.Mppt0Ch0ArrayCurrent);
+    }
+    if (message.Mppt0Ch0ArrayVoltage !== 0) {
+      writer.uint32(21).float(message.Mppt0Ch0ArrayVoltage);
+    }
+    if (message.Mppt0Ch0BatteryVoltage !== 0) {
+      writer.uint32(29).float(message.Mppt0Ch0BatteryVoltage);
+    }
+    if (message.Mppt0Ch0UnitTemperature !== 0) {
+      writer.uint32(37).float(message.Mppt0Ch0UnitTemperature);
+    }
+    if (message.Mppt0Ch1ArrayCurrent !== 0) {
+      writer.uint32(45).float(message.Mppt0Ch1ArrayCurrent);
+    }
+    if (message.Mppt0Ch1ArrayVoltage !== 0) {
+      writer.uint32(53).float(message.Mppt0Ch1ArrayVoltage);
+    }
+    if (message.Mppt0Ch1BatteryVoltage !== 0) {
+      writer.uint32(61).float(message.Mppt0Ch1BatteryVoltage);
+    }
+    if (message.Mppt0Ch1UnitTemperature !== 0) {
+      writer.uint32(69).float(message.Mppt0Ch1UnitTemperature);
+    }
+    if (message.Mppt1Ch0ArrayCurrent !== 0) {
+      writer.uint32(77).float(message.Mppt1Ch0ArrayCurrent);
+    }
+    if (message.Mppt1Ch0ArrayVoltage !== 0) {
+      writer.uint32(85).float(message.Mppt1Ch0ArrayVoltage);
+    }
+    if (message.Mppt1Ch0BatteryVoltage !== 0) {
+      writer.uint32(93).float(message.Mppt1Ch0BatteryVoltage);
+    }
+    if (message.Mppt1Ch0UnitTemperature !== 0) {
+      writer.uint32(101).float(message.Mppt1Ch0UnitTemperature);
+    }
+    if (message.Mppt1Ch1ArrayCurrent !== 0) {
+      writer.uint32(109).float(message.Mppt1Ch1ArrayCurrent);
+    }
+    if (message.Mppt1Ch1ArrayVoltage !== 0) {
+      writer.uint32(117).float(message.Mppt1Ch1ArrayVoltage);
+    }
+    if (message.Mppt1Ch1BatteryVoltage !== 0) {
+      writer.uint32(125).float(message.Mppt1Ch1BatteryVoltage);
+    }
+    if (message.Mppt1Ch1UnitTemperature !== 0) {
+      writer.uint32(133).float(message.Mppt1Ch1UnitTemperature);
+    }
+    if (message.Mppt2Ch0ArrayCurrent !== 0) {
+      writer.uint32(141).float(message.Mppt2Ch0ArrayCurrent);
+    }
+    if (message.Mppt2Ch0ArrayVoltage !== 0) {
+      writer.uint32(149).float(message.Mppt2Ch0ArrayVoltage);
+    }
+    if (message.Mppt2Ch0BatteryVoltage !== 0) {
+      writer.uint32(157).float(message.Mppt2Ch0BatteryVoltage);
+    }
+    if (message.Mppt2Ch0UnitTemperature !== 0) {
+      writer.uint32(165).float(message.Mppt2Ch0UnitTemperature);
+    }
+    if (message.Mppt2Ch1ArrayCurrent !== 0) {
+      writer.uint32(173).float(message.Mppt2Ch1ArrayCurrent);
+    }
+    if (message.Mppt2Ch1ArrayVoltage !== 0) {
+      writer.uint32(181).float(message.Mppt2Ch1ArrayVoltage);
+    }
+    if (message.Mppt2Ch1BatteryVoltage !== 0) {
+      writer.uint32(189).float(message.Mppt2Ch1BatteryVoltage);
+    }
+    if (message.Mppt2Ch1UnitTemperature !== 0) {
+      writer.uint32(197).float(message.Mppt2Ch1UnitTemperature);
+    }
+    if (message.Mppt3Ch0ArrayCurrent !== 0) {
+      writer.uint32(205).float(message.Mppt3Ch0ArrayCurrent);
+    }
+    if (message.Mppt3Ch0ArrayVoltage !== 0) {
+      writer.uint32(213).float(message.Mppt3Ch0ArrayVoltage);
+    }
+    if (message.Mppt3Ch0BatteryVoltage !== 0) {
+      writer.uint32(221).float(message.Mppt3Ch0BatteryVoltage);
+    }
+    if (message.Mppt3Ch0UnitTemperature !== 0) {
+      writer.uint32(229).float(message.Mppt3Ch0UnitTemperature);
+    }
+    if (message.Mppt3Ch1ArrayCurrent !== 0) {
+      writer.uint32(237).float(message.Mppt3Ch1ArrayCurrent);
+    }
+    if (message.Mppt3Ch1ArrayVoltage !== 0) {
+      writer.uint32(245).float(message.Mppt3Ch1ArrayVoltage);
+    }
+    if (message.Mppt3Ch1BatteryVoltage !== 0) {
+      writer.uint32(253).float(message.Mppt3Ch1BatteryVoltage);
+    }
+    if (message.Mppt3Ch1UnitTemperature !== 0) {
+      writer.uint32(261).float(message.Mppt3Ch1UnitTemperature);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MPPT {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMPPT();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.Mppt0Ch0ArrayCurrent = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.Mppt0Ch0ArrayVoltage = reader.float();
+          continue;
+        }
+        case 3: {
+          if (tag !== 29) {
+            break;
+          }
+
+          message.Mppt0Ch0BatteryVoltage = reader.float();
+          continue;
+        }
+        case 4: {
+          if (tag !== 37) {
+            break;
+          }
+
+          message.Mppt0Ch0UnitTemperature = reader.float();
+          continue;
+        }
+        case 5: {
+          if (tag !== 45) {
+            break;
+          }
+
+          message.Mppt0Ch1ArrayCurrent = reader.float();
+          continue;
+        }
+        case 6: {
+          if (tag !== 53) {
+            break;
+          }
+
+          message.Mppt0Ch1ArrayVoltage = reader.float();
+          continue;
+        }
+        case 7: {
+          if (tag !== 61) {
+            break;
+          }
+
+          message.Mppt0Ch1BatteryVoltage = reader.float();
+          continue;
+        }
+        case 8: {
+          if (tag !== 69) {
+            break;
+          }
+
+          message.Mppt0Ch1UnitTemperature = reader.float();
+          continue;
+        }
+        case 9: {
+          if (tag !== 77) {
+            break;
+          }
+
+          message.Mppt1Ch0ArrayCurrent = reader.float();
+          continue;
+        }
+        case 10: {
+          if (tag !== 85) {
+            break;
+          }
+
+          message.Mppt1Ch0ArrayVoltage = reader.float();
+          continue;
+        }
+        case 11: {
+          if (tag !== 93) {
+            break;
+          }
+
+          message.Mppt1Ch0BatteryVoltage = reader.float();
+          continue;
+        }
+        case 12: {
+          if (tag !== 101) {
+            break;
+          }
+
+          message.Mppt1Ch0UnitTemperature = reader.float();
+          continue;
+        }
+        case 13: {
+          if (tag !== 109) {
+            break;
+          }
+
+          message.Mppt1Ch1ArrayCurrent = reader.float();
+          continue;
+        }
+        case 14: {
+          if (tag !== 117) {
+            break;
+          }
+
+          message.Mppt1Ch1ArrayVoltage = reader.float();
+          continue;
+        }
+        case 15: {
+          if (tag !== 125) {
+            break;
+          }
+
+          message.Mppt1Ch1BatteryVoltage = reader.float();
+          continue;
+        }
+        case 16: {
+          if (tag !== 133) {
+            break;
+          }
+
+          message.Mppt1Ch1UnitTemperature = reader.float();
+          continue;
+        }
+        case 17: {
+          if (tag !== 141) {
+            break;
+          }
+
+          message.Mppt2Ch0ArrayCurrent = reader.float();
+          continue;
+        }
+        case 18: {
+          if (tag !== 149) {
+            break;
+          }
+
+          message.Mppt2Ch0ArrayVoltage = reader.float();
+          continue;
+        }
+        case 19: {
+          if (tag !== 157) {
+            break;
+          }
+
+          message.Mppt2Ch0BatteryVoltage = reader.float();
+          continue;
+        }
+        case 20: {
+          if (tag !== 165) {
+            break;
+          }
+
+          message.Mppt2Ch0UnitTemperature = reader.float();
+          continue;
+        }
+        case 21: {
+          if (tag !== 173) {
+            break;
+          }
+
+          message.Mppt2Ch1ArrayCurrent = reader.float();
+          continue;
+        }
+        case 22: {
+          if (tag !== 181) {
+            break;
+          }
+
+          message.Mppt2Ch1ArrayVoltage = reader.float();
+          continue;
+        }
+        case 23: {
+          if (tag !== 189) {
+            break;
+          }
+
+          message.Mppt2Ch1BatteryVoltage = reader.float();
+          continue;
+        }
+        case 24: {
+          if (tag !== 197) {
+            break;
+          }
+
+          message.Mppt2Ch1UnitTemperature = reader.float();
+          continue;
+        }
+        case 25: {
+          if (tag !== 205) {
+            break;
+          }
+
+          message.Mppt3Ch0ArrayCurrent = reader.float();
+          continue;
+        }
+        case 26: {
+          if (tag !== 213) {
+            break;
+          }
+
+          message.Mppt3Ch0ArrayVoltage = reader.float();
+          continue;
+        }
+        case 27: {
+          if (tag !== 221) {
+            break;
+          }
+
+          message.Mppt3Ch0BatteryVoltage = reader.float();
+          continue;
+        }
+        case 28: {
+          if (tag !== 229) {
+            break;
+          }
+
+          message.Mppt3Ch0UnitTemperature = reader.float();
+          continue;
+        }
+        case 29: {
+          if (tag !== 237) {
+            break;
+          }
+
+          message.Mppt3Ch1ArrayCurrent = reader.float();
+          continue;
+        }
+        case 30: {
+          if (tag !== 245) {
+            break;
+          }
+
+          message.Mppt3Ch1ArrayVoltage = reader.float();
+          continue;
+        }
+        case 31: {
+          if (tag !== 253) {
+            break;
+          }
+
+          message.Mppt3Ch1BatteryVoltage = reader.float();
+          continue;
+        }
+        case 32: {
+          if (tag !== 261) {
+            break;
+          }
+
+          message.Mppt3Ch1UnitTemperature = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MPPT {
+    return {
+      Mppt0Ch0ArrayCurrent: isSet(object.Mppt0Ch0ArrayCurrent)
+        ? globalThis.Number(object.Mppt0Ch0ArrayCurrent)
+        : 0,
+      Mppt0Ch0ArrayVoltage: isSet(object.Mppt0Ch0ArrayVoltage)
+        ? globalThis.Number(object.Mppt0Ch0ArrayVoltage)
+        : 0,
+      Mppt0Ch0BatteryVoltage: isSet(object.Mppt0Ch0BatteryVoltage)
+        ? globalThis.Number(object.Mppt0Ch0BatteryVoltage)
+        : 0,
+      Mppt0Ch0UnitTemperature: isSet(object.Mppt0Ch0UnitTemperature)
+        ? globalThis.Number(object.Mppt0Ch0UnitTemperature)
+        : 0,
+      Mppt0Ch1ArrayCurrent: isSet(object.Mppt0Ch1ArrayCurrent)
+        ? globalThis.Number(object.Mppt0Ch1ArrayCurrent)
+        : 0,
+      Mppt0Ch1ArrayVoltage: isSet(object.Mppt0Ch1ArrayVoltage)
+        ? globalThis.Number(object.Mppt0Ch1ArrayVoltage)
+        : 0,
+      Mppt0Ch1BatteryVoltage: isSet(object.Mppt0Ch1BatteryVoltage)
+        ? globalThis.Number(object.Mppt0Ch1BatteryVoltage)
+        : 0,
+      Mppt0Ch1UnitTemperature: isSet(object.Mppt0Ch1UnitTemperature)
+        ? globalThis.Number(object.Mppt0Ch1UnitTemperature)
+        : 0,
+      Mppt1Ch0ArrayCurrent: isSet(object.Mppt1Ch0ArrayCurrent)
+        ? globalThis.Number(object.Mppt1Ch0ArrayCurrent)
+        : 0,
+      Mppt1Ch0ArrayVoltage: isSet(object.Mppt1Ch0ArrayVoltage)
+        ? globalThis.Number(object.Mppt1Ch0ArrayVoltage)
+        : 0,
+      Mppt1Ch0BatteryVoltage: isSet(object.Mppt1Ch0BatteryVoltage)
+        ? globalThis.Number(object.Mppt1Ch0BatteryVoltage)
+        : 0,
+      Mppt1Ch0UnitTemperature: isSet(object.Mppt1Ch0UnitTemperature)
+        ? globalThis.Number(object.Mppt1Ch0UnitTemperature)
+        : 0,
+      Mppt1Ch1ArrayCurrent: isSet(object.Mppt1Ch1ArrayCurrent)
+        ? globalThis.Number(object.Mppt1Ch1ArrayCurrent)
+        : 0,
+      Mppt1Ch1ArrayVoltage: isSet(object.Mppt1Ch1ArrayVoltage)
+        ? globalThis.Number(object.Mppt1Ch1ArrayVoltage)
+        : 0,
+      Mppt1Ch1BatteryVoltage: isSet(object.Mppt1Ch1BatteryVoltage)
+        ? globalThis.Number(object.Mppt1Ch1BatteryVoltage)
+        : 0,
+      Mppt1Ch1UnitTemperature: isSet(object.Mppt1Ch1UnitTemperature)
+        ? globalThis.Number(object.Mppt1Ch1UnitTemperature)
+        : 0,
+      Mppt2Ch0ArrayCurrent: isSet(object.Mppt2Ch0ArrayCurrent)
+        ? globalThis.Number(object.Mppt2Ch0ArrayCurrent)
+        : 0,
+      Mppt2Ch0ArrayVoltage: isSet(object.Mppt2Ch0ArrayVoltage)
+        ? globalThis.Number(object.Mppt2Ch0ArrayVoltage)
+        : 0,
+      Mppt2Ch0BatteryVoltage: isSet(object.Mppt2Ch0BatteryVoltage)
+        ? globalThis.Number(object.Mppt2Ch0BatteryVoltage)
+        : 0,
+      Mppt2Ch0UnitTemperature: isSet(object.Mppt2Ch0UnitTemperature)
+        ? globalThis.Number(object.Mppt2Ch0UnitTemperature)
+        : 0,
+      Mppt2Ch1ArrayCurrent: isSet(object.Mppt2Ch1ArrayCurrent)
+        ? globalThis.Number(object.Mppt2Ch1ArrayCurrent)
+        : 0,
+      Mppt2Ch1ArrayVoltage: isSet(object.Mppt2Ch1ArrayVoltage)
+        ? globalThis.Number(object.Mppt2Ch1ArrayVoltage)
+        : 0,
+      Mppt2Ch1BatteryVoltage: isSet(object.Mppt2Ch1BatteryVoltage)
+        ? globalThis.Number(object.Mppt2Ch1BatteryVoltage)
+        : 0,
+      Mppt2Ch1UnitTemperature: isSet(object.Mppt2Ch1UnitTemperature)
+        ? globalThis.Number(object.Mppt2Ch1UnitTemperature)
+        : 0,
+      Mppt3Ch0ArrayCurrent: isSet(object.Mppt3Ch0ArrayCurrent)
+        ? globalThis.Number(object.Mppt3Ch0ArrayCurrent)
+        : 0,
+      Mppt3Ch0ArrayVoltage: isSet(object.Mppt3Ch0ArrayVoltage)
+        ? globalThis.Number(object.Mppt3Ch0ArrayVoltage)
+        : 0,
+      Mppt3Ch0BatteryVoltage: isSet(object.Mppt3Ch0BatteryVoltage)
+        ? globalThis.Number(object.Mppt3Ch0BatteryVoltage)
+        : 0,
+      Mppt3Ch0UnitTemperature: isSet(object.Mppt3Ch0UnitTemperature)
+        ? globalThis.Number(object.Mppt3Ch0UnitTemperature)
+        : 0,
+      Mppt3Ch1ArrayCurrent: isSet(object.Mppt3Ch1ArrayCurrent)
+        ? globalThis.Number(object.Mppt3Ch1ArrayCurrent)
+        : 0,
+      Mppt3Ch1ArrayVoltage: isSet(object.Mppt3Ch1ArrayVoltage)
+        ? globalThis.Number(object.Mppt3Ch1ArrayVoltage)
+        : 0,
+      Mppt3Ch1BatteryVoltage: isSet(object.Mppt3Ch1BatteryVoltage)
+        ? globalThis.Number(object.Mppt3Ch1BatteryVoltage)
+        : 0,
+      Mppt3Ch1UnitTemperature: isSet(object.Mppt3Ch1UnitTemperature)
+        ? globalThis.Number(object.Mppt3Ch1UnitTemperature)
+        : 0,
+    };
+  },
+
+  toJSON(message: MPPT): unknown {
+    const obj: any = {};
+    if (message.Mppt0Ch0ArrayCurrent !== 0) {
+      obj.Mppt0Ch0ArrayCurrent = message.Mppt0Ch0ArrayCurrent;
+    }
+    if (message.Mppt0Ch0ArrayVoltage !== 0) {
+      obj.Mppt0Ch0ArrayVoltage = message.Mppt0Ch0ArrayVoltage;
+    }
+    if (message.Mppt0Ch0BatteryVoltage !== 0) {
+      obj.Mppt0Ch0BatteryVoltage = message.Mppt0Ch0BatteryVoltage;
+    }
+    if (message.Mppt0Ch0UnitTemperature !== 0) {
+      obj.Mppt0Ch0UnitTemperature = message.Mppt0Ch0UnitTemperature;
+    }
+    if (message.Mppt0Ch1ArrayCurrent !== 0) {
+      obj.Mppt0Ch1ArrayCurrent = message.Mppt0Ch1ArrayCurrent;
+    }
+    if (message.Mppt0Ch1ArrayVoltage !== 0) {
+      obj.Mppt0Ch1ArrayVoltage = message.Mppt0Ch1ArrayVoltage;
+    }
+    if (message.Mppt0Ch1BatteryVoltage !== 0) {
+      obj.Mppt0Ch1BatteryVoltage = message.Mppt0Ch1BatteryVoltage;
+    }
+    if (message.Mppt0Ch1UnitTemperature !== 0) {
+      obj.Mppt0Ch1UnitTemperature = message.Mppt0Ch1UnitTemperature;
+    }
+    if (message.Mppt1Ch0ArrayCurrent !== 0) {
+      obj.Mppt1Ch0ArrayCurrent = message.Mppt1Ch0ArrayCurrent;
+    }
+    if (message.Mppt1Ch0ArrayVoltage !== 0) {
+      obj.Mppt1Ch0ArrayVoltage = message.Mppt1Ch0ArrayVoltage;
+    }
+    if (message.Mppt1Ch0BatteryVoltage !== 0) {
+      obj.Mppt1Ch0BatteryVoltage = message.Mppt1Ch0BatteryVoltage;
+    }
+    if (message.Mppt1Ch0UnitTemperature !== 0) {
+      obj.Mppt1Ch0UnitTemperature = message.Mppt1Ch0UnitTemperature;
+    }
+    if (message.Mppt1Ch1ArrayCurrent !== 0) {
+      obj.Mppt1Ch1ArrayCurrent = message.Mppt1Ch1ArrayCurrent;
+    }
+    if (message.Mppt1Ch1ArrayVoltage !== 0) {
+      obj.Mppt1Ch1ArrayVoltage = message.Mppt1Ch1ArrayVoltage;
+    }
+    if (message.Mppt1Ch1BatteryVoltage !== 0) {
+      obj.Mppt1Ch1BatteryVoltage = message.Mppt1Ch1BatteryVoltage;
+    }
+    if (message.Mppt1Ch1UnitTemperature !== 0) {
+      obj.Mppt1Ch1UnitTemperature = message.Mppt1Ch1UnitTemperature;
+    }
+    if (message.Mppt2Ch0ArrayCurrent !== 0) {
+      obj.Mppt2Ch0ArrayCurrent = message.Mppt2Ch0ArrayCurrent;
+    }
+    if (message.Mppt2Ch0ArrayVoltage !== 0) {
+      obj.Mppt2Ch0ArrayVoltage = message.Mppt2Ch0ArrayVoltage;
+    }
+    if (message.Mppt2Ch0BatteryVoltage !== 0) {
+      obj.Mppt2Ch0BatteryVoltage = message.Mppt2Ch0BatteryVoltage;
+    }
+    if (message.Mppt2Ch0UnitTemperature !== 0) {
+      obj.Mppt2Ch0UnitTemperature = message.Mppt2Ch0UnitTemperature;
+    }
+    if (message.Mppt2Ch1ArrayCurrent !== 0) {
+      obj.Mppt2Ch1ArrayCurrent = message.Mppt2Ch1ArrayCurrent;
+    }
+    if (message.Mppt2Ch1ArrayVoltage !== 0) {
+      obj.Mppt2Ch1ArrayVoltage = message.Mppt2Ch1ArrayVoltage;
+    }
+    if (message.Mppt2Ch1BatteryVoltage !== 0) {
+      obj.Mppt2Ch1BatteryVoltage = message.Mppt2Ch1BatteryVoltage;
+    }
+    if (message.Mppt2Ch1UnitTemperature !== 0) {
+      obj.Mppt2Ch1UnitTemperature = message.Mppt2Ch1UnitTemperature;
+    }
+    if (message.Mppt3Ch0ArrayCurrent !== 0) {
+      obj.Mppt3Ch0ArrayCurrent = message.Mppt3Ch0ArrayCurrent;
+    }
+    if (message.Mppt3Ch0ArrayVoltage !== 0) {
+      obj.Mppt3Ch0ArrayVoltage = message.Mppt3Ch0ArrayVoltage;
+    }
+    if (message.Mppt3Ch0BatteryVoltage !== 0) {
+      obj.Mppt3Ch0BatteryVoltage = message.Mppt3Ch0BatteryVoltage;
+    }
+    if (message.Mppt3Ch0UnitTemperature !== 0) {
+      obj.Mppt3Ch0UnitTemperature = message.Mppt3Ch0UnitTemperature;
+    }
+    if (message.Mppt3Ch1ArrayCurrent !== 0) {
+      obj.Mppt3Ch1ArrayCurrent = message.Mppt3Ch1ArrayCurrent;
+    }
+    if (message.Mppt3Ch1ArrayVoltage !== 0) {
+      obj.Mppt3Ch1ArrayVoltage = message.Mppt3Ch1ArrayVoltage;
+    }
+    if (message.Mppt3Ch1BatteryVoltage !== 0) {
+      obj.Mppt3Ch1BatteryVoltage = message.Mppt3Ch1BatteryVoltage;
+    }
+    if (message.Mppt3Ch1UnitTemperature !== 0) {
+      obj.Mppt3Ch1UnitTemperature = message.Mppt3Ch1UnitTemperature;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MPPT>, I>>(base?: I): MPPT {
+    return MPPT.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MPPT>, I>>(object: I): MPPT {
+    const message = createBaseMPPT();
+    message.Mppt0Ch0ArrayCurrent = object.Mppt0Ch0ArrayCurrent ?? 0;
+    message.Mppt0Ch0ArrayVoltage = object.Mppt0Ch0ArrayVoltage ?? 0;
+    message.Mppt0Ch0BatteryVoltage = object.Mppt0Ch0BatteryVoltage ?? 0;
+    message.Mppt0Ch0UnitTemperature = object.Mppt0Ch0UnitTemperature ?? 0;
+    message.Mppt0Ch1ArrayCurrent = object.Mppt0Ch1ArrayCurrent ?? 0;
+    message.Mppt0Ch1ArrayVoltage = object.Mppt0Ch1ArrayVoltage ?? 0;
+    message.Mppt0Ch1BatteryVoltage = object.Mppt0Ch1BatteryVoltage ?? 0;
+    message.Mppt0Ch1UnitTemperature = object.Mppt0Ch1UnitTemperature ?? 0;
+    message.Mppt1Ch0ArrayCurrent = object.Mppt1Ch0ArrayCurrent ?? 0;
+    message.Mppt1Ch0ArrayVoltage = object.Mppt1Ch0ArrayVoltage ?? 0;
+    message.Mppt1Ch0BatteryVoltage = object.Mppt1Ch0BatteryVoltage ?? 0;
+    message.Mppt1Ch0UnitTemperature = object.Mppt1Ch0UnitTemperature ?? 0;
+    message.Mppt1Ch1ArrayCurrent = object.Mppt1Ch1ArrayCurrent ?? 0;
+    message.Mppt1Ch1ArrayVoltage = object.Mppt1Ch1ArrayVoltage ?? 0;
+    message.Mppt1Ch1BatteryVoltage = object.Mppt1Ch1BatteryVoltage ?? 0;
+    message.Mppt1Ch1UnitTemperature = object.Mppt1Ch1UnitTemperature ?? 0;
+    message.Mppt2Ch0ArrayCurrent = object.Mppt2Ch0ArrayCurrent ?? 0;
+    message.Mppt2Ch0ArrayVoltage = object.Mppt2Ch0ArrayVoltage ?? 0;
+    message.Mppt2Ch0BatteryVoltage = object.Mppt2Ch0BatteryVoltage ?? 0;
+    message.Mppt2Ch0UnitTemperature = object.Mppt2Ch0UnitTemperature ?? 0;
+    message.Mppt2Ch1ArrayCurrent = object.Mppt2Ch1ArrayCurrent ?? 0;
+    message.Mppt2Ch1ArrayVoltage = object.Mppt2Ch1ArrayVoltage ?? 0;
+    message.Mppt2Ch1BatteryVoltage = object.Mppt2Ch1BatteryVoltage ?? 0;
+    message.Mppt2Ch1UnitTemperature = object.Mppt2Ch1UnitTemperature ?? 0;
+    message.Mppt3Ch0ArrayCurrent = object.Mppt3Ch0ArrayCurrent ?? 0;
+    message.Mppt3Ch0ArrayVoltage = object.Mppt3Ch0ArrayVoltage ?? 0;
+    message.Mppt3Ch0BatteryVoltage = object.Mppt3Ch0BatteryVoltage ?? 0;
+    message.Mppt3Ch0UnitTemperature = object.Mppt3Ch0UnitTemperature ?? 0;
+    message.Mppt3Ch1ArrayCurrent = object.Mppt3Ch1ArrayCurrent ?? 0;
+    message.Mppt3Ch1ArrayVoltage = object.Mppt3Ch1ArrayVoltage ?? 0;
+    message.Mppt3Ch1BatteryVoltage = object.Mppt3Ch1BatteryVoltage ?? 0;
+    message.Mppt3Ch1UnitTemperature = object.Mppt3Ch1UnitTemperature ?? 0;
+    return message;
+  },
+};
+
+function createBaseContactorStatus(): ContactorStatus {
+  return {
+    ArrayBPSError: false,
+    ArrayChargeCurrent: 0,
+    ArrayContactorClosed: false,
+    ArrayContactorClosing: false,
+    ArrayContactorError: false,
+    ArrayHeartbeat: false,
+    ArrayLineCurrent: 0,
+    ArrayPrechargerClosed: false,
+    ArrayPrechargerClosing: false,
+    ArrayPrechargerError: false,
+    ChargeBPSError: false,
+    ChargeChargeCurrent: 0,
+    ChargeContactorClosed: false,
+    ChargeContactorClosing: false,
+    ChargeContactorError: false,
+    ChargeHeartbeat: false,
+    ChargeLineCurrent: 0,
+    ChargePrechargerClosed: false,
+    ChargePrechargerClosing: false,
+    ChargePrechargerError: false,
+    CommonChargeCurrent: 0,
+    CommonContactorClosed: false,
+    CommonContactorClosing: false,
+    CommonContactorError: false,
+    CommonContactorOpeningError: false,
+    CommonHeartbeat: false,
+    CommonLineCurrent: 0,
+    CommonPrechargerClosed: false,
+    CommonPrechargerClosing: false,
+    CommonPrechargerError: false,
+    LvBpsError: false,
+    LvChargeCurrent: 0,
+    LvContactorClosed: false,
+    LvContactorClosing: false,
+    LvContactorError: false,
+    LvHeartbeat: false,
+    LvLineCurrent: 0,
+    LvPrechargerClosed: false,
+    LvPrechargerClosing: false,
+    LvPrechargerError: false,
+    MotorBPSError: false,
+    MotorChargeCurrent: 0,
+    MotorContactorClosed: false,
+    MotorContactorClosing: false,
+    MotorContactorError: false,
+    MotorHeartbeat: false,
+    MotorLineCurrent: 0,
+    MotorPrechargerClosed: false,
+    MotorPrechargerClosing: false,
+    MotorPrechargerError: false,
+  };
+}
+
+export const ContactorStatus: MessageFns<ContactorStatus> = {
+  encode(
+    message: ContactorStatus,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.ArrayBPSError !== false) {
+      writer.uint32(8).bool(message.ArrayBPSError);
+    }
+    if (message.ArrayChargeCurrent !== 0) {
+      writer.uint32(21).float(message.ArrayChargeCurrent);
+    }
+    if (message.ArrayContactorClosed !== false) {
+      writer.uint32(24).bool(message.ArrayContactorClosed);
+    }
+    if (message.ArrayContactorClosing !== false) {
+      writer.uint32(32).bool(message.ArrayContactorClosing);
+    }
+    if (message.ArrayContactorError !== false) {
+      writer.uint32(40).bool(message.ArrayContactorError);
+    }
+    if (message.ArrayHeartbeat !== false) {
+      writer.uint32(48).bool(message.ArrayHeartbeat);
+    }
+    if (message.ArrayLineCurrent !== 0) {
+      writer.uint32(61).float(message.ArrayLineCurrent);
+    }
+    if (message.ArrayPrechargerClosed !== false) {
+      writer.uint32(64).bool(message.ArrayPrechargerClosed);
+    }
+    if (message.ArrayPrechargerClosing !== false) {
+      writer.uint32(72).bool(message.ArrayPrechargerClosing);
+    }
+    if (message.ArrayPrechargerError !== false) {
+      writer.uint32(80).bool(message.ArrayPrechargerError);
+    }
+    if (message.ChargeBPSError !== false) {
+      writer.uint32(88).bool(message.ChargeBPSError);
+    }
+    if (message.ChargeChargeCurrent !== 0) {
+      writer.uint32(101).float(message.ChargeChargeCurrent);
+    }
+    if (message.ChargeContactorClosed !== false) {
+      writer.uint32(104).bool(message.ChargeContactorClosed);
+    }
+    if (message.ChargeContactorClosing !== false) {
+      writer.uint32(112).bool(message.ChargeContactorClosing);
+    }
+    if (message.ChargeContactorError !== false) {
+      writer.uint32(120).bool(message.ChargeContactorError);
+    }
+    if (message.ChargeHeartbeat !== false) {
+      writer.uint32(128).bool(message.ChargeHeartbeat);
+    }
+    if (message.ChargeLineCurrent !== 0) {
+      writer.uint32(141).float(message.ChargeLineCurrent);
+    }
+    if (message.ChargePrechargerClosed !== false) {
+      writer.uint32(144).bool(message.ChargePrechargerClosed);
+    }
+    if (message.ChargePrechargerClosing !== false) {
+      writer.uint32(152).bool(message.ChargePrechargerClosing);
+    }
+    if (message.ChargePrechargerError !== false) {
+      writer.uint32(160).bool(message.ChargePrechargerError);
+    }
+    if (message.CommonChargeCurrent !== 0) {
+      writer.uint32(173).float(message.CommonChargeCurrent);
+    }
+    if (message.CommonContactorClosed !== false) {
+      writer.uint32(176).bool(message.CommonContactorClosed);
+    }
+    if (message.CommonContactorClosing !== false) {
+      writer.uint32(184).bool(message.CommonContactorClosing);
+    }
+    if (message.CommonContactorError !== false) {
+      writer.uint32(192).bool(message.CommonContactorError);
+    }
+    if (message.CommonContactorOpeningError !== false) {
+      writer.uint32(200).bool(message.CommonContactorOpeningError);
+    }
+    if (message.CommonHeartbeat !== false) {
+      writer.uint32(208).bool(message.CommonHeartbeat);
+    }
+    if (message.CommonLineCurrent !== 0) {
+      writer.uint32(221).float(message.CommonLineCurrent);
+    }
+    if (message.CommonPrechargerClosed !== false) {
+      writer.uint32(224).bool(message.CommonPrechargerClosed);
+    }
+    if (message.CommonPrechargerClosing !== false) {
+      writer.uint32(232).bool(message.CommonPrechargerClosing);
+    }
+    if (message.CommonPrechargerError !== false) {
+      writer.uint32(240).bool(message.CommonPrechargerError);
+    }
+    if (message.LvBpsError !== false) {
+      writer.uint32(248).bool(message.LvBpsError);
+    }
+    if (message.LvChargeCurrent !== 0) {
+      writer.uint32(261).float(message.LvChargeCurrent);
+    }
+    if (message.LvContactorClosed !== false) {
+      writer.uint32(264).bool(message.LvContactorClosed);
+    }
+    if (message.LvContactorClosing !== false) {
+      writer.uint32(272).bool(message.LvContactorClosing);
+    }
+    if (message.LvContactorError !== false) {
+      writer.uint32(280).bool(message.LvContactorError);
+    }
+    if (message.LvHeartbeat !== false) {
+      writer.uint32(288).bool(message.LvHeartbeat);
+    }
+    if (message.LvLineCurrent !== 0) {
+      writer.uint32(301).float(message.LvLineCurrent);
+    }
+    if (message.LvPrechargerClosed !== false) {
+      writer.uint32(304).bool(message.LvPrechargerClosed);
+    }
+    if (message.LvPrechargerClosing !== false) {
+      writer.uint32(312).bool(message.LvPrechargerClosing);
+    }
+    if (message.LvPrechargerError !== false) {
+      writer.uint32(320).bool(message.LvPrechargerError);
+    }
+    if (message.MotorBPSError !== false) {
+      writer.uint32(328).bool(message.MotorBPSError);
+    }
+    if (message.MotorChargeCurrent !== 0) {
+      writer.uint32(341).float(message.MotorChargeCurrent);
+    }
+    if (message.MotorContactorClosed !== false) {
+      writer.uint32(344).bool(message.MotorContactorClosed);
+    }
+    if (message.MotorContactorClosing !== false) {
+      writer.uint32(352).bool(message.MotorContactorClosing);
+    }
+    if (message.MotorContactorError !== false) {
+      writer.uint32(360).bool(message.MotorContactorError);
+    }
+    if (message.MotorHeartbeat !== false) {
+      writer.uint32(368).bool(message.MotorHeartbeat);
+    }
+    if (message.MotorLineCurrent !== 0) {
+      writer.uint32(381).float(message.MotorLineCurrent);
+    }
+    if (message.MotorPrechargerClosed !== false) {
+      writer.uint32(384).bool(message.MotorPrechargerClosed);
+    }
+    if (message.MotorPrechargerClosing !== false) {
+      writer.uint32(392).bool(message.MotorPrechargerClosing);
+    }
+    if (message.MotorPrechargerError !== false) {
+      writer.uint32(400).bool(message.MotorPrechargerError);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ContactorStatus {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseContactorStatus();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.ArrayBPSError = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.ArrayChargeCurrent = reader.float();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.ArrayContactorClosed = reader.bool();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.ArrayContactorClosing = reader.bool();
+          continue;
+        }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.ArrayContactorError = reader.bool();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.ArrayHeartbeat = reader.bool();
+          continue;
+        }
+        case 7: {
+          if (tag !== 61) {
+            break;
+          }
+
+          message.ArrayLineCurrent = reader.float();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.ArrayPrechargerClosed = reader.bool();
+          continue;
+        }
+        case 9: {
+          if (tag !== 72) {
+            break;
+          }
+
+          message.ArrayPrechargerClosing = reader.bool();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.ArrayPrechargerError = reader.bool();
+          continue;
+        }
+        case 11: {
+          if (tag !== 88) {
+            break;
+          }
+
+          message.ChargeBPSError = reader.bool();
+          continue;
+        }
+        case 12: {
+          if (tag !== 101) {
+            break;
+          }
+
+          message.ChargeChargeCurrent = reader.float();
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.ChargeContactorClosed = reader.bool();
+          continue;
+        }
+        case 14: {
+          if (tag !== 112) {
+            break;
+          }
+
+          message.ChargeContactorClosing = reader.bool();
+          continue;
+        }
+        case 15: {
+          if (tag !== 120) {
+            break;
+          }
+
+          message.ChargeContactorError = reader.bool();
+          continue;
+        }
+        case 16: {
+          if (tag !== 128) {
+            break;
+          }
+
+          message.ChargeHeartbeat = reader.bool();
+          continue;
+        }
+        case 17: {
+          if (tag !== 141) {
+            break;
+          }
+
+          message.ChargeLineCurrent = reader.float();
+          continue;
+        }
+        case 18: {
+          if (tag !== 144) {
+            break;
+          }
+
+          message.ChargePrechargerClosed = reader.bool();
+          continue;
+        }
+        case 19: {
+          if (tag !== 152) {
+            break;
+          }
+
+          message.ChargePrechargerClosing = reader.bool();
+          continue;
+        }
+        case 20: {
+          if (tag !== 160) {
+            break;
+          }
+
+          message.ChargePrechargerError = reader.bool();
+          continue;
+        }
+        case 21: {
+          if (tag !== 173) {
+            break;
+          }
+
+          message.CommonChargeCurrent = reader.float();
+          continue;
+        }
+        case 22: {
+          if (tag !== 176) {
+            break;
+          }
+
+          message.CommonContactorClosed = reader.bool();
+          continue;
+        }
+        case 23: {
+          if (tag !== 184) {
+            break;
+          }
+
+          message.CommonContactorClosing = reader.bool();
+          continue;
+        }
+        case 24: {
+          if (tag !== 192) {
+            break;
+          }
+
+          message.CommonContactorError = reader.bool();
+          continue;
+        }
+        case 25: {
+          if (tag !== 200) {
+            break;
+          }
+
+          message.CommonContactorOpeningError = reader.bool();
+          continue;
+        }
+        case 26: {
+          if (tag !== 208) {
+            break;
+          }
+
+          message.CommonHeartbeat = reader.bool();
+          continue;
+        }
+        case 27: {
+          if (tag !== 221) {
+            break;
+          }
+
+          message.CommonLineCurrent = reader.float();
+          continue;
+        }
+        case 28: {
+          if (tag !== 224) {
+            break;
+          }
+
+          message.CommonPrechargerClosed = reader.bool();
+          continue;
+        }
+        case 29: {
+          if (tag !== 232) {
+            break;
+          }
+
+          message.CommonPrechargerClosing = reader.bool();
+          continue;
+        }
+        case 30: {
+          if (tag !== 240) {
+            break;
+          }
+
+          message.CommonPrechargerError = reader.bool();
+          continue;
+        }
+        case 31: {
+          if (tag !== 248) {
+            break;
+          }
+
+          message.LvBpsError = reader.bool();
+          continue;
+        }
+        case 32: {
+          if (tag !== 261) {
+            break;
+          }
+
+          message.LvChargeCurrent = reader.float();
+          continue;
+        }
+        case 33: {
+          if (tag !== 264) {
+            break;
+          }
+
+          message.LvContactorClosed = reader.bool();
+          continue;
+        }
+        case 34: {
+          if (tag !== 272) {
+            break;
+          }
+
+          message.LvContactorClosing = reader.bool();
+          continue;
+        }
+        case 35: {
+          if (tag !== 280) {
+            break;
+          }
+
+          message.LvContactorError = reader.bool();
+          continue;
+        }
+        case 36: {
+          if (tag !== 288) {
+            break;
+          }
+
+          message.LvHeartbeat = reader.bool();
+          continue;
+        }
+        case 37: {
+          if (tag !== 301) {
+            break;
+          }
+
+          message.LvLineCurrent = reader.float();
+          continue;
+        }
+        case 38: {
+          if (tag !== 304) {
+            break;
+          }
+
+          message.LvPrechargerClosed = reader.bool();
+          continue;
+        }
+        case 39: {
+          if (tag !== 312) {
+            break;
+          }
+
+          message.LvPrechargerClosing = reader.bool();
+          continue;
+        }
+        case 40: {
+          if (tag !== 320) {
+            break;
+          }
+
+          message.LvPrechargerError = reader.bool();
+          continue;
+        }
+        case 41: {
+          if (tag !== 328) {
+            break;
+          }
+
+          message.MotorBPSError = reader.bool();
+          continue;
+        }
+        case 42: {
+          if (tag !== 341) {
+            break;
+          }
+
+          message.MotorChargeCurrent = reader.float();
+          continue;
+        }
+        case 43: {
+          if (tag !== 344) {
+            break;
+          }
+
+          message.MotorContactorClosed = reader.bool();
+          continue;
+        }
+        case 44: {
+          if (tag !== 352) {
+            break;
+          }
+
+          message.MotorContactorClosing = reader.bool();
+          continue;
+        }
+        case 45: {
+          if (tag !== 360) {
+            break;
+          }
+
+          message.MotorContactorError = reader.bool();
+          continue;
+        }
+        case 46: {
+          if (tag !== 368) {
+            break;
+          }
+
+          message.MotorHeartbeat = reader.bool();
+          continue;
+        }
+        case 47: {
+          if (tag !== 381) {
+            break;
+          }
+
+          message.MotorLineCurrent = reader.float();
+          continue;
+        }
+        case 48: {
+          if (tag !== 384) {
+            break;
+          }
+
+          message.MotorPrechargerClosed = reader.bool();
+          continue;
+        }
+        case 49: {
+          if (tag !== 392) {
+            break;
+          }
+
+          message.MotorPrechargerClosing = reader.bool();
+          continue;
+        }
+        case 50: {
+          if (tag !== 400) {
+            break;
+          }
+
+          message.MotorPrechargerError = reader.bool();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ContactorStatus {
+    return {
+      ArrayBPSError: isSet(object.ArrayBPSError)
+        ? globalThis.Boolean(object.ArrayBPSError)
+        : false,
+      ArrayChargeCurrent: isSet(object.ArrayChargeCurrent)
+        ? globalThis.Number(object.ArrayChargeCurrent)
+        : 0,
+      ArrayContactorClosed: isSet(object.ArrayContactorClosed)
+        ? globalThis.Boolean(object.ArrayContactorClosed)
+        : false,
+      ArrayContactorClosing: isSet(object.ArrayContactorClosing)
+        ? globalThis.Boolean(object.ArrayContactorClosing)
+        : false,
+      ArrayContactorError: isSet(object.ArrayContactorError)
+        ? globalThis.Boolean(object.ArrayContactorError)
+        : false,
+      ArrayHeartbeat: isSet(object.ArrayHeartbeat)
+        ? globalThis.Boolean(object.ArrayHeartbeat)
+        : false,
+      ArrayLineCurrent: isSet(object.ArrayLineCurrent)
+        ? globalThis.Number(object.ArrayLineCurrent)
+        : 0,
+      ArrayPrechargerClosed: isSet(object.ArrayPrechargerClosed)
+        ? globalThis.Boolean(object.ArrayPrechargerClosed)
+        : false,
+      ArrayPrechargerClosing: isSet(object.ArrayPrechargerClosing)
+        ? globalThis.Boolean(object.ArrayPrechargerClosing)
+        : false,
+      ArrayPrechargerError: isSet(object.ArrayPrechargerError)
+        ? globalThis.Boolean(object.ArrayPrechargerError)
+        : false,
+      ChargeBPSError: isSet(object.ChargeBPSError)
+        ? globalThis.Boolean(object.ChargeBPSError)
+        : false,
+      ChargeChargeCurrent: isSet(object.ChargeChargeCurrent)
+        ? globalThis.Number(object.ChargeChargeCurrent)
+        : 0,
+      ChargeContactorClosed: isSet(object.ChargeContactorClosed)
+        ? globalThis.Boolean(object.ChargeContactorClosed)
+        : false,
+      ChargeContactorClosing: isSet(object.ChargeContactorClosing)
+        ? globalThis.Boolean(object.ChargeContactorClosing)
+        : false,
+      ChargeContactorError: isSet(object.ChargeContactorError)
+        ? globalThis.Boolean(object.ChargeContactorError)
+        : false,
+      ChargeHeartbeat: isSet(object.ChargeHeartbeat)
+        ? globalThis.Boolean(object.ChargeHeartbeat)
+        : false,
+      ChargeLineCurrent: isSet(object.ChargeLineCurrent)
+        ? globalThis.Number(object.ChargeLineCurrent)
+        : 0,
+      ChargePrechargerClosed: isSet(object.ChargePrechargerClosed)
+        ? globalThis.Boolean(object.ChargePrechargerClosed)
+        : false,
+      ChargePrechargerClosing: isSet(object.ChargePrechargerClosing)
+        ? globalThis.Boolean(object.ChargePrechargerClosing)
+        : false,
+      ChargePrechargerError: isSet(object.ChargePrechargerError)
+        ? globalThis.Boolean(object.ChargePrechargerError)
+        : false,
+      CommonChargeCurrent: isSet(object.CommonChargeCurrent)
+        ? globalThis.Number(object.CommonChargeCurrent)
+        : 0,
+      CommonContactorClosed: isSet(object.CommonContactorClosed)
+        ? globalThis.Boolean(object.CommonContactorClosed)
+        : false,
+      CommonContactorClosing: isSet(object.CommonContactorClosing)
+        ? globalThis.Boolean(object.CommonContactorClosing)
+        : false,
+      CommonContactorError: isSet(object.CommonContactorError)
+        ? globalThis.Boolean(object.CommonContactorError)
+        : false,
+      CommonContactorOpeningError: isSet(object.CommonContactorOpeningError)
+        ? globalThis.Boolean(object.CommonContactorOpeningError)
+        : false,
+      CommonHeartbeat: isSet(object.CommonHeartbeat)
+        ? globalThis.Boolean(object.CommonHeartbeat)
+        : false,
+      CommonLineCurrent: isSet(object.CommonLineCurrent)
+        ? globalThis.Number(object.CommonLineCurrent)
+        : 0,
+      CommonPrechargerClosed: isSet(object.CommonPrechargerClosed)
+        ? globalThis.Boolean(object.CommonPrechargerClosed)
+        : false,
+      CommonPrechargerClosing: isSet(object.CommonPrechargerClosing)
+        ? globalThis.Boolean(object.CommonPrechargerClosing)
+        : false,
+      CommonPrechargerError: isSet(object.CommonPrechargerError)
+        ? globalThis.Boolean(object.CommonPrechargerError)
+        : false,
+      LvBpsError: isSet(object.LvBpsError)
+        ? globalThis.Boolean(object.LvBpsError)
+        : false,
+      LvChargeCurrent: isSet(object.LvChargeCurrent)
+        ? globalThis.Number(object.LvChargeCurrent)
+        : 0,
+      LvContactorClosed: isSet(object.LvContactorClosed)
+        ? globalThis.Boolean(object.LvContactorClosed)
+        : false,
+      LvContactorClosing: isSet(object.LvContactorClosing)
+        ? globalThis.Boolean(object.LvContactorClosing)
+        : false,
+      LvContactorError: isSet(object.LvContactorError)
+        ? globalThis.Boolean(object.LvContactorError)
+        : false,
+      LvHeartbeat: isSet(object.LvHeartbeat)
+        ? globalThis.Boolean(object.LvHeartbeat)
+        : false,
+      LvLineCurrent: isSet(object.LvLineCurrent)
+        ? globalThis.Number(object.LvLineCurrent)
+        : 0,
+      LvPrechargerClosed: isSet(object.LvPrechargerClosed)
+        ? globalThis.Boolean(object.LvPrechargerClosed)
+        : false,
+      LvPrechargerClosing: isSet(object.LvPrechargerClosing)
+        ? globalThis.Boolean(object.LvPrechargerClosing)
+        : false,
+      LvPrechargerError: isSet(object.LvPrechargerError)
+        ? globalThis.Boolean(object.LvPrechargerError)
+        : false,
+      MotorBPSError: isSet(object.MotorBPSError)
+        ? globalThis.Boolean(object.MotorBPSError)
+        : false,
+      MotorChargeCurrent: isSet(object.MotorChargeCurrent)
+        ? globalThis.Number(object.MotorChargeCurrent)
+        : 0,
+      MotorContactorClosed: isSet(object.MotorContactorClosed)
+        ? globalThis.Boolean(object.MotorContactorClosed)
+        : false,
+      MotorContactorClosing: isSet(object.MotorContactorClosing)
+        ? globalThis.Boolean(object.MotorContactorClosing)
+        : false,
+      MotorContactorError: isSet(object.MotorContactorError)
+        ? globalThis.Boolean(object.MotorContactorError)
+        : false,
+      MotorHeartbeat: isSet(object.MotorHeartbeat)
+        ? globalThis.Boolean(object.MotorHeartbeat)
+        : false,
+      MotorLineCurrent: isSet(object.MotorLineCurrent)
+        ? globalThis.Number(object.MotorLineCurrent)
+        : 0,
+      MotorPrechargerClosed: isSet(object.MotorPrechargerClosed)
+        ? globalThis.Boolean(object.MotorPrechargerClosed)
+        : false,
+      MotorPrechargerClosing: isSet(object.MotorPrechargerClosing)
+        ? globalThis.Boolean(object.MotorPrechargerClosing)
+        : false,
+      MotorPrechargerError: isSet(object.MotorPrechargerError)
+        ? globalThis.Boolean(object.MotorPrechargerError)
+        : false,
+    };
+  },
+
+  toJSON(message: ContactorStatus): unknown {
+    const obj: any = {};
+    if (message.ArrayBPSError !== false) {
+      obj.ArrayBPSError = message.ArrayBPSError;
+    }
+    if (message.ArrayChargeCurrent !== 0) {
+      obj.ArrayChargeCurrent = message.ArrayChargeCurrent;
+    }
+    if (message.ArrayContactorClosed !== false) {
+      obj.ArrayContactorClosed = message.ArrayContactorClosed;
+    }
+    if (message.ArrayContactorClosing !== false) {
+      obj.ArrayContactorClosing = message.ArrayContactorClosing;
+    }
+    if (message.ArrayContactorError !== false) {
+      obj.ArrayContactorError = message.ArrayContactorError;
+    }
+    if (message.ArrayHeartbeat !== false) {
+      obj.ArrayHeartbeat = message.ArrayHeartbeat;
+    }
+    if (message.ArrayLineCurrent !== 0) {
+      obj.ArrayLineCurrent = message.ArrayLineCurrent;
+    }
+    if (message.ArrayPrechargerClosed !== false) {
+      obj.ArrayPrechargerClosed = message.ArrayPrechargerClosed;
+    }
+    if (message.ArrayPrechargerClosing !== false) {
+      obj.ArrayPrechargerClosing = message.ArrayPrechargerClosing;
+    }
+    if (message.ArrayPrechargerError !== false) {
+      obj.ArrayPrechargerError = message.ArrayPrechargerError;
+    }
+    if (message.ChargeBPSError !== false) {
+      obj.ChargeBPSError = message.ChargeBPSError;
+    }
+    if (message.ChargeChargeCurrent !== 0) {
+      obj.ChargeChargeCurrent = message.ChargeChargeCurrent;
+    }
+    if (message.ChargeContactorClosed !== false) {
+      obj.ChargeContactorClosed = message.ChargeContactorClosed;
+    }
+    if (message.ChargeContactorClosing !== false) {
+      obj.ChargeContactorClosing = message.ChargeContactorClosing;
+    }
+    if (message.ChargeContactorError !== false) {
+      obj.ChargeContactorError = message.ChargeContactorError;
+    }
+    if (message.ChargeHeartbeat !== false) {
+      obj.ChargeHeartbeat = message.ChargeHeartbeat;
+    }
+    if (message.ChargeLineCurrent !== 0) {
+      obj.ChargeLineCurrent = message.ChargeLineCurrent;
+    }
+    if (message.ChargePrechargerClosed !== false) {
+      obj.ChargePrechargerClosed = message.ChargePrechargerClosed;
+    }
+    if (message.ChargePrechargerClosing !== false) {
+      obj.ChargePrechargerClosing = message.ChargePrechargerClosing;
+    }
+    if (message.ChargePrechargerError !== false) {
+      obj.ChargePrechargerError = message.ChargePrechargerError;
+    }
+    if (message.CommonChargeCurrent !== 0) {
+      obj.CommonChargeCurrent = message.CommonChargeCurrent;
+    }
+    if (message.CommonContactorClosed !== false) {
+      obj.CommonContactorClosed = message.CommonContactorClosed;
+    }
+    if (message.CommonContactorClosing !== false) {
+      obj.CommonContactorClosing = message.CommonContactorClosing;
+    }
+    if (message.CommonContactorError !== false) {
+      obj.CommonContactorError = message.CommonContactorError;
+    }
+    if (message.CommonContactorOpeningError !== false) {
+      obj.CommonContactorOpeningError = message.CommonContactorOpeningError;
+    }
+    if (message.CommonHeartbeat !== false) {
+      obj.CommonHeartbeat = message.CommonHeartbeat;
+    }
+    if (message.CommonLineCurrent !== 0) {
+      obj.CommonLineCurrent = message.CommonLineCurrent;
+    }
+    if (message.CommonPrechargerClosed !== false) {
+      obj.CommonPrechargerClosed = message.CommonPrechargerClosed;
+    }
+    if (message.CommonPrechargerClosing !== false) {
+      obj.CommonPrechargerClosing = message.CommonPrechargerClosing;
+    }
+    if (message.CommonPrechargerError !== false) {
+      obj.CommonPrechargerError = message.CommonPrechargerError;
+    }
+    if (message.LvBpsError !== false) {
+      obj.LvBpsError = message.LvBpsError;
+    }
+    if (message.LvChargeCurrent !== 0) {
+      obj.LvChargeCurrent = message.LvChargeCurrent;
+    }
+    if (message.LvContactorClosed !== false) {
+      obj.LvContactorClosed = message.LvContactorClosed;
+    }
+    if (message.LvContactorClosing !== false) {
+      obj.LvContactorClosing = message.LvContactorClosing;
+    }
+    if (message.LvContactorError !== false) {
+      obj.LvContactorError = message.LvContactorError;
+    }
+    if (message.LvHeartbeat !== false) {
+      obj.LvHeartbeat = message.LvHeartbeat;
+    }
+    if (message.LvLineCurrent !== 0) {
+      obj.LvLineCurrent = message.LvLineCurrent;
+    }
+    if (message.LvPrechargerClosed !== false) {
+      obj.LvPrechargerClosed = message.LvPrechargerClosed;
+    }
+    if (message.LvPrechargerClosing !== false) {
+      obj.LvPrechargerClosing = message.LvPrechargerClosing;
+    }
+    if (message.LvPrechargerError !== false) {
+      obj.LvPrechargerError = message.LvPrechargerError;
+    }
+    if (message.MotorBPSError !== false) {
+      obj.MotorBPSError = message.MotorBPSError;
+    }
+    if (message.MotorChargeCurrent !== 0) {
+      obj.MotorChargeCurrent = message.MotorChargeCurrent;
+    }
+    if (message.MotorContactorClosed !== false) {
+      obj.MotorContactorClosed = message.MotorContactorClosed;
+    }
+    if (message.MotorContactorClosing !== false) {
+      obj.MotorContactorClosing = message.MotorContactorClosing;
+    }
+    if (message.MotorContactorError !== false) {
+      obj.MotorContactorError = message.MotorContactorError;
+    }
+    if (message.MotorHeartbeat !== false) {
+      obj.MotorHeartbeat = message.MotorHeartbeat;
+    }
+    if (message.MotorLineCurrent !== 0) {
+      obj.MotorLineCurrent = message.MotorLineCurrent;
+    }
+    if (message.MotorPrechargerClosed !== false) {
+      obj.MotorPrechargerClosed = message.MotorPrechargerClosed;
+    }
+    if (message.MotorPrechargerClosing !== false) {
+      obj.MotorPrechargerClosing = message.MotorPrechargerClosing;
+    }
+    if (message.MotorPrechargerError !== false) {
+      obj.MotorPrechargerError = message.MotorPrechargerError;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ContactorStatus>, I>>(
+    base?: I,
+  ): ContactorStatus {
+    return ContactorStatus.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ContactorStatus>, I>>(
+    object: I,
+  ): ContactorStatus {
+    const message = createBaseContactorStatus();
+    message.ArrayBPSError = object.ArrayBPSError ?? false;
+    message.ArrayChargeCurrent = object.ArrayChargeCurrent ?? 0;
+    message.ArrayContactorClosed = object.ArrayContactorClosed ?? false;
+    message.ArrayContactorClosing = object.ArrayContactorClosing ?? false;
+    message.ArrayContactorError = object.ArrayContactorError ?? false;
+    message.ArrayHeartbeat = object.ArrayHeartbeat ?? false;
+    message.ArrayLineCurrent = object.ArrayLineCurrent ?? 0;
+    message.ArrayPrechargerClosed = object.ArrayPrechargerClosed ?? false;
+    message.ArrayPrechargerClosing = object.ArrayPrechargerClosing ?? false;
+    message.ArrayPrechargerError = object.ArrayPrechargerError ?? false;
+    message.ChargeBPSError = object.ChargeBPSError ?? false;
+    message.ChargeChargeCurrent = object.ChargeChargeCurrent ?? 0;
+    message.ChargeContactorClosed = object.ChargeContactorClosed ?? false;
+    message.ChargeContactorClosing = object.ChargeContactorClosing ?? false;
+    message.ChargeContactorError = object.ChargeContactorError ?? false;
+    message.ChargeHeartbeat = object.ChargeHeartbeat ?? false;
+    message.ChargeLineCurrent = object.ChargeLineCurrent ?? 0;
+    message.ChargePrechargerClosed = object.ChargePrechargerClosed ?? false;
+    message.ChargePrechargerClosing = object.ChargePrechargerClosing ?? false;
+    message.ChargePrechargerError = object.ChargePrechargerError ?? false;
+    message.CommonChargeCurrent = object.CommonChargeCurrent ?? 0;
+    message.CommonContactorClosed = object.CommonContactorClosed ?? false;
+    message.CommonContactorClosing = object.CommonContactorClosing ?? false;
+    message.CommonContactorError = object.CommonContactorError ?? false;
+    message.CommonContactorOpeningError =
+      object.CommonContactorOpeningError ?? false;
+    message.CommonHeartbeat = object.CommonHeartbeat ?? false;
+    message.CommonLineCurrent = object.CommonLineCurrent ?? 0;
+    message.CommonPrechargerClosed = object.CommonPrechargerClosed ?? false;
+    message.CommonPrechargerClosing = object.CommonPrechargerClosing ?? false;
+    message.CommonPrechargerError = object.CommonPrechargerError ?? false;
+    message.LvBpsError = object.LvBpsError ?? false;
+    message.LvChargeCurrent = object.LvChargeCurrent ?? 0;
+    message.LvContactorClosed = object.LvContactorClosed ?? false;
+    message.LvContactorClosing = object.LvContactorClosing ?? false;
+    message.LvContactorError = object.LvContactorError ?? false;
+    message.LvHeartbeat = object.LvHeartbeat ?? false;
+    message.LvLineCurrent = object.LvLineCurrent ?? 0;
+    message.LvPrechargerClosed = object.LvPrechargerClosed ?? false;
+    message.LvPrechargerClosing = object.LvPrechargerClosing ?? false;
+    message.LvPrechargerError = object.LvPrechargerError ?? false;
+    message.MotorBPSError = object.MotorBPSError ?? false;
+    message.MotorChargeCurrent = object.MotorChargeCurrent ?? 0;
+    message.MotorContactorClosed = object.MotorContactorClosed ?? false;
+    message.MotorContactorClosing = object.MotorContactorClosing ?? false;
+    message.MotorContactorError = object.MotorContactorError ?? false;
+    message.MotorHeartbeat = object.MotorHeartbeat ?? false;
+    message.MotorLineCurrent = object.MotorLineCurrent ?? 0;
+    message.MotorPrechargerClosed = object.MotorPrechargerClosed ?? false;
+    message.MotorPrechargerClosing = object.MotorPrechargerClosing ?? false;
+    message.MotorPrechargerError = object.MotorPrechargerError ?? false;
+    return message;
+  },
+};
+
+function createBasePi(): Pi {
+  return { Rfid: "" };
+}
+
+export const Pi: MessageFns<Pi> = {
+  encode(message: Pi, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.Rfid !== "") {
+      writer.uint32(10).string(message.Rfid);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Pi {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePi();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.Rfid = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Pi {
+    return { Rfid: isSet(object.Rfid) ? globalThis.String(object.Rfid) : "" };
+  },
+
+  toJSON(message: Pi): unknown {
+    const obj: any = {};
+    if (message.Rfid !== "") {
+      obj.Rfid = message.Rfid;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Pi>, I>>(base?: I): Pi {
+    return Pi.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Pi>, I>>(object: I): Pi {
+    const message = createBasePi();
+    message.Rfid = object.Rfid ?? "";
+    return message;
+  },
+};
+
+function createBaseProximitySensors(): ProximitySensors {
+  return {
+    ProximitySensor1: 0,
+    ProximitySensor2: 0,
+    ProximitySensor3: 0,
+    ProximitySensor4: 0,
+  };
+}
+
+export const ProximitySensors: MessageFns<ProximitySensors> = {
+  encode(
+    message: ProximitySensors,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.ProximitySensor1 !== 0) {
+      writer.uint32(13).float(message.ProximitySensor1);
+    }
+    if (message.ProximitySensor2 !== 0) {
+      writer.uint32(21).float(message.ProximitySensor2);
+    }
+    if (message.ProximitySensor3 !== 0) {
+      writer.uint32(29).float(message.ProximitySensor3);
+    }
+    if (message.ProximitySensor4 !== 0) {
+      writer.uint32(37).float(message.ProximitySensor4);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ProximitySensors {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseProximitySensors();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.ProximitySensor1 = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.ProximitySensor2 = reader.float();
+          continue;
+        }
+        case 3: {
+          if (tag !== 29) {
+            break;
+          }
+
+          message.ProximitySensor3 = reader.float();
+          continue;
+        }
+        case 4: {
+          if (tag !== 37) {
+            break;
+          }
+
+          message.ProximitySensor4 = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ProximitySensors {
+    return {
+      ProximitySensor1: isSet(object.ProximitySensor1)
+        ? globalThis.Number(object.ProximitySensor1)
+        : 0,
+      ProximitySensor2: isSet(object.ProximitySensor2)
+        ? globalThis.Number(object.ProximitySensor2)
+        : 0,
+      ProximitySensor3: isSet(object.ProximitySensor3)
+        ? globalThis.Number(object.ProximitySensor3)
+        : 0,
+      ProximitySensor4: isSet(object.ProximitySensor4)
+        ? globalThis.Number(object.ProximitySensor4)
+        : 0,
+    };
+  },
+
+  toJSON(message: ProximitySensors): unknown {
+    const obj: any = {};
+    if (message.ProximitySensor1 !== 0) {
+      obj.ProximitySensor1 = message.ProximitySensor1;
+    }
+    if (message.ProximitySensor2 !== 0) {
+      obj.ProximitySensor2 = message.ProximitySensor2;
+    }
+    if (message.ProximitySensor3 !== 0) {
+      obj.ProximitySensor3 = message.ProximitySensor3;
+    }
+    if (message.ProximitySensor4 !== 0) {
+      obj.ProximitySensor4 = message.ProximitySensor4;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ProximitySensors>, I>>(
+    base?: I,
+  ): ProximitySensors {
+    return ProximitySensors.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ProximitySensors>, I>>(
+    object: I,
+  ): ProximitySensors {
+    const message = createBaseProximitySensors();
+    message.ProximitySensor1 = object.ProximitySensor1 ?? 0;
+    message.ProximitySensor2 = object.ProximitySensor2 ?? 0;
+    message.ProximitySensor3 = object.ProximitySensor3 ?? 0;
+    message.ProximitySensor4 = object.ProximitySensor4 ?? 0;
+    return message;
+  },
+};
+
+function createBaseTelemetry(): Telemetry {
+  return {
+    GpsAdditionalFlags: 0,
+    GpsDay: 0,
+    GpsFixStatusFlags: 0,
+    GpsHour: 0,
+    GpsLatitude: 0,
+    GpsLongitude: 0,
+    GpsMinute: 0,
+    GpsMonth: 0,
+    GpsSecond: 0,
+    GpsValidityFlags: 0,
+    GpsYear: 0,
+    MpuAccelerationX: 0,
+    MpuAccelerationY: 0,
+    MpuAccelerationZ: 0,
+    MpuRotationX: 0,
+    MpuRotationY: 0,
+    MpuRotationZ: 0,
+    MpuTemperature: 0,
+  };
+}
+
+export const Telemetry: MessageFns<Telemetry> = {
+  encode(
+    message: Telemetry,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.GpsAdditionalFlags !== 0) {
+      writer.uint32(13).float(message.GpsAdditionalFlags);
+    }
+    if (message.GpsDay !== 0) {
+      writer.uint32(21).float(message.GpsDay);
+    }
+    if (message.GpsFixStatusFlags !== 0) {
+      writer.uint32(29).float(message.GpsFixStatusFlags);
+    }
+    if (message.GpsHour !== 0) {
+      writer.uint32(37).float(message.GpsHour);
+    }
+    if (message.GpsLatitude !== 0) {
+      writer.uint32(45).float(message.GpsLatitude);
+    }
+    if (message.GpsLongitude !== 0) {
+      writer.uint32(53).float(message.GpsLongitude);
+    }
+    if (message.GpsMinute !== 0) {
+      writer.uint32(61).float(message.GpsMinute);
+    }
+    if (message.GpsMonth !== 0) {
+      writer.uint32(69).float(message.GpsMonth);
+    }
+    if (message.GpsSecond !== 0) {
+      writer.uint32(77).float(message.GpsSecond);
+    }
+    if (message.GpsValidityFlags !== 0) {
+      writer.uint32(85).float(message.GpsValidityFlags);
+    }
+    if (message.GpsYear !== 0) {
+      writer.uint32(93).float(message.GpsYear);
+    }
+    if (message.MpuAccelerationX !== 0) {
+      writer.uint32(101).float(message.MpuAccelerationX);
+    }
+    if (message.MpuAccelerationY !== 0) {
+      writer.uint32(109).float(message.MpuAccelerationY);
+    }
+    if (message.MpuAccelerationZ !== 0) {
+      writer.uint32(117).float(message.MpuAccelerationZ);
+    }
+    if (message.MpuRotationX !== 0) {
+      writer.uint32(125).float(message.MpuRotationX);
+    }
+    if (message.MpuRotationY !== 0) {
+      writer.uint32(133).float(message.MpuRotationY);
+    }
+    if (message.MpuRotationZ !== 0) {
+      writer.uint32(141).float(message.MpuRotationZ);
+    }
+    if (message.MpuTemperature !== 0) {
+      writer.uint32(149).float(message.MpuTemperature);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Telemetry {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTelemetry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.GpsAdditionalFlags = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.GpsDay = reader.float();
+          continue;
+        }
+        case 3: {
+          if (tag !== 29) {
+            break;
+          }
+
+          message.GpsFixStatusFlags = reader.float();
+          continue;
+        }
+        case 4: {
+          if (tag !== 37) {
+            break;
+          }
+
+          message.GpsHour = reader.float();
+          continue;
+        }
+        case 5: {
+          if (tag !== 45) {
+            break;
+          }
+
+          message.GpsLatitude = reader.float();
+          continue;
+        }
+        case 6: {
+          if (tag !== 53) {
+            break;
+          }
+
+          message.GpsLongitude = reader.float();
+          continue;
+        }
+        case 7: {
+          if (tag !== 61) {
+            break;
+          }
+
+          message.GpsMinute = reader.float();
+          continue;
+        }
+        case 8: {
+          if (tag !== 69) {
+            break;
+          }
+
+          message.GpsMonth = reader.float();
+          continue;
+        }
+        case 9: {
+          if (tag !== 77) {
+            break;
+          }
+
+          message.GpsSecond = reader.float();
+          continue;
+        }
+        case 10: {
+          if (tag !== 85) {
+            break;
+          }
+
+          message.GpsValidityFlags = reader.float();
+          continue;
+        }
+        case 11: {
+          if (tag !== 93) {
+            break;
+          }
+
+          message.GpsYear = reader.float();
+          continue;
+        }
+        case 12: {
+          if (tag !== 101) {
+            break;
+          }
+
+          message.MpuAccelerationX = reader.float();
+          continue;
+        }
+        case 13: {
+          if (tag !== 109) {
+            break;
+          }
+
+          message.MpuAccelerationY = reader.float();
+          continue;
+        }
+        case 14: {
+          if (tag !== 117) {
+            break;
+          }
+
+          message.MpuAccelerationZ = reader.float();
+          continue;
+        }
+        case 15: {
+          if (tag !== 125) {
+            break;
+          }
+
+          message.MpuRotationX = reader.float();
+          continue;
+        }
+        case 16: {
+          if (tag !== 133) {
+            break;
+          }
+
+          message.MpuRotationY = reader.float();
+          continue;
+        }
+        case 17: {
+          if (tag !== 141) {
+            break;
+          }
+
+          message.MpuRotationZ = reader.float();
+          continue;
+        }
+        case 18: {
+          if (tag !== 149) {
+            break;
+          }
+
+          message.MpuTemperature = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Telemetry {
+    return {
+      GpsAdditionalFlags: isSet(object.GpsAdditionalFlags)
+        ? globalThis.Number(object.GpsAdditionalFlags)
+        : 0,
+      GpsDay: isSet(object.GpsDay) ? globalThis.Number(object.GpsDay) : 0,
+      GpsFixStatusFlags: isSet(object.GpsFixStatusFlags)
+        ? globalThis.Number(object.GpsFixStatusFlags)
+        : 0,
+      GpsHour: isSet(object.GpsHour) ? globalThis.Number(object.GpsHour) : 0,
+      GpsLatitude: isSet(object.GpsLatitude)
+        ? globalThis.Number(object.GpsLatitude)
+        : 0,
+      GpsLongitude: isSet(object.GpsLongitude)
+        ? globalThis.Number(object.GpsLongitude)
+        : 0,
+      GpsMinute: isSet(object.GpsMinute)
+        ? globalThis.Number(object.GpsMinute)
+        : 0,
+      GpsMonth: isSet(object.GpsMonth) ? globalThis.Number(object.GpsMonth) : 0,
+      GpsSecond: isSet(object.GpsSecond)
+        ? globalThis.Number(object.GpsSecond)
+        : 0,
+      GpsValidityFlags: isSet(object.GpsValidityFlags)
+        ? globalThis.Number(object.GpsValidityFlags)
+        : 0,
+      GpsYear: isSet(object.GpsYear) ? globalThis.Number(object.GpsYear) : 0,
+      MpuAccelerationX: isSet(object.MpuAccelerationX)
+        ? globalThis.Number(object.MpuAccelerationX)
+        : 0,
+      MpuAccelerationY: isSet(object.MpuAccelerationY)
+        ? globalThis.Number(object.MpuAccelerationY)
+        : 0,
+      MpuAccelerationZ: isSet(object.MpuAccelerationZ)
+        ? globalThis.Number(object.MpuAccelerationZ)
+        : 0,
+      MpuRotationX: isSet(object.MpuRotationX)
+        ? globalThis.Number(object.MpuRotationX)
+        : 0,
+      MpuRotationY: isSet(object.MpuRotationY)
+        ? globalThis.Number(object.MpuRotationY)
+        : 0,
+      MpuRotationZ: isSet(object.MpuRotationZ)
+        ? globalThis.Number(object.MpuRotationZ)
+        : 0,
+      MpuTemperature: isSet(object.MpuTemperature)
+        ? globalThis.Number(object.MpuTemperature)
+        : 0,
+    };
+  },
+
+  toJSON(message: Telemetry): unknown {
+    const obj: any = {};
+    if (message.GpsAdditionalFlags !== 0) {
+      obj.GpsAdditionalFlags = message.GpsAdditionalFlags;
+    }
+    if (message.GpsDay !== 0) {
+      obj.GpsDay = message.GpsDay;
+    }
+    if (message.GpsFixStatusFlags !== 0) {
+      obj.GpsFixStatusFlags = message.GpsFixStatusFlags;
+    }
+    if (message.GpsHour !== 0) {
+      obj.GpsHour = message.GpsHour;
+    }
+    if (message.GpsLatitude !== 0) {
+      obj.GpsLatitude = message.GpsLatitude;
+    }
+    if (message.GpsLongitude !== 0) {
+      obj.GpsLongitude = message.GpsLongitude;
+    }
+    if (message.GpsMinute !== 0) {
+      obj.GpsMinute = message.GpsMinute;
+    }
+    if (message.GpsMonth !== 0) {
+      obj.GpsMonth = message.GpsMonth;
+    }
+    if (message.GpsSecond !== 0) {
+      obj.GpsSecond = message.GpsSecond;
+    }
+    if (message.GpsValidityFlags !== 0) {
+      obj.GpsValidityFlags = message.GpsValidityFlags;
+    }
+    if (message.GpsYear !== 0) {
+      obj.GpsYear = message.GpsYear;
+    }
+    if (message.MpuAccelerationX !== 0) {
+      obj.MpuAccelerationX = message.MpuAccelerationX;
+    }
+    if (message.MpuAccelerationY !== 0) {
+      obj.MpuAccelerationY = message.MpuAccelerationY;
+    }
+    if (message.MpuAccelerationZ !== 0) {
+      obj.MpuAccelerationZ = message.MpuAccelerationZ;
+    }
+    if (message.MpuRotationX !== 0) {
+      obj.MpuRotationX = message.MpuRotationX;
+    }
+    if (message.MpuRotationY !== 0) {
+      obj.MpuRotationY = message.MpuRotationY;
+    }
+    if (message.MpuRotationZ !== 0) {
+      obj.MpuRotationZ = message.MpuRotationZ;
+    }
+    if (message.MpuTemperature !== 0) {
+      obj.MpuTemperature = message.MpuTemperature;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Telemetry>, I>>(base?: I): Telemetry {
+    return Telemetry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Telemetry>, I>>(
+    object: I,
+  ): Telemetry {
+    const message = createBaseTelemetry();
+    message.GpsAdditionalFlags = object.GpsAdditionalFlags ?? 0;
+    message.GpsDay = object.GpsDay ?? 0;
+    message.GpsFixStatusFlags = object.GpsFixStatusFlags ?? 0;
+    message.GpsHour = object.GpsHour ?? 0;
+    message.GpsLatitude = object.GpsLatitude ?? 0;
+    message.GpsLongitude = object.GpsLongitude ?? 0;
+    message.GpsMinute = object.GpsMinute ?? 0;
+    message.GpsMonth = object.GpsMonth ?? 0;
+    message.GpsSecond = object.GpsSecond ?? 0;
+    message.GpsValidityFlags = object.GpsValidityFlags ?? 0;
+    message.GpsYear = object.GpsYear ?? 0;
+    message.MpuAccelerationX = object.MpuAccelerationX ?? 0;
+    message.MpuAccelerationY = object.MpuAccelerationY ?? 0;
+    message.MpuAccelerationZ = object.MpuAccelerationZ ?? 0;
+    message.MpuRotationX = object.MpuRotationX ?? 0;
+    message.MpuRotationY = object.MpuRotationY ?? 0;
+    message.MpuRotationZ = object.MpuRotationZ ?? 0;
+    message.MpuTemperature = object.MpuTemperature ?? 0;
+    return message;
+  },
+};
+
+function createBaseTelemetryData(): TelemetryData {
+  return {
+    B3: undefined,
+    Battery: undefined,
+    BatteryFaults: undefined,
+    Contactor: undefined,
+    KeyMotor: undefined,
+    MBMS: undefined,
+    MPPT: undefined,
+    MotorDetails0: undefined,
+    MotorDetails1: undefined,
+    Pi: undefined,
+    ProximitySensors: undefined,
+    Telemetry: undefined,
+    TimeStamp: 0,
+    Title: "",
+  };
+}
+
+export const TelemetryData: MessageFns<TelemetryData> = {
+  encode(
+    message: TelemetryData,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.B3 !== undefined) {
+      B3.encode(message.B3, writer.uint32(10).fork()).join();
+    }
+    if (message.Battery !== undefined) {
+      BatteryStatus.encode(message.Battery, writer.uint32(18).fork()).join();
+    }
+    if (message.BatteryFaults !== undefined) {
+      BatteryFaults.encode(
+        message.BatteryFaults,
+        writer.uint32(26).fork(),
+      ).join();
+    }
+    if (message.Contactor !== undefined) {
+      ContactorStatus.encode(
+        message.Contactor,
+        writer.uint32(34).fork(),
+      ).join();
+    }
+    if (message.KeyMotor !== undefined) {
+      KeyMotor.encode(message.KeyMotor, writer.uint32(42).fork()).join();
+    }
+    if (message.MBMS !== undefined) {
+      MBMS.encode(message.MBMS, writer.uint32(50).fork()).join();
+    }
+    if (message.MPPT !== undefined) {
+      MPPT.encode(message.MPPT, writer.uint32(58).fork()).join();
+    }
+    if (message.MotorDetails0 !== undefined) {
+      MotorDetails.encode(
+        message.MotorDetails0,
+        writer.uint32(66).fork(),
+      ).join();
+    }
+    if (message.MotorDetails1 !== undefined) {
+      MotorDetails.encode(
+        message.MotorDetails1,
+        writer.uint32(74).fork(),
+      ).join();
+    }
+    if (message.Pi !== undefined) {
+      Pi.encode(message.Pi, writer.uint32(82).fork()).join();
+    }
+    if (message.ProximitySensors !== undefined) {
+      ProximitySensors.encode(
+        message.ProximitySensors,
+        writer.uint32(90).fork(),
+      ).join();
+    }
+    if (message.Telemetry !== undefined) {
+      Telemetry.encode(message.Telemetry, writer.uint32(98).fork()).join();
+    }
+    if (message.TimeStamp !== 0) {
+      writer.uint32(104).uint64(message.TimeStamp);
+    }
+    if (message.Title !== "") {
+      writer.uint32(114).string(message.Title);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): TelemetryData {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTelemetryData();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.B3 = B3.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.Battery = BatteryStatus.decode(reader, reader.uint32());
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.BatteryFaults = BatteryFaults.decode(reader, reader.uint32());
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.Contactor = ContactorStatus.decode(reader, reader.uint32());
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.KeyMotor = KeyMotor.decode(reader, reader.uint32());
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.MBMS = MBMS.decode(reader, reader.uint32());
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.MPPT = MPPT.decode(reader, reader.uint32());
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.MotorDetails0 = MotorDetails.decode(reader, reader.uint32());
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.MotorDetails1 = MotorDetails.decode(reader, reader.uint32());
+          continue;
+        }
+        case 10: {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.Pi = Pi.decode(reader, reader.uint32());
+          continue;
+        }
+        case 11: {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.ProximitySensors = ProximitySensors.decode(
+            reader,
+            reader.uint32(),
+          );
+          continue;
+        }
+        case 12: {
+          if (tag !== 98) {
+            break;
+          }
+
+          message.Telemetry = Telemetry.decode(reader, reader.uint32());
+          continue;
+        }
+        case 13: {
+          if (tag !== 104) {
+            break;
+          }
+
+          message.TimeStamp = longToNumber(reader.uint64());
+          continue;
+        }
+        case 14: {
+          if (tag !== 114) {
+            break;
+          }
+
+          message.Title = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TelemetryData {
+    return {
+      B3: isSet(object.B3) ? B3.fromJSON(object.B3) : undefined,
+      Battery: isSet(object.Battery)
+        ? BatteryStatus.fromJSON(object.Battery)
+        : undefined,
+      BatteryFaults: isSet(object.BatteryFaults)
+        ? BatteryFaults.fromJSON(object.BatteryFaults)
+        : undefined,
+      Contactor: isSet(object.Contactor)
+        ? ContactorStatus.fromJSON(object.Contactor)
+        : undefined,
+      KeyMotor: isSet(object.KeyMotor)
+        ? KeyMotor.fromJSON(object.KeyMotor)
+        : undefined,
+      MBMS: isSet(object.MBMS) ? MBMS.fromJSON(object.MBMS) : undefined,
+      MPPT: isSet(object.MPPT) ? MPPT.fromJSON(object.MPPT) : undefined,
+      MotorDetails0: isSet(object.MotorDetails0)
+        ? MotorDetails.fromJSON(object.MotorDetails0)
+        : undefined,
+      MotorDetails1: isSet(object.MotorDetails1)
+        ? MotorDetails.fromJSON(object.MotorDetails1)
+        : undefined,
+      Pi: isSet(object.Pi) ? Pi.fromJSON(object.Pi) : undefined,
+      ProximitySensors: isSet(object.ProximitySensors)
+        ? ProximitySensors.fromJSON(object.ProximitySensors)
+        : undefined,
+      Telemetry: isSet(object.Telemetry)
+        ? Telemetry.fromJSON(object.Telemetry)
+        : undefined,
+      TimeStamp: isSet(object.TimeStamp)
+        ? globalThis.Number(object.TimeStamp)
+        : 0,
+      Title: isSet(object.Title) ? globalThis.String(object.Title) : "",
+    };
+  },
+
+  toJSON(message: TelemetryData): unknown {
+    const obj: any = {};
+    if (message.B3 !== undefined) {
+      obj.B3 = B3.toJSON(message.B3);
+    }
+    if (message.Battery !== undefined) {
+      obj.Battery = BatteryStatus.toJSON(message.Battery);
+    }
+    if (message.BatteryFaults !== undefined) {
+      obj.BatteryFaults = BatteryFaults.toJSON(message.BatteryFaults);
+    }
+    if (message.Contactor !== undefined) {
+      obj.Contactor = ContactorStatus.toJSON(message.Contactor);
+    }
+    if (message.KeyMotor !== undefined) {
+      obj.KeyMotor = KeyMotor.toJSON(message.KeyMotor);
+    }
+    if (message.MBMS !== undefined) {
+      obj.MBMS = MBMS.toJSON(message.MBMS);
+    }
+    if (message.MPPT !== undefined) {
+      obj.MPPT = MPPT.toJSON(message.MPPT);
+    }
+    if (message.MotorDetails0 !== undefined) {
+      obj.MotorDetails0 = MotorDetails.toJSON(message.MotorDetails0);
+    }
+    if (message.MotorDetails1 !== undefined) {
+      obj.MotorDetails1 = MotorDetails.toJSON(message.MotorDetails1);
+    }
+    if (message.Pi !== undefined) {
+      obj.Pi = Pi.toJSON(message.Pi);
+    }
+    if (message.ProximitySensors !== undefined) {
+      obj.ProximitySensors = ProximitySensors.toJSON(message.ProximitySensors);
+    }
+    if (message.Telemetry !== undefined) {
+      obj.Telemetry = Telemetry.toJSON(message.Telemetry);
+    }
+    if (message.TimeStamp !== 0) {
+      obj.TimeStamp = Math.round(message.TimeStamp);
+    }
+    if (message.Title !== "") {
+      obj.Title = message.Title;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TelemetryData>, I>>(
+    base?: I,
+  ): TelemetryData {
+    return TelemetryData.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TelemetryData>, I>>(
+    object: I,
+  ): TelemetryData {
+    const message = createBaseTelemetryData();
+    message.B3 =
+      object.B3 !== undefined && object.B3 !== null
+        ? B3.fromPartial(object.B3)
+        : undefined;
+    message.Battery =
+      object.Battery !== undefined && object.Battery !== null
+        ? BatteryStatus.fromPartial(object.Battery)
+        : undefined;
+    message.BatteryFaults =
+      object.BatteryFaults !== undefined && object.BatteryFaults !== null
+        ? BatteryFaults.fromPartial(object.BatteryFaults)
+        : undefined;
+    message.Contactor =
+      object.Contactor !== undefined && object.Contactor !== null
+        ? ContactorStatus.fromPartial(object.Contactor)
+        : undefined;
+    message.KeyMotor =
+      object.KeyMotor !== undefined && object.KeyMotor !== null
+        ? KeyMotor.fromPartial(object.KeyMotor)
+        : undefined;
+    message.MBMS =
+      object.MBMS !== undefined && object.MBMS !== null
+        ? MBMS.fromPartial(object.MBMS)
+        : undefined;
+    message.MPPT =
+      object.MPPT !== undefined && object.MPPT !== null
+        ? MPPT.fromPartial(object.MPPT)
+        : undefined;
+    message.MotorDetails0 =
+      object.MotorDetails0 !== undefined && object.MotorDetails0 !== null
+        ? MotorDetails.fromPartial(object.MotorDetails0)
+        : undefined;
+    message.MotorDetails1 =
+      object.MotorDetails1 !== undefined && object.MotorDetails1 !== null
+        ? MotorDetails.fromPartial(object.MotorDetails1)
+        : undefined;
+    message.Pi =
+      object.Pi !== undefined && object.Pi !== null
+        ? Pi.fromPartial(object.Pi)
+        : undefined;
+    message.ProximitySensors =
+      object.ProximitySensors !== undefined && object.ProximitySensors !== null
+        ? ProximitySensors.fromPartial(object.ProximitySensors)
+        : undefined;
+    message.Telemetry =
+      object.Telemetry !== undefined && object.Telemetry !== null
+        ? Telemetry.fromPartial(object.Telemetry)
+        : undefined;
+    message.TimeStamp = object.TimeStamp ?? 0;
+    message.Title = object.Title ?? "";
+    return message;
+  },
+};
+
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
+
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+    ? globalThis.Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends {}
+        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function longToNumber(int64: { toString(): string }): number {
   const num = globalThis.Number(int64.toString());
