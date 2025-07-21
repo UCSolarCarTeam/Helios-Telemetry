@@ -5,6 +5,7 @@
   "types": "./index.ts",
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.658.1",
+    "@bufbuild/protobuf": "^2.6.1",
     "protobufjs": "^7.4.0"
   },
   "devDependencies": {

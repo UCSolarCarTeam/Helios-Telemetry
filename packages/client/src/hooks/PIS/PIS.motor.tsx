@@ -45,11 +45,11 @@ const Motor = (): I_PIS => {
         name: "Active Motor",
       },
       {
-        data: [{ value: MotorDetails0?.BEMF_D }],
+        data: [{ value: MotorDetails0?.bemfD }],
         name: "BEMF D",
       },
       {
-        data: [{ value: MotorDetails0?.BEMF_Q }],
+        data: [{ value: MotorDetails0?.bemfQ }],
         name: "BEMF Q",
       },
       {
@@ -61,7 +61,7 @@ const Motor = (): I_PIS => {
         name: "Bus Voltage",
       },
       {
-        data: [{ value: MotorDetails0?.DC_Bus_Ah }],
+        data: [{ value: MotorDetails0?.DCBusAh }],
         name: "DC Bus Ah",
       },
       {
@@ -221,11 +221,11 @@ const Motor = (): I_PIS => {
         name: "Active Motor",
       },
       {
-        data: [{ value: MotorDetails1?.BEMF_D }],
+        data: [{ value: MotorDetails1?.bemfD }],
         name: "BEMF D",
       },
       {
-        data: [{ value: MotorDetails1?.BEMF_Q }],
+        data: [{ value: MotorDetails1?.bemfQ }],
         name: "BEMF Q",
       },
       {
@@ -237,7 +237,7 @@ const Motor = (): I_PIS => {
         name: "Bus Voltage",
       },
       {
-        data: [{ value: MotorDetails1?.DC_Bus_Ah }],
+        data: [{ value: MotorDetails1?.DCBusAh }],
         name: "DC Bus Ah",
       },
       {

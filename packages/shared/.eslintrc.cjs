@@ -3,7 +3,7 @@ const config = {
   extends: ["../../.eslintrc.cjs"],
   root: true,
   rules: {
-    "no-console": "off",
+    "no-console": "off", //TODO: Delete this...
   },
 };
 
