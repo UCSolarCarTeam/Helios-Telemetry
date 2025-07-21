@@ -1,19 +1,4 @@
-import {
-  B3,
-  BatteryFaultErrors,
-  BatteryFaults,
-  BatteryFaultWarnings,
-  BatteryStatus,
-  ContactorStatus,
-  KeyMotor,
-  MBMS,
-  MotorDetails,
-  MPPT,
-  Pi,
-  ProximitySensors,
-  Telemetry,
-  TelemetryData,
-} from "./protoTypes";
+import { TelemetryData } from "./protoTypes";
 
 export type CoordUpdateResponse =
   | Coords
@@ -40,23 +25,15 @@ export interface IDriverNameUpdate {
 
 // the codec: smaller data types which make up the large io-ts type for incoming packets (ITelemetryDataType)
 
-export type ITelemetryData = TelemetryData;
-export type IContactor = ContactorStatus;
-export type IBattery = BatteryStatus;
-export type IBatteryFaults = BatteryFaults;
-export type IBatteryFaultErrors = BatteryFaultErrors;
-export type IBatteryFaultWarnings = BatteryFaultWarnings;
-export type IB3 = B3;
-export type IKeyMotor = KeyMotor;
-export type IMBMS = MBMS;
-export type IMotorDetails = MotorDetails;
-export type IMPPT = MPPT;
-export type IPi = Pi;
-export type IProximitySensors = ProximitySensors;
-export type ITelemetry = Telemetry;
-// the codec: large io-ts type for incoming packets (ITelemetryDataType)
+type RemoveUndefined<T> = {
+  [K in keyof T]: T[K] extends undefined
+    ? never
+    : T[K] extends object
+      ? RemoveUndefined<Exclude<T[K], undefined>>
+      : Exclude<T[K], undefined>;
+};
+export type ITelemetryData = RemoveUndefined<RemoveUndefined<TelemetryData>>;
 
-//old data type definitions
 export interface IDriverData {
   driver: string;
   Rfid: string;
