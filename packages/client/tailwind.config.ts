@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -22,6 +23,9 @@ const config: Config = {
         "green-dark": "#00ae00",
         sand: "#BFBFBF",
         arsenic: "#3A3A3A",
+        "fault-red": "#9C0534",
+        "fault-orange": "#F98D10",
+        "fault-green": "#00A651",
       },
       textColor: {
         light: "#3A3A3A",

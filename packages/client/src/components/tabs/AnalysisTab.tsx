@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import { tabs } from "@/objects/TabRoutes";
+import { helios, lightGray, mediumGray } from "@/styles/colors";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
@@ -30,11 +31,11 @@ const filters: string[] = [
 const color = createTheme({
   palette: {
     primary: {
-      main: "#B94A6C", // selected tab color
+      main: helios, // selected tab color
     },
 
     text: {
-      primary: "#3A3A3A", // non-selected tab color
+      primary: mediumGray, // non-selected tab color
     },
   },
 });
@@ -90,7 +91,7 @@ function AnalysisTab() {
               <Tab
                 key={tab.id}
                 label={tab.name.toUpperCase()}
-                sx={theme === "dark" ? { color: "#D2D2D2" } : {}}
+                sx={theme === "dark" ? { color: lightGray } : {}}
                 value={tab.id}
               ></Tab>
             ))}

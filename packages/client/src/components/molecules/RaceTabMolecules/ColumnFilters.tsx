@@ -1,6 +1,7 @@
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
 
+import { gray, helios, heliosCompliment, lightGray } from "@/styles/colors";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -59,12 +60,12 @@ export default function ColumnFilters({
       <InputLabel
         sx={{
           "&.Mui-focused": {
-            color: "#963A56",
+            color: heliosCompliment,
           },
           "&.MuiInputLabel-shrink": {
-            color: "#963A56",
+            color: heliosCompliment,
           },
-          color: "#963A56",
+          color: heliosCompliment,
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
@@ -77,8 +78,8 @@ export default function ColumnFilters({
         MenuProps={{
           PaperProps: {
             sx: {
-              backgroundColor: resolvedTheme === "dark" ? "#222" : "#fff",
-              color: resolvedTheme === "dark" ? "#fff" : "#963A56",
+              backgroundColor: resolvedTheme === "dark" ? gray : "white",
+              color: resolvedTheme === "dark" ? "white" : heliosCompliment,
             },
           },
         }}
@@ -92,21 +93,21 @@ export default function ColumnFilters({
         sx={{
           "& .MuiMenuItem-root": {
             "&:hover": {
-              backgroundColor: "#963A56",
+              backgroundColor: heliosCompliment,
             },
-            backgroundColor: "#B94A6C",
+            backgroundColor: helios,
           },
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#B94A6C",
+            borderColor: helios,
           },
           "& .MuiSelect-icon": {
-            color: "#963A56",
+            color: heliosCompliment,
           },
           "& .MuiSelect-select": {
-            color: resolvedTheme === "dark" ? "#D2D2D2" : "black",
+            color: resolvedTheme === "dark" ? lightGray : "black",
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#963A56",
+            borderColor: heliosCompliment,
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
             borderColor: resolvedTheme === "dark" ? "white" : "",

@@ -1,5 +1,6 @@
 import { useTheme } from "next-themes";
 
+import { gray, helios, heliosCompliment } from "@/styles/colors";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
@@ -32,12 +33,12 @@ export default function DriverFilter({
           <InputLabel
             sx={{
               "&.Mui-focused": {
-                color: "#963A56",
+                color: heliosCompliment,
               },
               "&.MuiInputLabel-shrink": {
-                color: "#963A56",
+                color: heliosCompliment,
               },
-              color: "#963A56",
+              color: heliosCompliment,
             }}
           >
             Driver
@@ -46,8 +47,8 @@ export default function DriverFilter({
             MenuProps={{
               PaperProps: {
                 sx: {
-                  backgroundColor: resolvedTheme === "dark" ? "#222" : "#fff",
-                  color: resolvedTheme === "dark" ? "#fff" : "#963A56",
+                  backgroundColor: resolvedTheme === "dark" ? gray : "white",
+                  color: resolvedTheme === "dark" ? "white" : heliosCompliment,
                 },
               },
             }}
@@ -56,22 +57,22 @@ export default function DriverFilter({
             sx={{
               "& .MuiMenuItem-root": {
                 "&:hover": {
-                  backgroundColor: "#963A56",
+                  backgroundColor: heliosCompliment,
                 },
-                backgroundColor: "#B94A6C",
-                color: resolvedTheme === "dark" ? "#fff" : "#963A56",
+                backgroundColor: helios,
+                color: resolvedTheme === "dark" ? "white" : heliosCompliment,
               },
               "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#B94A6C",
+                borderColor: helios,
               },
               "& .MuiSelect-icon": {
-                color: "#963A56",
+                color: heliosCompliment,
               },
               "& .MuiSelect-select": {
-                color: resolvedTheme === "dark" ? "#fff" : "#963A56",
+                color: resolvedTheme === "dark" ? "white" : heliosCompliment,
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#963A56",
+                borderColor: heliosCompliment,
               },
               "&:hover .MuiOutlinedInput-notchedOutline": {
                 borderColor: resolvedTheme === "dark" ? "white" : "",

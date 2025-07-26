@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import React from "react";
 
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
+import { faultCardGreen, faultCardOrange, faultCardRed } from "@/styles/colors";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
@@ -20,22 +21,24 @@ function FaultCard(props: FaultCardProps) {
         <div
           className={`flex size-full items-center justify-start border p-2 transition-all duration-200 ${
             severity === ISeverity.ERROR
-              ? "hover:border-primaryDark border-primary hover:scale-[1.01]"
+              ? "border-fault-red hover:scale-[1.01] hover:border-fault-red"
               : severity === ISeverity.WARNING
-                ? "border-[#F98D10] hover:scale-[1.01]"
+                ? "border-fault-orange hover:scale-[1.01]"
                 : severity === ISeverity.CLEAR
-                  ? "border-[#00A651] hover:scale-[1.01]"
+                  ? "border-fault-green hover:scale-[1.01]"
                   : ""
           }`}
         >
           <div className="flex h-full justify-start">
             {severity === ISeverity.ERROR ? (
-              <DangerousIcon sx={{ color: "#9C0534", fontSize: "40px" }} />
+              <DangerousIcon sx={{ color: faultCardRed, fontSize: "40px" }} />
             ) : severity === ISeverity.WARNING ? (
-              <WarningAmberIcon sx={{ color: "#F98D10", fontSize: "40px" }} />
+              <WarningAmberIcon
+                sx={{ color: faultCardOrange, fontSize: "40px" }}
+              />
             ) : severity === ISeverity.CLEAR ? (
               <CheckCircleOutlineIcon
-                sx={{ color: "#00A651", fontSize: "40px" }}
+                sx={{ color: faultCardGreen, fontSize: "40px" }}
               />
             ) : null}
           </div>

@@ -6,6 +6,7 @@ import {
   CONNECTIONTYPES,
   useAppState,
 } from "@/contexts/AppStateContext";
+import { helios, heliosCompliment, sand } from "@/styles/colors";
 import { TimeInput } from "@mantine/dates";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Modal from "@mui/material/Modal";
@@ -92,16 +93,15 @@ function SettingsComponent() {
                 onChange={handleDarkChange}
                 sx={{
                   "& .MuiToggleButton-root": {
-                    borderColor: resolvedTheme === "dark" ? "#BFBFBF" : null,
-                    color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
+                    borderColor: resolvedTheme === "dark" ? sand : null,
+                    color: resolvedTheme === "dark" ? sand : "black",
                   },
                   "& .MuiToggleButton-root.Mui-selected": {
                     "&:hover": {
                       backgroundColor:
-                        resolvedTheme === "dark" ? "#a13b5a" : null,
+                        resolvedTheme === "dark" ? heliosCompliment : null,
                     },
-                    backgroundColor:
-                      resolvedTheme === "dark" ? "#B94A6C" : null,
+                    backgroundColor: resolvedTheme === "dark" ? helios : null,
                   },
                 }}
                 value={theme}
@@ -133,16 +133,15 @@ function SettingsComponent() {
                 onChange={handleUnitChange}
                 sx={{
                   "& .MuiToggleButton-root": {
-                    borderColor: resolvedTheme === "dark" ? "#BFBFBF" : null,
-                    color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
+                    borderColor: resolvedTheme === "dark" ? sand : null,
+                    color: resolvedTheme === "dark" ? sand : "black",
                   },
                   "& .MuiToggleButton-root.Mui-selected": {
                     "&:hover": {
                       backgroundColor:
-                        resolvedTheme === "dark" ? "#a13b5a" : null,
+                        resolvedTheme === "dark" ? heliosCompliment : null,
                     },
-                    backgroundColor:
-                      resolvedTheme === "dark" ? "#B94A6C" : null,
+                    backgroundColor: resolvedTheme === "dark" ? helios : null,
                   },
                 }}
                 value={currentAppState.appUnits}
@@ -172,16 +171,15 @@ function SettingsComponent() {
                 onChange={handleConnectionChange}
                 sx={{
                   "& .MuiToggleButton-root": {
-                    borderColor: resolvedTheme === "dark" ? "#BFBFBF" : null,
-                    color: resolvedTheme === "dark" ? "#BFBFBF" : "#000",
+                    borderColor: resolvedTheme === "dark" ? sand : null,
+                    color: resolvedTheme === "dark" ? sand : "black",
                   },
                   "& .MuiToggleButton-root.Mui-selected": {
                     "&:hover": {
                       backgroundColor:
-                        resolvedTheme === "dark" ? "#a13b5a" : null,
+                        resolvedTheme === "dark" ? heliosCompliment : null,
                     },
-                    backgroundColor:
-                      resolvedTheme === "dark" ? "#B94A6C" : null,
+                    backgroundColor: resolvedTheme === "dark" ? helios : null,
                   },
                 }}
                 value={currentAppState.connectionType}

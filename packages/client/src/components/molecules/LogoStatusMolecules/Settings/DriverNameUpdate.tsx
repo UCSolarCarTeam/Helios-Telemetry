@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 
+import { sand } from "@/styles/colors";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
@@ -127,10 +128,10 @@ export default function DriverUpdate() {
             }}
             sx={{
               "& .MuiInputBase-input": {
-                color: "#BFBFBF",
+                color: sand,
               },
               "& .MuiInputBase-input::placeholder": {
-                color: "#BFBFBF",
+                color: sand,
                 opacity: 1,
               },
             }}
@@ -153,10 +154,10 @@ export default function DriverUpdate() {
           onChange={(e) => setPassword(e.target.value)}
           sx={{
             "& .MuiInputBase-input": {
-              color: "#BFBFBF",
+              color: sand,
             },
             "& .MuiInputBase-input::placeholder": {
-              color: "#BFBFBF",
+              color: sand,
               opacity: 1,
             },
           }}

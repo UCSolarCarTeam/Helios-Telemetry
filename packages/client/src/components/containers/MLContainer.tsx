@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use client";
 
 import { useTheme } from "next-themes";
@@ -8,10 +7,6 @@ import type { PlotParams } from "react-plotly.js";
 import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
 
 import Plotly from "./Plotly";
-
-/* eslint-disable */
-
-/* eslint-disable */
 
 const SMALL_SCREEN = 380;
 
