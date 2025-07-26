@@ -78,10 +78,19 @@ function MapText() {
               <div>
                 {Array.isArray(raceInfo.raceDates) &&
                   raceInfo.raceDates.map((raceDate, i) => {
+                    if (
+                      raceDate == null ||
+                      isNaN(new Date(raceDate).valueOf())
+                    ) {
+                      return <div key={i}>Invalid Date</div>;
+                    }
+
                     const startRaceDate = new Date(raceDate);
+
                     const endRaceDate = new Date(
                       startRaceDate.getTime() + 8 * 1000 * 3600,
                     );
+
                     return (
                       <div key={i}>
                         {startRaceDate.toLocaleDateString("en-US", {

@@ -42,10 +42,13 @@ export class LapController implements LapControllerType {
   public previouslyInFinishLineProximity = false;
   public passedDebouncedCheckpoint = false;
   public totalTime = 3600 * 1000 * 8; // 1000 ms/sec * 3600 sec/hr * 8 hr
-  public day1 = new Date(Date.UTC(2025, 6, 3, 14, 0, 0)); // July 3rd 2025, 2:00:00 PM (in UTC)
-  public day2 = new Date(Date.UTC(2025, 6, 4, 13, 0, 0)); // July 4th 2025, 3:00:00 PM (in UTC)
-  public day3 = new Date(Date.UTC(2025, 6, 5, 13, 0, 0)); // July 5th 2025, 3:00:00 PM (in UTC)
-  public raceDates = [this.day1, this.day2, this.day3];
+
+  // July 3rd 2025, 2:00:00 PM (in UTC)
+  // July 4th 2025, 3:00:00 PM (in UTC)
+  // July 5th 2025, 3:00:00 PM (in UTC)
+  public raceDates = process.env.RACE_DAYS.split(",").map(
+    (date) => new Date(date),
+  );
 
   public raceInfo: IRaceInfo = {
     distance: 0,
