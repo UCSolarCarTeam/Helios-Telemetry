@@ -1,11 +1,10 @@
-// This file allows us to toggle map layers.
+import { useTheme } from "next-themes";
 import React, { useCallback, useMemo, useState } from "react";
 import { FaLayerGroup, FaLocationArrow, FaSatellite } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 
 import { TrackList } from "@/components/molecules/MapMolecules/Map";
-import { useAppState } from "@/contexts/AppStateContext";
 import { Coords } from "@shared/helios-types/src/types";
 
 type MapStates = {
@@ -43,13 +42,12 @@ export default function MapControls({
   trackList: TrackList[];
   viewTracks: boolean[];
 }) {
-  const {
-    currentAppState: { darkMode },
-  } = useAppState();
+  const { resolvedTheme } = useTheme();
+
   const buttonClasses = useMemo(
     () =>
-      `flex size-8 items-center justify-center rounded-full bg-light text-light ${darkMode && "invert"}`,
-    [darkMode],
+      `flex size-8 items-center justify-center rounded-full bg-light text-light ${resolvedTheme === "dark" && "invert"}`,
+    [resolvedTheme],
   );
   const iconClasses = useMemo(() => `h-6 text-xl`, []);
   const [viewRaceTracks, setViewRaceTracks] = useState(false);
@@ -103,7 +101,7 @@ export default function MapControls({
                 }}
               >
                 <div
-                  className={`size-2 rounded-xl outline outline-1 outline-gray-500 ${darkMode && "invert"}`}
+                  className={`size-2 rounded-xl outline outline-1 outline-gray-500 ${resolvedTheme === "dark" && "invert"}`}
                   style={{
                     backgroundColor:
                       typeof track.layerProps.paint?.["line-color"] ===

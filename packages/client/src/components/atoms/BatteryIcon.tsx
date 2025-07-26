@@ -7,8 +7,8 @@ function BatteryIconComponent() {
   return (
     <div className="col-span-3 grid w-full pr-2">
       <div className="flex w-full flex-nowrap">
-        <div className="relative flex h-full min-h-full w-[98%] items-stretch justify-center self-center rounded-lg bg-[#BAB8B8]">
-          <div className="absolute z-40 flex min-h-full items-center justify-center text-center text-lg text-[#FFFFFF]">
+        <div className="relative flex h-full min-h-full w-[98%] items-stretch justify-center self-center rounded-lg bg-sand dark:bg-arsenic">
+          <div className="absolute z-40 flex min-h-full items-center justify-center text-center text-lg text-white">
             {batteryLevel.toString()}%
           </div>
           <div className="w-full">
@@ -22,7 +22,7 @@ function BatteryIconComponent() {
           </div>
         </div>
         <div
-          className={`flex h-1/4 w-[2%] self-center rounded-r-lg transition-all ${batteryLevel > 98 ? "bg-primary" : "bg-[#BAB8B8]"}`}
+          className={`flex h-1/4 w-[2%] self-center rounded-r-lg transition-all ${batteryLevel > 98 ? "bg-primary" : "bg-sand"}`}
         />
       </div>
     </div>

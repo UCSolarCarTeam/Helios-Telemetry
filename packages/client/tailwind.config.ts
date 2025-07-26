@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -17,10 +18,14 @@ const config: Config = {
       },
       colors: {
         primary: "#9C0534",
+        secondary: "#B94A6C",
         green: "#01650B",
         "green-dark": "#00ae00",
-        "sand": "#BFBFBF",
-        "arsenic": "#3A3A3A",
+        sand: "#BFBFBF",
+        arsenic: "#3A3A3A",
+        "fault-red": "#9C0534",
+        "fault-orange": "#F98D10",
+        "fault-green": "#00A651",
       },
       textColor: {
         light: "#3A3A3A",
@@ -86,6 +91,9 @@ const config: Config = {
         },
         "::-webkit-scrollbar-track": {
           backgroundColor: "#D2D2D2",
+        },
+        ".dark ::-webkit-scrollbar-track": {
+          backgroundColor: "#3A3A3A",
         },
       };
 

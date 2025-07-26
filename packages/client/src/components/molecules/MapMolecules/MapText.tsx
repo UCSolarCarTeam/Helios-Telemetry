@@ -1,17 +1,16 @@
+import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
 import useUnitsHandler from "@/hooks/PIS/useUnitsHandler";
 import { UnitType } from "@/objects/PIS/PIS.interface";
+import { mediumGray } from "@/styles/colors";
 import { Button, Popover } from "@mantine/core";
 import { type IRaceInfo } from "@shared/helios-types";
 
 function MapText() {
   const [raceInfo, setRaceInfo] = useState({} as IRaceInfo);
-  const {
-    currentAppState: { darkMode },
-  } = useAppState();
+  const { resolvedTheme } = useTheme();
 
   const distanceText = useUnitsHandler(UnitType.DISTANCE, raceInfo.distance);
   const totalDistanceText = useUnitsHandler(
@@ -44,13 +43,13 @@ function MapText() {
         <Popover.Dropdown
           styles={{
             arrow: {
-              backgroundColor: darkMode ? "#3A3A3A" : "",
-              color: darkMode ? "white" : "",
+              backgroundColor: resolvedTheme === "dark" ? mediumGray : "",
+              color: resolvedTheme === "dark" ? "white" : "",
             },
 
             dropdown: {
-              backgroundColor: darkMode ? "#3A3A3A" : "",
-              color: darkMode ? "white" : "",
+              backgroundColor: resolvedTheme === "dark" ? mediumGray : "",
+              color: resolvedTheme === "dark" ? "white" : "",
             },
           }}
         >
@@ -112,10 +111,12 @@ function MapText() {
         <Popover.Target>
           <div className="grid place-content-center py-2">
             <Button
-              color={darkMode ? "dark" : undefined}
-              variant={darkMode ? "filled" : "default"}
+              color={resolvedTheme === "dark" ? "dark" : undefined}
+              variant={resolvedTheme === "dark" ? "filled" : "default"}
             >
-              <div className={darkMode ? "text-helios" : ""}>Get Race Info</div>
+              <div className={resolvedTheme === "dark" ? "text-helios" : ""}>
+                Get Race Info
+              </div>
             </Button>
           </div>
         </Popover.Target>

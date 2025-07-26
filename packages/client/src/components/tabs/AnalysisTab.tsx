@@ -1,9 +1,11 @@
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import { tabs } from "@/objects/TabRoutes";
+import { helios, lightGray, mediumGray } from "@/styles/colors";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 
@@ -26,14 +28,14 @@ const filters: string[] = [
   "Battery Current",
 ] as const;
 
-const theme = createTheme({
+const color = createTheme({
   palette: {
     primary: {
-      main: "#B94A6C", // selected tab color
+      main: helios, // selected tab color
     },
 
     text: {
-      primary: "#3A3A3A", // non-selected tab color
+      primary: mediumGray, // non-selected tab color
     },
   },
 });
@@ -54,6 +56,7 @@ export function TabContent({
 function AnalysisTab() {
   const { currentAppState } = useAppState();
   const [value, setValue] = useState<number>(0);
+  const { resolvedTheme } = useTheme();
 
   return (
     <div className="flex flex-col gap-y-4 px-4">
@@ -73,11 +76,11 @@ function AnalysisTab() {
           <span className="text-sm">Insert Name</span>
         </div>
 
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={color}>
           <Tabs
             TabIndicatorProps={{
               style: {
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: color.palette.primary.main,
               },
             }}
             onChange={(e, newValue: number) => setValue(newValue)}
@@ -88,7 +91,7 @@ function AnalysisTab() {
               <Tab
                 key={tab.id}
                 label={tab.name.toUpperCase()}
-                sx={currentAppState.darkMode ? { color: "#D2D2D2" } : {}}
+                sx={resolvedTheme === "dark" ? { color: lightGray } : {}}
                 value={tab.id}
               ></Tab>
             ))}

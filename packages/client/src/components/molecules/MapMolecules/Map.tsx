@@ -2,6 +2,7 @@
 import type { FeatureCollection, LineString } from "geojson";
 import mapboxgl, { LineLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { type JSX, useCallback, useEffect, useRef, useState } from "react";
 import ReactMapGL, {
@@ -17,7 +18,6 @@ import ReactMapGL, {
 } from "react-map-gl";
 
 import HeliosModel from "@/assets/HeliosBirdseye.png";
-import { useAppState } from "@/contexts/AppStateContext";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import {
   type Coords,
@@ -83,14 +83,13 @@ export default function Map({
   carLocation: Coords;
   lapLocation: Coords;
 }): JSX.Element {
-  const {
-    currentAppState: { darkMode },
-  } = useAppState();
   const [viewState, setViewState] = useState<Partial<ViewState>>({
     latitude: carLocation.lat,
     longitude: carLocation.long,
     zoom: 14,
   });
+  const { resolvedTheme } = useTheme();
+
   const [mapStates, setMapStates] = useState({
     centered: true,
     currentCarLocation: carLocation,
@@ -217,7 +216,7 @@ export default function Map({
         mapStyle={
           mapStates.satelliteMode
             ? "mapbox://styles/mapbox/satellite-streets-v12"
-            : darkMode
+            : resolvedTheme === "dark"
               ? "mapbox://styles/mapbox/dark-v11"
               : "mapbox://styles/mapbox/light-v11"
         }
@@ -276,7 +275,7 @@ export default function Map({
           style={{
             color: mapStates.satelliteMode
               ? "white"
-              : darkMode
+              : resolvedTheme === "dark"
                 ? "white"
                 : "black",
           }}
