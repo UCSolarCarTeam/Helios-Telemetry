@@ -57,7 +57,10 @@ const createDateTime = (time: Date, year: number, month: number, day: number) =>
     time.getSeconds(),
   );
 
-function handleDownloadCSV(csv: string, playbackDateTime: IPlaybackDateTime) {
+function handleDownloadCSV(
+  csv: string,
+  confirmedPlaybackDateTime: IPlaybackDateTime,
+) {
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -65,10 +68,12 @@ function handleDownloadCSV(csv: string, playbackDateTime: IPlaybackDateTime) {
   const now = new Date();
   const dateStr = now.toLocaleDateString().replace(/\//g, "-");
   // Use the selected playback start and end times for the filename
-  const start = playbackDateTime?.startTime
-    ? playbackDateTime.startTime
+  const start = confirmedPlaybackDateTime?.startTime
+    ? confirmedPlaybackDateTime.startTime
     : new Date();
-  const end = playbackDateTime?.endTime ? playbackDateTime.endTime : new Date();
+  const end = confirmedPlaybackDateTime?.endTime
+    ? confirmedPlaybackDateTime.endTime
+    : new Date();
 
   const formatTime = (date: Date) =>
     date.toLocaleTimeString([], {
@@ -99,6 +104,9 @@ function PlaybackDatePicker() {
           };
     },
   );
+
+  const [confirmedPlaybackDateTime, setConfirmedPlaybackDateTime] =
+    useState<IPlaybackDateTime>(playbackDateTime);
 
   const { playbackData, setPlaybackData } = usePlaybackContext();
 
@@ -196,6 +204,7 @@ function PlaybackDatePicker() {
                 <DatePickerColumn
                   fetchPlaybackData={fetchPlaybackData}
                   playbackDateTime={playbackDateTime}
+                  setConfirmedPlaybackDateTime={setConfirmedPlaybackDateTime}
                   setPlaybackDateTime={updatePlaybackTime}
                 />
                 <DatePickerResultColumn
@@ -211,7 +220,7 @@ function PlaybackDatePicker() {
                     onClick={() =>
                       handleDownloadCSV(
                         convertToCSV(playbackData),
-                        playbackDateTime,
+                        confirmedPlaybackDateTime,
                       )
                     }
                   >

@@ -22,9 +22,13 @@ import { IPlaybackDateTime } from "../PlaybackDatePicker";
 const DataPickerColumn = ({
   fetchPlaybackData,
   playbackDateTime,
+  setConfirmedPlaybackDateTime,
   setPlaybackDateTime,
 }: {
   setPlaybackDateTime: React.Dispatch<React.SetStateAction<IPlaybackDateTime>>;
+  setConfirmedPlaybackDateTime: React.Dispatch<
+    React.SetStateAction<IPlaybackDateTime>
+  >;
   playbackDateTime: IPlaybackDateTime;
   fetchPlaybackData: () => void;
 }) => {
@@ -74,6 +78,7 @@ const DataPickerColumn = ({
         startTime: playbackDateTime.startTime,
       },
     }));
+    setConfirmedPlaybackDateTime(playbackDateTime);
     fetchPlaybackData();
   };
   // Handle TimeInput change to update startTime or endTime
