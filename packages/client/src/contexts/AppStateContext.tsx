@@ -169,7 +169,6 @@ export function AppStateContextProvider({ children }: Props) {
         ...prev,
         appUnits: parsedSettings.appUnits ?? prev.appUnits,
         connectionType: parsedSettings.connectionType ?? prev.connectionType,
-        darkMode: parsedSettings.darkMode ?? prev.darkMode,
         favourites: parsedFavourites,
         lapCoords: parsedSettings.lapCoords ?? prev.lapCoords,
         playbackDateTime: parsedPlaybackDateTime,
@@ -189,7 +188,6 @@ export function AppStateContextProvider({ children }: Props) {
           "Battery Average Voltage",
         ],
         lapCoords: parsedSettings.lapCoords,
-
       }));
     }
   }, []);

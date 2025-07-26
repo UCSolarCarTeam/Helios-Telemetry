@@ -36,7 +36,6 @@ export default function Home() {
             <BottomInformationContainer />
           )}
         </div>
-   
       </div>
     </div>
   );
