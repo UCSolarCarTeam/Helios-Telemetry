@@ -4,22 +4,22 @@ import { CircularProgress } from "@mui/material";
 import { ITelemetryData } from "@shared/helios-types";
 
 interface DatePickerResultColumnProps {
-  playbackDateTime: {
+  confirmedPlaybackDateTime: {
     date: Date | null;
     startTime: Date | null;
     endTime: Date | null;
   };
-  playbackData: ITelemetryData[]; // Adjust type based on your data structure
+  playbackData: ITelemetryData[];
   loading: boolean;
 }
 
 const DatePickerResultColumn: React.FC<DatePickerResultColumnProps> = ({
+  confirmedPlaybackDateTime,
   loading,
   playbackData,
-  playbackDateTime,
 }) => {
-  const displayStartTime = `${playbackDateTime.date?.toDateString()} at ${playbackDateTime.startTime?.toLocaleTimeString()}`;
-  const displayEndTime = `${playbackDateTime.date?.toDateString()} at ${playbackDateTime.endTime?.toLocaleTimeString()}`;
+  const displayStartTime = `${confirmedPlaybackDateTime.date?.toDateString()} at ${confirmedPlaybackDateTime.startTime?.toLocaleTimeString()}`;
+  const displayEndTime = `${confirmedPlaybackDateTime.date?.toDateString()} at ${confirmedPlaybackDateTime.endTime?.toLocaleTimeString()}`;
 
   return (
     <div className="flex flex-grow items-center border-t border-gray-300 pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">

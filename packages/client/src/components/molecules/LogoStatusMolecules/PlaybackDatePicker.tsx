@@ -208,9 +208,9 @@ function PlaybackDatePicker() {
                   setPlaybackDateTime={updatePlaybackTime}
                 />
                 <DatePickerResultColumn
+                  confirmedPlaybackDateTime={confirmedPlaybackDateTime}
                   loading={loading}
                   playbackData={playbackData}
-                  playbackDateTime={playbackDateTime}
                 />
               </div>
               {playbackData.length > 0 && (
