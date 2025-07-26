@@ -32,7 +32,7 @@ const StatsContainer = () => {
           <p className="pt-1 text-center text-4xl font-normal text-primary">
             {statsProps.OptimalDrivingSpeed}km/h
           </p>
-          <div className="h-3 w-full rounded-full bg-arsenic">
+          <div className="h-3 w-full rounded-full bg-arsenic dark:bg-sand">
             <div
               className="flex h-3 items-stretch rounded-full bg-green-dark"
               style={{ width: `${statsProps.linePercentage}%` }}
