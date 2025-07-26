@@ -1,10 +1,14 @@
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
-import { convertToDecimalDegrees } from "@/utils/lapCalculations";
+import {
+  calculateOffset,
+  convertToDecimalDegrees,
+} from "@/utils/lapCalculations";
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import {
+  FINISH_LINE_LOCATION,
   calculateVehicleVelocity,
   haversineDistance,
 } from "@shared/helios-types";
@@ -13,6 +17,7 @@ import type {
   CoordUpdateResponse,
   Coords,
   ILapData,
+  IRaceInfo,
   ITelemetryData,
 } from "@shared/helios-types";
 
@@ -34,16 +39,92 @@ const logger = createLightweightApplicationLogger("LapController.ts");
  */
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
-  public previouslyInFinishLineProximity: boolean = false;
-  public lapNumber: number = 0;
-  public finishLineLocation: Coords = {
-    lat: 37.001949324,
-    long: -86.366554059,
+  public previouslyInFinishLineProximity = false;
+  public passedDebouncedCheckpoint = false;
+  public totalTime = 3600 * 1000 * 8; // 1000 ms/sec * 3600 sec/hr * 8 hr
+  public day1 = new Date(Date.UTC(2025, 6, 3, 14, 0, 0)); // July 3rd 2025, 2:00:00 PM (in UTC)
+  public day2 = new Date(Date.UTC(2025, 6, 4, 13, 0, 0)); // July 4th 2025, 3:00:00 PM (in UTC)
+  public day3 = new Date(Date.UTC(2025, 6, 5, 13, 0, 0)); // July 5th 2025, 3:00:00 PM (in UTC)
+  public raceDates = [this.day1, this.day2, this.day3];
+
+  public raceInfo: IRaceInfo = {
+    distance: 0,
+    lapNumber: 0,
+    prevTime: 0,
+    raceDates: this.raceDates,
+    raceDay: 0,
+    timeLeft: this.totalTime,
+    totalDistance: 0,
   };
+
+  public finishLineLocation: Coords = FINISH_LINE_LOCATION;
+
+  public lapDebounceLocation: Coords = {
+    // debounce so that it doesnt just count every checklap as a function
+    lat:
+      this.finishLineLocation.lat -
+      calculateOffset(0.01, this.finishLineLocation.lat).latOffset,
+    long:
+      this.finishLineLocation.long -
+      calculateOffset(0.01, this.finishLineLocation.lat).longOffset,
+  };
+
+  private timerInterval: NodeJS.Timeout;
   backendController: BackendController;
+
+  public startTimers() {
+    this.timerInterval = setInterval(() => {
+      this.raceInfo.timeLeft -= 1000;
+
+      // reset race info
+      if (this.raceInfo.timeLeft <= 0) {
+        this.cleanUp(); // clean up timer interval
+        this.raceInfo.totalDistance += this.raceInfo.distance;
+        this.raceInfo.distance = 0;
+        this.raceInfo.timeLeft = this.totalTime; // reset race info
+        this.raceInfo.prevTime = 0; // reset previous time calculated back to 0
+        this.raceInfo.raceDay += 1;
+        this.startRace(); // check for new day
+      }
+
+      if (this.raceInfo.raceDay >= 3) {
+        this.raceInfo.timeLeft = this.totalTime; // reset back to start after 3 days
+      }
+    }, 1000); // update the time every 1 second.
+  }
 
   constructor(backendController: BackendController) {
     this.backendController = backendController;
+  }
+
+  public cleanUp() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  public calculateRaceDistance(motor0Speed: number, motor1Speed: number) {
+    const vehicleVelocity = calculateVehicleVelocity(motor0Speed, motor1Speed);
+
+    const currentTime = Date.now();
+    if (this.raceInfo.prevTime !== 0 && this.raceInfo.raceDay < 3) {
+      const dTime = (currentTime - this.raceInfo.prevTime) / (3600 * 1000); // convert ms to hr
+      this.raceInfo.distance = this.raceInfo.distance + vehicleVelocity * dTime;
+    }
+    this.raceInfo.prevTime = currentTime;
+  }
+
+  public startRace() {
+    const currentTime = new Date().getTime();
+    const raceStarting = this.raceDates.some((raceDate) => {
+      const timeDifference = Math.abs(currentTime - raceDate.getTime());
+      return timeDifference <= 1000; // true if within one second tolerance (can be changed)
+    });
+
+    if (raceStarting) {
+      this.startTimers();
+    }
   }
 
   public setFinishLineLocation(
@@ -74,20 +155,49 @@ export class LapController implements LapControllerType {
     }
   }
 
+  // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
     await this.backendController.dynamoDB.insertLapData(lapData);
   }
 
+  // this function is for calling when lap completes via geofence
+  public async handleGeofenceLap(rfid: string, timestamp: number) {
+    await this.backendController.dynamoDB.insertIntoGpsLapCountTable(
+      rfid,
+      timestamp,
+    );
+  }
+
   public async handlePacket(packet: ITelemetryData) {
-    if (this.checkLap(packet) && this.lastLapPackets.length > 0) {
+    const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
+    const motorDetails1 = packet.MotorDetails1.VehicleVelocity;
+    if (this.raceInfo.raceDay >= 3)
+      // also include if !packet.B3.RaceMode
+      this.cleanUp(); // clean up after the last race day
+    else if (this.timerInterval == null) this.startRace(); // also include if packet.B3.RaceMode == true
+
+    if (
+      this.timerInterval != null &&
+      this.raceInfo.timeLeft > 0 &&
+      this.raceInfo.timeLeft < this.totalTime
+    ) {
+      this.calculateRaceDistance(motorDetails0, motorDetails1);
+    }
+
+    if (this.checkLap(packet) && this.lastLapPackets.length > 5) {
+      logger.info("lap completed for geofence");
+      this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
+    }
+
+    if (packet.B3.LapDigital && this.lastLapPackets.length > 5) {
       await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
       // update last lap packet
       const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
-        ?.Battery.BatteryPack.PackAmphours as number;
+        ?.Battery.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
         this.lastLapPackets,
       );
@@ -106,16 +216,21 @@ export class LapController implements LapControllerType {
           distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
           energyConsumed: this.getEnergyConsumption(this.lastLapPackets),
           lapTime: this.calculateLapTime(this.lastLapPackets),
-          netPowerOut: 1, // CHANGE THIS BASED ON CORRECTED NET POWER VALUE!
+          netPowerOut: this.netPower(this.lastLapPackets),
           timeStamp: packet.TimeStamp,
-          totalPowerIn: 1, // CHANGE THIS BASED ON CORRECTED TOTAL POWER VALUE!
+          totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
           totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
         },
         timestamp: packet.TimeStamp,
       };
+
+      logger.info("Lap data inserted into database: ", lapData);
+
       this.handleLapData(lapData);
       this.lastLapPackets = [];
     }
+
+    this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
     this.lastLapPackets.push(packet);
   }
 
@@ -123,7 +238,22 @@ export class LapController implements LapControllerType {
     return this.lastLapPackets;
   }
 
-  //checks if lap has been acheived
+  private checkDebounce(packet: ITelemetryData) {
+    const inDebounceZone =
+      haversineDistance(
+        packet.Telemetry.GpsLatitude,
+        packet.Telemetry.GpsLongitude,
+        this.lapDebounceLocation.lat,
+        this.lapDebounceLocation.long,
+      ) <= 0.01; // 0.01 km = 10 m
+
+    if (inDebounceZone && !this.passedDebouncedCheckpoint)
+      this.passedDebouncedCheckpoint = true;
+
+    return this.passedDebouncedCheckpoint;
+  }
+
+  // checks if lap has been acheived (using geofencing)
   private checkLap(packet: ITelemetryData) {
     const inProximity =
       haversineDistance(
@@ -131,10 +261,15 @@ export class LapController implements LapControllerType {
         packet.Telemetry.GpsLongitude,
         this.finishLineLocation.lat,
         this.finishLineLocation.long,
-      ) <= 0.01;
+      ) <= 0.03; // 0.01 km = 10 m
+
     let lapHappened = false;
-    if (!this.previouslyInFinishLineProximity && inProximity) {
+    const checkDebounce = this.checkDebounce(packet);
+
+    if (checkDebounce && !this.previouslyInFinishLineProximity && inProximity) {
       lapHappened = true;
+      this.raceInfo.lapNumber += 1;
+      this.passedDebouncedCheckpoint = false;
     }
 
     this.previouslyInFinishLineProximity = inProximity;
@@ -161,8 +296,8 @@ export class LapController implements LapControllerType {
     const sumAverageLapSpeed = lastLapPackets.reduce(
       (sum: number, packet: ITelemetryData) => {
         const vehicleVelocity = calculateVehicleVelocity(
-          packet.MotorDetails0.CurrentRpmValue as number,
-          packet.MotorDetails1.CurrentRpmValue as number,
+          packet.MotorDetails0.MotorVelocity as number,
+          packet.MotorDetails1.MotorVelocity as number,
         );
         return vehicleVelocity !== undefined ? sum + vehicleVelocity : sum;
       },
@@ -178,7 +313,7 @@ export class LapController implements LapControllerType {
     }
 
     const sumAveragePack = lastLapPackets.reduce((sum, packet) => {
-      const packCurrent = packet.Battery?.BatteryPack.PackCurrent;
+      const packCurrent = packet.Battery?.PackCurrent;
       return packCurrent !== undefined ? sum + packCurrent : sum;
     }, 0);
 
@@ -204,37 +339,33 @@ export class LapController implements LapControllerType {
     packetArray: ITelemetryData[],
     motorIndex: number,
   ): number {
-    // The Motor's Odometer resets every time a motor trips or the car power cycles
-    let totalDistanceTraveled = 0;
+    if (packetArray.length < 2) return 0;
 
-    for (let i = 0; i < packetArray.length; i++) {
-      totalDistanceTraveled += (packetArray[i]?.[`MotorDetails${motorIndex}`]
-        ?.CurrentRpmValue *
-        0.15 *
-        0.5) as number;
+    let totalDistance = 0;
+    let lastOdometer: number | undefined = undefined;
 
-      // Check if the motor had reset, keep a tally of the distance travelled
-      // if (
-      //   this.checkIfMotorReset(
-      //     packetArray[i]?.[`MotorDetails${odometerIndex}`]?.Odometer as number,
-      //     motorDistanceTraveledSession,
-      //   )
-      // ) {
-      //   totalDistanceTraveled += motorDistanceTraveledSession;
-      // }
+    for (const packet of packetArray) {
+      const motor = packet[`MotorDetails${motorIndex}`];
+      const odometer = motor?.Odometer;
 
-      // motorDistanceTraveledSession = packetArray[i]?.[
-      //   `MotorDetails${odometerIndex}`
-      // ]?.Odometer as number;
+      if (typeof odometer !== "number") continue;
+
+      if (lastOdometer === undefined) {
+        lastOdometer = odometer;
+        continue;
+      }
+
+      if (odometer >= lastOdometer) {
+        totalDistance += odometer - lastOdometer;
+      } else {
+        // odometer reset detected
+      }
+
+      lastOdometer = odometer;
     }
-    // totalDistanceTraveled += motorDistanceTraveledSession;
-    // // Remove the initial distance
-    // totalDistanceTraveled -= packetArray[0]?.[`MotorDetails${odometerIndex}`]
-    //   ?.Odometer as number;
-    // // Convert to kilometers (odometer reports as meters)
-    // totalDistanceTraveled /= 1000;
 
-    return totalDistanceTraveled;
+    // convert m to km
+    return totalDistance / 1000;
   }
 
   public getDistanceTravelled(packetArray: ITelemetryData[]) {
@@ -261,7 +392,6 @@ export class LapController implements LapControllerType {
 
     // Define constants
     const mpptCount = 4;
-    const motorCount = 2;
 
     // Get the sum of the average array power of all MPPTs
     const mpptPowerIn = packetArray
@@ -272,44 +402,47 @@ export class LapController implements LapControllerType {
           // arrayPower += packet['mppt' + mppt + 'arrayvoltage'] *
           //               packet['mppt' + mppt + 'arraycurrent'];
           arrayPower +=
-            (packet.MPPT0?.ArrayVoltage as number) *
-            (packet.MPPT0?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt0Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt0Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT1?.ArrayVoltage as number) *
-            (packet.MPPT1?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt1Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt1Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT2?.ArrayVoltage as number) *
-            (packet.MPPT2?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt2Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt2Ch1ArrayVoltage as number);
           arrayPower +=
-            (packet.MPPT3?.ArrayVoltage as number) *
-            (packet.MPPT3?.ArrayCurrent as number);
+            (packet.MPPT?.Mppt3Ch0ArrayVoltage as number) *
+            (packet.MPPT?.Mppt3Ch1ArrayVoltage as number);
         }
         return arrayPower;
       })
       .reduce((sum, curr) => sum + curr / packetArray.length, 0);
 
     // Get the sum of the regen of all motors
-    const regenPowerIn = packetArray
-      .map((packet) => {
-        let regen = 0;
-        for (let motor = 0; motor < motorCount; motor++) {
-          // let busCurrent = packet['motor' + motor + 'buscurrent'];
-          // let busVoltage = packet['motor' + motor + 'busvoltage'];
-          const busCurrent = packet.KeyMotor[motor]?.BusCurrent;
-          const busVoltage = packet.KeyMotor[motor]?.BusVoltage;
+    const regenPowerSum = packetArray.reduce((sum, packet) => {
+      let regenPower = 0;
 
-          // Filter out any values with busCurrent >= 0
-          if (busCurrent && busCurrent >= 0) {
-            continue;
-          }
+      const motorDetails = [packet.MotorDetails0, packet.MotorDetails1];
 
-          regen += (busCurrent as number) * (busVoltage as number);
+      for (const motor of motorDetails) {
+        const current = motor?.BusCurrent;
+        const voltage = motor?.BusVoltage;
+
+        if (
+          typeof current === "number" &&
+          typeof voltage === "number" &&
+          current < 0
+        ) {
+          regenPower += current * voltage;
         }
-        return regen;
-      })
-      .reduce((sum, curr) => sum + curr / packetArray.length, 0);
+      }
 
-    return Math.abs(mpptPowerIn + regenPowerIn);
+      return sum + regenPower;
+    }, 0);
+
+    const avgRegenPower = regenPowerSum / packetArray.length;
+
+    return Math.abs(mpptPowerIn + avgRegenPower);
   }
 
   public getAveragePowerOut(packetArray: ITelemetryData[]): number {
@@ -321,15 +454,16 @@ export class LapController implements LapControllerType {
     return Math.abs(
       packetArray.reduce(
         (sum, curr) =>
-          sum +
-          curr.Battery.BatteryPack.PackCurrent *
-            curr.Battery.BatteryPack.PackVoltage,
+          sum + curr.Battery.PackCurrent * curr.Battery.PackVoltage,
         0,
       ) / packetArray.length,
     );
   }
 
   public netPower(packetArray: ITelemetryData[]): number {
+    if (!packetArray || packetArray.length === 0) {
+      return 0;
+    }
     return (
       this.getAveragePowerIn(packetArray) - this.getAveragePowerOut(packetArray)
     );

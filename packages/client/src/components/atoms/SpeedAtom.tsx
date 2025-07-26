@@ -1,42 +1,36 @@
 import React from "react";
 
-import { APPUNITS } from "@/contexts/AppStateContext";
-import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import useUnitsHandler from "@/hooks/PIS/useUnitsHandler";
+import { UnitType } from "@/objects/PIS/PIS.interface";
 import { calculateVehicleVelocity } from "@shared/helios-types";
 
 function SpeedAtom() {
-  const { currentAppState } = useAppState();
   const { currentPacket } = usePacket();
 
-  let speedValue = React.useMemo(
+  const speedValue = React.useMemo(
     () =>
       calculateVehicleVelocity(
-        currentPacket.MotorDetails0?.CurrentRpmValue,
-        currentPacket.MotorDetails1?.CurrentRpmValue,
+        currentPacket.MotorDetails0?.MotorVelocity,
+        currentPacket.MotorDetails1?.MotorVelocity,
       ),
     [
-      currentPacket.MotorDetails0?.CurrentRpmValue,
-      currentPacket.MotorDetails1?.CurrentRpmValue,
+      currentPacket.MotorDetails0?.MotorVelocity,
+      currentPacket.MotorDetails1?.MotorVelocity,
     ],
   );
 
-  let speedUnit = "km/h";
-
-  if (currentAppState.appUnits === APPUNITS.IMPERIAL) {
-    speedValue = speedValue * 0.621371;
-    speedUnit = "mph";
-  }
+  const speed = useUnitsHandler(UnitType.SPEED, speedValue);
 
   return (
     <>
       <div className="col-span-2 grid h-10 w-full content-center justify-items-center">
         <div className="flex flex-row">
           <div className="items-center">
-            <h1 className="text-4xl">{speedValue.toFixed(0)}</h1>
+            <h1 className="text-4xl">{Number(speed.val).toFixed(0)}</h1>
           </div>
           <div className="items-center">
-            <h1 className="text-sm">{speedUnit}</h1>
+            <h1 className="text-sm">{speed.units}</h1>
           </div>
         </div>
       </div>

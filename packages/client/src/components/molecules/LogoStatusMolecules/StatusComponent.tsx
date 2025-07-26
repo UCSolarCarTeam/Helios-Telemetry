@@ -31,11 +31,11 @@ function PlaybackPickerComponent() {
     </div>
   );
 }
+
 function StatusComponent() {
   const { resolvedTheme } = useTheme();
   const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
-
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
   const carConnection = currentAppState.socketConnected;

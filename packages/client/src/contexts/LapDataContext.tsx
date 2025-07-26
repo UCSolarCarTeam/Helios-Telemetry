@@ -26,7 +26,7 @@ export const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
       lapPacket.data.batterySecondsRemaining.toFixed(2),
     ),
     distance: parseFloat(lapPacket.data.distance.toFixed(2)),
-    energyConsumed: parseFloat((lapPacket.data.energyConsumed ?? 0).toFixed(2)),
+    energyConsumed: parseFloat(lapPacket.data.energyConsumed.toFixed(2)),
     lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
     netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
     timeStamp: new Date(lapPacket.data.timeStamp).toLocaleString("en-US"),
@@ -68,24 +68,19 @@ export function LapDataContextProvider({
   const fetchLapData = useCallback(async () => {
     try {
       const response = await axios.get(`${prodURL}/laps`);
-      return response.data.data; // Assuming the API returns an array of lap data
+
+      if (!Array.isArray(response)) {
+        throw new Error("Invalid API response format");
+      }
+
+      setLapData(response.data.data.map(formatLapData));
     } catch (error) {
       return { error: "Error fetching lap data" };
     }
   }, []);
 
   useEffect(() => {
-    fetchLapData()
-      .then((response) => {
-        if (!Array.isArray(response)) {
-          throw new Error("Invalid API response format");
-        }
-        const formattedData = response.map(formatLapData);
-        setLapData(formattedData);
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+    fetchLapData();
   }, [fetchLapData]);
 
   useEffect(() => {

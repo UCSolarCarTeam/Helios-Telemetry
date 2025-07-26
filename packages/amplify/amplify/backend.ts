@@ -144,6 +144,17 @@ const driverDataTable = new dynamodb.Table(
   },
 );
 
+const gpsCalculatedLapDataTable = new dynamodb.Table(
+  TelemetryBackendStack,
+  "gps_lap_count_table",
+  {
+    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+    partitionKey: { name: "Rfid", type: dynamodb.AttributeType.STRING },
+    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
+    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
+  },
+);
+
 const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
   "TelemetryECSTaskDefintion",
@@ -152,6 +163,7 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   environment: {
     DRIVER_TABLE_NAME: driverDataTable.tableName,
+    GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
     PACKET_TABLE_NAME: packetDataTable.tableName,
   },
@@ -295,7 +307,7 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   "Aedes - Allow inbound traffic on port 1883",
 );
 
-//Give DynamoDB Permissions to hte packet data and lap data
+// Give DynamoDB Permissions to hte packet data and lap data
 const dynamoDbAccessPolicy = new iam.PolicyStatement({
   actions: [
     "dynamodb:PutItem",
@@ -308,8 +320,10 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
 
   resources: [
     packetDataTable.tableArn,
+    `${packetDataTable.tableArn}/index/type-timestamp-index`,
     lapDataTable.tableArn,
     driverDataTable.tableArn,
+    gpsCalculatedLapDataTable.tableArn,
   ],
 });
 

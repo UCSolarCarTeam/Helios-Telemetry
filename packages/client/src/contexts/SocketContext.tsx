@@ -10,11 +10,13 @@ import {
 import { type Socket, io } from "socket.io-client";
 
 import { useAppState } from "@/contexts/AppStateContext";
+import { notifications } from "@mantine/notifications";
 import type {
   CoordInfoUpdate,
   CoordUpdateResponse,
   Coords,
   ILapData,
+  IRaceInfo,
   ITelemetryData,
 } from "@shared/helios-types";
 import { socketURL } from "@shared/helios-types";
@@ -29,7 +31,10 @@ interface ServerToClientEvents {
   lapCoords: (coords: CoordUpdateResponse) => void;
   carLatency: (value: number) => void;
   lapData: (value: ILapData) => void;
+  raceInfo: (value: IRaceInfo) => void;
   lapComplete: () => void;
+  carDisconnect: (data: { message: string }) => void;
+  carConnect: (data: { message: string }) => void;
 }
 
 // Defaults to using client fakerJS, change Data to Network in site settings to connect to server
@@ -61,6 +66,28 @@ export function SocketContextProvider({
     },
     [setCurrentAppState],
   );
+  const onCarConnect = useCallback(() => {
+    setCurrentAppState((prev) => ({
+      ...prev,
+      mqttConnected: true,
+    }));
+    notifications.show({
+      color: "",
+      message: "Car has reconnected!",
+      title: "Connection Restored",
+    });
+  }, [setCurrentAppState]);
+  const onCarDisconnect = useCallback(() => {
+    setCurrentAppState((prev) => ({
+      ...prev,
+      mqttConnected: false,
+    }));
+    notifications.show({
+      color: "red",
+      message: "Car has disconnected!",
+      title: "Connection Lost",
+    });
+  }, [setCurrentAppState]);
 
   useEffect(() => {
     // Connect to the socket
@@ -77,15 +104,25 @@ export function SocketContextProvider({
     }, 10000);
 
     // Register event listeners
+    socketIO.on("carDisconnect", onCarDisconnect);
+    socketIO.on("carConnect", onCarConnect);
     socketIO.on("carLatency", onCarLatency);
     socketIO.on("lapCoords", onLapCoords);
     return () => {
       socketIO.disconnect();
       clearInterval(id);
+      socketIO.off("carDisconnect", onCarDisconnect);
+      socketIO.off("carConnect", onCarConnect);
       socketIO.off("carLatency", onCarLatency);
       socketIO.off("lapCoords", onLapCoords);
     };
-  }, [onCarLatency, onLapCoords, setCurrentAppState]);
+  }, [
+    onCarConnect,
+    onCarDisconnect,
+    onCarLatency,
+    onLapCoords,
+    setCurrentAppState,
+  ]);
 
   // Socket connection status listeners
   socketIO.on("connect", () => {

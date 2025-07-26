@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
@@ -5,196 +6,337 @@ import { UnitType } from "@/objects/PIS/PIS.interface";
 
 const Motor = (): I_PIS => {
   const { currentPacket } = usePacket();
+  const { KeyMotor, MotorDetails0, MotorDetails1 } = currentPacket;
   return {
     KeyMotorDetails: [
       {
         data: [
           {
-            value: currentPacket?.KeyMotor?.ControlMode,
+            // max: 100,
+            // min: 20,
+            unit: UnitType.AMPERAGE,
+            value: KeyMotor?.BusCurrentOut,
           },
         ],
-        name: "Control Mode",
+        name: "Bus Current Out",
       },
       {
         data: [
           {
-            value: currentPacket?.KeyMotor?.DebugMode,
+            unit: UnitType.SPEED,
+            value: KeyMotor?.KeyMotorVelocity,
           },
         ],
-        name: "Debug Mode",
+        name: "Key Motor Velocity",
       },
       {
         data: [
           {
-            value: currentPacket?.KeyMotor?.MotorMode,
+            unit: UnitType.AMPERAGE,
+            value: KeyMotor?.MotorCurrent,
           },
         ],
-        name: "Motor Mode",
-      },
-      {
-        data: [
-          {
-            max: 100,
-            min: 20,
-            value: currentPacket?.KeyMotor?.MotorSetpoint,
-          },
-        ],
-        name: "Motor Setpoint",
-      },
-      {
-        data: [
-          {
-            value: currentPacket?.KeyMotor?.SoftwareEnable,
-          },
-        ],
-        name: "Software Enable",
+        name: "Motor Current",
       },
     ] as unknown as I_PISField[],
     LeftMotorDetails: [
       {
-        data: [
-          {
-            max: 360,
-            min: 0,
-            value: currentPacket?.MotorDetails0?.AbsoluteAngle,
-          },
-        ],
-        name: "Absolute Angle",
+        data: [{ value: MotorDetails0?.ActiveMotor }],
+        name: "Active Motor",
+      },
+      {
+        data: [{ value: MotorDetails0?.BEMF_D }],
+        name: "BEMF D",
+      },
+      {
+        data: [{ value: MotorDetails0?.BEMF_Q }],
+        name: "BEMF Q",
+      },
+      {
+        data: [{ unit: UnitType.AMPERAGE, value: MotorDetails0?.BusCurrent }],
+        name: "Bus Current",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails0?.BusVoltage }],
+        name: "Bus Voltage",
+      },
+      {
+        data: [{ value: MotorDetails0?.DC_Bus_Ah }],
+        name: "DC Bus Ah",
       },
       {
         data: [
-          {
-            value: currentPacket?.MotorDetails0?.ControlValue, // int
-          },
+          { unit: UnitType.TEMP, value: MotorDetails0?.DspBoardTemperature },
         ],
-        name: "Control Value",
+        name: "DSP Board Temperature",
+      },
+      {
+        data: [{ value: MotorDetails0?.ErrorFlags }],
+        name: "Error Flags",
       },
       {
         data: [
-          {
-            unit: UnitType.WATT,
-            value: currentPacket?.MotorDetails0?.CurrentMotorPower, // short int
-          },
+          { unit: UnitType.TEMP, value: MotorDetails0?.HeatsinkTemperature },
         ],
-        name: "Current Motor Power",
+        name: "Heatsink Temperature",
       },
       {
-        data: [
-          {
-            unit: UnitType.NEWTONMETERS,
-            value: currentPacket?.MotorDetails0?.CurrentMotorTorque,
-          },
-        ],
-        name: "Current Motor Torque",
+        data: [{ value: MotorDetails0?.Id }],
+        name: "Id",
       },
       {
-        data: [
-          {
-            unit: UnitType.RPM,
-            value: currentPacket?.MotorDetails0?.CurrentRpmValue,
-          },
-        ],
-        name: "Current RPM Value",
+        data: [{ value: MotorDetails0?.Iq }],
+        name: "Iq",
       },
       {
-        data: [
-          {
-            unit: "°C",
-            value: currentPacket?.MotorDetails0?.MotorTemperature,
-          },
-        ],
+        data: [{ value: MotorDetails0?.LimitFlags }],
+        name: "Limit Flags",
+      },
+      {
+        data: [{ value: MotorDetails0?.MotorId }],
+        name: "Motor Id",
+      },
+      {
+        data: [{ unit: UnitType.TEMP, value: MotorDetails0?.MotorTemperature }],
         name: "Motor Temperature",
       },
       {
+        data: [{ unit: UnitType.SPEED, value: MotorDetails0?.MotorVelocity }],
+        name: "Motor Velocity",
+      },
+      {
+        data: [{ value: MotorDetails0?.Odometer }],
+        name: "Odometer",
+      },
+      {
+        data: [{ value: MotorDetails0?.PhaseCurrentB }],
+        name: "Phase Current B",
+      },
+      {
+        data: [{ value: MotorDetails0?.PhaseCurrentC }],
+        name: "Phase Current C",
+      },
+      {
+        data: [{ value: MotorDetails0?.RxErrorCount }],
+        name: "Rx Error Count",
+      },
+      {
+        data: [{ value: MotorDetails0?.SerialNumber }],
+        name: "Serial Number",
+      },
+      {
+        data: [{ unit: UnitType.SPEED, value: MotorDetails0?.SlipSpeed }],
+        name: "Slip Speed",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails0?.Supply15V }],
+        name: "Supply 15V",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails0?.Supply1V9 }],
+        name: "Supply 1.9V",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails0?.Supply3V3 }],
+        name: "Supply 3.3V",
+      },
+      {
+        data: [{ value: MotorDetails0?.TritiumId }],
+        name: "Tritium Id",
+      },
+      {
+        data: [{ value: MotorDetails0?.TxErrorCount }],
+        name: "Tx Error Count",
+      },
+      {
+        data: [{ value: MotorDetails0?.Vd }],
+        name: "Vd",
+      },
+      {
+        data: [
+          { unit: UnitType.VOLTAGE, value: MotorDetails0?.VehicleVelocity },
+        ],
+        name: "Vehicle Velocity",
+      },
+      {
+        data: [{ value: MotorDetails0?.Vq }],
+        name: "Vq",
+      },
+    ] as unknown as I_PISField[],
+
+    MotorFaults: [
+      {
         data: [
           {
-            units: UnitType.AMPERAGE,
-            value: currentPacket?.MotorDetails0?.InverterPeakCurrent,
+            value: MotorDetails0?.ErrorFlags,
           },
         ],
-        name: "Inverter Peak Current",
+        name: "Error Flag Raised In Left Motor",
       },
       {
         data: [
           {
-            value: currentPacket?.MotorDetails0?.MotorTemperature,
+            value: MotorDetails0?.RxErrorCount,
           },
         ],
-        name: "Motor Temperature",
+        name: "Rx Error Raised In Left Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails0?.TxErrorCount,
+          },
+        ],
+        name: "Tx Error Raised In Left Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails1?.ErrorFlags,
+          },
+        ],
+        name: "Error Flag Raised In Right Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails1?.RxErrorCount,
+          },
+        ],
+        name: "Rx Error Raised In Right Motor",
+      },
+      {
+        data: [
+          {
+            value: MotorDetails1?.TxErrorCount,
+          },
+        ],
+        name: "Tx Error Raised In Right Motor",
       },
     ] as unknown as I_PISField[],
 
     RightMotorDetails: [
       {
-        data: [
-          {
-            max: 360,
-            min: 0,
-            value: currentPacket?.MotorDetails1?.AbsoluteAngle,
-          },
-        ],
-        name: "Absolute Angle",
+        data: [{ value: MotorDetails1?.ActiveMotor }],
+        name: "Active Motor",
+      },
+      {
+        data: [{ value: MotorDetails1?.BEMF_D }],
+        name: "BEMF D",
+      },
+      {
+        data: [{ value: MotorDetails1?.BEMF_Q }],
+        name: "BEMF Q",
+      },
+      {
+        data: [{ unit: UnitType.AMPERAGE, value: MotorDetails1?.BusCurrent }],
+        name: "Bus Current",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails1?.BusVoltage }],
+        name: "Bus Voltage",
+      },
+      {
+        data: [{ value: MotorDetails1?.DC_Bus_Ah }],
+        name: "DC Bus Ah",
       },
       {
         data: [
-          {
-            value: currentPacket?.MotorDetails1?.ControlValue, // int
-          },
+          { unit: UnitType.TEMP, value: MotorDetails1?.DspBoardTemperature },
         ],
-        name: "Control Value",
+        name: "DSP Board Temperature",
+      },
+      {
+        data: [{ value: MotorDetails1?.ErrorFlags }],
+        name: "Error Flags",
       },
       {
         data: [
-          {
-            unit: UnitType.WATT,
-            value: currentPacket?.MotorDetails1?.CurrentMotorPower, // short int
-          },
+          { unit: UnitType.TEMP, value: MotorDetails1?.HeatsinkTemperature },
         ],
-        name: "Current Motor Power",
+        name: "Heatsink Temperature",
       },
       {
-        data: [
-          {
-            unit: UnitType.NEWTONMETERS,
-            value: currentPacket?.MotorDetails1?.CurrentMotorTorque,
-          },
-        ],
-        name: "Current Motor Torque",
+        data: [{ value: MotorDetails1?.Id }],
+        name: "Id",
       },
       {
-        data: [
-          {
-            unit: UnitType.RPM,
-            value: currentPacket?.MotorDetails1?.CurrentRpmValue,
-          },
-        ],
-        name: "Current RPM Value",
+        data: [{ value: MotorDetails1?.Iq }],
+        name: "Iq",
       },
       {
-        data: [
-          {
-            unit: "°C",
-            value: currentPacket?.MotorDetails1?.MotorTemperature,
-          },
-        ],
+        data: [{ value: MotorDetails1?.LimitFlags }],
+        name: "Limit Flags",
+      },
+      {
+        data: [{ value: MotorDetails1?.MotorId }],
+        name: "Motor Id",
+      },
+      {
+        data: [{ unit: UnitType.TEMP, value: MotorDetails1?.MotorTemperature }],
         name: "Motor Temperature",
       },
       {
-        data: [
-          {
-            units: UnitType.AMPERAGE,
-            value: currentPacket?.MotorDetails1?.InverterPeakCurrent,
-          },
-        ],
-        name: "Inverter Peak Current",
+        data: [{ unit: UnitType.SPEED, value: MotorDetails1?.MotorVelocity }],
+        name: "Motor Velocity",
+      },
+      {
+        data: [{ value: MotorDetails1?.Odometer }],
+        name: "Odometer",
+      },
+      {
+        data: [{ value: MotorDetails1?.PhaseCurrentB }],
+        name: "Phase Current B",
+      },
+      {
+        data: [{ value: MotorDetails1?.PhaseCurrentC }],
+        name: "Phase Current C",
+      },
+      {
+        data: [{ value: MotorDetails1?.RxErrorCount }],
+        name: "Rx Error Count",
+      },
+      {
+        data: [{ value: MotorDetails1?.SerialNumber }],
+        name: "Serial Number",
+      },
+      {
+        data: [{ unit: UnitType.SPEED, value: MotorDetails1?.SlipSpeed }],
+        name: "Slip Speed",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails1?.Supply15V }],
+        name: "Supply 15V",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails1?.Supply1V9 }],
+        name: "Supply 1.9V",
+      },
+      {
+        data: [{ unit: UnitType.VOLTAGE, value: MotorDetails1?.Supply3V3 }],
+        name: "Supply 3.3V",
+      },
+      {
+        data: [{ value: MotorDetails1?.TritiumId }],
+        name: "Tritium Id",
+      },
+      {
+        data: [{ value: MotorDetails1?.TxErrorCount }],
+        name: "Tx Error Count",
+      },
+      {
+        data: [{ value: MotorDetails1?.Vd }],
+        name: "Vd",
       },
       {
         data: [
-          {
-            value: currentPacket?.MotorDetails1?.MotorTemperature,
-          },
+          { unit: UnitType.VOLTAGE, value: MotorDetails1?.VehicleVelocity },
         ],
-        name: "Motor Temperature",
+        name: "Vehicle Velocity",
+      },
+      {
+        data: [{ value: MotorDetails1?.Vq }],
+        name: "Vq",
       },
     ] as unknown as I_PISField[],
   };
