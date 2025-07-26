@@ -56,7 +56,7 @@ export function TabContent({
 function AnalysisTab() {
   const { currentAppState } = useAppState();
   const [value, setValue] = useState<number>(0);
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   return (
     <div className="flex flex-col gap-y-4 px-4">
@@ -91,7 +91,7 @@ function AnalysisTab() {
               <Tab
                 key={tab.id}
                 label={tab.name.toUpperCase()}
-                sx={theme === "dark" ? { color: lightGray } : {}}
+                sx={resolvedTheme === "dark" ? { color: lightGray } : {}}
                 value={tab.id}
               ></Tab>
             ))}

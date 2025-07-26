@@ -42,12 +42,12 @@ export default function MapControls({
   trackList: TrackList[];
   viewTracks: boolean[];
 }) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const buttonClasses = useMemo(
     () =>
-      `flex size-8 items-center justify-center rounded-full bg-light text-light ${theme === "dark" && "invert"}`,
-    [theme],
+      `flex size-8 items-center justify-center rounded-full bg-light text-light ${resolvedTheme === "dark" && "invert"}`,
+    [resolvedTheme],
   );
   const iconClasses = useMemo(() => `h-6 text-xl`, []);
   const [viewRaceTracks, setViewRaceTracks] = useState(false);
@@ -101,7 +101,7 @@ export default function MapControls({
                 }}
               >
                 <div
-                  className={`size-2 rounded-xl outline outline-1 outline-gray-500 ${theme === "dark" && "invert"}`}
+                  className={`size-2 rounded-xl outline outline-1 outline-gray-500 ${resolvedTheme === "dark" && "invert"}`}
                   style={{
                     backgroundColor:
                       typeof track.layerProps.paint?.["line-color"] ===
