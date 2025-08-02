@@ -12,31 +12,33 @@ export default function Home() {
 
   return (
     <div className="h-full w-screen overflow-x-hidden bg-light p-4 text-light dark:bg-dark dark:text-dark lg:h-screen">
-      <div className="flex h-full flex-col gap-y-2">
-        <div className="flex h-full flex-wrap gap-2">
-          <div className="mx-auto w-36">
-            <LogoStatusContainer />
+      <PlaybackContextProvider>
+        <div className="flex h-full flex-col gap-y-2">
+          <div className="flex h-full flex-wrap gap-2">
+            <div className="mx-auto w-36">
+              <LogoStatusContainer />
+            </div>
+            <div className="w-full flex-1 flex-row">
+              <TabsContainer />
+            </div>
           </div>
-          <div className="w-full flex-1 flex-row">
-            <TabsContainer />
+          <div className="flex flex-row flex-wrap gap-2">
+            <div className="size-96 grow">
+              <MapContainer />
+            </div>
+            <div className="grow basis-2/3">
+              <HeroContainer />
+            </div>
+          </div>
+          <div className="grid">
+            {currentAppState.playbackSwitch ? (
+              <PlaybackSlider />
+            ) : (
+              <BottomInformationContainer />
+            )}
           </div>
         </div>
-        <div className="flex flex-row flex-wrap gap-2">
-          <div className="size-96 grow">
-            <MapContainer />
-          </div>
-          <div className="grow basis-2/3">
-            <HeroContainer />
-          </div>
-        </div>
-        <div className="grid">
-          {currentAppState.playbackSwitch ? (
-            <PlaybackSlider />
-          ) : (
-            <BottomInformationContainer />
-          )}
-        </div>
-      </div>
+      </PlaybackContextProvider>
     </div>
   );
 }
