@@ -1,3 +1,4 @@
+import { useTheme } from "next-themes";
 import { twMerge } from "tailwind-merge";
 
 import AWSIcon from "@/components/atoms/AWSIcon";
@@ -6,6 +7,7 @@ import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { helios } from "@/styles/colors";
 import { Switch } from "@mantine/core";
 
 function PlaybackPickerComponent() {
@@ -17,7 +19,7 @@ function PlaybackPickerComponent() {
         <span className="pr-3">Playback: </span>
         <Switch
           checked={currentAppState.playbackSwitch}
-          color="#B94A6C"
+          color={helios}
           onClick={() =>
             setCurrentAppState((prevState) => ({
               ...prevState,
@@ -31,12 +33,13 @@ function PlaybackPickerComponent() {
 }
 
 function StatusComponent() {
-  const { currentAppState } = useAppState();
+  const { resolvedTheme } = useTheme();
+  const { currentAppState, setCurrentAppState } = useAppState();
   const { currentPacket } = usePacket();
   const userConnection = currentAppState.socketConnected;
   // TODO: change carConnection from socketIO.connected to carConnection.connected
-  const carConnection = currentAppState.mqttConnected;
-  const colorTheme = currentAppState.darkMode ? "#FFFFFF" : "#000000";
+  const carConnection = currentAppState.socketConnected;
+  const colorTheme = resolvedTheme === "dark" ? "white" : "black";
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = currentAppState.socketConnected
     ? new Date(currentPacket.TimeStamp).toLocaleString()

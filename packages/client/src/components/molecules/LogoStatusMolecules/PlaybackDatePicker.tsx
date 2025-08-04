@@ -213,7 +213,7 @@ function PlaybackDatePicker() {
                   playbackData={playbackData}
                 />
               </div>
-              {playbackData.length > 0 && (
+              {(playbackData?.length ?? 0) > 0 && (
                 <Tooltip arrow title="Download to CSV">
                   <button
                     className="absolute right-7 top-5"

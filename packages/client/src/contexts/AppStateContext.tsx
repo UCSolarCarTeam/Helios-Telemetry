@@ -32,7 +32,6 @@ interface IAppState {
   displayLoading: boolean;
   loading: boolean;
   error: boolean;
-  darkMode: boolean;
   appUnits: APPUNITS;
   favourites: string[];
   connectionType: CONNECTIONTYPES;
@@ -48,7 +47,6 @@ interface IAppState {
 interface IAppStateReturn {
   currentAppState: IAppState;
   setCurrentAppState: Dispatch<SetStateAction<IAppState>>;
-  toggleDarkMode: () => void;
 }
 
 const appStateContext = createContext<IAppStateReturn>({} as IAppStateReturn);
@@ -70,7 +68,6 @@ export function AppStateContextProvider({ children }: Props) {
     appUnits: APPUNITS.METRIC,
     carLatency: 0,
     connectionType: CONNECTIONTYPES.DEMO,
-    darkMode: false,
     displayLoading: true,
     error: false,
     favourites: [],
@@ -172,20 +169,28 @@ export function AppStateContextProvider({ children }: Props) {
         ...prev,
         appUnits: parsedSettings.appUnits ?? prev.appUnits,
         connectionType: parsedSettings.connectionType ?? prev.connectionType,
-        darkMode: parsedSettings.darkMode ?? prev.darkMode,
         favourites: parsedFavourites,
         lapCoords: parsedSettings.lapCoords ?? prev.lapCoords,
         playbackDateTime: parsedPlaybackDateTime,
       }));
+    } else if (favourites === null && savedSettings) {
+      const parsedSettings: IAppState = JSON.parse(savedSettings) as IAppState;
+      setCurrentAppState((prev) => ({
+        ...prev,
+        appUnits: parsedSettings.appUnits,
+        connectionType: parsedSettings.connectionType,
+        favourites: [
+          "Motor Temp",
+          "Battery Cell Voltage",
+          "Vehicle Velocity",
+          "Pack Voltage",
+          "Pack Current",
+          "Battery Average Voltage",
+        ],
+        lapCoords: parsedSettings.lapCoords,
+      }));
     }
   }, []);
-
-  const toggleDarkMode = useCallback(() => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      darkMode: !currentAppState.darkMode,
-    }));
-  }, [currentAppState.darkMode]);
 
   const saveSettingsToLocalStorage = useCallback(() => {
     localStorage.setItem("settings", JSON.stringify(currentAppState));
@@ -214,7 +219,6 @@ export function AppStateContextProvider({ children }: Props) {
       value={{
         currentAppState,
         setCurrentAppState,
-        toggleDarkMode,
       }}
     >
       {children}

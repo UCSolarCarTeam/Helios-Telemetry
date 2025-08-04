@@ -6,7 +6,7 @@ function FaultsComponent() {
   const { currentFaults } = useFaults();
 
   return (
-    <div className="flex h-full flex-col overflow-y-scroll">
+    <div className="flex h-full flex-col overflow-y-auto">
       {currentFaults instanceof Map && currentFaults.size > 0 ? (
         <>
           {Array.from(currentFaults.entries()).map(([key, faultObj]) => {

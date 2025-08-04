@@ -11,7 +11,7 @@ const MPPT = (): I_PIS => {
         {
           data: [
             {
-              hover: "Unit 0 Channel 0 Array Voltage ",
+              hover: "Unit 0 Channel 0 Array Voltage",
               max: 100,
               min: 20,
               unit: UnitType.VOLTAGE,
