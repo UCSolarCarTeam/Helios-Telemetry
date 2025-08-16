@@ -3,31 +3,25 @@
 module "s3_bucket"{
     source = "./modules/remote-state"
 
-    bucket_location = "remote-state-prod"
-    name ="SolarCar Telemetry Remote State"
+    bucket_name = "ucsolar-helios-telemetry-remote-state"
+    name ="helios-telemetry-remote-state"
     environment = "prod"
 }
-# module code pipeline
 
-resource "aws_ecr_repository" "default"{
-    name = "Helios Telemetry ECR"
-    description = "This is where we store our images that are used to buld our images."
+# Secrets Manager
+
+# Create the secrets
+resource "aws_secretsmanager_secret" "default"{
+    for_each = toset([
+    "HeliosTelemetryBackendSSL/Chain${var.old_stack_name}",
+    "HeliosTelemetryBackendSSL/Certificate${var.old_stack_name}",
+    "HeliosTelemetryBackendSSL/PrivateKey${var.old_stack_name}",
+    "HeliosTelemetryMQTTCredentials${var.old_stack_name}"
+  ])
+    name =  each.key
+    
+    tags ={
+      name = each.key,
+      source = "terraform"
+    }
 }
-# import {
-#   to = aws_ecr_repository.service
-#   id = "test-service"
-# }
-# TODO: We can migrate our existing one over but tbh it doesn't even matter:
-
-resource "aws_codebuild_project" "TelemetryCodeBuild"{
-    name = "Helios-Telemetry-CodeBuild"
-    description = "This codebuild will contain all the information about our codebuild project."
-
-    build_timeout = 5
-}
-resource "aws_codebuild_webhook" "main"{
-    project_name = aws_codebuild_project.
-}
-
-# module infrastcutre ops
-

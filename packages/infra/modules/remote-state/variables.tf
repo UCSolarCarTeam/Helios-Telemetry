@@ -1,4 +1,4 @@
-variable "bucket_location"{
+variable "bucket_name"{
     description= "Bucket location"
     type = string
 }
