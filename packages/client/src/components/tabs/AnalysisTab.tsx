@@ -3,7 +3,6 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useAppState } from "@/contexts/AppStateContext";
 import { tabs } from "@/objects/TabRoutes";
 import { helios, lightGray, mediumGray } from "@/styles/colors";
 import { ThemeProvider } from "@emotion/react";
@@ -54,7 +53,6 @@ export function TabContent({
 }
 
 function AnalysisTab() {
-  const { currentAppState } = useAppState();
   const [value, setValue] = useState<number>(0);
   const { resolvedTheme } = useTheme();
 
