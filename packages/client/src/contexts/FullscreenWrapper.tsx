@@ -57,7 +57,7 @@ const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
   return (
     <div className={`relative ${fullscreenClasses}`} ref={targetElement}>
       <button
-        className="absolute right-0 top-0 z-50 mr-2 mt-2 rounded px-2 py-1 text-xs text-light transition-colors hover:bg-gray-200 dark:text-dark hover:dark:bg-gray-700"
+        className="absolute right-0 top-0 z-50 mr-2 mt-2 hidden rounded px-2 py-1 text-xs text-light md:block"
         onClick={() => toggleFullScreen()}
         title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
       >
