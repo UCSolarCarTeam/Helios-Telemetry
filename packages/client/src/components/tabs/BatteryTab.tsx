@@ -1,5 +1,4 @@
 import PISTransformer from "@/components/transformers/PISTransformer";
-import FullscreenWrapper from "@/contexts/FullscreenWrapper";
 import usePIS from "@/hooks/PIS/usePIS";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 
@@ -8,9 +7,7 @@ function BatteryTab() {
 
   return (
     <div>
-      <FullscreenWrapper>
-        <PISTransformer root={battery as I_PIS} />
-      </FullscreenWrapper>
+      <PISTransformer root={battery as I_PIS} />
     </div>
   );
 }

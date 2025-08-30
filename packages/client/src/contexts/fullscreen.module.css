@@ -1,3 +1,5 @@
+/* We apply this css to the FullscreenWrapper component because for some reason, md:block doesn't work as expected with tailwind */
+
 @media (min-width: 768px) {
   .mdScreenBlock {
     display: block;
