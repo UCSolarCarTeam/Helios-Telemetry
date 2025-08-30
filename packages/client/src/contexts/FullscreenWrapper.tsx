@@ -19,6 +19,8 @@ import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
+import style from "./fullscreen.module.css";
+
 const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
   const targetElement = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
@@ -57,8 +59,8 @@ const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
   return (
     <div className={`relative ${fullscreenClasses}`} ref={targetElement}>
       <button
-        className="absolute right-0 top-0 z-50 mr-2 mt-2 hidden rounded px-2 py-1 text-xs text-light md:block"
-        onClick={() => toggleFullScreen()}
+        className={`absolute right-0 top-0 z-50 mr-2 mt-2 hidden rounded px-2 py-1 text-xs text-light ${style.mdScreenBlock}`}
+        onClick={toggleFullScreen}
         title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
       >
         {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
