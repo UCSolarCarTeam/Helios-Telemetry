@@ -14,8 +14,9 @@
  * - We have to manually define theme classes when in fullscreen mode because once a component is in fullscreen mode, it loses context about parent's styling.
  */
 import { useTheme } from "next-themes";
-import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useRef } from "react";
 
+import useFullscreen from "@/hooks/useFullscreen";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
@@ -24,7 +25,7 @@ import style from "./fullscreen.module.css";
 const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
   const targetElement = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const isFullscreen = useFullscreen();
 
   function toggleFullScreen() {
     const elementReferenced = targetElement.current;
@@ -37,17 +38,6 @@ const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
       document.exitFullscreen?.();
     }
   }
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-  }, []);
 
   // have to manually define theme classes when in fullscreen mode
   const fullscreenClasses = isFullscreen

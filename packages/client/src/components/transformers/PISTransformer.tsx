@@ -2,6 +2,7 @@ import { type JSX, useCallback } from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import useUnitsHandler from "@/hooks/PIS/useUnitsHandler";
+import useFullscreen from "@/hooks/useFullscreen";
 import {
   type I_PISField,
   type I_PISFieldData,
@@ -154,9 +155,20 @@ type FieldsPrinterProps = {
 
 function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
   const { depth = 0, fields } = props;
+  const isFullscreen = useFullscreen();
+
+  // get the max height class based on depth, but only do this if not in fullscreen
+  const getMaxHeightClass = () => {
+    if (isFullscreen) return ""; // no max height restriction in fullscreen
+
+    if (depth >= 3) return "max-h-[100px]";
+    if (depth === 2) return "max-h-[260px]";
+    return "max-h-[260px]";
+  };
+
   return (
     <div
-      className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-x-hidden ${depth >= 3 ? `max-h-[100px]` : depth === 2 ? `max-h-[260px]` : `max-h-[260px]`}`}
+      className={`block overflow-x-hidden md:grid md:grid-cols-3 md:gap-x-2 lg:block lg:overflow-x-hidden ${getMaxHeightClass()}`}
     >
       {fields.map((field, index) => (
         <FieldPrinter field={field} key={index} />
