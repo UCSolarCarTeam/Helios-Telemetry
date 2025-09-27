@@ -1,9 +1,9 @@
-import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField, UnitType } from "@/objects/PIS/PIS.interface";
+import { usePacketStore } from "@/stores/usePacket";
 
 const MPPT = (): I_PIS => {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const { MPPT } = currentPacket;
   const data = {
     Unit0: {

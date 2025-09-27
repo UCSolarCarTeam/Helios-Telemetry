@@ -1,8 +1,8 @@
 import ParkingBrakeIcon from "@/components/atoms/ParkingBreakIcon";
-import { usePacket } from "@/contexts/PacketContext";
+import { usePacketStore } from "@/stores/usePacket";
 
 function GearParkBrakeComponent() {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const selectedCSS = "font-bold text-helios";
   const reverse = currentPacket.B3.ReverseDigital;
   const forward = !currentPacket.B3.ReverseDigital;

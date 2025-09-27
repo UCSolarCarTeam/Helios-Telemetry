@@ -1,7 +1,7 @@
-import { usePacket } from "@/contexts/PacketContext";
+import { usePacketStore } from "@/stores/usePacket";
 
 function BatteryIconComponent() {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const batteryLevel = currentPacket.Battery.PackStateOfCharge;
 
   return (
