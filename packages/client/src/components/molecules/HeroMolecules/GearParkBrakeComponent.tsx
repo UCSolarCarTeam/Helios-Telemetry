@@ -10,7 +10,7 @@ function GearParkBrakeComponent() {
   const reverse = currentPacket.B3.ReverseDigital;
   const forward = !currentPacket.B3.ReverseDigital;
   const brake = currentPacket.B3.BrakeSwitchDigital;
-  const colorTheme = resolvedTheme === "dark" ? "white" : "black";
+  const colorTheme = resolvedTheme === "dark" ? "#D2D2D2" : "#212121";
 
   return (
     <>
