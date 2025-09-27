@@ -22,7 +22,10 @@ import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
 import style from "./fullscreen.module.css";
 
-const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
+const FullscreenWrapper = ({
+  children,
+  className,
+}: PropsWithChildren<{ className?: string }>) => {
   const targetElement = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const isFullscreen = useFullscreen();
@@ -47,15 +50,18 @@ const FullscreenWrapper = ({ children }: PropsWithChildren<object>) => {
     : "";
 
   return (
-    <div className={`relative ${fullscreenClasses}`} ref={targetElement}>
+    <div
+      className={`relative ${fullscreenClasses} ${className || ""}`}
+      ref={targetElement}
+    >
       <button
-        className={`absolute right-0 top-0 z-50 mr-2 mt-2 hidden rounded px-2 py-1 text-xs text-light ${style.mdScreenBlock}`}
+        className={`absolute right-2 top-2 z-50 hidden rounded px-2 py-1 text-xs ${fullscreenClasses} ${style.mdScreenBlock}`}
         onClick={toggleFullScreen}
         title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
       >
         {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
       </button>
-      {children}
+      <div className="size-full">{children}</div>
     </div>
   );
 };
