@@ -3,7 +3,7 @@ import { type JSX, useEffect, useState } from "react";
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
 import { useAppState } from "@/contexts/AppStateContext";
-import { usePacket } from "@/contexts/PacketContext";
+import { usePacketStore } from "@/stores/usePacket";
 import { Coords } from "@shared/helios-types";
 
 import { GEO_DATA } from "../molecules/MapMolecules/MapSetup";
@@ -18,7 +18,7 @@ const startingLocation: Coords = {
 };
 function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
 
   const isDemo = currentAppState.connectionType === "DEMO";
   const [carLocation, setCarLocation] = useState(

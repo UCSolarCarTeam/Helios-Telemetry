@@ -1,10 +1,10 @@
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 
+import { LapListenerManager } from "@/components/global/LapDataListenerManager";
 import LoadingWrapper from "@/components/global/LoadingWrapper";
+import { PacketListenerManager } from "@/components/global/PacketListenerManager";
 import { AppStateContextProvider } from "@/contexts/AppStateContext";
-import { LapDataContextProvider } from "@/contexts/LapDataContext";
-import { PacketContextProvider } from "@/contexts/PacketContext";
 import { SocketContextProvider } from "@/contexts/SocketContext";
 import "@/styles/globals.css";
 import { MantineProvider } from "@mantine/core";
@@ -20,13 +20,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <Notifications />
         <AppStateContextProvider>
           <SocketContextProvider>
-            <PacketContextProvider>
-              <LapDataContextProvider>
-                <LoadingWrapper>
-                  <Component {...pageProps} />
-                </LoadingWrapper>
-              </LapDataContextProvider>
-            </PacketContextProvider>
+            <LoadingWrapper>
+              <LapListenerManager />
+              <PacketListenerManager />
+              <Component {...pageProps} />
+            </LoadingWrapper>
           </SocketContextProvider>
         </AppStateContextProvider>
       </ThemeProvider>
