@@ -1,7 +1,6 @@
 import axios from "axios";
 import { create } from "zustand";
 
-import { socketIO } from "@/contexts/SocketContext";
 import { notifications } from "@mantine/notifications";
 import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 
@@ -28,26 +27,22 @@ export const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
 });
 
 interface LapDataState {
-  attachNetworkListener: () => void;
-  detachNetworkListener: () => void;
-  lapData: IFormattedLapData[];
   formatLapData: (lapPacket: ILapData) => IFormattedLapData;
-  onLapData: (lapPacket: ILapData) => void;
-  onLapComplete: () => void;
-  fetchLapData: () => Promise<void>;
+  lapData: IFormattedLapData[];
+  setLapData: (data: IFormattedLapData[]) => void;
+  addLapData: (data: IFormattedLapData) => void;
   clearLapData: () => void;
+  fetchLapData: () => Promise<void>;
 }
 
-export const useLapDataStore = create<LapDataState>((set, get) => ({
-  attachNetworkListener: () => {
-    socketIO.on("lapData", get().onLapData);
-    socketIO.on("lapComplete", get().onLapComplete);
-  },
+export const useLapDataStore = create<LapDataState>((set) => ({
+  addLapData: (data) =>
+    set((state) => ({
+      lapData: [...state.lapData, data],
+    })),
+
   clearLapData: () => set({ lapData: [] }),
-  detachNetworkListener: () => {
-    socketIO.off("lapData", get().onLapData);
-    socketIO.off("lapComplete", get().onLapComplete);
-  },
+
   fetchLapData: async () => {
     try {
       const response = await axios.get(`${prodURL}/laps`);
@@ -67,19 +62,7 @@ export const useLapDataStore = create<LapDataState>((set, get) => ({
       });
     }
   },
-  formatLapData,
+  formatLapData: formatLapData,
   lapData: [],
-  onLapComplete: () => {
-    notifications.show({
-      color: "green",
-      message: "A lap has been completed!",
-      title: "Lap Completion",
-    });
-  },
-  onLapData: (lapPacket: ILapData) => {
-    const formattedData = formatLapData(lapPacket);
-    set((state) => ({
-      lapData: [...state.lapData, formattedData],
-    }));
-  },
+  setLapData: (data) => set({ lapData: data }),
 }));

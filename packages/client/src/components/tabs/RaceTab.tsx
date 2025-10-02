@@ -2,8 +2,8 @@ import axios from "axios";
 import { useTheme } from "next-themes";
 import React, { useCallback, useEffect, useState } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
-import { useLapData } from "@/contexts/LapDataContext";
+import { useAppState } from "@/stores/useAppState";
+import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { type IFormattedLapData, prodURL } from "@shared/helios-types";

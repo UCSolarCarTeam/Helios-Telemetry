@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { tabs } from "@/objects/TabRoutes";
-import { helios, lightGray, mediumGray } from "@/styles/colors";
+import { useAppState } from "@/stores/useAppState";
 import { ThemeProvider } from "@emotion/react";
 import { Tab, Tabs, createTheme } from "@mui/material";
 

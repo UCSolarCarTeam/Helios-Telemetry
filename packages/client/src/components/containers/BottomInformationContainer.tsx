@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
 import usePIS from "@/hooks/PIS/usePIS";
 import { useFavouriteLookupTable } from "@/hooks/favouriteLookupTable";
 import type I_PIS from "@/objects/PIS/PIS.interface";
+import { useAppState } from "@/stores/useAppState";
 
 function BottomInformationContainer() {
   const { currentAppState, setCurrentAppState } = useAppState();

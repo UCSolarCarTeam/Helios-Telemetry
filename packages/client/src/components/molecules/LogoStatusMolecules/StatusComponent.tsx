@@ -5,7 +5,7 @@ import AWSIcon from "@/components/atoms/AWSIcon";
 import CarIcon from "@/components/atoms/CarIcon";
 import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
-import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
+import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
 import { Switch } from "@mantine/core";
 

@@ -9,7 +9,7 @@ import {
 } from "react";
 import { type Socket, io } from "socket.io-client";
 
-import { useAppState } from "@/contexts/AppStateContext";
+import { useAppState } from "@/stores/useAppState";
 import { notifications } from "@mantine/notifications";
 import type {
   CoordInfoUpdate,

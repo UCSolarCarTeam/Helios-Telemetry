@@ -1,42 +1,67 @@
 import { useEffect } from "react";
 
-import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
-import { useLapDataStore } from "@/stores/useLapData";
+import { socketIO } from "@/contexts/SocketContext";
+import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
+import { formatLapData, useLapDataStore } from "@/stores/useLapData";
+import { notifications } from "@mantine/notifications";
+import type { ILapData } from "@shared/helios-types";
 
 export function LapListenerManager(): React.ReactElement | null {
   const { currentAppState } = useAppState();
-  const {
-    attachNetworkListener,
-    clearLapData,
-    detachNetworkListener,
-    fetchLapData,
-  } = useLapDataStore();
+  const { addLapData, clearLapData, fetchLapData } = useLapDataStore();
 
+  // Fetch initial lap data when manager mounts
   useEffect(() => {
-    // Always fetch initial lap data when manager mounts
     fetchLapData();
+  }, [fetchLapData]);
 
+  // Handle connection type changes
+  useEffect(() => {
+    // Playback mode: no listeners, clear data
     if (currentAppState.playbackSwitch) {
-      // playback mode: no listeners, just clear data if needed
       clearLapData();
-      detachNetworkListener();
       return;
     }
 
+    // Network mode: attach socket listeners
     if (currentAppState.connectionType === CONNECTIONTYPES.NETWORK) {
-      attachNetworkListener();
-      return () => {
-        detachNetworkListener();
+      const handleLapData = (lapPacket: ILapData) => {
+        const formattedData = formatLapData(lapPacket);
+        addLapData(formattedData);
       };
-    } else if (currentAppState.connectionType === CONNECTIONTYPES.DEMO) {
-      clearLapData();
-    } else if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
+
+      const handleLapComplete = () => {
+        notifications.show({
+          color: "green",
+          message: "A lap has been completed!",
+          title: "Lap Completion",
+        });
+      };
+
+      socketIO.on("lapData", handleLapData);
+      socketIO.on("lapComplete", handleLapComplete);
+
+      return () => {
+        socketIO.off("lapData", handleLapData);
+        socketIO.off("lapComplete", handleLapComplete);
+      };
     }
 
-    return () => {
-      detachNetworkListener();
-    };
-  }, [currentAppState.connectionType, currentAppState.playbackSwitch]);
+    // Demo mode: clear existing lap data
+    else if (currentAppState.connectionType === CONNECTIONTYPES.DEMO) {
+      clearLapData();
+    }
+
+    // Radio mode: TODO
+    else if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
+      // TODO: handle radio
+    }
+  }, [
+    currentAppState.connectionType,
+    currentAppState.playbackSwitch,
+    addLapData,
+    clearLapData,
+  ]);
 
   return null;
 }

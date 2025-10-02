@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { PlotParams } from "react-plotly.js";
 
 import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
+import { useAppState } from "@/stores/useAppState";
 
 import Plotly from "./Plotly";
 
