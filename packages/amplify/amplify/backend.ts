@@ -217,6 +217,12 @@ dbSecurityGroup.addIngressRule(
   "Allow Postgres access",
 );
 
+const keyPair = ec2.KeyPair.fromKeyPairName(
+  TelemetryBackendStack,
+  "KeyPair",
+  "Burton",
+);
+
 const dbInstance = new ec2.Instance(
   TelemetryBackendStack,
   "TelemetryDBInstance",
@@ -225,7 +231,7 @@ const dbInstance = new ec2.Instance(
       ec2.InstanceClass.T3,
       ec2.InstanceSize.SMALL,
     ),
-    keyName: "my-keypair",
+    keyPair: keyPair,
     machineImage: ec2.MachineImage.latestAmazonLinux2023(),
     role: ec2Role,
     securityGroup: dbSecurityGroup,
