@@ -2,6 +2,7 @@ import React from "react";
 
 import { useAppState } from "@/contexts/AppStateContext";
 import { DatePicker, TimeInput } from "@mantine/dates";
+import { notifications } from "@mantine/notifications";
 import { Button } from "@mui/material";
 
 import { IPlaybackDateTime } from "../PlaybackDatePicker";
@@ -21,9 +22,13 @@ import { IPlaybackDateTime } from "../PlaybackDatePicker";
 const DataPickerColumn = ({
   fetchPlaybackData,
   playbackDateTime,
+  setConfirmedPlaybackDateTime,
   setPlaybackDateTime,
 }: {
   setPlaybackDateTime: React.Dispatch<React.SetStateAction<IPlaybackDateTime>>;
+  setConfirmedPlaybackDateTime: React.Dispatch<
+    React.SetStateAction<IPlaybackDateTime>
+  >;
   playbackDateTime: IPlaybackDateTime;
   fetchPlaybackData: () => void;
 }) => {
@@ -52,7 +57,30 @@ const DataPickerColumn = ({
       });
     }
   };
-
+  const handleConfirm = () => {
+    if (
+      playbackDateTime.startTime &&
+      playbackDateTime.endTime &&
+      playbackDateTime.startTime > playbackDateTime.endTime
+    ) {
+      notifications.show({
+        color: "red",
+        message: "Start time cannot be after end time.",
+        title: "Invalid Time Range",
+      });
+      return;
+    }
+    setCurrentAppState((prev) => ({
+      ...prev,
+      playbackDateTime: {
+        date: playbackDateTime.date,
+        endTime: playbackDateTime.endTime,
+        startTime: playbackDateTime.startTime,
+      },
+    }));
+    setConfirmedPlaybackDateTime(playbackDateTime);
+    fetchPlaybackData();
+  };
   // Handle TimeInput change to update startTime or endTime
   const handleTimeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -62,13 +90,18 @@ const DataPickerColumn = ({
     if (!timeValue) return;
 
     const [hours, minutes, seconds = 0] = timeValue.split(":").map(Number);
-
     setPlaybackDateTime((prev) => {
       const newTime = new Date(prev[timeKey] ?? new Date());
       newTime.setHours(hours ?? 0, minutes ?? 0, seconds ?? 0);
+      let newEndTime = prev.endTime;
+      if (timeKey === "startTime" && prev.endTime && newTime >= prev.endTime) {
+        newEndTime = new Date(newTime);
+        newEndTime.setHours(newEndTime.getHours() + 1);
+      }
 
       return {
         ...prev,
+        endTime: newEndTime,
         [timeKey]: newTime,
       };
     });
@@ -83,37 +116,18 @@ const DataPickerColumn = ({
       />
 
       <div className="flex flex-row items-center gap-1">
-        {(["startTime", "endTime"] as Array<keyof IPlaybackDateTime>).map(
-          (timeKey) => (
-            <React.Fragment key={timeKey}>
-              <TimeInput
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  handleTimeChange(event, timeKey as "startTime" | "endTime")
-                }
-                value={
-                  playbackDateTime[timeKey]?.toTimeString().split(" ")[0] ?? ""
-                }
-              />
-              {timeKey === "startTime" && <span>-</span>}
-            </React.Fragment>
-          ),
-        )}
+        <TimeInput
+          onChange={(event) => handleTimeChange(event, "startTime")}
+          value={playbackDateTime.startTime?.toTimeString().split(" ")[0] ?? ""}
+        />
+        -
+        <TimeInput
+          onChange={(event) => handleTimeChange(event, "endTime")}
+          value={playbackDateTime.endTime?.toTimeString().split(" ")[0] ?? ""}
+        />
       </div>
 
-      <Button
-        className="mb-1"
-        onClick={() => {
-          setCurrentAppState((prev) => ({
-            ...prev,
-            playbackDateTime: {
-              date: playbackDateTime.date,
-              endTime: playbackDateTime.endTime,
-              startTime: playbackDateTime.startTime,
-            },
-          }));
-          fetchPlaybackData();
-        }}
-      >
+      <Button className="mb-1" onClick={handleConfirm}>
         Confirm
       </Button>
     </div>

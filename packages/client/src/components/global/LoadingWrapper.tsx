@@ -1,5 +1,4 @@
 import { type PropsWithChildren, memo, useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
 
 import Loading from "@/components/global/Loading";
 import { useAppState } from "@/contexts/AppStateContext";
@@ -68,7 +67,7 @@ const LoadingWrapper = ({ children }: PropsWithChildren) => {
   }, [currentAppState.loading, currentLoadingState, setCurrentAppState]);
 
   return (
-    <div className={twMerge(currentAppState.darkMode ? "dark" : "")}>
+    <div>
       {currentAppState.displayLoading ? (
         <Loading currentLoadingState={currentLoadingState} />
       ) : (

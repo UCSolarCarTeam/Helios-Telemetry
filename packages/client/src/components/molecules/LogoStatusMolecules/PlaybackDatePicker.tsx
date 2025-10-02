@@ -5,8 +5,10 @@ import { useAppState } from "@/contexts/AppStateContext";
 import { usePlaybackContext } from "@/contexts/PlayBackContext";
 import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { Modal } from "@mui/material";
-import { ITelemetryData, prodURL } from "@shared/helios-types";
+import Tooltip from "@mui/material/Tooltip";
+import { ITelemetryData, convertToCSV, prodURL } from "@shared/helios-types";
 
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
 import DatePickerResultColumn from "./DataPickerMolecules/DatePickerResultColumn";
@@ -36,6 +38,15 @@ export type IPlaybackDataResponse = {
   id: string;
 };
 
+/*
+ * This component is used to contain the PlaybackResultColumn and DatePickerColumn in a modal. It contains the actual logic for 
+ * fetching the playback data from the database based on the selected date and time.
+
+ * It also contains the logic for exporting the playback data to a CSV file. It does so by flattening the nested JSON TelemetryData
+ * objects into a flat structure that can be easily converted to CSV format and then using the browser's Blob API to create a 
+ * downloadable file.
+ */
+
 const createDateTime = (time: Date, year: number, month: number, day: number) =>
   new Date(
     year,
@@ -45,6 +56,38 @@ const createDateTime = (time: Date, year: number, month: number, day: number) =>
     time.getMinutes(),
     time.getSeconds(),
   );
+
+function handleDownloadCSV(
+  csv: string,
+  confirmedPlaybackDateTime: IPlaybackDateTime,
+) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString().replace(/\//g, "-");
+  // Use the selected playback start and end times for the filename
+  const start = confirmedPlaybackDateTime?.startTime
+    ? confirmedPlaybackDateTime.startTime
+    : new Date();
+  const end = confirmedPlaybackDateTime?.endTime
+    ? confirmedPlaybackDateTime.endTime
+    : new Date();
+
+  const formatTime = (date: Date) =>
+    date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+  const timeStr = `${formatTime(start)}_to_${formatTime(end)}`;
+  a.setAttribute("download", `Helios Packet Data - ${dateStr} ${timeStr}.csv`);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
@@ -61,6 +104,9 @@ function PlaybackDatePicker() {
           };
     },
   );
+
+  const [confirmedPlaybackDateTime, setConfirmedPlaybackDateTime] =
+    useState<IPlaybackDateTime>(playbackDateTime);
 
   const { playbackData, setPlaybackData } = usePlaybackContext();
 
@@ -94,11 +140,11 @@ function PlaybackDatePicker() {
     const startTimeUTC = Math.floor(startDateTime.getTime());
     const endTimeUTC = Math.floor(endDateTime.getTime());
 
-    const maxInterval = 10 * 60 * 1000; // 10 minutes in ms
+    const maxInterval = 60 * 60 * 1000; // 60 minutes in ms
     if (endTimeUTC - startTimeUTC > maxInterval) {
       notifications.show({
         color: "red",
-        message: "Please select a range of maximum 10 minutes.",
+        message: `Please select a range of maximum ${maxInterval / 1000 / 60} minutes.`,
         title: "Error",
       });
       setLoading(false);
@@ -133,6 +179,12 @@ function PlaybackDatePicker() {
     }
   }, [currentAppState.playbackSwitch]);
 
+  const updatePlaybackTime: React.Dispatch<
+    React.SetStateAction<IPlaybackDateTime>
+  > = (time) => {
+    setLoading(false);
+    setPlaybackDateTime(time);
+  };
   return (
     <>
       {currentAppState.playbackSwitch && (
@@ -152,14 +204,30 @@ function PlaybackDatePicker() {
                 <DatePickerColumn
                   fetchPlaybackData={fetchPlaybackData}
                   playbackDateTime={playbackDateTime}
-                  setPlaybackDateTime={setPlaybackDateTime}
+                  setConfirmedPlaybackDateTime={setConfirmedPlaybackDateTime}
+                  setPlaybackDateTime={updatePlaybackTime}
                 />
                 <DatePickerResultColumn
+                  confirmedPlaybackDateTime={confirmedPlaybackDateTime}
                   loading={loading}
                   playbackData={playbackData}
-                  playbackDateTime={playbackDateTime}
                 />
               </div>
+              {(playbackData?.length ?? 0) > 0 && (
+                <Tooltip arrow title="Download to CSV">
+                  <button
+                    className="absolute right-7 top-5"
+                    onClick={() =>
+                      handleDownloadCSV(
+                        convertToCSV(playbackData),
+                        confirmedPlaybackDateTime,
+                      )
+                    }
+                  >
+                    <FileDownloadOutlinedIcon />
+                  </button>
+                </Tooltip>
+              )}
             </div>
           </Modal>
         </div>
