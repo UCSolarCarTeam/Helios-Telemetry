@@ -162,7 +162,6 @@ function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
     if (isFullscreen) return ""; // no max height restriction in fullscreen
 
     if (depth >= 3) return "max-h-[100px]";
-    if (depth === 2) return "max-h-[260px]";
     return "max-h-[260px]";
   };
 

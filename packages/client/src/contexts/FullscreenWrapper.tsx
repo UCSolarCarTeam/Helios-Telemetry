@@ -24,7 +24,7 @@ import style from "./fullscreen.module.css";
 
 const FullscreenWrapper = ({
   children,
-  className,
+  className = "",
 }: PropsWithChildren<{ className?: string }>) => {
   const targetElement = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
@@ -51,7 +51,7 @@ const FullscreenWrapper = ({
 
   return (
     <div
-      className={`relative ${fullscreenClasses} ${className || ""}`}
+      className={`relative ${fullscreenClasses} ${className}`}
       ref={targetElement}
     >
       <button
