@@ -52,11 +52,24 @@ const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
   },
 );
 
+const TelemetryBackendSecretsDatabaseCredentials = new secretsmanager.Secret(
+  TelemetryBackendStack,
+  "HeliosTelemetryDBCredentials",
+  {
+    secretName: "HeliosTelemetryDBCredentials" + backend.stack.stackName,
+    secretObjectValue: {
+      POSTGRES_PASSWORD: cdk.SecretValue.unsafePlainText(""),
+      POSTGRES_USERNAME: cdk.SecretValue.unsafePlainText(""),
+    },
+  },
+);
+
 const TelemetryBackendImageRepository = new ecr.Repository(
   TelemetryBackendStack,
   "TelemetryBackendImageRepository",
 );
 
+// Build image for our backend container
 const TelemetryBackendCodeBuildProject = new codebuild.Project(
   TelemetryBackendStack,
   "TelemetryBackendCodeBuildProject",
@@ -160,8 +173,127 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
   "TelemetryECSTaskDefintion",
 );
 
+// Create IAM role for EC2 instance
+
+const TelemetryBackendVPC = new ec2.Vpc(
+  TelemetryBackendStack,
+  "TelemetryBackendVPC",
+  {
+    maxAzs: 1,
+    natGateways: 0,
+  },
+);
+
+const ec2Role = new iam.Role(TelemetryBackendStack, "TelemetryDBEC2Role", {
+  assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
+  managedPolicies: [
+    iam.ManagedPolicy.fromAwsManagedPolicyName(
+      "AmazonEC2ContainerRegistryReadOnly",
+    ),
+    iam.ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
+  ],
+});
+
+const dbVolume = new ec2.CfnVolume(TelemetryBackendStack, "TimescaleDBVolume", {
+  availabilityZone: TelemetryBackendVPC.availabilityZones[0],
+  size: 50,
+  volumeType: "gp3",
+});
+
+const dbSecurityGroup = new ec2.SecurityGroup(
+  TelemetryBackendStack,
+  "TelemetryDBSecurityGroup",
+  {
+    allowAllOutbound: true,
+    description: "Security group for TimescaleDB EC2 instance",
+    vpc: TelemetryBackendVPC,
+  },
+);
+
+// Open port 5432 (Postgres)
+dbSecurityGroup.addIngressRule(
+  ec2.Peer.anyIpv4(),
+  ec2.Port.tcp(5432),
+  "Allow Postgres access",
+);
+
+const dbInstance = new ec2.Instance(
+  TelemetryBackendStack,
+  "TelemetryDBInstance",
+  {
+    instanceType: ec2.InstanceType.of(
+      ec2.InstanceClass.T3,
+      ec2.InstanceSize.SMALL,
+    ),
+    keyName: "my-keypair",
+    machineImage: ec2.MachineImage.latestAmazonLinux2023(),
+    role: ec2Role,
+    securityGroup: dbSecurityGroup,
+    vpc: TelemetryBackendVPC,
+  },
+);
+
+// Attach EBS
+new ec2.CfnVolumeAttachment(
+  TelemetryBackendStack,
+  "TimescaleDBVolumeAttachment",
+  {
+    device: "/dev/xvdh",
+    instanceId: dbInstance.instanceId,
+    volumeId: dbVolume.ref,
+  },
+);
+
+dbInstance.addUserData(`
+#!/bin/bash
+# Update system & install prerequisites
+yum update -y
+amazon-linux-extras enable docker
+yum install -y docker git jq awscli
+systemctl enable docker
+systemctl start docker
+
+# Install Docker Compose
+curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+# Mount EBS volume
+if ! blkid /dev/xvdh; then mkfs -t xfs /dev/xvdh; fi
+mkdir -p /var/lib/timescaledb/data
+mount /dev/xvdh /var/lib/timescaledb/data
+echo '/dev/xvdh /var/lib/timescaledb/data xfs defaults,nofail 0 2' >> /etc/fstab
+chown -R ec2-user:ec2-user /var/lib/timescaledb/data
+
+# Clone your repo
+cd /home/ec2-user
+git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
+cd Helios-Telemetry/packages/db
+
+# Pull DB secrets
+DB_CREDS=$(aws secretsmanager get-secret-value --secret-id HeliosTelemetryDBCredentials --query SecretString --output text)
+POSTGRES_USER=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
+POSTGRES_PASSWORD=$(echo $DB_CREDS | jq -r .POSTGRES_PASSWORD)
+
+# Pull SSL secrets
+aws secretsmanager get-secret-value --secret-id HeliosTelemetryBackendSSL/Certificate --query SecretString --output text > /home/ec2-user/cert.pem
+aws secretsmanager get-secret-value --secret-id HeliosTelemetryBackendSSL/Chain --query SecretString --output text > /home/ec2-user/chain.pem
+aws secretsmanager get-secret-value --secret-id HeliosTelemetryBackendSSL/PrivateKey --query SecretString --output text > /home/ec2-user/private.key
+
+# Create .env file for Docker Compose
+cat <<EOF > /home/ec2-user/.env
+POSTGRES_USER=$POSTGRES_USER
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+POSTGRES_DB=postgres
+EOF
+
+# Run Docker Compose
+docker-compose --env-file /home/ec2-user/.env up -d`);
+
 TelemetryECSTaskDefintion.addContainer("TheContainer", {
   environment: {
+    DB_HOST: dbInstance.instancePrivateIp,
+    DB_NAME: "postgres",
+    DB_PORT: "5432",
     DRIVER_TABLE_NAME: driverDataTable.tableName,
     GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
@@ -200,6 +332,14 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerMQTTCredentials,
       "username",
     ),
+    POSTGRES_PASSWORD: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsDatabaseCredentials,
+      "POSTGRES_PASSWORD",
+    ), // pass DB password
+    POSTGRES_USERNAME: ecs.Secret.fromSecretsManager(
+      TelemetryBackendSecretsDatabaseCredentials,
+      "POSTGRES_USERNAME",
+    ), // pass DB username,
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
@@ -220,14 +360,6 @@ TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefintion.taskRole,
 );
 
-const TelemetryBackendVPC = new ec2.Vpc(
-  TelemetryBackendStack,
-  "TelemetryBackendVPC",
-  {
-    maxAzs: 1,
-    natGateways: 0,
-  },
-);
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,
   "TelemetryBackendSecurityGroup",
