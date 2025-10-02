@@ -1,42 +1,66 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
-import { CONNECTIONTYPES } from "@/contexts/AppStateContext";
+import { socketIO } from "@/contexts/SocketContext";
+import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
+import { generateFakeTelemetryData } from "@shared/helios-types";
+import type { ITelemetryData } from "@shared/helios-types";
 
 export function PacketListenerManager(): React.ReactElement | null {
   const { currentAppState } = useAppState();
-  const {
-    attachNetworkListener,
-    detachNetworkListener,
-    startDemoMode,
-    stopDemoMode,
-  } = usePacketStore();
+  const { setCurrentPacket } = usePacketStore();
+  const demoIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Clean up any existing listeners/intervals
+    const cleanup = () => {
+      if (demoIntervalRef.current) {
+        clearInterval(demoIntervalRef.current);
+        demoIntervalRef.current = null;
+      }
+    };
+
+    // If playback mode is on, don't attach anything
     if (currentAppState.playbackSwitch) {
-      // Nothing to attach
-      stopDemoMode();
-      detachNetworkListener();
+      cleanup();
       return;
     }
 
+    // Handle different connection types
     if (currentAppState.connectionType === CONNECTIONTYPES.NETWORK) {
-      attachNetworkListener();
-      return () => detachNetworkListener();
+      // Attach network listener
+      const handlePacket = (packet: ITelemetryData) => {
+        setCurrentPacket(packet);
+      };
+
+      socketIO.on("packet", handlePacket);
+
+      return () => {
+        socketIO.off("packet", handlePacket);
+      };
     } else if (currentAppState.connectionType === CONNECTIONTYPES.DEMO) {
-      startDemoMode();
-      return () => stopDemoMode();
+      // Start demo mode
+      demoIntervalRef.current = setInterval(() => {
+        setCurrentPacket(generateFakeTelemetryData());
+      }, 500);
+
+      return () => {
+        if (demoIntervalRef.current) {
+          clearInterval(demoIntervalRef.current);
+          demoIntervalRef.current = null;
+        }
+      };
     } else if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
       // TODO: handle radio
     }
 
-    // Clean up on unmount
-    return () => {
-      stopDemoMode();
-      detachNetworkListener();
-    };
-  }, [currentAppState.connectionType, currentAppState.playbackSwitch]);
+    // Cleanup on unmount or mode change
+    return cleanup;
+  }, [
+    currentAppState.connectionType,
+    currentAppState.playbackSwitch,
+    setCurrentPacket,
+  ]);
 
   return null;
 }

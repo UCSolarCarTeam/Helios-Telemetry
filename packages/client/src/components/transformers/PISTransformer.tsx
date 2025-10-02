@@ -1,6 +1,5 @@
 import { type JSX, useCallback } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
 import useUnitsHandler from "@/hooks/PIS/useUnitsHandler";
 import useFullscreen from "@/hooks/useFullscreen";
 import {
@@ -8,6 +7,7 @@ import {
   type I_PISFieldData,
 } from "@/objects/PIS/PIS.interface";
 import type I_PIS from "@/objects/PIS/PIS.interface";
+import { useAppState } from "@/stores/useAppState";
 
 type RangeCheckedFieldDataProps = {
   fieldData: I_PISFieldData;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
+import { useAppState } from "@/stores/useAppState";
 import { usePlaybackStore } from "@/stores/usePlayback";
 import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
