@@ -253,7 +253,7 @@ const dbInstance = new ec2.Instance(
 // Attach EBS
 const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
   TelemetryBackendStack,
-  "TimescaleDBVolumeAttachment",
+  "TimeScaleDBVolumeAttachment2",
   {
     device: "/dev/xvdh",
     instanceId: dbInstance.instanceId,
