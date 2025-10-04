@@ -174,7 +174,6 @@ const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
 );
 
 // Create IAM role for EC2 instance
-
 const TelemetryBackendVPC = new ec2.Vpc(
   TelemetryBackendStack,
   "TelemetryBackendVPC",
@@ -212,9 +211,16 @@ const dbSecurityGroup = new ec2.SecurityGroup(
 
 // Open port 5432 (Postgres)
 dbSecurityGroup.addIngressRule(
-  ec2.Peer.anyIpv4(),
+  ec2.Peer.anyIpv4(), // once we know things work we can make this so that only the ECS cluster can access it
   ec2.Port.tcp(5432),
   "Allow Postgres access",
+);
+
+// Allow SSH access on port 22
+dbSecurityGroup.addIngressRule(
+  ec2.Peer.anyIpv4(),
+  ec2.Port.tcp(22),
+  "Allow SSH access",
 );
 
 const keyPair = ec2.KeyPair.fromKeyPairName(
@@ -236,6 +242,9 @@ const dbInstance = new ec2.Instance(
     role: ec2Role,
     securityGroup: dbSecurityGroup,
     vpc: TelemetryBackendVPC,
+    vpcSubnets: {
+      subnetType: ec2.SubnetType.PUBLIC,
+    },
   },
 );
 
