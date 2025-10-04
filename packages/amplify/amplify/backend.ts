@@ -199,6 +199,8 @@ const dbVolume = new ec2.CfnVolume(TelemetryBackendStack, "TimescaleDBVolume", {
   volumeType: "gp3",
 });
 
+dbVolume.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
+
 const dbSecurityGroup = new ec2.SecurityGroup(
   TelemetryBackendStack,
   "TelemetryDBSecurityGroup",
@@ -249,7 +251,7 @@ const dbInstance = new ec2.Instance(
 );
 
 // Attach EBS
-new ec2.CfnVolumeAttachment(
+const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
   TelemetryBackendStack,
   "TimescaleDBVolumeAttachment",
   {
@@ -258,6 +260,8 @@ new ec2.CfnVolumeAttachment(
     volumeId: dbVolume.ref,
   },
 );
+
+dbVolumeAttachment.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
 
 dbInstance.addUserData(`
 #!/bin/bash
