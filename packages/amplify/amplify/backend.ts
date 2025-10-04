@@ -272,6 +272,9 @@ yum install -y docker git jq awscli
 systemctl enable docker
 systemctl start docker
 
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
+
 # Install Docker Compose
 curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
@@ -439,6 +442,7 @@ const TelemetryECSService = new ecs.Ec2Service(
   {
     cluster: TelemetryECSCluster,
     desiredCount: 1,
+    enableExecuteCommand: true,
     maxHealthyPercent: 100,
     minHealthyPercent: 0,
     taskDefinition: TelemetryECSTaskDefintion,
