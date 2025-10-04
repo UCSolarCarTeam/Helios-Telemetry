@@ -308,13 +308,14 @@ git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
 cd Helios-Telemetry/packages/db
 
 # Pull DB secrets
-DB_CREDS=$(aws secretsmanager get-secret-value --secret-id HeliosTelemetryDBCredentials --query SecretString --output text)
-POSTGRES_USER=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
+SECRET_NAME="${TelemetryBackendSecretsDatabaseCredentials.secretName}"
+DB_CREDS=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query SecretString --output text)
+POSTGRES_USERNAME=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
 POSTGRES_PASSWORD=$(echo $DB_CREDS | jq -r .POSTGRES_PASSWORD)
 
 # Create .env file for Docker Compose
 cat <<EOF > /home/ec2-user/Helios-Telemetry/packages/db/.db.env
-POSTGRES_USER=$POSTGRES_USER
+POSTGRES_USER=$POSTGRES_USERNAME
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 POSTGRES_DB=postgres
 EOF
