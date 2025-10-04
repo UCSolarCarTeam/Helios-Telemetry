@@ -15,6 +15,7 @@
  */
 import { useTheme } from "next-themes";
 import { PropsWithChildren, useRef } from "react";
+import React from "react";
 
 import useFullscreen from "@/hooks/useFullscreen";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
@@ -42,6 +43,25 @@ const FullscreenWrapper = ({
     }
   }
 
+  // function to get child component name
+  const getComponentName = () => {
+    const childArray = React.Children.toArray(children);
+    if (childArray.length > 0) {
+      const firstChild = childArray[0];
+      if (React.isValidElement(firstChild)) {
+        // if child is a function component
+        if (typeof firstChild.type === "function") {
+          return firstChild.type.name || "Component";
+        }
+        // if child is a string (ie. 'div', 'span', etc.)
+        if (typeof firstChild.type === "string") {
+          return firstChild.type;
+        }
+      }
+    }
+    return "Unknown Component";
+  };
+
   // have to manually define theme classes when in fullscreen mode
   const fullscreenClasses = isFullscreen
     ? resolvedTheme === "dark"
@@ -54,13 +74,16 @@ const FullscreenWrapper = ({
       className={`relative ${fullscreenClasses} ${className}`}
       ref={targetElement}
     >
-      <button
-        className={`absolute right-2 top-2 z-50 hidden rounded px-2 py-1 text-xs ${fullscreenClasses} ${style.mdScreenBlock}`}
-        onClick={toggleFullScreen}
-        title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-      >
-        {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-      </button>
+      <div className="flex items-center gap-2 px-2 text-xs">
+        <button
+          className={`hidden rounded px-2 py-0 ${fullscreenClasses} ${style.mdScreenBlock}`}
+          onClick={toggleFullScreen}
+          title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+        >
+          {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+        </button>
+        <div>{getComponentName()}</div>
+      </div>
       <div className="size-full">{children}</div>
     </div>
   );
