@@ -168,9 +168,9 @@ const gpsCalculatedLapDataTable = new dynamodb.Table(
   },
 );
 
-const TelemetryECSTaskDefintion = new ecs.Ec2TaskDefinition(
+const TelemetryECSTaskDefinition = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
-  "TelemetryECSTaskDefintion",
+  "TelemetryECSTaskDefinition",
 );
 
 // Create IAM role for EC2 instance
@@ -247,89 +247,86 @@ const ssmUserPolicy = new iam.Policy(TelemetryBackendStack, "SSMUserPolicy", {
   ],
 });
 
-// const dbInstance = new ec2.Instance(
-//   TelemetryBackendStack,
-//   "TelemetryDBInstance",
-//   {
-//     instanceType: ec2.InstanceType.of(
-//       ec2.InstanceClass.T3,
-//       ec2.InstanceSize.SMALL,
-//     ),
-//     keyPair: keyPair,
-//     machineImage: ec2.MachineImage.latestAmazonLinux2023(),
-//     role: ec2Role,
-//     securityGroup: dbSecurityGroup,
-//     vpc: TelemetryBackendVPC,
-//     vpcSubnets: {
-//       subnetType: ec2.SubnetType.PUBLIC,
-//     },
-//   },
-// );
+const dbInstance = new ec2.Instance(
+  TelemetryBackendStack,
+  "TelemetryDBInstance",
+  {
+    instanceType: ec2.InstanceType.of(
+      ec2.InstanceClass.T3,
+      ec2.InstanceSize.SMALL,
+    ),
+    keyPair: keyPair,
+    machineImage: ec2.MachineImage.latestAmazonLinux2023(),
+    role: ec2Role,
+    securityGroup: dbSecurityGroup,
+    vpc: TelemetryBackendVPC,
+    vpcSubnets: {
+      subnetType: ec2.SubnetType.PUBLIC,
+    },
+  },
+);
 
-// // Attach EBS
-// const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
-//   TelemetryBackendStack,
-//   "TimeScaleDBVolumeAttachment",
-//   {
-//     device: "/dev/xvdh",
-//     instanceId: dbInstance.instanceId,
-//     volumeId: dbVolume.ref,
-//   },
-// );
+// Attach EBS
+const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
+  TelemetryBackendStack,
+  "TimeScaleDBVolumeAttachment",
+  {
+    device: "/dev/xvdh",
+    instanceId: dbInstance.instanceId,
+    volumeId: dbVolume.ref,
+  },
+);
 
-// dbVolumeAttachment.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
+dbVolumeAttachment.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
 
-// dbInstance.addUserData(`
-// #!/bin/bash
-// # Update system & install prerequisites
-// yum update -y
-// amazon-linux-extras enable docker
-// yum install -y docker git jq awscli
-// systemctl enable docker
-// systemctl start docker
+dbInstance.addUserData(`
+#!/bin/bash
+# Update system & install prerequisites
+yum update -y
+amazon-linux-extras enable docker
+yum install -y docker git jq awscli
+systemctl enable docker
+systemctl start docker
 
-// sudo systemctl enable amazon-ssm-agent
-// sudo systemctl start amazon-ssm-agent
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
 
-// # Install Docker Compose
-// curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-// chmod +x /usr/local/bin/docker-compose
+# Install Docker Compose
+curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 
-// # Mount EBS volume
-// if ! blkid /dev/xvdh; then mkfs -t xfs /dev/xvdh; fi
-// mkdir -p /var/lib/timescaledb/data
-// mount /dev/xvdh /var/lib/timescaledb/data
-// echo '/dev/xvdh /var/lib/timescaledb/data xfs defaults,nofail 0 2' >> /etc/fstab
-// chown -R ec2-user:ec2-user /var/lib/timescaledb/data
+# Mount EBS volume
+if ! blkid /dev/xvdh; then mkfs -t xfs /dev/xvdh; fi
+mkdir -p /var/lib/timescaledb/data
+mount /dev/xvdh /var/lib/timescaledb/data
+echo '/dev/xvdh /var/lib/timescaledb/data xfs defaults,nofail 0 2' >> /etc/fstab
+chown -R ec2-user:ec2-user /var/lib/timescaledb/data
 
-// # Clone your repo
-// cd /home/ec2-user
-// git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
-// cd Helios-Telemetry/packages/db
+# Clone your repo
+cd /home/ec2-user
+git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
+cd Helios-Telemetry/packages/db
 
-// # Pull DB secrets
-// DB_CREDS=$(aws secretsmanager get-secret-value --secret-id HeliosTelemetryDBCredentials --query SecretString --output text)
-// POSTGRES_USER=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
-// POSTGRES_PASSWORD=$(echo $DB_CREDS | jq -r .POSTGRES_PASSWORD)
+# Pull DB secrets
+DB_CREDS=$(aws secretsmanager get-secret-value --secret-id HeliosTelemetryDBCredentials --query SecretString --output text)
+POSTGRES_USER=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
+POSTGRES_PASSWORD=$(echo $DB_CREDS | jq -r .POSTGRES_PASSWORD)
 
-// # Pull SSL secrets
-// aws secretsmanager get-secret-value --secret-id HeliosTelemetryBackendSSL/Certificate --query SecretString --output text > /home/ec2-user/cert.pem
-// aws secretsmanager get-secret-value --secret-id HeliosTelemetryBackendSSL/Chain --query SecretString --output text > /home/ec2-user/chain.pem
-// aws secretsmanager get-secret-value --secret-id HeliosTelemetryBackendSSL/PrivateKey --query SecretString --output text > /home/ec2-user/private.key
+# Create .env file for Docker Compose
+cat <<EOF > /home/ec2-user/Helios-Telemetry/packages/db/.db.env
+POSTGRES_USER=$POSTGRES_USER
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+POSTGRES_DB=postgres
+EOF
 
-// # Create .env file for Docker Compose
-// cat <<EOF > /home/ec2-user/.env
-// POSTGRES_USER=$POSTGRES_USER
-// POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-// POSTGRES_DB=postgres
-// EOF
+# Run Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo docker-compose up -d`);
 
-// # Run Docker Compose
-// docker-compose --env-file /home/ec2-user/.env up -d`);
-
-TelemetryECSTaskDefintion.addContainer("TheContainer", {
+TelemetryECSTaskDefinition.addContainer("TheContainer", {
   environment: {
-    // DB_HOST: dbInstance.instancePrivateIp,
+    DB_HOST: dbInstance.instancePrivateIp,
     DB_NAME: "postgres",
     DB_PORT: "5432",
     DRIVER_TABLE_NAME: driverDataTable.tableName,
@@ -386,16 +383,16 @@ TelemetryECSTaskDefintion.addContainer("TheContainer", {
 
 // Allow ECS Task to read the Secrets Manager Store
 TelemetryBackendSecretsManagerPrivKey.grantRead(
-  TelemetryECSTaskDefintion.taskRole,
+  TelemetryECSTaskDefinition.taskRole,
 );
 TelemetryBackendSecretsManagerChain.grantRead(
-  TelemetryECSTaskDefintion.taskRole,
+  TelemetryECSTaskDefinition.taskRole,
 );
 TelemetryBackendSecretsManagerCertificate.grantRead(
-  TelemetryECSTaskDefintion.taskRole,
+  TelemetryECSTaskDefinition.taskRole,
 );
 TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
-  TelemetryECSTaskDefintion.taskRole,
+  TelemetryECSTaskDefinition.taskRole,
 );
 
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
@@ -461,7 +458,7 @@ const TelemetryECSService = new ecs.Ec2Service(
     enableExecuteCommand: true,
     maxHealthyPercent: 100,
     minHealthyPercent: 0,
-    taskDefinition: TelemetryECSTaskDefintion,
+    taskDefinition: TelemetryECSTaskDefinition,
   },
 );
 
@@ -499,7 +496,7 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
 });
 
 // Attach the policy to the ECS Task Role
-TelemetryECSTaskDefintion.taskRole.addToPrincipalPolicy(dynamoDbAccessPolicy);
+TelemetryECSTaskDefinition.taskRole.addToPrincipalPolicy(dynamoDbAccessPolicy);
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
 const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
