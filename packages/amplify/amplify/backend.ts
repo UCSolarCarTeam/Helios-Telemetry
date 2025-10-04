@@ -190,6 +190,7 @@ const ec2Role = new iam.Role(TelemetryBackendStack, "TelemetryDBEC2Role", {
       "AmazonEC2ContainerRegistryReadOnly",
     ),
     iam.ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
+    iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"), // allows users to connect to instance using AWS SSM
   ],
 });
 
@@ -230,6 +231,21 @@ const keyPair = ec2.KeyPair.fromKeyPairName(
   "KeyPair",
   "Burton",
 );
+// policy to allow users to connect to instance via ssm, we can use this in the future to grant users permissions to start a session
+// add this policy in the future to users' roles so they can start an ssm session to connect to the instance instead of having to
+// create a .pem file and allow specific ips / users to connect we use this instead.
+const ssmUserPolicy = new iam.Policy(TelemetryBackendStack, "SSMUserPolicy", {
+  statements: [
+    new iam.PolicyStatement({
+      actions: [
+        "ssm:StartSession",
+        "ssm:DescribeSessions",
+        "ssm:GetConnectionStatus",
+      ],
+      resources: ["*"], // allow on all instances; you can narrow this later
+    }),
+  ],
+});
 
 const dbInstance = new ec2.Instance(
   TelemetryBackendStack,
