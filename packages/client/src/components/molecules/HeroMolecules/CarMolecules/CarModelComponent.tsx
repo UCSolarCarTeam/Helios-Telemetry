@@ -159,6 +159,11 @@ const CarModelComponent = (props: CarModelComponentProps) => {
   const { materials, nodes } = useGLTF(path) as unknown as HeliosCar;
 
   const clear = materials["Shape.050"];
+  const shape48 = materials["Shape.048"].clone();
+  const shape49 = materials["Shape.049"].clone();
+  const shape51 = materials["Shape.051"].clone();
+  const shape52 = materials["Shape.052"].clone();
+  const shape54 = materials["Shape.054"].clone();
 
   return (
     <group
@@ -555,7 +560,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet048.geometry}
-        material={props.isClear ? clear : materials["Shape.048"]}
+        material={props.isClear ? clear : shape48}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -563,7 +568,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet049.geometry}
-        material={props.isClear ? clear : materials["Shape.049"]}
+        material={props.isClear ? clear : shape49}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -579,7 +584,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet051.geometry}
-        material={props.isClear ? clear : materials["Shape.051"]}
+        material={props.isClear ? clear : shape51}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -588,7 +593,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet052.geometry}
-        material={props.isClear ? clear : materials["Shape.052"]}
+        material={props.isClear ? clear : shape52}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -604,7 +609,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet054.geometry}
-        material={props.isClear ? clear : materials["Shape.054"]}
+        material={props.isClear ? clear : shape54}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -620,7 +625,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet056.geometry}
-        material={props.isClear ? clear : materials["Shape.052"]}
+        material={props.isClear ? clear : shape52}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -644,7 +649,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet059.geometry}
-        material={props.isClear ? clear : materials["Shape.052"]}
+        material={props.isClear ? clear : shape52}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -652,7 +657,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet060.geometry}
-        material={props.isClear ? clear : materials["Shape.052"]}
+        material={props.isClear ? clear : shape52}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
@@ -660,7 +665,7 @@ const CarModelComponent = (props: CarModelComponentProps) => {
       <mesh
         castShadow
         geometry={nodes.Shape_IndexedFaceSet061.geometry}
-        material={props.isClear ? clear : materials["Shape.052"]}
+        material={props.isClear ? clear : shape52}
         position={[-31.75, 0, -2872.13]}
         receiveShadow
         rotation={[Math.PI / 2, 0, -Math.PI]}
