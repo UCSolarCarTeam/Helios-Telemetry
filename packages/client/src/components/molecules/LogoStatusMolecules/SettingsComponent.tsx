@@ -1,12 +1,7 @@
 import { useTheme } from "next-themes";
 import { useCallback, useState } from "react";
 
-import {
-  APPUNITS,
-  CONNECTIONTYPES,
-  useAppState,
-} from "@/contexts/AppStateContext";
-import { helios, heliosCompliment, sand } from "@/styles/colors";
+import { APPUNITS, CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { TimeInput } from "@mantine/dates";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Modal from "@mui/material/Modal";

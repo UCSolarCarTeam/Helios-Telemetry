@@ -1,11 +1,11 @@
 /* eslint-disable sort-keys */
-import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
 import { UnitType } from "@/objects/PIS/PIS.interface";
+import { usePacketStore } from "@/stores/usePacket";
 
 const Motor = (): I_PIS => {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const { KeyMotor, MotorDetails0, MotorDetails1 } = currentPacket;
   return {
     KeyMotorDetails: [
