@@ -313,12 +313,12 @@ DB_CREDS=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query 
 POSTGRES_USERNAME=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
 POSTGRES_PASSWORD=$(echo $DB_CREDS | jq -r .POSTGRES_PASSWORD)
 
-# Create .env file for Docker Compose
-cat <<EOF > /home/ec2-user/Helios-Telemetry/packages/db/.db.env
-POSTGRES_USER=$POSTGRES_USERNAME
-POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+# Create .env file for Docker Compose has to use sudo sh for permissions
+sudo sh -c 'cat <<EOF > /home/ec2-user/Helios-Telemetry/packages/db/.db.env
+POSTGRES_USER='"$POSTGRES_USERNAME"'
+POSTGRES_PASSWORD='"$POSTGRES_PASSWORD"'
 POSTGRES_DB=postgres
-EOF
+EOF'
 
 # Run Docker Compose
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
