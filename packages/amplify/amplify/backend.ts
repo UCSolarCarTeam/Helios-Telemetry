@@ -183,147 +183,147 @@ const TelemetryBackendVPC = new ec2.Vpc(
   },
 );
 
-// const ec2Role = new iam.Role(TelemetryBackendStack, "TelemetryDBEC2Role", {
-//   assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
-//   managedPolicies: [
-//     iam.ManagedPolicy.fromAwsManagedPolicyName(
-//       "AmazonEC2ContainerRegistryReadOnly",
-//     ),
-//     iam.ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
-//     iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"), // allows users to connect to instance using AWS SSM
-//   ],
-// });
+const ec2Role = new iam.Role(TelemetryBackendStack, "TelemetryDBEC2Role", {
+  assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
+  managedPolicies: [
+    iam.ManagedPolicy.fromAwsManagedPolicyName(
+      "AmazonEC2ContainerRegistryReadOnly",
+    ),
+    iam.ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
+    iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"), // allows users to connect to instance using AWS SSM
+  ],
+});
 
-// const dbVolume = new ec2.CfnVolume(TelemetryBackendStack, "TimescaleDBVolume", {
-//   availabilityZone: TelemetryBackendVPC.availabilityZones[0],
-//   size: 50,
-//   volumeType: "gp3",
-// });
+const dbVolume = new ec2.CfnVolume(TelemetryBackendStack, "TimescaleDBVolume", {
+  availabilityZone: TelemetryBackendVPC.availabilityZones[0],
+  size: 50,
+  volumeType: "gp3",
+});
 
-// dbVolume.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
+dbVolume.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
 
-// const dbSecurityGroup = new ec2.SecurityGroup(
-//   TelemetryBackendStack,
-//   "TelemetryDBSecurityGroup",
-//   {
-//     allowAllOutbound: true,
-//     description: "Security group for TimescaleDB EC2 instance",
-//     vpc: TelemetryBackendVPC,
-//   },
-// );
+const dbSecurityGroup = new ec2.SecurityGroup(
+  TelemetryBackendStack,
+  "TelemetryDBSecurityGroup",
+  {
+    allowAllOutbound: true,
+    description: "Security group for TimescaleDB EC2 instance",
+    vpc: TelemetryBackendVPC,
+  },
+);
 
-// // Open port 5432 (Postgres)
-// dbSecurityGroup.addIngressRule(
-//   ec2.Peer.anyIpv4(), // once we know things work we can make this so that only the ECS cluster can access it
-//   ec2.Port.tcp(5432),
-//   "Allow Postgres access",
-// );
+// Open port 5432 (Postgres)
+dbSecurityGroup.addIngressRule(
+  ec2.Peer.anyIpv4(), // once we know things work we can make this so that only the ECS cluster can access it
+  ec2.Port.tcp(5432),
+  "Allow Postgres access",
+);
 
-// // Allow SSH access on port 22
-// dbSecurityGroup.addIngressRule(
-//   ec2.Peer.anyIpv4(),
-//   ec2.Port.tcp(22),
-//   "Allow SSH access",
-// );
+// Allow SSH access on port 22
+dbSecurityGroup.addIngressRule(
+  ec2.Peer.anyIpv4(),
+  ec2.Port.tcp(22),
+  "Allow SSH access",
+);
 
-// const keyPair = ec2.KeyPair.fromKeyPairName(
-//   TelemetryBackendStack,
-//   "KeyPair",
-//   "Burton",
-// );
-// // policy to allow users to connect to instance via ssm, we can use this in the future to grant users permissions to start a session
-// // add this policy in the future to users' roles so they can start an ssm session to connect to the instance instead of having to
-// // create a .pem file and allow specific ips / users to connect we use this instead.
-// const ssmUserPolicy = new iam.Policy(TelemetryBackendStack, "SSMUserPolicy", {
-//   statements: [
-//     new iam.PolicyStatement({
-//       actions: [
-//         "ssm:StartSession",
-//         "ssm:DescribeSessions",
-//         "ssm:GetConnectionStatus",
-//       ],
-//       resources: ["*"], // allow on all instances; you can narrow this later
-//     }),
-//   ],
-// });
+const keyPair = ec2.KeyPair.fromKeyPairName(
+  TelemetryBackendStack,
+  "KeyPair",
+  "Burton",
+);
+// policy to allow users to connect to instance via ssm, we can use this in the future to grant users permissions to start a session
+// add this policy in the future to users' roles so they can start an ssm session to connect to the instance instead of having to
+// create a .pem file and allow specific ips / users to connect we use this instead.
+const ssmUserPolicy = new iam.Policy(TelemetryBackendStack, "SSMUserPolicy", {
+  statements: [
+    new iam.PolicyStatement({
+      actions: [
+        "ssm:StartSession",
+        "ssm:DescribeSessions",
+        "ssm:GetConnectionStatus",
+      ],
+      resources: ["*"], // allow on all instances; you can narrow this later
+    }),
+  ],
+});
 
-// const dbInstance = new ec2.Instance(
-//   TelemetryBackendStack,
-//   "TelemetryDBInstance",
-//   {
-//     instanceType: ec2.InstanceType.of(
-//       ec2.InstanceClass.T3,
-//       ec2.InstanceSize.SMALL,
-//     ),
-//     keyPair: keyPair,
-//     machineImage: ec2.MachineImage.latestAmazonLinux2023(),
-//     role: ec2Role,
-//     securityGroup: dbSecurityGroup,
-//     vpc: TelemetryBackendVPC,
-//     vpcSubnets: {
-//       subnetType: ec2.SubnetType.PUBLIC,
-//     },
-//   },
-// );
+const dbInstance = new ec2.Instance(
+  TelemetryBackendStack,
+  "TelemetryDBInstance",
+  {
+    instanceType: ec2.InstanceType.of(
+      ec2.InstanceClass.T3,
+      ec2.InstanceSize.SMALL,
+    ),
+    keyPair: keyPair,
+    machineImage: ec2.MachineImage.latestAmazonLinux2023(),
+    role: ec2Role,
+    securityGroup: dbSecurityGroup,
+    vpc: TelemetryBackendVPC,
+    vpcSubnets: {
+      subnetType: ec2.SubnetType.PUBLIC,
+    },
+  },
+);
 
-// // Attach EBS
-// const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
-//   TelemetryBackendStack,
-//   "TimeScaleDBVolumeAttachment",
-//   {
-//     device: "/dev/xvdh",
-//     instanceId: dbInstance.instanceId,
-//     volumeId: dbVolume.ref,
-//   },
-// );
+// Attach EBS
+const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
+  TelemetryBackendStack,
+  "TimeScaleDBVolumeAttachment",
+  {
+    device: "/dev/xvdh",
+    instanceId: dbInstance.instanceId,
+    volumeId: dbVolume.ref,
+  },
+);
 
-// dbVolumeAttachment.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
+dbVolumeAttachment.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
 
-// dbInstance.addUserData(`
-// #!/bin/bash
-// # Update system & install prerequisites
-// yum update -y
-// amazon-linux-extras enable docker
-// yum install -y docker git jq awscli
-// systemctl enable docker
-// systemctl start docker
+dbInstance.addUserData(`
+#!/bin/bash
+# Update system & install prerequisites
+yum update -y
+amazon-linux-extras enable docker
+yum install -y docker git jq awscli
+systemctl enable docker
+systemctl start docker
 
-// sudo systemctl enable amazon-ssm-agent
-// sudo systemctl start amazon-ssm-agent
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
 
-// # Install Docker Compose
-// curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-// chmod +x /usr/local/bin/docker-compose
+# Install Docker Compose
+curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 
-// # Mount EBS volume
-// if ! blkid /dev/xvdh; then mkfs -t xfs /dev/xvdh; fi
-// mkdir -p /var/lib/timescaledb/data
-// mount /dev/xvdh /var/lib/timescaledb/data
-// echo '/dev/xvdh /var/lib/timescaledb/data xfs defaults,nofail 0 2' >> /etc/fstab
-// chown -R ec2-user:ec2-user /var/lib/timescaledb/data
+# Mount EBS volume
+if ! blkid /dev/xvdh; then mkfs -t xfs /dev/xvdh; fi
+mkdir -p /var/lib/timescaledb/data
+mount /dev/xvdh /var/lib/timescaledb/data
+echo '/dev/xvdh /var/lib/timescaledb/data xfs defaults,nofail 0 2' >> /etc/fstab
+chown -R ec2-user:ec2-user /var/lib/timescaledb/data
 
-// # Clone your repo
-// cd /home/ec2-user
-// git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
-// cd Helios-Telemetry/packages/db
+# Clone your repo
+cd /home/ec2-user
+git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
+cd Helios-Telemetry/packages/db
 
-// # Pull DB secrets
-// SECRET_NAME="${TelemetryBackendSecretsDatabaseCredentials.secretName}"
-// DB_CREDS=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query SecretString --output text)
-// POSTGRES_USERNAME=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
-// POSTGRES_PASSWORD=$(echo $DB_CREDS | jq -r .POSTGRES_PASSWORD)
+# Pull DB secrets
+SECRET_NAME="${TelemetryBackendSecretsDatabaseCredentials.secretName}"
+DB_CREDS=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query SecretString --output text)
+POSTGRES_USERNAME=$(echo $DB_CREDS | jq -r .POSTGRES_USERNAME)
+POSTGRES_PASSWORD=$(echo $DB_CREDS | jq -r .POSTGRES_PASSWORD)
 
-// # Create .env file for Docker Compose has to use sudo sh for permissions
-// sudo sh -c 'cat <<EOF > /home/ec2-user/Helios-Telemetry/packages/db/.db.env
-// POSTGRES_USER='"$POSTGRES_USERNAME"'
-// POSTGRES_PASSWORD='"$POSTGRES_PASSWORD"'
-// POSTGRES_DB=postgres
-// EOF'
+# Create .env file for Docker Compose has to use sudo sh for permissions
+sudo sh -c 'cat <<EOF > /home/ec2-user/Helios-Telemetry/packages/db/.db.env
+POSTGRES_USER='"$POSTGRES_USERNAME"'
+POSTGRES_PASSWORD='"$POSTGRES_PASSWORD"'
+POSTGRES_DB=postgres
+EOF'
 
-// # Run Docker Compose
-// sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-// sudo chmod +x /usr/local/bin/docker-compose
-// sudo docker-compose up -d`);
+# Run Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo docker-compose up -d`);
 
 TelemetryECSTaskDefinition.addContainer("TheContainer", {
   environment: {
