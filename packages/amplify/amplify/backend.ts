@@ -267,7 +267,7 @@ const dbInstance = new ec2.Instance(
 );
 
 // Attach EBS
-const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
+new ec2.CfnVolumeAttachment(
   TelemetryBackendStack,
   "TimeScaleDBVolumeAttachment",
   {
@@ -276,8 +276,6 @@ const dbVolumeAttachment = new ec2.CfnVolumeAttachment(
     volumeId: dbVolume.ref,
   },
 );
-
-dbVolumeAttachment.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
 
 dbInstance.addUserData(`
 #!/bin/bash
