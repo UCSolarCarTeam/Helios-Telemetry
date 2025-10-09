@@ -74,15 +74,17 @@ const FullscreenWrapper = ({
       className={`relative ${fullscreenClasses} ${className}`}
       ref={targetElement}
     >
-      <div className="flex items-center gap-2 px-2 text-xs">
+      <div
+        className={`flex items-center gap-2 px-2 text-xs ${isFullscreen ? "pt-4" : ""}`}
+      >
         <button
-          className={`hidden rounded px-2 py-0 ${fullscreenClasses} ${style.mdScreenBlock}`}
+          className={`hidden rounded ${style.mdScreenBlock} ${fullscreenClasses}`}
           onClick={toggleFullScreen}
           title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
         >
           {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
         </button>
-        <div>{getComponentName()}</div>
+        <div className="font-bold">{getComponentName()}</div>
       </div>
       <div className="size-full">{children}</div>
     </div>
