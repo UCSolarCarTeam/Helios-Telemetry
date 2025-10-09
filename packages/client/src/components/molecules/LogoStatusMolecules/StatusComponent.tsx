@@ -7,6 +7,7 @@ import LatencyDotsIcon from "@/components/atoms/LatencyDotsIcon";
 import UserComputerIcon from "@/components/atoms/UserComputerIcon";
 import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
+import { helios } from "@/styles/colors";
 import { Switch } from "@mantine/core";
 
 function PlaybackPickerComponent() {
@@ -35,6 +36,7 @@ function StatusComponent() {
   const { currentAppState } = useAppState();
   const { currentPacket } = usePacketStore();
   const userConnection = currentAppState.socketConnected;
+  const { resolvedTheme } = useTheme();
   // TODO: change carConnection from socketIO.connected to carConnection.connected
   const carConnection = currentAppState.socketConnected;
   const colorTheme = resolvedTheme === "dark" ? "white" : "black";
