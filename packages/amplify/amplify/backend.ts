@@ -195,7 +195,7 @@ const ec2Role = new iam.Role(TelemetryBackendStack, "TelemetryDBEC2Role", {
 });
 
 const dbVolume = new ec2.CfnVolume(TelemetryBackendStack, "TimescaleDBVolume", {
-  availabilityZone: TelemetryBackendVPC.availabilityZones[0],
+  availabilityZone: TelemetryBackendVPC.availabilityZones[0]!,
   size: 50,
   volumeType: "gp3",
 });
@@ -294,16 +294,46 @@ curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-comp
 chmod +x /usr/local/bin/docker-compose
 
 # Mount EBS volume
-if ! blkid /dev/xvdh; then mkfs -t xfs /dev/xvdh; fi
+
+# Wait for EBS volume to be attached (Nitro instances use nvme devices)
+sleep 10
+DEVICE=""
+# Check for both /dev/xvdh and NVMe device names
+if [ -e /dev/xvdh ]; then
+  DEVICE="/dev/xvdh"
+elif [ -e /dev/nvme1n1 ]; then
+  DEVICE="/dev/nvme1n1"
+else
+  echo "ERROR: Could not find EBS volume device"
+  exit 1
+fi
+
+# Format if not already formatted
+if ! blkid $DEVICE; then 
+  mkfs -t xfs $DEVICE
+fi
+
+# Create mount point and mount
 mkdir -p /var/lib/timescaledb/data
-sudo mount /dev/xvdh /var/lib/timescaledb/data
-sudo chmod 777 /etc/fstab
-echo '/dev/xvdh /var/lib/timescaledb/data xfs defaults,nofail 0 2' >> /etc/fstab
+sudo mount $DEVICE /var/lib/timescaledb/data
+
+# Get UUID for fstab entry (more reliable than device names)
+VOLUME_UUID=$(blkid -s UUID -o value $DEVICE)
+
+# Add to fstab using UUID (survives reboots regardless of device naming)
+if ! grep -q "$VOLUME_UUID" /etc/fstab; then
+  echo "UUID=$VOLUME_UUID /var/lib/timescaledb/data xfs defaults,nofail 0 2" >> /etc/fstab
+fi
+
+# Set correct permissions (UID 1000 = ec2-user, matches container's postgres user)
+chmod -R 700 /var/lib/timescaledb/data
+
 chown -R ec2-user:ec2-user /var/lib/timescaledb/data
 
 # Clone your repo
 sudo cd /home/ec2-user
 git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
+chown -R ec2-user:ec2-user /home/ec2-user/Helios-Telemetry
 cd Helios-Telemetry/packages/db
 
 # Pull DB secrets
@@ -320,9 +350,10 @@ POSTGRES_DB=postgres
 EOF'
 
 # Run Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-sudo docker-compose up -d`);
+docker-compose up -d
+
+# Log completion
+echo "TimescaleDB setup completed successfully" >> /var/log/userdata.log`);
 
 TelemetryECSTaskDefinition.addContainer("TheContainer", {
   environment: {
