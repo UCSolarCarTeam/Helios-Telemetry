@@ -298,9 +298,10 @@ chmod +x /usr/local/bin/docker-compose
 # Wait for EBS volume to be attached (Nitro instances use nvme devices)
 sleep 10
 DEVICE=""
+
 # Check for both /dev/xvdh and NVMe device names
 if [ -e /dev/xvdh ]; then
-  DEVICE="/dev/xvdh"
+  DEVICE=$(readlink -f /dev/xvdh)
 elif [ -e /dev/nvme1n1 ]; then
   DEVICE="/dev/nvme1n1"
 else
@@ -309,15 +310,14 @@ else
 fi
 
 # Format if not already formatted
-if ! blkid $DEVICE; then 
+if ! blkid $DEVICE | grep -q "TYPE="; then
   mkfs -t xfs $DEVICE
 fi
 
 # Create mount point and mount
 mkdir -p /var/lib/timescaledb/data
-sudo mount $DEVICE /var/lib/timescaledb/data
 
-# Get UUID for fstab entry (more reliable than device names)
+# Get UUID for fstab entry 
 VOLUME_UUID=$(blkid -s UUID -o value $DEVICE)
 
 # Add to fstab using UUID (survives reboots regardless of device naming)
@@ -325,13 +325,16 @@ if ! grep -q "$VOLUME_UUID" /etc/fstab; then
   echo "UUID=$VOLUME_UUID /var/lib/timescaledb/data xfs defaults,nofail 0 2" >> /etc/fstab
 fi
 
-# Set correct permissions (UID 1000 = ec2-user, matches container's postgres user)
-chmod -R 700 /var/lib/timescaledb/data
+sudo mount -a
 
-chown -R ec2-user:ec2-user /var/lib/timescaledb/data
+
+# Set correct permissions 
+sudo chmod -R 700 /var/lib/timescaledb/data
+
+sudo chown -R ec2-user:ec2-user /var/lib/timescaledb/data
 
 # Clone your repo
-sudo cd /home/ec2-user
+cd /home/ec2-user
 git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
 chown -R ec2-user:ec2-user /home/ec2-user/Helios-Telemetry
 cd Helios-Telemetry/packages/db
