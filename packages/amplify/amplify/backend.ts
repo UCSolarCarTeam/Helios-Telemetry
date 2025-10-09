@@ -296,12 +296,13 @@ chmod +x /usr/local/bin/docker-compose
 # Mount EBS volume
 if ! blkid /dev/xvdh; then mkfs -t xfs /dev/xvdh; fi
 mkdir -p /var/lib/timescaledb/data
-mount /dev/xvdh /var/lib/timescaledb/data
+sudo mount /dev/xvdh /var/lib/timescaledb/data
+sudo chmod 777 /etc/fstab
 echo '/dev/xvdh /var/lib/timescaledb/data xfs defaults,nofail 0 2' >> /etc/fstab
 chown -R ec2-user:ec2-user /var/lib/timescaledb/data
 
 # Clone your repo
-cd /home/ec2-user
+sudo cd /home/ec2-user
 git clone https://github.com/UCSolarCarTeam/Helios-Telemetry.git
 cd Helios-Telemetry/packages/db
 
