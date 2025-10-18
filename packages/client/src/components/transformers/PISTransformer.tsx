@@ -153,7 +153,7 @@ type FieldsPrinterProps = {
 };
 
 function FieldsPrinter(props: FieldsPrinterProps): JSX.Element {
-  const { depth = 0, fields } = props;
+  const { basePath, depth = 0, fields } = props;
   const isFullscreen = useFullscreen();
 
   // get the max height class based on depth, but only do this if not in fullscreen
