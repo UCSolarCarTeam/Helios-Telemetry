@@ -26,6 +26,8 @@ const config: Config = {
         "fault-red": "#9C0534",
         "fault-orange": "#F98D10",
         "fault-green": "#00A651",
+        light: "#3A3A3A",
+        dark: "#D2D2D2",
       },
       textColor: {
         light: "#3A3A3A",

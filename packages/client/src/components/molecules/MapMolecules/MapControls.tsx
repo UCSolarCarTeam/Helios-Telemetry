@@ -82,7 +82,7 @@ export default function MapControls({
       >
         <FaLocationArrow className={iconClasses} />
       </button>
-      <button
+      <div
         className={twMerge(buttonClasses, "relative")}
         onClick={toggleRaceTracks}
       >
@@ -117,7 +117,7 @@ export default function MapControls({
             );
           })}
         </div>
-      </button>
+      </div>
     </div>
   );
 }
