@@ -1,7 +1,7 @@
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 
-import { socketIO } from "@/contexts/SocketContext";
+import { socketIO } from "@/components/global/SocketManager";
 import useUnitsHandler from "@/hooks/PIS/useUnitsHandler";
 import { UnitType } from "@/objects/PIS/PIS.interface";
 import { useAppState } from "@/stores/useAppState";

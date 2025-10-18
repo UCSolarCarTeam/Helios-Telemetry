@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { socketIO } from "@/contexts/SocketContext";
+import { socketIO } from "@/components/global/SocketManager";
 import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { formatLapData, useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";

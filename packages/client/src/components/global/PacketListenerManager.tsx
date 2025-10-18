@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { socketIO } from "@/contexts/SocketContext";
+import { socketIO } from "@/components/global/SocketManager";
 import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
 import { generateFakeTelemetryData } from "@shared/helios-types";

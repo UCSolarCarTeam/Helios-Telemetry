@@ -18,7 +18,6 @@ interface IAppState {
   displayLoading: boolean;
   loading: boolean;
   error: boolean;
-  darkMode: boolean;
   appUnits: APPUNITS;
   favourites: string[];
   connectionType: CONNECTIONTYPES;
@@ -35,7 +34,6 @@ interface IAppState {
 interface AppStateStore {
   currentAppState: IAppState;
   setCurrentAppState: (updater: (prev: IAppState) => IAppState) => void;
-  toggleDarkMode: () => void;
 }
 
 export const useAppState = create<AppStateStore>((set) => ({
@@ -43,7 +41,6 @@ export const useAppState = create<AppStateStore>((set) => ({
     appUnits: APPUNITS.METRIC,
     carLatency: 0,
     connectionType: CONNECTIONTYPES.DEMO,
-    darkMode: false,
     displayLoading: true,
     error: false,
     favourites: [],
@@ -64,13 +61,5 @@ export const useAppState = create<AppStateStore>((set) => ({
   setCurrentAppState: (updater) =>
     set((state) => ({
       currentAppState: updater(state.currentAppState),
-    })),
-
-  toggleDarkMode: () =>
-    set((state) => ({
-      currentAppState: {
-        ...state.currentAppState,
-        darkMode: !state.currentAppState.darkMode,
-      },
     })),
 }));

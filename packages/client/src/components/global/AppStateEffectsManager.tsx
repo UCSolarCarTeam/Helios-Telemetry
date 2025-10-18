@@ -94,7 +94,6 @@ export default function AppStateEffects() {
         ...prev,
         appUnits: parsedSettings.appUnits ?? prev.appUnits,
         connectionType: parsedSettings.connectionType ?? prev.connectionType,
-        darkMode: parsedSettings.darkMode ?? prev.darkMode,
         favourites: parsedFavourites,
         lapCoords: parsedSettings.lapCoords ?? prev.lapCoords,
         playbackDateTime: parsedPlaybackDateTime,
