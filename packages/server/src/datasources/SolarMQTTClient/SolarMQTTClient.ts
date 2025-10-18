@@ -9,7 +9,7 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { validateTelemetryData } from "@shared/helios-types";
+import { ITelemetryData } from "@shared/helios-types";
 
 const {
   carConnect,
@@ -101,14 +101,10 @@ export class SolarMQTTClient implements SolarMQTTClientType {
           this.backendController.handleTelemetryToCar(serverToCarLatency);
           break;
         case packetTopic:
-          const packet = JSON.parse(message.toString());
+          const packet = JSON.parse(message.toString()) as ITelemetryData;
           try {
-            const validPacket = validateTelemetryData(packet);
-            this.backendController.handlePacketReceive(validPacket);
-
-            if (validPacket.Pi.Rfid) {
-              this.latestRfid = validPacket.Pi.Rfid.toString();
-            }
+            this.backendController.handlePacketReceive(packet);
+            this.latestRfid = packet.Pi.Rfid.toString();
           } catch (error) {
             logger.error(`Invalid packet format: ${error.message}`);
           }
