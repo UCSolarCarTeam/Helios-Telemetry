@@ -9,8 +9,8 @@ import {
   useState,
 } from "react";
 
-import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
+import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { notifications } from "@mantine/notifications";
 import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 

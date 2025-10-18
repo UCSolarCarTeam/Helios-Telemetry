@@ -1,8 +1,8 @@
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 
+import AppStateEffects from "@/components/global/AppStateEffectsManager";
 import LoadingWrapper from "@/components/global/LoadingWrapper";
-import { AppStateContextProvider } from "@/contexts/AppStateContext";
 import { LapDataContextProvider } from "@/contexts/LapDataContext";
 import { PacketContextProvider } from "@/contexts/PacketContext";
 import { SocketContextProvider } from "@/contexts/SocketContext";
@@ -15,10 +15,13 @@ import "@mantine/notifications/styles.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <MantineProvider>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <Notifications />
-        <AppStateContextProvider>
+    <>
+      {/* <AppStateEffects /> */}
+      <MantineProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Notifications />
+          <AppStateEffects />
+
           <SocketContextProvider>
             <PacketContextProvider>
               <LapDataContextProvider>
@@ -28,8 +31,8 @@ export default function App({ Component, pageProps }: AppProps) {
               </LapDataContextProvider>
             </PacketContextProvider>
           </SocketContextProvider>
-        </AppStateContextProvider>
-      </ThemeProvider>
-    </MantineProvider>
+        </ThemeProvider>
+      </MantineProvider>
+    </>
   );
 }

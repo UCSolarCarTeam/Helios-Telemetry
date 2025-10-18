@@ -7,8 +7,8 @@ import {
   useState,
 } from "react";
 
-import { CONNECTIONTYPES, useAppState } from "@/contexts/AppStateContext";
 import { socketIO } from "@/contexts/SocketContext";
+import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { generateFakeTelemetryData } from "@shared/helios-types";
 import type { ITelemetryData } from "@shared/helios-types";
 

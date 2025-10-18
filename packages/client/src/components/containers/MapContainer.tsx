@@ -2,8 +2,8 @@ import { type JSX, useEffect, useState } from "react";
 
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
-import { useAppState } from "@/contexts/AppStateContext";
 import { usePacket } from "@/contexts/PacketContext";
+import { useAppState } from "@/stores/useAppState";
 import { Coords } from "@shared/helios-types";
 
 import { GEO_DATA } from "../molecules/MapMolecules/MapSetup";

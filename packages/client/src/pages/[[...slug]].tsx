@@ -4,8 +4,8 @@ import LogoStatusContainer from "@/components/containers/LogoStatusContainer";
 import MapContainer from "@/components/containers/MapContainer";
 import TabsContainer from "@/components/containers/TabsContainer";
 import PlaybackSlider from "@/components/molecules/PlaybackMolecules/PlaybackSlider";
-import { useAppState } from "@/contexts/AppStateContext";
 import { PlaybackContextProvider } from "@/contexts/PlayBackContext";
+import { useAppState } from "@/stores/useAppState";
 
 export default function Home() {
   const { currentAppState } = useAppState();
