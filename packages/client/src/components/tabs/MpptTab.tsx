@@ -13,6 +13,4 @@ function MpptTab(): JSX.Element {
   );
 }
 
-MpptTab.displayName = "MpptTab";
-
 export default MpptTab;

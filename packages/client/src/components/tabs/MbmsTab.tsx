@@ -14,6 +14,4 @@ function MbmsTab(): JSX.Element {
   );
 }
 
-MbmsTab.displayName = "MbmsTab";
-
 export default MbmsTab;

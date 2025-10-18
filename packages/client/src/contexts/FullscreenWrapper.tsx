@@ -3,7 +3,7 @@
  *
  * Usage:
  * ```tsx
- * <FullscreenWrapper>
+ * <FullscreenWrapper componentName="component name here">
  *   <YourComponent />
  * </FullscreenWrapper>
  * ```
@@ -15,7 +15,6 @@
  */
 import { useTheme } from "next-themes";
 import { PropsWithChildren, useRef } from "react";
-import React from "react";
 
 import useFullscreen from "@/hooks/useFullscreen";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
@@ -23,10 +22,16 @@ import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
 import style from "./fullscreen.module.css";
 
+interface FullscreenWrapperProps {
+  componentName: string;
+  className?: string;
+}
+
 const FullscreenWrapper = ({
   children,
   className = "",
-}: PropsWithChildren<{ className?: string }>) => {
+  componentName,
+}: PropsWithChildren<FullscreenWrapperProps>) => {
   const targetElement = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const isFullscreen = useFullscreen();
@@ -42,33 +47,6 @@ const FullscreenWrapper = ({
       document.exitFullscreen?.();
     }
   }
-
-  // function to get child component name
-  const getComponentName = () => {
-    const childArray = React.Children.toArray(children);
-    if (childArray.length > 0) {
-      const firstChild = childArray[0];
-      if (React.isValidElement(firstChild)) {
-        if (typeof firstChild.type === "function") {
-          // check if we gave the function a displayName
-          const componentType =
-            firstChild.type as React.ComponentType<unknown> & {
-              displayName?: string;
-            };
-          if (componentType.displayName) {
-            return componentType.displayName;
-          }
-          // fallback to function name. on prod, we may see "Component" as the name if there is no manually set displayName (due to minification).
-          return firstChild.type.name || "Component";
-        }
-        // if child is a string (ie. 'div', 'span', etc.)
-        if (typeof firstChild.type === "string") {
-          return firstChild.type;
-        }
-      }
-    }
-    return "Unknown Component";
-  };
 
   // have to manually define theme classes when in fullscreen mode
   const fullscreenClasses = isFullscreen
@@ -92,7 +70,7 @@ const FullscreenWrapper = ({
         >
           {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
         </button>
-        <div className="font-bold">{getComponentName()}</div>
+        <div className="font-bold">{componentName}</div>
       </div>
       <div className="size-full">{children}</div>
     </div>

@@ -13,6 +13,4 @@ function MotorTab(): JSX.Element {
   );
 }
 
-MotorTab.displayName = "MotorTab";
-
 export default MotorTab;

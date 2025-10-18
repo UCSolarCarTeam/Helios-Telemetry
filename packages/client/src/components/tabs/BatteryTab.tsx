@@ -12,6 +12,4 @@ function BatteryTab() {
   );
 }
 
-BatteryTab.displayName = "BatteryTab";
-
 export default BatteryTab;
