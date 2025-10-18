@@ -49,8 +49,16 @@ const FullscreenWrapper = ({
     if (childArray.length > 0) {
       const firstChild = childArray[0];
       if (React.isValidElement(firstChild)) {
-        // if child is a function component
         if (typeof firstChild.type === "function") {
+          // check if we gave the function a displayName
+          const componentType =
+            firstChild.type as React.ComponentType<unknown> & {
+              displayName?: string;
+            };
+          if (componentType.displayName) {
+            return componentType.displayName;
+          }
+          // fallback to function name. on prod, we may see "Component" as the name if there is no manually set displayName (due to minification).
           return firstChild.type.name || "Component";
         }
         // if child is a string (ie. 'div', 'span', etc.)
