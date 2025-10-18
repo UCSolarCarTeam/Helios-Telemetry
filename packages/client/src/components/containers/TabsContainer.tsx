@@ -22,7 +22,9 @@ function TabsContainer() {
               {isRaceOrAnalysisTab ? (
                 route.element
               ) : (
-                <FullscreenWrapper>{route.element}</FullscreenWrapper>
+                <FullscreenWrapper componentName={`${route.id} Tab`}>
+                  {route.element}
+                </FullscreenWrapper>
               )}
             </Fragment>
           );

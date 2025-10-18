@@ -3,7 +3,7 @@
  *
  * Usage:
  * ```tsx
- * <FullscreenWrapper>
+ * <FullscreenWrapper componentName="component name here">
  *   <YourComponent />
  * </FullscreenWrapper>
  * ```
@@ -22,10 +22,16 @@ import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
 import style from "./fullscreen.module.css";
 
+interface FullscreenWrapperProps {
+  componentName: string;
+  className?: string;
+}
+
 const FullscreenWrapper = ({
   children,
   className = "",
-}: PropsWithChildren<{ className?: string }>) => {
+  componentName,
+}: PropsWithChildren<FullscreenWrapperProps>) => {
   const targetElement = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const isFullscreen = useFullscreen();
@@ -54,13 +60,18 @@ const FullscreenWrapper = ({
       className={`relative ${fullscreenClasses} ${className}`}
       ref={targetElement}
     >
-      <button
-        className={`absolute right-2 top-2 z-50 hidden rounded px-2 py-1 text-xs ${fullscreenClasses} ${style.mdScreenBlock}`}
-        onClick={toggleFullScreen}
-        title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+      <div
+        className={`flex items-center gap-2 px-2 text-xs ${isFullscreen ? "pt-4" : ""}`}
       >
-        {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-      </button>
+        <button
+          className={`hidden rounded ${style.mdScreenBlock} ${fullscreenClasses}`}
+          onClick={toggleFullScreen}
+          title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+        >
+          {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+        </button>
+        <div className="font-bold">{componentName}</div>
+      </div>
       <div className="size-full">{children}</div>
     </div>
   );
