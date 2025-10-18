@@ -1,7 +1,7 @@
 import { type PropsWithChildren, memo, useEffect, useState } from "react";
 
 import Loading from "@/components/global/Loading";
-import { useAppState } from "@/contexts/AppStateContext";
+import { useAppState } from "@/stores/useAppState";
 
 export enum LOADINGSTAGES {
   DRIVE_IN = 1,

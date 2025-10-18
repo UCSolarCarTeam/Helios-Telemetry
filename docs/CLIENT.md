@@ -104,7 +104,6 @@ const [currentAppState, setCurrentAppState] = useState<IAppState>({
     appUnits: APPUNITS.METRIC,
     carLatency: 0,
     connectionType: CONNECTIONTYPES.DEMO,
-    darkMode: false,
     displayLoading: true,
     error: false,
     favourites: [],
