@@ -4,7 +4,7 @@ const ParkingBrakeIcon = (props: SvgProps) => {
   const { color, height, width } = props;
   return (
     <svg
-      fill={color}
+      className={color}
       height={height}
       id="Capa_1"
       version="1.1"
