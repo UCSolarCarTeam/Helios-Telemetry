@@ -9,7 +9,7 @@ dotenv.config();
 
 export const AppDataSource = new DataSource({
   // database name
-  database: process.env.DB_NAME || "helios_telemetry",
+  database: process.env.DB_NAME || "postgres",
   // entity schemas, whenever you make a table you have to add it here
   entities: [TestTable],
   // database host (if it's localhost or not)
@@ -20,7 +20,7 @@ export const AppDataSource = new DataSource({
   logging: process.env.NODE_ENV === "development",
   // the migrations directory (not sure if this works yet)
   migrations: [__dirname + "/migrations/*.{js,ts}"],
-  password: process.env.DB_PASSWORD || "password",
+  password: process.env.DB_PASSWORD || "postgres",
   port: parseInt(process.env.DB_PORT || "5432"),
   //  Idk if this should be enabled or not
   //  synchronize: process.env.NODE_ENV === "development", // Only in development

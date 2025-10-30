@@ -10,10 +10,7 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "paths": {
-      "@timescaledb/*": ["../../packages/*/src"]
-    }
+    "strict": true
   },
   "include": ["src", "migrations"],
   "exclude": ["node_modules", "dist"]

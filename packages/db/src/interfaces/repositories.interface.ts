@@ -1,4 +1,5 @@
-import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOneOptions } from "typeorm";
+import { TestTable } from "../entities/TestTable.entity";
 
 export interface IBaseRepository<T> {
   create(entity: DeepPartial<T>): Promise<T>;
@@ -10,7 +11,7 @@ export interface IBaseRepository<T> {
   count(options?: FindManyOptions<T>): Promise<number>;
 }
 
-export interface ITestTableRepository extends IBaseRepository<any> {
-  findByName(name: string): Promise<any[]>;
-  findActiveRecords(): Promise<any[]>;
+export interface ITestTableRepository extends IBaseRepository<TestTable> {
+  findByName(name: string): Promise<TestTable[]>;
+  findActiveRecords(): Promise<TestTable[]>;
 }
