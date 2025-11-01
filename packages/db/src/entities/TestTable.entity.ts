@@ -9,10 +9,11 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 
 @Entity("test_table")
 @Hypertable({
-  timeColumn: "time",
-  chunkInterval: "1 day",
-  compress_orderby: "timestamp",
-  compression: { compress: true, compress_orderby: "timestamp" },
+  compression: {
+    compress: true,
+    compress_orderby: "timestamp DESC",
+    compress_segmentby: "name",
+  },
 })
 export class TestTable {
   @PrimaryGeneratedColumn("uuid")
@@ -32,6 +33,9 @@ export class TestTable {
 
   @Column({ type: "int", default: 0 })
   value!: number;
+
+  @Column({ type: "text" })
+  rfid!: string;
 
   @CreateDateColumn()
   createdAt!: Date;
