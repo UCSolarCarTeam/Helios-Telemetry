@@ -3,11 +3,11 @@
     "require": ["tsconfig-paths/register"]
   },
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "esnext",
     "esModuleInterop": true,
     "target": "es2020",
     "noImplicitAny": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
