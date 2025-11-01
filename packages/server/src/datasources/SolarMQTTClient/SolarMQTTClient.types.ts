@@ -1,5 +1,5 @@
 import type { MqttClient } from "mqtt";
-import type { IClientOptions } from "mqtt/*";
+import type { IClientOptions } from "mqtt";
 
 export const options: IClientOptions = {
   host: "localhost",

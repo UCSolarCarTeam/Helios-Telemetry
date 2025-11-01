@@ -7,6 +7,7 @@ import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
+import { DatabaseManager } from "@/database/DatabaseManager";
 
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
@@ -17,6 +18,7 @@ export class BackendController implements BackendControllerTypes {
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
+  public databaseManager: DatabaseManager;
   public carLatency: number;
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
@@ -25,9 +27,23 @@ export class BackendController implements BackendControllerTypes {
     this.socketIO = new SocketIO(httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
+    this.databaseManager = DatabaseManager.getInstance();
     this.establishCarPinging();
     this.carLatency = 0;
+    this.initializeDatabase();
     // this.handleCarLatency();
+  }
+
+  private async initializeDatabase() {
+    try {
+      await this.databaseManager.initialize();
+      logger.info("Database connection established successfully");
+    } catch (error) {
+      logger.error("Failed to initialize database:", error);
+      // Optionally throw or handle gracefully based on your needs
+      // For non-critical features, you might continue without database
+      // throw error;
+    }
   }
 
   public establishCarPinging() {
@@ -63,5 +79,14 @@ export class BackendController implements BackendControllerTypes {
     // Broadcast the car disconnect event to the frontend
     this.socketIO.broadcastCarConnect({ message: "Car has connected" });
     logger.info("Car connect event broadcasted to frontend");
+  }
+
+  public async cleanup() {
+    try {
+      await this.databaseManager.close();
+      logger.info("Database connection closed successfully");
+    } catch (error) {
+      logger.error("Error closing database connection:", error);
+    }
   }
 }
