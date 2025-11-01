@@ -1,7 +1,7 @@
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
 import { startAedes } from "@/aedes";
-import { server, setBackendController, getBackendController } from "@/index";
+import { server, setBackendController } from "@/index";
 import main from "@/main";
 
 const logger = createLightweightApplicationLogger("server.ts");
@@ -26,31 +26,3 @@ export const httpServer = server
     const backendController = main(httpServer);
     setBackendController(backendController);
   });
-
-// Graceful shutdown handling
-process.on('SIGTERM', async () => {
-  logger.info('Received SIGTERM, shutting down gracefully');
-  await gracefulShutdown();
-});
-
-process.on('SIGINT', async () => {
-  logger.info('Received SIGINT, shutting down gracefully');
-  await gracefulShutdown();
-});
-
-async function gracefulShutdown() {
-  try {
-    const backendController = getBackendController();
-    if (backendController) {
-      await backendController.cleanup();
-    }
-    
-    httpServer.close(() => {
-      logger.info('Server closed successfully');
-      process.exit(0);
-    });
-  } catch (error) {
-    logger.error('Error during graceful shutdown:', error);
-    process.exit(1);
-  }
-}

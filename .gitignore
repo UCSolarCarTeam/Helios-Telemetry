@@ -29,7 +29,6 @@ yarn-error.log*
 
 # local env files
 **/.env
-**/.db.env
 **/.env*.local
 
 # vercel
@@ -45,4 +44,3 @@ amplifyconfiguration.json
 
 #databases
 packages/server/database.sqlite
-packages/db/dist

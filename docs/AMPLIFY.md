@@ -205,11 +205,3 @@ This table stores the [packet](./TELEMETRY.md#packet) data. The timestamp of whe
     }
 }
 ```
-
-### Connecting through the instance through SSM
-
-You need this IAM Role to be able to connect through SSM
-
-```
-AmazonEC2RoleforSSM
-```
