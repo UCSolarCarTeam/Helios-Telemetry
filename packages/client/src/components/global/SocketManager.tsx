@@ -1,15 +1,9 @@
-import {
-  type JSX,
-  type PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+"use client";
+
+import { useCallback, useEffect, useRef } from "react";
 import { type Socket, io } from "socket.io-client";
 
-import { useAppState } from "@/contexts/AppStateContext";
+import { useAppState } from "@/stores/useAppState";
 import { notifications } from "@mantine/notifications";
 import type {
   CoordInfoUpdate,
@@ -37,16 +31,13 @@ interface ServerToClientEvents {
   carConnect: (data: { message: string }) => void;
 }
 
-// Defaults to using client fakerJS, change Data to Network in site settings to connect to server
+// The socket instance
 export const socketIO: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   socketURL,
   { autoConnect: false },
 );
 
-const socketContext = createContext({});
-export function SocketContextProvider({
-  children,
-}: PropsWithChildren): JSX.Element {
+export default function SocketManager() {
   const { setCurrentAppState } = useAppState();
   const start = useRef<number | null>(null);
 
@@ -59,29 +50,22 @@ export function SocketContextProvider({
 
   const onLapCoords = useCallback(
     (coords: CoordUpdateResponse) => {
-      if ("error" in coords) {
-        return;
-      }
+      if ("error" in coords) return;
       setCurrentAppState((prev) => ({ ...prev, lapCoords: coords as Coords }));
     },
     [setCurrentAppState],
   );
+
   const onCarConnect = useCallback(() => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      mqttConnected: true,
-    }));
+    setCurrentAppState((prev) => ({ ...prev, mqttConnected: true }));
     notifications.show({
-      color: "",
       message: "Car has reconnected!",
       title: "Connection Restored",
     });
   }, [setCurrentAppState]);
+
   const onCarDisconnect = useCallback(() => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      mqttConnected: false,
-    }));
+    setCurrentAppState((prev) => ({ ...prev, mqttConnected: false }));
     notifications.show({
       color: "red",
       message: "Car has disconnected!",
@@ -90,24 +74,32 @@ export function SocketContextProvider({
   }, [setCurrentAppState]);
 
   useEffect(() => {
-    // Connect to the socket
+    // Connect the socket
     socketIO.connect();
 
-    // Ping the server every second to measure user latency
+    // Ping interval
     const id = setInterval(() => {
       start.current = Date.now();
-
       socketIO.emit("ping", () => {
         const duration = Date.now() - (start.current as number);
         setCurrentAppState((prev) => ({ ...prev, userLatency: duration }));
       });
     }, 10000);
 
-    // Register event listeners
+    // Register listeners
     socketIO.on("carDisconnect", onCarDisconnect);
     socketIO.on("carConnect", onCarConnect);
     socketIO.on("carLatency", onCarLatency);
     socketIO.on("lapCoords", onLapCoords);
+
+    socketIO.on("connect", () => {
+      setCurrentAppState((prev) => ({ ...prev, socketConnected: true }));
+    });
+
+    socketIO.on("disconnect", () => {
+      setCurrentAppState((prev) => ({ ...prev, socketConnected: false }));
+    });
+
     return () => {
       socketIO.disconnect();
       clearInterval(id);
@@ -124,24 +116,5 @@ export function SocketContextProvider({
     setCurrentAppState,
   ]);
 
-  // Socket connection status listeners
-  socketIO.on("connect", () => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      socketConnected: true,
-    }));
-  });
-
-  socketIO.on("disconnect", () => {
-    setCurrentAppState((prev) => ({
-      ...prev,
-      socketConnected: false,
-    }));
-  });
-
-  return <socketContext.Provider value={{}}>{children}</socketContext.Provider>;
-}
-
-export function useSocket() {
-  return useContext(socketContext);
+  return null; // This component does not render anything
 }
