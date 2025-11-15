@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import PauseIcon from "@/components/atoms/PauseIcon";
 import PlayIcon from "@/components/atoms/PlayIcon";
-import { usePacket } from "@/contexts/PacketContext";
-import { usePlaybackContext } from "@/contexts/PlayBackContext";
+import { usePacketStore } from "@/stores/usePacket";
+import { usePlaybackStore } from "@/stores/usePlayback";
 import Tooltip from "@mui/material/Tooltip";
 
 export default function PlaybackSlider() {
@@ -18,8 +18,10 @@ export default function PlaybackSlider() {
   const [tooltipPosition, setTooltipPosition] = useState({ left: 0, top: 0 });
   const hoverAnchorRef = useRef<HTMLDivElement>(null);
 
-  const { setCurrentPacket } = usePacket();
-  const { playbackData } = usePlaybackContext();
+  const { setCurrentPacket } = usePacketStore();
+  const { playbackData } = usePlaybackStore((state) => ({
+    playbackData: state.playbackData,
+  }));
 
   const { hasData, sortedData } = useMemo(() => {
     const sortedData =
