@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "clean": "rimraf dist",
-    "start": "node dist/server.js",
+    "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
     "build": "npm run clean && npm run tsc",
     "dev": "NODE_ENV=development nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
     "tsc": "tsc -p ./tsconfig.json"
