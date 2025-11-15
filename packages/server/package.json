@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "scripts": {
     "clean": "rimraf dist",
-    "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
+    "start": "node dist/server.js",
     "build": "npm run clean && npm run tsc",
-    "dev": "NODE_ENV=development nodemon - exec 'ts-node' src/server.ts",
+    "dev": "NODE_ENV=development nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
     "tsc": "tsc -p ./tsconfig.json"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "axios": "^1.7.2",
     "axios-retry": "^4.0.0",
     "cors": "^2.8.5",
+    "db": "*",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "log4js": "^6.9.1",
@@ -33,6 +34,9 @@
     "typescript": "^5.5.3"
   },
   "devDependencies": {
+    "@timescaledb/core": "^0.0.1",
+    "@timescaledb/schemas": "^0.0.1",
+    "@timescaledb/typeorm": "^0.0.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/eslint": "^9.6.0",
     "@types/express": "^4.17.21",
