@@ -24,5 +24,5 @@ export const AppDataSource = new DataSource({
   port: parseInt(process.env.DB_PORT || "5432"),
   synchronize: process.env.NODE_ENV === "development", // Only in development
   type: "postgres",
-  username: process.env.POSTGRES_USER || "postgres",
+  username: process.env.POSTGRES_USERNAME || "postgres",
 });
