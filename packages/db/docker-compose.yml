@@ -6,7 +6,7 @@ services:
     env_file:
       - .db.env # contains the information regarding our user, password, and database
     ports:
-      - "5433:5432" # map host port to internal port
+      - "5432:5432" # map host port to internal port
     volumes:
       - /var/lib/timescaledb/data:/var/lib/postgresql/data # volume to store persistence in case the container spins down/fails etc
     restart: unless-stopped # try to restart it unless manually stopped

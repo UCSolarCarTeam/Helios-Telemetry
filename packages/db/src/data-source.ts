@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
   // the migrations directory (not sure if this works yet)
   migrations: [__dirname + "/migrations/*.{js,ts}"],
   password: process.env.POSTGRES_PASSWORD || "postgres",
-  port: parseInt(process.env.DB_PORT || "5433"),
+  port: parseInt(process.env.DB_PORT || "5432"),
   synchronize: process.env.NODE_ENV === "development", // Only in development
   type: "postgres",
   username: process.env.POSTGRES_USER || "postgres",
