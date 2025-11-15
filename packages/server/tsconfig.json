@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "node16",
     "esModuleInterop": true,
     "target": "es2020",
     "noImplicitAny": false,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
+    "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types"],
     "paths": {
       "@/*": ["src/*"]
     },
@@ -17,5 +19,11 @@
     "resolveJsonModule": true
   },
   "include": [".eslintrc.cjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
-  "exclude": ["dist", "../client"]
+  "exclude": [
+    "dist",
+    "../client",
+    "../../node_modules",
+    "node_modules",
+    "**/node_modules"
+  ]
 }
