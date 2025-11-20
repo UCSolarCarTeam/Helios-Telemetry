@@ -158,6 +158,7 @@ export class LapController implements LapControllerType {
   // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
+    await this.backendController.grafanaWebSocket.broadcastLapData(lapData);
     await this.backendController.dynamoDB.insertLapData(lapData);
   }
 

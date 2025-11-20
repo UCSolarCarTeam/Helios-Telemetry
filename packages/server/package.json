@@ -16,6 +16,7 @@
     "@godaddy/terminus": "^4.12.1",
     "@shared/helios-types": "*",
     "@types/sqlite3": "^3.1.11",
+    "@types/ws": "^8.18.1",
     "aedes": "^0.51.2",
     "axios": "^1.7.2",
     "axios-retry": "^4.0.0",
@@ -31,7 +32,8 @@
     "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@timescaledb/core": "^0.0.1",
