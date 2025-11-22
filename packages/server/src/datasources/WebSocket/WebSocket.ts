@@ -87,4 +87,4 @@ export class NativeWebSocket implements WebSocketType {
   }
 }
 
-export default WebSocket;
+export default NativeWebSocket;
