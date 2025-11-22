@@ -4,14 +4,16 @@ import type { BackendControllerTypes } from "@/controllers/BackendController/Bac
 import { LapController } from "@/controllers/LapController/LapController";
 
 import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
-import { GrafanaWebSocket } from "@/datasources/GrafanaWebSocket/GrafanaWebSocket";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
+import { NativeWebSocket } from "@/datasources/WebSocket/WebSocket";
 
 import { DatabaseManager } from "@/database/DatabaseManager";
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
+
+const grafanaWsPath = process.env.GRAFANA_WS_PATH ?? "/grafana-ws";
 
 //getDriverInfo
 export class BackendController implements BackendControllerTypes {
@@ -19,7 +21,7 @@ export class BackendController implements BackendControllerTypes {
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
-  public grafanaWebSocket: GrafanaWebSocket;
+  public webSocket: NativeWebSocket;
   public databaseManager: DatabaseManager;
   public carLatency: number;
   constructor(
@@ -27,7 +29,7 @@ export class BackendController implements BackendControllerTypes {
   ) {
     this.dynamoDB = new DynamoDB(this);
     this.socketIO = new SocketIO(httpsServer, this);
-    this.grafanaWebSocket = new GrafanaWebSocket(httpsServer, this);
+    this.webSocket = new NativeWebSocket(grafanaWsPath, httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
     this.databaseManager = DatabaseManager.getInstance();
@@ -69,8 +71,8 @@ export class BackendController implements BackendControllerTypes {
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
 
-    // Broadcast the packet to the grafana web socket
-    // this.grafanaWebSocket.broadcastPacket(message); // only send the ILapData through WS for now
+    // Broadcast the packet to the native web socket
+    // this.webSocket.broadcastPacket(message); // only send the ILapData through WS for now
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);

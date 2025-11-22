@@ -1,9 +1,9 @@
 import type { LapController } from "@/controllers/LapController/LapController";
 
 import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
-import type { GrafanaWebSocket } from "@/datasources/GrafanaWebSocket/GrafanaWebSocket";
 import type { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import type { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
+import type { NativeWebSocket } from "@/datasources/WebSocket/WebSocket";
 
 import type { ITelemetryData } from "@shared/helios-types";
 
@@ -15,5 +15,5 @@ export interface BackendControllerTypes {
   lapController: LapController;
   mqtt: SolarMQTTClient;
   socketIO: SocketIO;
-  grafanaWebSocket: GrafanaWebSocket;
+  webSocket: NativeWebSocket;
 }
