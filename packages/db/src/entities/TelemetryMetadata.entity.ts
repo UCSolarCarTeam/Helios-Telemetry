@@ -1,4 +1,4 @@
-import { Entity, Column, Index } from "typeorm";
+import { Entity, Column, Index, PrimaryColumn } from "typeorm";
 import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 
 /**
@@ -20,9 +20,10 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 @Index(["race_name", "timestamp"])
 export class TelemetryMetadata {
   @TimeColumn()
+  @PrimaryColumn({ type: "timestamptz" })
   timestamp!: Date;
 
-  @Column({ type: "text", primary: true })
+  @PrimaryColumn({ type: "text" })
   rfid!: string;
 
   @Column({ type: "text", nullable: true })

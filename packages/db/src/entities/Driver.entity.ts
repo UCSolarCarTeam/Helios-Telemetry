@@ -12,7 +12,6 @@ import {
  * Stores driver information linked by RFID
  */
 @Entity("driver")
-@Index(["rfid"], { unique: true })
 export class Driver {
   @PrimaryColumn({ type: "text" })
   rfid!: string;

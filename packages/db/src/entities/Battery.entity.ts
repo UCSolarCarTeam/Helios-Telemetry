@@ -1,4 +1,4 @@
-import { Entity, Column, Index } from "typeorm";
+import { Entity, Column, Index, PrimaryColumn } from "typeorm";
 import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 
 /**
@@ -18,9 +18,10 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 @Index(["rfid", "timestamp"])
 export class Battery {
   @TimeColumn()
+  @PrimaryColumn({ type: "timestamptz" })
   timestamp!: Date;
 
-  @Column({ type: "text", primary: true })
+  @PrimaryColumn({ type: "text" })
   rfid!: string;
 
   @Column({ type: "boolean" })
@@ -32,7 +33,7 @@ export class Battery {
   @Column({ type: "float" })
   average_temperature!: number;
 
-  @Column({ type: "float" })
+  @Column({ type: "integer" })
   bmu_alive!: number;
 
   @Column({ type: "boolean" })
@@ -53,13 +54,13 @@ export class Battery {
   @Column({ type: "float" })
   high_cell_voltage!: number;
 
-  @Column({ type: "float" })
+  @Column({ type: "integer" })
   high_cell_voltage_id!: number;
 
   @Column({ type: "float" })
   high_temperature!: number;
 
-  @Column({ type: "float" })
+  @Column({ type: "integer" })
   high_thermistor_id!: number;
 
   @Column({ type: "float" })
@@ -77,13 +78,13 @@ export class Battery {
   @Column({ type: "float" })
   low_cell_voltage!: number;
 
-  @Column({ type: "float" })
+  @Column({ type: "integer" })
   low_cell_voltage_id!: number;
 
   @Column({ type: "float" })
   low_temperature!: number;
 
-  @Column({ type: "float" })
+  @Column({ type: "integer" })
   low_thermistor_id!: number;
 
   @Column({ type: "boolean" })
@@ -119,7 +120,7 @@ export class Battery {
   @Column({ type: "float" })
   pack_voltage!: number;
 
-  @Column({ type: "float" })
+  @Column({ type: "integer" })
   populated_cells!: number;
 
   @Column({ type: "float" })

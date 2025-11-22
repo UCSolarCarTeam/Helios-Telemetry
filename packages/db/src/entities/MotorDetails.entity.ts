@@ -1,4 +1,4 @@
-import { Entity, Column, Index } from "typeorm";
+import { Entity, Column, Index, PrimaryColumn } from "typeorm";
 import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 
 /**
@@ -20,13 +20,14 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 @Index(["motor_id", "timestamp"])
 export class MotorDetails {
   @TimeColumn()
+  @PrimaryColumn({ type: "timestamptz" })
   timestamp!: Date;
 
-  @Column({ type: "text", primary: true })
+  @PrimaryColumn({ type: "text" })
   rfid!: string;
 
-  @Column({ type: "int", primary: true })
-  motor_id!: number; // 0 or 1 (MotorDetails0 or MotorDetails1)
+  @PrimaryColumn({ type: "int" })
+  motor_id!: number;
 
   @Column({ type: "float" })
   active_motor!: number;

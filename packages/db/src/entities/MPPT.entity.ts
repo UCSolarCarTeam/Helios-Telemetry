@@ -1,4 +1,4 @@
-import { Entity, Column, Index } from "typeorm";
+import { Entity, Column, Index, PrimaryColumn } from "typeorm";
 import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 
 /**
@@ -18,9 +18,10 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 @Index(["rfid", "timestamp"])
 export class MPPT {
   @TimeColumn()
+  @PrimaryColumn({ type: "timestamptz" })
   timestamp!: Date;
 
-  @Column({ type: "text", primary: true })
+  @PrimaryColumn({ type: "text" })
   rfid!: string;
 
   @Column({ type: "float" })
