@@ -70,7 +70,7 @@ export class BackendController implements BackendControllerTypes {
     this.socketIO.broadcastPacket(message);
 
     // Broadcast the packet to the grafana web socket
-    this.grafanaWebSocket.broadcastPacket(message);
+    // this.grafanaWebSocket.broadcastPacket(message); // only send the ILapData through WS for now
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);

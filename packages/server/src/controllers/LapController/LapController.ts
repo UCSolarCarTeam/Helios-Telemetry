@@ -191,7 +191,11 @@ export class LapController implements LapControllerType {
       this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
     }
 
-    if (packet.B3.LapDigital && this.lastLapPackets.length > 5) {
+    if (
+      //TEST: commented out this condition for broadcasting lap data to grafana
+      // packet.B3.LapDigital &&
+      this.lastLapPackets.length > 5
+    ) {
       await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
