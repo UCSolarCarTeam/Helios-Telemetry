@@ -51,8 +51,16 @@ export class GrafanaWebSocket implements GrafanaWebSocketType {
       data: packet,
       type: "packet",
     };
-
-    this.wss.clients.forEach((ws) => ws.send(JSON.stringify(message)));
+    this.wss.clients.forEach((ws) => {
+      try {
+        ws.send(JSON.stringify(message));
+      } catch (error) {
+        logger.error(
+          "Error broadcasting telemetry packet to Grafana WS",
+          error,
+        );
+      }
+    });
   }
 
   public broadcastLapData(lapData: ILapData): void {
@@ -67,8 +75,13 @@ export class GrafanaWebSocket implements GrafanaWebSocketType {
       data: lapData,
       type: "lapData",
     };
-
-    this.wss.clients.forEach((ws) => ws.send(JSON.stringify(message)));
+    this.wss.clients.forEach((ws) => {
+      try {
+        ws.send(JSON.stringify(message));
+      } catch (error) {
+        logger.error("Error broadcasting lap data to Grafana WS", error);
+      }
+    });
   }
 
   public initializeWebSocketListeners(ws: WebSocket): void {
