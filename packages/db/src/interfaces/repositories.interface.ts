@@ -1,5 +1,4 @@
 import { DeepPartial, FindManyOptions, FindOneOptions } from "typeorm";
-import { TestTable } from "../entities/TestTable.entity";
 import { B3 } from "../entities/B3.entity";
 import { BatteryFaults } from "../entities/BatteryFaults.entity";
 import { Battery } from "../entities/Battery.entity";
@@ -22,11 +21,6 @@ export interface IBaseRepository<T> {
   update(timestamp: Date, updates: DeepPartial<T>): Promise<T | null>;
   delete(timestamp: Date): Promise<boolean>;
   count(options?: FindManyOptions<T>): Promise<number>;
-}
-
-export interface ITestTableRepository extends IBaseRepository<TestTable> {
-  findByName(name: string): Promise<TestTable[]>;
-  findActiveRecords(): Promise<TestTable[]>;
 }
 
 export interface IB3Repository extends IBaseRepository<B3> {}

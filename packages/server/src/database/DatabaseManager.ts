@@ -1,9 +1,8 @@
-import { DatabaseService, TestTableService } from 'db';
+import { DatabaseService } from "db";
 
 export class DatabaseManager {
   private static instance: DatabaseManager;
   private databaseService: DatabaseService;
-  private _testTableService: TestTableService | null = null;
 
   private constructor() {
     this.databaseService = new DatabaseService();
@@ -19,26 +18,16 @@ export class DatabaseManager {
   public async initialize(): Promise<void> {
     try {
       await this.databaseService.initialize();
-      console.log('DatabaseManager initialized successfully');
+      console.log("DatabaseManager initialized successfully");
     } catch (error) {
-      console.error('Failed to initialize DatabaseManager:', error);
+      console.error("Failed to initialize DatabaseManager:", error);
       throw error;
     }
   }
 
   public async close(): Promise<void> {
     await this.databaseService.close();
-    console.log('DatabaseManager closed');
-  }
-
-  // Lazy-load services
-  public get testTableService(): TestTableService {
-    if (!this._testTableService) {
-      this._testTableService = new TestTableService(
-        this.databaseService.testTableRepository
-      );
-    }
-    return this._testTableService;
+    console.log("DatabaseManager closed");
   }
 
   // Helper method to check connection status
