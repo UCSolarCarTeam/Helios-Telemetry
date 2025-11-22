@@ -11,6 +11,8 @@ import type { ILapData, ITelemetryData } from "@shared/helios-types";
 
 const logger = createLightweightApplicationLogger("GrafanaWebSocket.ts");
 
+const wsPath = process.env.GRAFANA_WS_PATH ?? "/grafana-ws";
+
 export class GrafanaWebSocket implements GrafanaWebSocketType {
   wss: WebSocketServer;
   backendController: BackendController;
@@ -20,7 +22,7 @@ export class GrafanaWebSocket implements GrafanaWebSocketType {
   ) {
     this.backendController = backendController;
     this.wss = new WebSocketServer({
-      path: "/grafana-ws",
+      path: wsPath,
       server: httpsServer,
     });
 
