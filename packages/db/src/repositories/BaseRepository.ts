@@ -6,15 +6,19 @@ import {
 } from "typeorm";
 import { ObjectLiteral, FindOneOptions } from "typeorm";
 
-// Define a base entity interface that has an id
+// every entity has either timestamp (car parts) or rfid (driver and car parts) as its primary key
 interface BaseEntity {
-  id: number | string;
+  timestamp?: Date;
+  rfid?: string;
 }
 
 export abstract class BaseRepository<T extends ObjectLiteral & BaseEntity> {
-  constructor(protected repository: Repository<T>) {}
+  constructor(
+    protected repository: Repository<T>,
+    protected primaryKey: keyof T = "timestamp" as keyof T,
+  ) {}
 
-  async findAll(options?: FindManyOptions<T>): Promise<T[]> {
+  async findMany(options?: FindManyOptions<T>): Promise<T[]> {
     return this.repository.find(options);
   }
 
@@ -22,9 +26,9 @@ export abstract class BaseRepository<T extends ObjectLiteral & BaseEntity> {
     return this.repository.findOne(options);
   }
 
-  async findById(id: number | string): Promise<T | null> {
+  async findById(id: Date | string): Promise<T | null> {
     return this.repository.findOne({
-      where: { id } as FindOptionsWhere<T>,
+      where: { [this.primaryKey]: id } as FindOptionsWhere<T>,
     });
   }
 
@@ -33,13 +37,17 @@ export abstract class BaseRepository<T extends ObjectLiteral & BaseEntity> {
     return this.repository.save(entity);
   }
 
-  async update(id: number | string, data: DeepPartial<T>): Promise<T | null> {
-    await this.repository.update(id, data);
+  async update(id: Date | string, data: Partial<T>): Promise<T | null> {
+    // no nested updates possible with current any entitiy so Partial<T> is okay
+    await this.repository.update(
+      { [this.primaryKey]: id } as FindOptionsWhere<T>,
+      data,
+    );
     return this.findById(id);
   }
 
-  async delete(id: number | string): Promise<boolean> {
-    const result = await this.repository.delete(id);
+  async delete(timestamp: Date): Promise<boolean> {
+    const result = await this.repository.delete(timestamp);
     return (result.affected ?? 0) > 0;
   }
 

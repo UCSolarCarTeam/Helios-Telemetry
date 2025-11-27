@@ -1,11 +1,8 @@
-import { DataSource } from 'typeorm';
-import { AppDataSource } from '../data-source';
-import { TestTable } from '../entities/TestTable.entity';
-import { TestTableRepository } from '../repositories/TestTableRepository';
+import { DataSource } from "typeorm";
+import { AppDataSource } from "../data-source";
 
 export class DatabaseService {
   private dataSource: DataSource;
-  private _testTableRepository: TestTableRepository | null = null;
 
   constructor() {
     this.dataSource = AppDataSource;
@@ -15,10 +12,10 @@ export class DatabaseService {
     try {
       if (!this.dataSource.isInitialized) {
         await this.dataSource.initialize();
-        console.log('Database connection initialized successfully');
+        console.log("Database connection initialized successfully");
       }
     } catch (error) {
-      console.error('Error during database initialization:', error);
+      console.error("Error during database initialization:", error);
       throw error;
     }
   }
@@ -26,16 +23,8 @@ export class DatabaseService {
   async close(): Promise<void> {
     if (this.dataSource.isInitialized) {
       await this.dataSource.destroy();
-      console.log('Database connection closed');
+      console.log("Database connection closed");
     }
-  }
-
-  get testTableRepository(): TestTableRepository {
-    if (!this._testTableRepository) {
-      const repository = this.dataSource.getRepository(TestTable);
-      this._testTableRepository = new TestTableRepository(repository);
-    }
-    return this._testTableRepository;
   }
 
   // Helper method to check if database is connected
