@@ -19,107 +19,107 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class MPPT {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "float" })
-  mppt0_ch0_array_current!: number;
+  Mppt0Ch0ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt0_ch0_array_voltage!: number;
+  Mppt0Ch0ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt0_ch0_battery_voltage!: number;
+  Mppt0Ch0BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt0_ch0_unit_temperature!: number;
+  Mppt0Ch0UnitTemperature!: number;
 
   @Column({ type: "float" })
-  mppt0_ch1_array_current!: number;
+  Mppt0Ch1ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt0_ch1_array_voltage!: number;
+  Mppt0Ch1ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt0_ch1_battery_voltage!: number;
+  Mppt0Ch1BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt0_ch1_unit_temperature!: number;
+  Mppt0Ch1UnitTemperature!: number;
 
   @Column({ type: "float" })
-  mppt1_ch0_array_current!: number;
+  Mppt1Ch0ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt1_ch0_array_voltage!: number;
+  Mppt1Ch0ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt1_ch0_battery_voltage!: number;
+  Mppt1Ch0BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt1_ch0_unit_temperature!: number;
+  Mppt1Ch0UnitTemperature!: number;
 
   @Column({ type: "float" })
-  mppt1_ch1_array_current!: number;
+  Mppt1Ch1ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt1_ch1_array_voltage!: number;
+  Mppt1Ch1ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt1_ch1_battery_voltage!: number;
+  Mppt1Ch1BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt1_ch1_unit_temperature!: number;
+  Mppt1Ch1UnitTemperature!: number;
 
   @Column({ type: "float" })
-  mppt2_ch0_array_current!: number;
+  Mppt2Ch0ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt2_ch0_array_voltage!: number;
+  Mppt2Ch0ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt2_ch0_battery_voltage!: number;
+  Mppt2Ch0BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt2_ch0_unit_temperature!: number;
+  Mppt2Ch0UnitTemperature!: number;
 
   // MPPT 2 Channel 1
   @Column({ type: "float" })
-  mppt2_ch1_array_current!: number;
+  Mppt2Ch1ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt2_ch1_array_voltage!: number;
+  Mppt2Ch1ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt2_ch1_battery_voltage!: number;
+  Mppt2Ch1BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt2_ch1_unit_temperature!: number;
+  Mppt2Ch1UnitTemperature!: number;
 
   // MPPT 3 Channel 0
   @Column({ type: "float" })
-  mppt3_ch0_array_current!: number;
+  Mppt3Ch0ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt3_ch0_array_voltage!: number;
+  Mppt3Ch0ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt3_ch0_battery_voltage!: number;
+  Mppt3Ch0BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt3_ch0_unit_temperature!: number;
+  Mppt3Ch0UnitTemperature!: number;
 
   // MPPT 3 Channel 1
   @Column({ type: "float" })
-  mppt3_ch1_array_current!: number;
+  Mppt3Ch1ArrayCurrent!: number;
 
   @Column({ type: "float" })
-  mppt3_ch1_array_voltage!: number;
+  Mppt3Ch1ArrayVoltage!: number;
 
   @Column({ type: "float" })
-  mppt3_ch1_battery_voltage!: number;
+  Mppt3Ch1BatteryVoltage!: number;
 
   @Column({ type: "float" })
-  mppt3_ch1_unit_temperature!: number;
+  Mppt3Ch1UnitTemperature!: number;
 }

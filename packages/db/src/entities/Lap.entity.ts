@@ -18,41 +18,41 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 @Index(["rfid", "timestamp"])
 export class Lap {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  Id!: string;
 
   @TimeColumn()
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @Column({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "float" })
-  lap_time!: number;
+  LapTime!: number;
 
   @Column({ type: "float" })
-  total_power_in!: number;
+  TotalPowerIn!: number;
 
   @Column({ type: "float" })
-  total_power_out!: number;
+  TotalPowerOut!: number;
 
   @Column({ type: "float" })
-  net_power_out!: number;
+  NetPowerOut!: number;
 
   @Column({ type: "float" })
-  distance!: number;
+  Distance!: number;
 
   @Column({ type: "float" })
-  energy_consumed!: number;
+  EnergyConsumed!: number;
 
   @Column({ type: "float" })
-  amp_hours!: number;
+  AmpHours!: number;
 
   @Column({ type: "float" })
-  average_pack_current!: number;
+  AveragePackCurrent!: number;
 
   @Column({ type: "float" })
-  battery_seconds_remaining!: number;
+  BatterySecondsRemaining!: number;
 
   @Column({ type: "float" })
-  average_speed!: number;
+  AverageSpeed!: number;
 }

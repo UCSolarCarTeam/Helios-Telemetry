@@ -21,14 +21,14 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class TelemetryMetadata {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "text", nullable: true })
-  race_name?: string;
+  RaceName?: string;
 
   @Column({ type: "text", nullable: true })
-  title?: string;
+  Title?: string;
 }

@@ -19,20 +19,20 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class ProximitySensors {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "float" })
-  proximity_sensor_1!: number;
+  ProximitySensor1!: number;
 
   @Column({ type: "float" })
-  proximity_sensor_2!: number;
+  ProximitySensor2!: number;
 
   @Column({ type: "float" })
-  proximity_sensor_3!: number;
+  RroximitySensor3!: number;
 
   @Column({ type: "float" })
-  proximity_sensor_4!: number;
+  ProximitySensor4!: number;
 }
