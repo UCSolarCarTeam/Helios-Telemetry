@@ -19,115 +19,115 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class BatteryFaults {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   // Errors
   @Column({ type: "boolean" })
-  error_always_on_supply_fault!: boolean;
+  ErrorAlwaysOnSupplyFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_canbus_communication_fault!: boolean;
+  ErrorCanbusCommunicationFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_charge_limit_enforcement_fault!: boolean;
+  ErrorChargeLimitEnforcementFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_charger_safety_relay_fault!: boolean;
+  ErrorChargerSafetyRelayFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_current_sensor_fault!: boolean;
+  ErrorCurrentSensorFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_discharge_limit_enforcement_fault!: boolean;
+  ErrorDischargeLimitEnforcementFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_fan_monitor_fault!: boolean;
+  ErrorFanMonitorFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_high_voltage_isolation_fault!: boolean;
+  ErrorHighVoltageIsolationFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_internal_communication_fault!: boolean;
+  ErrorInternalCommunicationFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_internal_conversion_fault!: boolean;
+  ErrorInternalConversionFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_internal_logic_fault!: boolean;
+  ErrorInternalLogicFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_internal_memory_fault!: boolean;
+  ErrorInternalMemoryFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_internal_thermistor_fault!: boolean;
+  ErrorInternalThermistorFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_low_cell_voltage_fault!: boolean;
+  ErrorLowCellVoltageFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_open_wiring_fault!: boolean;
+  ErrorOpenWiringFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_pack_voltage_sensor_fault!: boolean;
+  ErrorPackVoltageSensorFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_power_supply_12v_fault!: boolean;
+  ErrorPowerSupply12vFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_thermistor_fault!: boolean;
+  ErrorThermistorFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_voltage_redundancy_fault!: boolean;
+  ErrorVoltageRedundancyFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_weak_cell_fault!: boolean;
+  ErrorWeakCellFault!: boolean;
 
   @Column({ type: "boolean" })
-  error_weak_pack_fault!: boolean;
+  ErrorWeakPackFault!: boolean;
 
   // Warnings
   @Column({ type: "boolean" })
-  warning_ccl_reduced_due_to_alternate_current_limit!: boolean;
+  WarningCclReducedDueToAlternateCurrentLimit!: boolean;
 
   @Column({ type: "boolean" })
-  warning_ccl_reduced_due_to_charger_latch!: boolean;
+  WarningCclReducedDueToChargerLatch!: boolean;
 
   @Column({ type: "boolean" })
-  warning_ccl_reduced_due_to_high_cell_resistance!: boolean;
+  WarningCclReducedDueToHighCellResistance!: boolean;
 
   @Column({ type: "boolean" })
-  warning_ccl_reduced_due_to_high_cell_voltage!: boolean;
+  WarningCclReducedDueToHighCellVoltage!: boolean;
 
   @Column({ type: "boolean" })
-  warning_ccl_reduced_due_to_high_pack_voltage!: boolean;
+  WarningCclReducedDueToHighPackVoltage!: boolean;
 
   @Column({ type: "boolean" })
-  warning_ccl_reduced_due_to_high_soc!: boolean;
+  WarningCclReducedDueToHighSoc!: boolean;
 
   @Column({ type: "boolean" })
-  warning_ccl_reduced_due_to_temperature!: boolean;
+  WarningCclReducedDueToTemperature!: boolean;
 
   @Column({ type: "boolean" })
-  warning_dcl_and_ccl_reduced_due_to_communication_failsafe!: boolean;
+  WarningDclAndCclReducedDueToCommunicationFailsafe!: boolean;
 
   @Column({ type: "boolean" })
-  warning_dcl_and_ccl_reduced_due_to_voltage_failsafe!: boolean;
+  WarningDclAndCclReducedDueToVoltageFailsafe!: boolean;
 
   @Column({ type: "boolean" })
-  warning_dcl_reduced_due_to_high_cell_resistance!: boolean;
+  WarningDclReducedDueToHighCellResistance!: boolean;
 
   @Column({ type: "boolean" })
-  warning_dcl_reduced_due_to_low_cell_voltage!: boolean;
+  WarningDclReducedDueToLowCellVoltage!: boolean;
 
   @Column({ type: "boolean" })
-  warning_dcl_reduced_due_to_low_pack_voltage!: boolean;
+  WarningDclReducedDueToLowPackVoltage!: boolean;
 
   @Column({ type: "boolean" })
-  warning_dcl_reduced_due_to_low_soc!: boolean;
+  WarningDclReducedDueToLowSoc!: boolean;
 
   @Column({ type: "boolean" })
-  warning_dcl_reduced_due_to_temperature!: boolean;
+  WarningDclReducedDueToTemperature!: boolean;
 }

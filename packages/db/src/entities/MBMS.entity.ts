@@ -19,179 +19,179 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class MBMS {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "boolean" })
-  abatt_disable!: boolean;
+  AbattDisable!: boolean;
 
   @Column({ type: "boolean" })
-  array_contactor_command!: boolean;
+  ArrayContactorCommand!: boolean;
 
   @Column({ type: "boolean" })
-  array_heartbeat_dead_trip!: boolean;
+  ArrayHeartbeatDeadTrip!: boolean;
 
   @Column({ type: "boolean" })
-  array_high_current_trip!: boolean;
+  ArrayHighCurrentTrip!: boolean;
 
   @Column({ type: "boolean" })
-  array_high_current_warning!: boolean;
+  ArrayHighCurrentWarning!: boolean;
 
   @Column({ type: "float" })
-  auxiliary_battery_voltage!: number;
+  AuxiliaryBatteryVoltage!: number;
 
   @Column({ type: "boolean" })
-  can_oc_12v_warning!: boolean;
+  CanOc12vWarning!: boolean;
 
   @Column({ type: "boolean" })
-  charge_contactor_command!: boolean;
+  ChargeContactorCommand!: boolean;
 
   @Column({ type: "boolean" })
-  charge_enable!: boolean;
+  ChargeEnable!: boolean;
 
   @Column({ type: "boolean" })
-  charge_heartbeat_dead_trip!: boolean;
+  ChargeHeartbeatDeadTrip!: boolean;
 
   @Column({ type: "boolean" })
-  charge_high_current_trip!: boolean;
+  ChargeHighCurrentTrip!: boolean;
 
   @Column({ type: "boolean" })
-  charge_high_current_warning!: boolean;
+  ChargeHighCurrentWarning!: boolean;
 
   @Column({ type: "boolean" })
-  charge_safety!: boolean;
+  ChargeSafety!: boolean;
 
   @Column({ type: "boolean" })
-  charge_should_trip!: boolean;
+  ChargeShouldTrip!: boolean;
 
   @Column({ type: "boolean" })
-  chg_fault!: boolean;
+  ChgFault!: boolean;
 
   @Column({ type: "boolean" })
-  chg_lv_en!: boolean;
+  ChgLvEn!: boolean;
 
   @Column({ type: "boolean" })
-  chg_on!: boolean;
+  ChgOn!: boolean;
 
   @Column({ type: "boolean" })
-  common_contactor_command!: boolean;
+  CommonContactorCommand!: boolean;
 
   @Column({ type: "boolean" })
-  common_heartbeat_dead_trip!: boolean;
+  CommonHeartbeatDeadTrip!: boolean;
 
   @Column({ type: "boolean" })
-  common_high_current_trip!: boolean;
+  CommonHighCurrentTrip!: boolean;
 
   @Column({ type: "boolean" })
-  common_high_current_warning!: boolean;
+  CommonHighCurrentWarning!: boolean;
 
   @Column({ type: "boolean" })
-  contactor_connected_unexpectedly_trip!: boolean;
+  ContactorConnectedUnexpectedlyTrip!: boolean;
 
   @Column({ type: "boolean" })
-  contactor_disconnected_unexpectedly_trip!: boolean;
+  ContactorDisconnectedUnexpectedlyTrip!: boolean;
 
   @Column({ type: "boolean" })
-  dcdc_fault!: boolean;
+  DcdcFault!: boolean;
 
   @Column({ type: "boolean" })
-  dcdc_on!: boolean;
+  DcdcOn!: boolean;
 
   @Column({ type: "boolean" })
-  discharge_enable!: boolean;
+  DischargeEnable!: boolean;
 
   @Column({ type: "boolean" })
-  discharge_should_trip!: boolean;
+  DischargeShouldTrip!: boolean;
 
   @Column({ type: "boolean" })
-  en1!: boolean;
+  En1!: boolean;
 
   @Column({ type: "boolean" })
-  esd_enabled_trip!: boolean;
+  EsdEnabledTrip!: boolean;
 
   @Column({ type: "boolean" })
-  external_shutdown!: boolean;
+  ExternalShutdown!: boolean;
 
   @Column({ type: "boolean" })
-  heartbeat!: boolean;
+  Heartbeat!: boolean;
 
   @Column({ type: "boolean" })
-  high_cell_voltage_trip!: boolean;
+  HighCellVoltageTrip!: boolean;
 
   @Column({ type: "boolean" })
-  high_cell_voltage_warning!: boolean;
+  HighCellVoltageWarning!: boolean;
 
   @Column({ type: "boolean" })
-  high_temperature_trip!: boolean;
+  HighTemperatureTrip!: boolean;
 
   @Column({ type: "boolean" })
-  high_temperature_warning!: boolean;
+  HighTemperatureWarning!: boolean;
 
   @Column({ type: "boolean" })
-  key!: boolean;
+  Key!: boolean;
 
   @Column({ type: "boolean" })
-  low_cell_voltage_trip!: boolean;
+  LowCellVoltageTrip!: boolean;
 
   @Column({ type: "boolean" })
-  low_cell_voltage_warning!: boolean;
+  LowCellVoltageWarning!: boolean;
 
   @Column({ type: "boolean" })
-  low_temperature_trip!: boolean;
+  LowTemperatureTrip!: boolean;
 
   @Column({ type: "boolean" })
-  low_temperature_warning!: boolean;
+  LowTemperatureWarning!: boolean;
 
   @Column({ type: "boolean" })
-  lv_contactor_command!: boolean;
+  LvContactorCommand!: boolean;
 
   @Column({ type: "boolean" })
-  lv_heartbeat_dead_trip!: boolean;
+  LvHeartbeatDeadTrip!: boolean;
 
   @Column({ type: "boolean" })
-  lv_high_current_trip!: boolean;
+  LvHighCurrentTrip!: boolean;
 
   @Column({ type: "boolean" })
-  lv_high_current_warning!: boolean;
+  LvHighCurrentWarning!: boolean;
 
   @Column({ type: "boolean" })
-  main_power_switch!: boolean;
+  MainPowerSwitch!: boolean;
 
   @Column({ type: "boolean" })
-  motor_contactor_command!: boolean;
+  MotorContactorCommand!: boolean;
 
   @Column({ type: "boolean" })
-  motor_heartbeat_dead_trip!: boolean;
+  MotorHeartbeatDeadTrip!: boolean;
 
   @Column({ type: "boolean" })
-  motor_high_current_trip!: boolean;
+  MotorHighCurrentTrip!: boolean;
 
   @Column({ type: "boolean" })
-  motor_high_current_warning!: boolean;
+  MotorHighCurrentWarning!: boolean;
 
   @Column({ type: "boolean" })
-  mps_disabled_trip!: boolean;
+  MpsDisabledTrip!: boolean;
 
   @Column({ type: "boolean" })
-  orion_can_received_recently!: boolean;
+  OrionCanReceivedRecently!: boolean;
 
   @Column({ type: "boolean" })
-  orion_message_timeout_trip!: boolean;
+  OrionMessageTimeoutTrip!: boolean;
 
   @Column({ type: "boolean" })
-  protection_trip!: boolean;
+  ProtectionTrip!: boolean;
 
   @Column({ type: "float" })
-  startup_state!: number;
+  StartupState!: number;
 
   @Column({ type: "boolean" })
-  strobe_bms_light!: boolean;
+  StrobeBmsLight!: boolean;
 
   @Column({ type: "float" })
-  system_state!: number;
+  SystemState!: number;
 
   @Column({ type: "boolean" })
-  three_a_oc!: boolean;
+  ThreeAOc!: boolean;
 }

@@ -14,14 +14,15 @@ import {
 @Entity("driver")
 export class Driver {
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "text" })
-  name!: string;
+  Name!: string;
 
-  @CreateDateColumn()
-  created_at!: Date;
+  // might not need these two but good practice 
+  // @CreateDateColumn()
+  // CreatedAt!: Date;
 
-  @UpdateDateColumn()
-  updated_at!: Date;
+  // @UpdateDateColumn()
+  // UpdatedAt!: Date;
 }

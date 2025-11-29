@@ -19,163 +19,163 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class Contactor {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   // Array Contactor
   @Column({ type: "boolean" })
-  array_bps_error!: boolean;
+  ArrayBpsError!: boolean;
 
   @Column({ type: "float" })
-  array_charge_current!: number;
+  ArrayChargeCurrent!: number;
 
   @Column({ type: "boolean" })
-  array_contactor_closed!: boolean;
+  ArrayContactorClosed!: boolean;
 
   @Column({ type: "boolean" })
-  array_contactor_closing!: boolean;
+  ArrayContactorClosing!: boolean;
 
   @Column({ type: "boolean" })
-  array_contactor_error!: boolean;
+  ArrayContactorError!: boolean;
 
   @Column({ type: "boolean" })
-  array_heartbeat!: boolean;
+  ArrayHeartbeat!: boolean;
 
   @Column({ type: "float" })
-  array_line_current!: number;
+  ArrayLineCurrent!: number;
 
   @Column({ type: "boolean" })
-  array_precharger_closed!: boolean;
+  ArrayPrechargerClosed!: boolean;
 
   @Column({ type: "boolean" })
-  array_precharger_closing!: boolean;
+  ArrayPrechargerClosing!: boolean;
 
   @Column({ type: "boolean" })
-  array_precharger_error!: boolean;
+  ArrayPrechargerError!: boolean;
 
   // Charge Contactor
   @Column({ type: "boolean" })
-  charge_bps_error!: boolean;
+  ChargeBpsError!: boolean;
 
   @Column({ type: "float" })
-  charge_charge_current!: number;
+  ChargeChargeCurrent!: number;
 
   @Column({ type: "boolean" })
-  charge_contactor_closed!: boolean;
+  ChargeContactorClosed!: boolean;
 
   @Column({ type: "boolean" })
-  charge_contactor_closing!: boolean;
+  ChargeContactorClosing!: boolean;
 
   @Column({ type: "boolean" })
-  charge_contactor_error!: boolean;
+  ChargeContactorError!: boolean;
 
   @Column({ type: "boolean" })
-  charge_heartbeat!: boolean;
+  ChargeHeartbeat!: boolean;
 
   @Column({ type: "float" })
-  charge_line_current!: number;
+  ChargeLineCurrent!: number;
 
   @Column({ type: "boolean" })
-  charge_precharger_closed!: boolean;
+  ChargePrechargerClosed!: boolean;
 
   @Column({ type: "boolean" })
-  charge_precharger_closing!: boolean;
+  ChargePrechargerClosing!: boolean;
 
   @Column({ type: "boolean" })
-  charge_precharger_error!: boolean;
+  ChargePrechargerError!: boolean;
 
   // Common Contactor
   @Column({ type: "float" })
-  common_charge_current!: number;
+  CommonChargeCurrent!: number;
 
   @Column({ type: "boolean" })
-  common_contactor_closed!: boolean;
+  CommonContactorClosed!: boolean;
 
   @Column({ type: "boolean" })
-  common_contactor_closing!: boolean;
+  CommonContactorClosing!: boolean;
 
   @Column({ type: "boolean" })
-  common_contactor_error!: boolean;
+  CommonContactorError!: boolean;
 
   @Column({ type: "boolean" })
-  common_contactor_opening_error!: boolean;
+  CommonContactorOpeningError!: boolean;
 
   @Column({ type: "boolean" })
-  common_heartbeat!: boolean;
+  CommonHeartbeat!: boolean;
 
   @Column({ type: "float" })
-  common_line_current!: number;
+  CommonLineCurrent!: number;
 
   @Column({ type: "boolean" })
-  common_precharger_closed!: boolean;
+  CommonPrechargerClosed!: boolean;
 
   @Column({ type: "boolean" })
-  common_precharger_closing!: boolean;
+  CommonPrechargerClosing!: boolean;
 
   @Column({ type: "boolean" })
-  common_precharger_error!: boolean;
+  CommonPrechargerError!: boolean;
 
   // LV Contactor
   @Column({ type: "boolean" })
-  lv_bps_error!: boolean;
+  LvBpsError!: boolean;
 
   @Column({ type: "float" })
-  lv_charge_current!: number;
+  LvChargeCurrent!: number;
 
   @Column({ type: "boolean" })
-  lv_contactor_closed!: boolean;
+  LvContactorClosed!: boolean;
 
   @Column({ type: "boolean" })
-  lv_contactor_closing!: boolean;
+  LvContactorClosing!: boolean;
 
   @Column({ type: "boolean" })
-  lv_contactor_error!: boolean;
+  LvContactorError!: boolean;
 
   @Column({ type: "boolean" })
-  lv_heartbeat!: boolean;
+  LvHeartbeat!: boolean;
 
   @Column({ type: "float" })
-  lv_line_current!: number;
+  LvLineCurrent!: number;
 
   @Column({ type: "boolean" })
-  lv_precharger_closed!: boolean;
+  LvPrechargerClosed!: boolean;
 
   @Column({ type: "boolean" })
-  lv_precharger_closing!: boolean;
+  LvPrechargerClosing!: boolean;
 
   @Column({ type: "boolean" })
-  lv_precharger_error!: boolean;
+  LvPrechargerError!: boolean;
 
   // Motor Contactor
   @Column({ type: "boolean" })
-  motor_bps_error!: boolean;
+  MotorBpsError!: boolean;
 
   @Column({ type: "float" })
-  motor_charge_current!: number;
+  MotorChargeCurrent!: number;
 
   @Column({ type: "boolean" })
-  motor_contactor_closed!: boolean;
+  MotorContactorClosed!: boolean;
 
   @Column({ type: "boolean" })
-  motor_contactor_closing!: boolean;
+  MotorContactorClosing!: boolean;
 
   @Column({ type: "boolean" })
-  motor_contactor_error!: boolean;
+  MotorContactorError!: boolean;
 
   @Column({ type: "boolean" })
-  motor_heartbeat!: boolean;
+  MotorHeartbeat!: boolean;
 
   @Column({ type: "float" })
-  motor_line_current!: number;
+  MotorLineCurrent!: number;
 
   @Column({ type: "boolean" })
-  motor_precharger_closed!: boolean;
+  MotorPrechargerClosed!: boolean;
 
   @Column({ type: "boolean" })
-  motor_precharger_closing!: boolean;
+  MotorPrechargerClosing!: boolean;
 
   @Column({ type: "boolean" })
-  motor_precharger_error!: boolean;
+  MotorPrechargerError!: boolean;
 }

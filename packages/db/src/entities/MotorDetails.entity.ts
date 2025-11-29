@@ -21,95 +21,95 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class MotorDetails {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @PrimaryColumn({ type: "int" })
-  motor_id!: number;
+  MotorId!: number;
 
   @Column({ type: "float" })
-  active_motor!: number;
+  ActiveMotor!: number;
 
   @Column({ type: "float" })
-  bemf_d!: number;
+  BemfD!: number;
 
   @Column({ type: "float" })
-  bemf_q!: number;
+  BemfQ!: number;
 
   @Column({ type: "float" })
-  bus_current!: number;
+  BusCurrent!: number;
 
   @Column({ type: "float" })
-  bus_voltage!: number;
+  BusVoltage!: number;
 
   @Column({ type: "float" })
-  dc_bus_ah!: number;
+  DcBusAh!: number;
 
   @Column({ type: "float" })
-  dsp_board_temperature!: number;
+  DspBoardTemperature!: number;
 
   @Column({ type: "float" })
-  error_flags!: number;
+  ErrorFlags!: number;
 
   @Column({ type: "float" })
-  heatsink_temperature!: number;
+  HeatsinkTemperature!: number;
 
   @Column({ type: "float" })
-  id!: number;
+  Id!: number;
 
   @Column({ type: "float" })
-  iq!: number;
+  Iq!: number;
 
   @Column({ type: "float" })
-  limit_flags!: number;
+  LimitFlags!: number;
 
   @Column({ type: "float" })
-  motor_temperature!: number;
+  MotorTemperature!: number;
 
   @Column({ type: "float" })
-  motor_velocity!: number;
+  MotorVelocity!: number;
 
   @Column({ type: "float" })
-  odometer!: number;
+  Odometer!: number;
 
   @Column({ type: "float" })
-  phase_current_b!: number;
+  PhaseCurrentB!: number;
 
   @Column({ type: "float" })
-  phase_current_c!: number;
+  PhaseCurrentC!: number;
 
   @Column({ type: "float" })
-  rx_error_count!: number;
+  RxErrorCount!: number;
 
   @Column({ type: "float" })
-  serial_number!: number;
+  SerialNumber!: number;
 
   @Column({ type: "float" })
-  slip_speed!: number;
+  SlipSpeed!: number;
 
   @Column({ type: "float" })
-  supply_15v!: number;
+  Supply15v!: number;
 
   @Column({ type: "float" })
-  supply_1v9!: number;
+  Supply1v9!: number;
 
   @Column({ type: "float" })
-  supply_3v3!: number;
+  Supply3v3!: number;
 
   @Column({ type: "float" })
-  tritium_id!: number;
+  TritiumId!: number;
 
   @Column({ type: "float" })
-  tx_error_count!: number;
+  TxErrorCount!: number;
 
   @Column({ type: "float" })
-  vd!: number;
+  Vd!: number;
 
   @Column({ type: "float" })
-  vehicle_velocity!: number;
+  VehicleVelocity!: number;
 
   @Column({ type: "float" })
-  vq!: number;
+  Vq!: number;
 }

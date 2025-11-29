@@ -19,17 +19,17 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class KeyMotor {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "float" })
-  bus_current_out!: number;
+  BusCurrentOut!: number;
 
   @Column({ type: "float" })
-  key_motor_velocity!: number;
+  KeyMotorVelocity!: number;
 
   @Column({ type: "float" })
-  motor_current!: number;
+  MotorCurrent!: number;
 }
