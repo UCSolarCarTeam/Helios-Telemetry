@@ -25,9 +25,12 @@ import { type TerminusOptions, createTerminus } from "@godaddy/terminus";
 dotenv.config();
 
 const app = express();
-let backendController: BackendController | null;
+let backendController: BackendController | null = null;
 export const setBackendController = (backend: BackendController) => {
   backendController = backend;
+};
+export const getBackendController = (): BackendController | null => {
+  return backendController;
 };
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -62,6 +65,10 @@ const onSignal = async () => {
   logger.info("🚀 Server is starting cleanup");
 
   try {
+    // Cleanup database connection
+    if (backendController) {
+      await backendController.cleanup();
+    }
     logger.info("Kafka Consumer Disconnected");
   } catch (err) {
     logger.error("Error disconnecting the kafka consumer", err as Error);

@@ -191,14 +191,14 @@ function PISTransformer(props: PIStransformerProps): JSX.Element {
 
   return (
     root && (
-      <div className="flex size-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[350px]">
+      <div className="flex size-full flex-col gap-x-2 lg:h-[375px] lg:flex-wrap xl:h-[326px]">
         {Object.keys(root).map((key, index) => {
           const value = root[key];
           return (
             <div className={`flex flex-col`} id={key} key={index}>
               <div className="flex w-full items-center justify-evenly border-b-2 border-helios">
                 <p
-                  className={`pt-3 font-bold text-helios ${
+                  className={`font-bold text-helios ${
                     depth >= 2 ? `text-xs` : depth === 1 ? "text-sm" : "text-lg"
                   }`}
                 >

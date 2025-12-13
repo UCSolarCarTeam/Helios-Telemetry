@@ -3,15 +3,15 @@
 ###################################################################
 
 # Default Home Dir for ubi8 image: /opt/helios-backend/src
-FROM registry.access.redhat.com/ubi8/nodejs-20-minimal as nodejs20-base
+FROM registry.access.redhat.com/ubi9/nodejs-22-minimal as nodejs22-base
 USER root
 WORKDIR /opt/helios-backend/src
 
-ENV NODE_VERSION node@20.11.1
-ENV NPM_VERSION npm@10.5.0
+ENV NODE_VERSION node@22.13.0
+ENV NPM_VERSION npm@10.9.0
 
 # Add custom user id
-RUN microdnf install util-linux
+RUN microdnf install -y util-linux
 RUN groupadd --gid 1001 solarcar-user \
   && useradd -u 1001 -g 1001 -c 'solarcar-user' -s /bin/bash solarcar-user
 
@@ -30,7 +30,7 @@ RUN npm remove -g node \
 # Multi stage build - Stage 1 - build backend
 ###################################################################
 
-FROM nodejs20-base as buildstageBackend
+FROM nodejs22-base as buildstageBackend
 USER root
 
 WORKDIR /opt/helios-backend/src
@@ -46,7 +46,7 @@ RUN yarn build
 # Multi stage build - Stage 2 - Build production
 ###################################################################
 
-FROM nodejs20-base as productionBuild
+FROM nodejs22-base as productionBuild
 USER root
 
 WORKDIR /opt/solarcar-user

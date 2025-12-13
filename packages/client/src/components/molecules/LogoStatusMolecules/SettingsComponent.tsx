@@ -63,7 +63,7 @@ function SettingsComponent() {
 
   return (
     <div className="grid">
-      <h2 className="text-text-gray dark:text-text-gray-dark w-fit cursor-pointer text-sm font-black">
+      <h2 className="w-fit cursor-pointer fill-light text-sm font-black dark:fill-dark">
         <SettingsIcon onClick={() => setOpen(true)} />
       </h2>
       <Modal

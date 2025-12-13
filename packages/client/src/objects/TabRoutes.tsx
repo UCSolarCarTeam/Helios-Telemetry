@@ -32,7 +32,7 @@ export const tabs: TabProps[] = [
 
 export const routes: SolarCarRoutes[] = [
   { element: <BatteryTab />, id: "Battery", path: "/battery", value: "1" },
-  { element: <MbmsTab />, id: "Mbms", path: "/mbms", value: "2" },
+  { element: <MbmsTab />, id: "MBMS", path: "/mbms", value: "2" },
   { element: <MotorTab />, id: "Motor", path: "/motor", value: "3" },
   { element: <MpptTab />, id: "MPPT", path: "/mppt", value: "4" },
   { element: <RaceTab />, id: "Race", path: "/race", value: "5" },
