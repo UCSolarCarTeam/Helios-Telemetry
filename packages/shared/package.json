@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "main": "./index.ts",
   "types": "./index.ts",
+  "scripts": {
+    "test": "tsx ./src/test.ts"
+  },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.658.1",
-    "fp-ts": "^2.16.9",
-    "io-ts": "^2.2.22",
-    "typescript": "^5.5.3"
+    "@bufbuild/protobuf": "^2.6.1",
+    "protobufjs": "^7.4.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.0.3"
+    "@faker-js/faker": "^9.0.3",
+    "ts-proto": "^2.2.5",
+    "typescript": "^5.6.3"
   }
 }
