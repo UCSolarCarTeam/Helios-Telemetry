@@ -5,6 +5,5 @@ Ensure you have the protobuf server running on port 8000. You can find additiona
 To run the tests for the shared package, you can use the following command in the root directory of the repository:
 
 ```bash
-npx tsx ./packages/shared/src/test.ts
-
+yarn test
 ```

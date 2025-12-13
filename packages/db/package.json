@@ -6,7 +6,6 @@
   "scripts": {
     "build": "tsc",
     "start": "tsx src/index.ts",
-    "test": "jest --runInBand",
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down",
     "db:logs": "docker-compose logs -f timescaledb",

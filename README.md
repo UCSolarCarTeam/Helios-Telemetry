@@ -67,13 +67,13 @@ Deployment available at: <https://telemetry-beta.calgarysolarcar.ca>
 
 - [Introduction](./docs/SERVER.md#server-older-documentation)
   - [Socket.IO](./docs/SERVER.md#wtf-is-a-socketio)
-  - [MQTT](#what-is-mqtt)
-  - [Express.js](#what-do-we-use-expressjs-for)
-  - [Routes](#what-is-a-route)
-  - [Controllers](#controllers)
-  - [Backend Controller](#backend-controller)
-  - [Lap Controller](#lap-controller)
-  - [DynamoDB Controller](#dynamo-db-controller)
+    - [MQTT](./docs/SERVER.md#what-is-mqtt)
+    - [Express.js](./docs/SERVER.md#what-do-we-use-expressjs-for)
+    - [Routes](./docs/SERVER.md#what-is-a-route)
+    - [Controllers](./docs/SERVER.md#controllers)
+    - [Backend Controller](./docs/SERVER.md#backend-controller)
+    - [Lap Controller](./docs/SERVER.md#lap-controller)
+    - [DynamoDB Controller](./docs/SERVER.md#dynamo-db-controller)
 
 ### [Shared Folder](./docs/SHARED.md)
 
@@ -120,7 +120,7 @@ Appending `:client` or `:server` behind the build command will build/start the p
 ### Generate Protobuf Typescript Definitions
 
 ```bash
-npx protoc --plugin=protoc-gen-ts_proto=".\\node_modules\\.bin\\protoc-gen-ts_proto.cmd" --ts_proto_out="./" ./packages/shared/src/.proto
+yarn types:generate
 ```
 
 ### Secrets and environment variables

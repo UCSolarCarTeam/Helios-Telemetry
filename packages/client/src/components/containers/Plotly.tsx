@@ -1,21 +1,33 @@
 import dynamic from "next/dynamic";
+import { Config, Layout } from "plotly.js";
 import {
   forwardRef,
   useEffect,
+  useId,
   useImperativeHandle,
   useRef,
   useState,
 } from "react";
-import { PlotParams } from "react-plotly.js";
 
+interface PlotlyProps {
+  id?: string;
+  className?: string;
+  data: Plotly.Data[];
+  layout?: Partial<Layout>;
+  config?: Partial<Config>;
+}
 type PlotlyHTML = Plotly.PlotlyHTMLElement & { align: string };
 const Plotly = dynamic(
   () =>
     import("plotly.js-dist-min").then(({ newPlot, purge }) => {
-      const Plotly = forwardRef<HTMLDivElement, PlotParams>(
-        ({ className, config, data, layout }, ref) => {
+      const Plotly = forwardRef<HTMLDivElement, PlotlyProps>(
+        ({ className, config, data, id, layout }, ref) => {
+          const originId = useId();
+          const realId = id || originId;
           const originRef = useRef(null);
-          const [handle, setHandle] = useState<Plotly.PlotlyHTMLElement>();
+          const [handle, setHandle] = useState<
+            Plotly.PlotlyHTMLElement | undefined
+          >(undefined);
 
           useEffect(() => {
             let instance: Plotly.PlotlyHTMLElement | undefined;
@@ -33,7 +45,7 @@ const Plotly = dynamic(
 
           useImperativeHandle(ref, () => handle as PlotlyHTML, [handle]);
 
-          return <div className={className} ref={originRef} />;
+          return <div className={className} id={realId} ref={originRef} />;
         },
       );
       Plotly.displayName = "Plotly";

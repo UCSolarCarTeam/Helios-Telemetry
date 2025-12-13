@@ -27,7 +27,8 @@
     "migrate:revert": "lerna run migrate:revert --scope=db",
     "migrate:reset": "lerna run migrate:reset --scope=db",
     "schema:sync": "lerna run schema:sync --scope=db",
-    "schema:drop": "lerna run schema:drop --scope=db"
+    "schema:drop": "lerna run schema:drop --scope=db",
+    "types:generate": "npx protoc --plugin=protoc-gen-ts_proto=\".\\node_modules\\.bin\\protoc-gen-ts_proto.cmd\" --ts_proto_out=\"./.\" ./packages/shared/src/protoTypes.proto"
   },
   "dependencies": {
     "@mantine/dates": "^8.0.1",
