@@ -139,4 +139,4 @@ In packages/client `.env`:
 NEXT_PUBLIC_MAPSAPIKEY=
 ```
 
-Ask your lead for these keys
+Ask your lead for these keys or find them in [Confluence](https://uofcsolarcar.atlassian.net/wiki/spaces/ST/pages/345964547/Helios+Telemetry+Environment+Variables)
