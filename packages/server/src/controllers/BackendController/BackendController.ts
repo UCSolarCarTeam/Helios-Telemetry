@@ -1,3 +1,4 @@
+import { DatabaseService } from "db";
 import type { IncomingMessage, Server, ServerResponse } from "http";
 
 import type { BackendControllerTypes } from "@/controllers/BackendController/BackendController.types";
@@ -7,8 +8,8 @@ import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
-import { DatabaseManager } from "@/database/DatabaseManager";
 
+import { DatabaseManager } from "@/database/DatabaseManager";
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
 
@@ -20,6 +21,7 @@ export class BackendController implements BackendControllerTypes {
   public mqtt: SolarMQTTClient;
   public databaseManager: DatabaseManager;
   public carLatency: number;
+  public databaseService: DatabaseService;
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
   ) {
@@ -31,12 +33,14 @@ export class BackendController implements BackendControllerTypes {
     this.establishCarPinging();
     this.carLatency = 0;
     this.initializeDatabase();
+    this.databaseService = DatabaseService.getInstance();
     // this.handleCarLatency();
   }
 
   private async initializeDatabase() {
     try {
       await this.databaseManager.initialize();
+      // await this.databaseService.initialize();
       logger.info("Database connection established successfully");
     } catch (error) {
       logger.error("Failed to initialize database:", error);
@@ -68,6 +72,9 @@ export class BackendController implements BackendControllerTypes {
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);
+
+    // insert to timescaledb
+    await this.databaseService.insertPacketData(message);
   }
 
   public handleCarDisconnect() {
@@ -84,6 +91,7 @@ export class BackendController implements BackendControllerTypes {
   public async cleanup() {
     try {
       await this.databaseManager.close();
+      // await this.databaseService.close();
       logger.info("Database connection closed successfully");
     } catch (error) {
       logger.error("Error closing database connection:", error);
