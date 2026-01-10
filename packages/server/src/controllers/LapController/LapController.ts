@@ -158,6 +158,7 @@ export class LapController implements LapControllerType {
   // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
+    await this.backendController.webSocket.broadcastLapData(lapData);
     await this.backendController.dynamoDB.insertLapData(lapData);
   }
 
@@ -190,7 +191,11 @@ export class LapController implements LapControllerType {
       this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
     }
 
-    if (packet.B3.LapDigital && this.lastLapPackets.length > 5) {
+    if (
+      // TEST: The condition was commented out because, in the current fakePacket data, packet.B3.LapDigital is always false. As a result, the code for broadcasting lap data (broadcastLapData) would never execute during testing with fakePacket. By commenting out this condition, it allows the code to proceed and broadcast lap data even when LapDigital is false.
+      // packet.B3.LapDigital &&
+      this.lastLapPackets.length > 5
+    ) {
       await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket

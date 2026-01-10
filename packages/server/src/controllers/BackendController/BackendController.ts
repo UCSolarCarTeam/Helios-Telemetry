@@ -7,10 +7,13 @@ import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
-import { DatabaseManager } from "@/database/DatabaseManager";
+import { NativeWebSocket } from "@/datasources/WebSocket/WebSocket";
 
+import { DatabaseManager } from "@/database/DatabaseManager";
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
+
+const grafanaWsPath = "/grafana-ws";
 
 //getDriverInfo
 export class BackendController implements BackendControllerTypes {
@@ -18,6 +21,7 @@ export class BackendController implements BackendControllerTypes {
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
+  public webSocket: NativeWebSocket;
   public databaseManager: DatabaseManager;
   public carLatency: number;
   constructor(
@@ -25,6 +29,7 @@ export class BackendController implements BackendControllerTypes {
   ) {
     this.dynamoDB = new DynamoDB(this);
     this.socketIO = new SocketIO(httpsServer, this);
+    this.webSocket = new NativeWebSocket(grafanaWsPath, httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
     this.databaseManager = DatabaseManager.getInstance();
@@ -65,6 +70,9 @@ export class BackendController implements BackendControllerTypes {
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
+
+    // Broadcast the packet to the native web socket
+    // this.webSocket.broadcastPacket(message); // The line is commented out because, at the moment, the WebSocket used by Grafana is only intended to broadcast lapData, not packet data. Packet data is retrieved directly from the database (via MQTT), so there is no need to broadcast it through the WebSocket.
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);
