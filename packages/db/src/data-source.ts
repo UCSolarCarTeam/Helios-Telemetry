@@ -15,5 +15,5 @@ export const AppDataSource = new DataSource({
   migrations: [__dirname + "/migrations/*.{js,ts}"],
   synchronize: process.env.NODE_ENV === "development",
   type: "postgres",
-  url: "postgres://tsdbadmin:l61gksd8ona24d62@l6yyro58r7.wy9edrssy5.tsdb.cloud.timescale.com:38572/tsdb",
+  url: process.env.DATABASE_URL,
 });
