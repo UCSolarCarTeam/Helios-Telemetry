@@ -13,7 +13,7 @@ import { DatabaseManager } from "@/database/DatabaseManager";
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
 
-const grafanaWsPath = process.env.GRAFANA_WS_PATH ?? "/grafana-ws";
+const grafanaWsPath = "/grafana-ws";
 
 //getDriverInfo
 export class BackendController implements BackendControllerTypes {

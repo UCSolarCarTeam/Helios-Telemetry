@@ -74,17 +74,6 @@ Login as `admin` / `admin` and verify the dashboards and data source configurati
 
 ## WebSocket (Grafana) — quick setup
 
-1. Add the WebSocket path environment variable to the server env file used by `Helios-Telemetry` (i.e. `packages/server/.env`):
+In Grafana (open `http://localhost:3000` and login): - Click **Explore** in the left-hand menu. - For **Data source**, choose **WebSocket API** (the WebSocket data source in the Telemetry-Visualizer setup). - In the **Field** input enter: `$.data`
 
-```bash
-GRAFANA_WS_PATH=/grafana-ws
-```
-
-2. Restart the backend if it was already running so it picks up the new environment variable.
-
-3. In Grafana (open `http://localhost:3000` and login):
-	- Click **Explore** in the left-hand menu.
-	- For **Data source**, choose **WebSocket API** (the WebSocket data source in the Telemetry-Visualizer setup).
-	- In the **Field** input enter: `$.data`
-
-You should now see the telemetry payload returned by the backend (the `data` object) in the Explore panel. The backend uses the `GRAFANA_WS_PATH` value for the WebSocket endpoint path (default `/grafana-ws`).
+You should now see the telemetry payload returned by the backend (the `data` object) in the Explore panel. The backend uses the `/grafana-ws` path for the WebSocket endpoint.
