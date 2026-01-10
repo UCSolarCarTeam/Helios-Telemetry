@@ -7,6 +7,8 @@ import {
   Index,
 } from "typeorm";
 
+// use this table!!
+
 /**
  * Driver table (not a hypertable)
  * Stores driver information linked by RFID

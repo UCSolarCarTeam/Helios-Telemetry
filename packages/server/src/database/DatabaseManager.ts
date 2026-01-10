@@ -1,42 +1,54 @@
-import { DatabaseService } from "db";
+//
+import { createLightweightApplicationLogger } from "@/utils/logger";
+
+import { AppDataSource } from "@db/data-source";
+import { TelemetryService } from "@db/services/TelemetryService";
+import { ITelemetryData } from "@shared/helios-types";
+
+const logger = createLightweightApplicationLogger("DatabaseManager.ts");
 
 export class DatabaseManager {
   private static instance: DatabaseManager;
-  private databaseService: DatabaseService;
+  private telemetryService?: TelemetryService;
+  private isConnected = false;
 
-  private constructor() {
-    this.databaseService = new DatabaseService();
-  }
+  private constructor() {}
 
-  public static getInstance(): DatabaseManager {
+  static getInstance(): DatabaseManager {
     if (!DatabaseManager.instance) {
       DatabaseManager.instance = new DatabaseManager();
     }
     return DatabaseManager.instance;
   }
 
-  public async initialize(): Promise<void> {
-    try {
-      await this.databaseService.initialize();
-      console.log("DatabaseManager initialized successfully");
-    } catch (error) {
-      console.error("Failed to initialize DatabaseManager:", error);
-      throw error;
+  async initialize() {
+    if (!this.isConnected) {
+      await AppDataSource.initialize();
+      this.telemetryService = new TelemetryService();
+      this.isConnected = true;
+      logger.info("Database initialized successfully");
     }
   }
 
-  public async close(): Promise<void> {
-    await this.databaseService.close();
-    console.log("DatabaseManager closed");
+  async insertTelemetryData(packet: ITelemetryData) {
+    if (!this.telemetryService) {
+      throw new Error("DatabaseManager not initialized");
+    }
+    return this.telemetryService.insertTelemetryPacket(packet);
   }
 
-  // Helper method to check connection status
-  public get isConnected(): boolean {
-    return this.databaseService.isConnected;
+  async getTelemetryBetweenDates(start: Date, end: Date, rfid?: string) {
+    if (!this.telemetryService) {
+      throw new Error("DatabaseManager not initialized");
+    }
+    return this.telemetryService.getTelemetryBetweenDates(start, end, rfid);
   }
 
-  // Get raw database service if needed
-  public get rawDatabaseService(): DatabaseService {
-    return this.databaseService;
+  async close() {
+    if (this.isConnected) {
+      await AppDataSource.destroy();
+      this.isConnected = false;
+      logger.info("Database connection closed");
+    }
   }
 }
