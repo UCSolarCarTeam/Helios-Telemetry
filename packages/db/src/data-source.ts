@@ -54,3 +54,14 @@ export const AppDataSource = new DataSource({
   type: "postgres",
   username: process.env.POSTGRES_USERNAME || "postgres",
 });
+
+// export const AppDataSource = new DataSource({
+//   entities: [TelemetryPacket, Driver, Lap],
+//   logging: process.env.NODE_ENV === "development",
+//   migrations: [__dirname + "/migrations/*.{js,ts}"],
+//   synchronize: process.env.NODE_ENV === "development",
+//   type: "postgres",
+//   url:
+//     process.env.DATABASE_URL ??
+//     "postgres://tsdbadmin@y0b9h9zgeh.wy9edrssy5.tsdb.cloud.timescale.com:34124/tsdb?sslmode=require",
+// });
