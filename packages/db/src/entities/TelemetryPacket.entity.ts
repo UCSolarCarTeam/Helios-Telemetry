@@ -1,26 +1,22 @@
 import { Entity, Column, Index, PrimaryColumn } from "typeorm";
 import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 
-
-// use this table !!
-
 /**
- * Flattened Telemetry hypertable
  * Combines all sensor data into a single wide table for simplified insertions and queries
- * Replaces the previous normalized structure with separate tables for each car component
  */
 @Entity("telemetry_packet")
 @Hypertable({
-  timeColumnName: "timestamp",
-  chunkTimeInterval: "1 month",
   compression: {
     compress: true,
-    compress_segmentby: "rfid, race_name",
-    compress_orderby: "timestamp DESC",
+    compress_segmentby: "Rfid",
+    compress_orderby: "Timestamp",
+    policy: {
+      schedule_interval: "7 days",
+    },
   },
 })
-@Index(["rfid", "timestamp"])
-@Index(["race_name", "timestamp"])
+@Index(["Rfid", "Timestamp"])
+@Index(["RaceName", "Timestamp"])
 export class TelemetryPacket {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })

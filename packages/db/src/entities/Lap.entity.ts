@@ -1,21 +1,12 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn } from "typeorm";
-import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
+import { TimeColumn } from "@timescaledb/typeorm";
 
 /**
  * Lap data hypertable
  * Stores computed lap metrics for each lap
  */
 @Entity("lap")
-@Hypertable({
-  timeColumnName: "timestamp",
-  chunkTimeInterval: "1 month",
-  compression: {
-    compress: true,
-    compress_segmentby: "rfid",
-    compress_orderby: "timestamp DESC",
-  },
-})
-@Index(["rfid", "timestamp"])
+@Index(["Rfid", "Timestamp"])
 export class Lap {
   @PrimaryGeneratedColumn("uuid")
   Id!: string;

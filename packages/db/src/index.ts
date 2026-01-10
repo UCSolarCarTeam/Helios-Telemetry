@@ -1,8 +1,5 @@
 export { AppDataSource } from "./data-source";
 export { BaseRepository } from "./repositories/BaseRepository";
-// entities
-
-// repositories
 
 // interfaces
 export * from "./interfaces/repositories.interface";
