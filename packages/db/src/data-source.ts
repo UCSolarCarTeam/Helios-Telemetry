@@ -16,6 +16,7 @@ import { Telemetry } from "./entities/Telemetry.entity";
 import { ProximitySensors } from "./entities/ProximitySensors.entity";
 import { Driver } from "./entities/Driver.entity";
 import { Lap } from "./entities/Lap.entity";
+import { TelemetryPacket } from "./entities/TelemetryPacket.entity";
 
 dotenv.config({ path: ".db.env" });
 
@@ -37,6 +38,7 @@ export const AppDataSource = new DataSource({
     ProximitySensors,
     Driver,
     Lap,
+    TelemetryPacket,
   ],
   // database host (if it's localhost or not)
   host: process.env.DB_HOST || "localhost",
