@@ -332,6 +332,7 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     DRIVER_TABLE_NAME: driverDataTable.tableName,
     GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
+    NODE_ENV: "production",
     PACKET_TABLE_NAME: packetDataTable.tableName,
   },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
