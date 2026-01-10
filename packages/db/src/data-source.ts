@@ -9,11 +9,15 @@ import { TelemetryPacket } from "./entities/TelemetryPacket.entity";
 
 dotenv.config({ path: ".db.env" });
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is required in .db.env file");
+}
+
 export const AppDataSource = new DataSource({
   entities: [TelemetryPacket, Driver, Lap],
   logging: process.env.NODE_ENV === "development",
   migrations: [__dirname + "/migrations/*.{js,ts}"],
   synchronize: process.env.NODE_ENV === "development",
   type: "postgres",
-  url: "postgres://tsdbadmin:l61gksd8ona24d62@l6yyro58r7.wy9edrssy5.tsdb.cloud.timescale.com:38572/tsdb",
+  url: process.env.DATABASE_URL,
 });
