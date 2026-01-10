@@ -72,7 +72,7 @@ export class BackendController implements BackendControllerTypes {
     this.socketIO.broadcastPacket(message);
 
     // Broadcast the packet to the native web socket
-    // this.webSocket.broadcastPacket(message); // only send the ILapData through WS for now
+    // this.webSocket.broadcastPacket(message); // The line is commented out because, at the moment, the WebSocket used by Grafana is only intended to broadcast lapData, not packet data. Packet data is retrieved directly from the database (via MQTT), so there is no need to broadcast it through the WebSocket.
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);

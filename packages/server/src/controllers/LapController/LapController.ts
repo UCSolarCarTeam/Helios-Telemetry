@@ -192,7 +192,7 @@ export class LapController implements LapControllerType {
     }
 
     if (
-      //TEST: commented out this condition for broadcasting lap data to grafana
+      // TEST: The condition was commented out because, in the current fakePacket data, packet.B3.LapDigital is always false. As a result, the code for broadcasting lap data (broadcastLapData) would never execute during testing with fakePacket. By commenting out this condition, it allows the code to proceed and broadcast lap data even when LapDigital is false.
       // packet.B3.LapDigital &&
       this.lastLapPackets.length > 5
     ) {
