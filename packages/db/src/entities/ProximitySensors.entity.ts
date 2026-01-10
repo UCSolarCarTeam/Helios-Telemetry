@@ -31,8 +31,9 @@ export class ProximitySensors {
   ProximitySensor2!: number;
 
   @Column({ type: "float" })
-  RroximitySensor3!: number;
+  ProximitySensor3!: number;
 
   @Column({ type: "float" })
   ProximitySensor4!: number;
 }
+
