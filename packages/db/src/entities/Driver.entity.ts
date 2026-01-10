@@ -4,13 +4,10 @@ import {
   PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  Index,
 } from "typeorm";
 
-// use this table!!
-
 /**
- * Driver table (not a hypertable)
+ * Driver table
  * Stores driver information linked by RFID
  */
 @Entity("driver")
@@ -21,10 +18,9 @@ export class Driver {
   @Column({ type: "text" })
   Name!: string;
 
-  // might not need these two but good practice 
-  // @CreateDateColumn()
-  // CreatedAt!: Date;
+  @CreateDateColumn()
+  CreatedAt!: Date;
 
-  // @UpdateDateColumn()
-  // UpdatedAt!: Date;
+  @UpdateDateColumn()
+  UpdatedAt!: Date;
 }
