@@ -7734,14 +7734,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:15.3.4":
-  version: 15.3.4
-  resolution: "@next/swc-darwin-arm64@npm:15.3.4"
-  checksum: 10c0/538f192270cf4b7b8a7db387da7c83026c72ae427891efebc9fe7cd6e1d6243f74a2f5524c2b5f5031c4594a71b73e4fbe78d2a3eba3d43bc4bb30895d08d8b3
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
 "@next/swc-darwin-x64@npm:15.1.4":
   version: 15.1.4
   resolution: "@next/swc-darwin-x64@npm:15.1.4"
@@ -22368,7 +22360,6 @@ __metadata:
   dependencies:
     "@mantine/dates": "npm:^8.0.1"
     "@mantine/notifications": "npm:^7.17.3"
-    "@next/swc-darwin-arm64": "npm:15.3.4"
     "@types/eslint": "npm:^9.6.0"
     "@typescript-eslint/eslint-plugin": "npm:^7.4.0"
     "@typescript-eslint/parser": "npm:^7.4.0"
