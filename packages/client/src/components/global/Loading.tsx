@@ -3,7 +3,7 @@ import { memo, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { LOADINGSTAGES } from "@/components/global/LoadingWrapper";
-import { useAppState } from "@/contexts/AppStateContext";
+import { useAppState } from "@/stores/useAppState";
 
 const Loading = (props: { currentLoadingState: LOADINGSTAGES }) => {
   const { currentAppState } = useAppState();
