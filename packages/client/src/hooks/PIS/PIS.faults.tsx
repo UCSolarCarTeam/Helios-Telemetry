@@ -20,7 +20,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.InternalCommunicationFault,
             },
           ],
-          isFault: true,
           name: "Internal Communication Fault",
         },
         {
@@ -31,7 +30,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.InternalConversionFault,
             },
           ],
-          isFault: true,
           name: "Internal Conversion Fault",
         },
         {
@@ -42,7 +40,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.WeakCellFault,
             },
           ],
-          isFault: true,
           name: "Weak Cell Fault",
         },
         {
@@ -53,7 +50,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.LowCellVoltageFault,
             },
           ],
-          isFault: true,
           name: "Low Cell Voltage Fault",
         },
         {
@@ -64,7 +60,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.OpenWiringFault,
             },
           ],
-          isFault: true,
           name: "Open Wiring Fault",
         },
         {
@@ -75,7 +70,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.CurrentSensorFault,
             },
           ],
-          isFault: true,
           name: "Current Sensor Fault",
         },
         {
@@ -86,7 +80,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.PackVoltageSensorFault,
             },
           ],
-          isFault: true,
           name: "Pack Voltage Sensor Fault",
         },
         {
@@ -97,7 +90,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.WeakPackFault,
             },
           ],
-          isFault: true,
           name: "Weak Pack Fault",
         },
         {
@@ -108,7 +100,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.VoltageRedundancyFault,
             },
           ],
-          isFault: true,
           name: "Voltage Redundancy Fault",
         },
         {
@@ -119,7 +110,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.FanMonitorFault,
             },
           ],
-          isFault: true,
           name: "Fan Monitor Fault",
         },
         {
@@ -130,7 +120,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.ThermistorFault,
             },
           ],
-          isFault: true,
           name: "Thermistor Fault",
         },
         {
@@ -141,7 +130,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.CanbusCommunicationFault,
             },
           ],
-          isFault: true,
           name: "CANBUS Communications Fault",
         },
         {
@@ -152,7 +140,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.AlwaysOnSupplyFault,
             },
           ],
-          isFault: true,
           name: "Always On Supply Fault",
         },
         {
@@ -163,7 +150,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.HighVoltageIsolationFault,
             },
           ],
-          isFault: true,
           name: "High Voltage Isolation Fault",
         },
         {
@@ -174,7 +160,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.PowerSupply12VFault,
             },
           ],
-          isFault: true,
           name: "12V Power Supply Fault",
         },
         {
@@ -185,7 +170,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.ChargeLimitEnforcementFault,
             },
           ],
-          isFault: true,
           name: "Charge Limit Enforcement Fault",
         },
         {
@@ -196,7 +180,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.ChargerSafetyRelayFault,
             },
           ],
-          isFault: true,
           name: "Charge Safety Relay Fault",
         },
         {
@@ -207,7 +190,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.DischargeLimitEnforcementFault,
             },
           ],
-          isFault: true,
           name: "Discharge Limit Enforcement Fault",
         },
         {
@@ -218,7 +200,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.ChargerSafetyRelayFault,
             },
           ],
-          isFault: true,
           name: "Charger Safety Relay Fault",
         },
         {
@@ -229,7 +210,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.InternalMemoryFault,
             },
           ],
-          isFault: true,
           name: "Internal Memory Fault",
         },
         {
@@ -240,7 +220,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.InternalThermistorFault,
             },
           ],
-          isFault: true,
           name: "Internal Thermistors Fault",
         },
         {
@@ -251,7 +230,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Errors.InternalLogicFault,
             },
           ],
-          isFault: true,
           name: "Internal Logic Fault",
         },
       ],
@@ -264,7 +242,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.DclReducedDueToLowSoc,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due To Low Soc",
         },
         {
@@ -275,7 +252,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.DclReducedDueToHighCellResistance,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to HighCell Resistance",
         },
         {
@@ -286,7 +262,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.DclReducedDueToTemperature,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to Temperature",
         },
         {
@@ -297,7 +272,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.DclReducedDueToLowCellVoltage,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to Low Cell Voltage",
         },
         {
@@ -308,7 +282,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.DclReducedDueToLowPackVoltage,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to Low Pack Voltage",
         },
         {
@@ -320,7 +293,6 @@ const Faults = (): I_PIS => {
                 BatteryFaults.Warnings.DclAndCclReducedDueToVoltageFailsafe,
             },
           ],
-          isFault: true,
           name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
         },
         {
@@ -333,7 +305,6 @@ const Faults = (): I_PIS => {
                   .DclAndCclReducedDueToCommunicationFailsafe,
             },
           ],
-          isFault: true,
           name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
         },
         {
@@ -344,7 +315,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.CclReducedDueToHighSoc,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to High Soc",
         },
         {
@@ -355,7 +325,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.CclReducedDueToHighCellResistance,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced to High Cell Resistance",
         },
         {
@@ -366,7 +335,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.CclReducedDueToTemperature,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to Temperature",
         },
         {
@@ -377,7 +345,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.CclReducedDueToHighCellVoltage,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to High Cell Voltage",
         },
         {
@@ -388,7 +355,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.CclReducedDueToHighPackVoltage,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to High Pack Voltage",
         },
         {
@@ -399,7 +365,6 @@ const Faults = (): I_PIS => {
               value: BatteryFaults.Warnings.CclReducedDueToChargerLatch,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to Charger Latch",
         },
         {
@@ -411,7 +376,6 @@ const Faults = (): I_PIS => {
                 BatteryFaults.Warnings.CclReducedDueToAlternateCurrentLimit,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to Alternate Current Limit",
         },
       ],
@@ -426,7 +390,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.ArrayBPSError,
             },
           ],
-          isFault: true,
           name: "Array BPS Error",
         },
         {
@@ -437,7 +400,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.ArrayContactorError,
             },
           ],
-          isFault: true,
           name: "Array Contactor Error",
         },
         {
@@ -448,7 +410,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.ArrayPrechargerError,
             },
           ],
-          isFault: true,
           name: "Array Precharger Error",
         },
         {
@@ -459,7 +420,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.ChargeBPSError,
             },
           ],
-          isFault: true,
           name: "Charge BPS Error",
         },
         {
@@ -470,7 +430,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.ChargeContactorError,
             },
           ],
-          isFault: true,
           name: "Charge Contactor Error",
         },
         {
@@ -481,7 +440,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.ChargePrechargerError,
             },
           ],
-          isFault: true,
           name: "Charge Precharger Error",
         },
         {
@@ -492,7 +450,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.CommonContactorError,
             },
           ],
-          isFault: true,
           name: "Common Contactor Error",
         },
         {
@@ -503,7 +460,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.CommonContactorOpeningError,
             },
           ],
-          isFault: true,
           name: "Common Contactor Opening Error",
         },
         {
@@ -514,7 +470,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.CommonPrechargerError,
             },
           ],
-          isFault: true,
           name: "Common Precharger Error",
         },
         {
@@ -525,7 +480,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.LvBpsError,
             },
           ],
-          isFault: true,
           name: "LV BPS Error",
         },
         {
@@ -536,7 +490,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.LvContactorError,
             },
           ],
-          isFault: true,
           name: "LV Contactor Error",
         },
         {
@@ -547,7 +500,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.LvPrechargerError,
             },
           ],
-          isFault: true,
           name: "LV Precharger Error",
         },
         {
@@ -558,7 +510,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.MotorBPSError,
             },
           ],
-          isFault: true,
           name: "Motor BPS Error",
         },
         {
@@ -569,7 +520,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.MotorContactorError,
             },
           ],
-          isFault: true,
           name: "Motor Contactor Error",
         },
         {
@@ -580,7 +530,6 @@ const Faults = (): I_PIS => {
               value: Contactor?.MotorPrechargerError,
             },
           ],
-          isFault: true,
           name: "Motor Precharger Error",
         },
       ],
@@ -595,7 +544,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ArrayHeartbeatDeadTrip,
             },
           ],
-          isFault: true,
           name: "Array Heartbeat Dead Trip",
         },
         {
@@ -606,7 +554,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ArrayHighCurrentTrip,
             },
           ],
-          isFault: true,
           name: "Array High Current Trip",
         },
         {
@@ -617,7 +564,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ChargeHeartbeatDeadTrip,
             },
           ],
-          isFault: true,
           name: "Charge Heartbeat Dead Trip",
         },
         {
@@ -628,7 +574,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ChargeHighCurrentTrip,
             },
           ],
-          isFault: true,
           name: "Charge High Current Trip",
         },
         {
@@ -639,7 +584,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.CommonHeartbeatDeadTrip,
             },
           ],
-          isFault: true,
           name: "Common Heartbeat Dead Trip",
         },
         {
@@ -650,7 +594,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.CommonHighCurrentTrip,
             },
           ],
-          isFault: true,
           name: "Common High Current Trip",
         },
         {
@@ -661,7 +604,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ContactorConnectedUnexpectedlyTrip,
             },
           ],
-          isFault: true,
           name: "Contactor Connected Unexpectedly Trip",
         },
         {
@@ -672,7 +614,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ContactorDisconnectedUnexpectedlyTrip,
             },
           ],
-          isFault: true,
           name: "Contactor Disconnected Unexpectedly Trip",
         },
         {
@@ -683,7 +624,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.EsdEnabledTrip,
             },
           ],
-          isFault: true,
           name: "Esd Enabled Trip",
         },
         {
@@ -694,7 +634,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.Heartbeat,
             },
           ],
-          isFault: true,
           name: "No MBMS Heartbeat For 2.5s",
         },
         {
@@ -705,7 +644,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.HighCellVoltageTrip,
             },
           ],
-          isFault: true,
           name: "High Cell Voltage Trip",
         },
         {
@@ -716,7 +654,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.HighTemperatureTrip,
             },
           ],
-          isFault: true,
           name: "High Temperature Trip",
         },
         {
@@ -727,7 +664,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.HighTemperatureWarning,
             },
           ],
-          isFault: true,
           name: "High Temperature Warning",
         },
         {
@@ -738,7 +674,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.LowCellVoltageTrip,
             },
           ],
-          isFault: true,
           name: "Low Cell Voltage Trip",
         },
         {
@@ -749,7 +684,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.LowCellVoltageWarning,
             },
           ],
-          isFault: true,
           name: "Low Cell Voltage Warning",
         },
         {
@@ -760,7 +694,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.LvHeartbeatDeadTrip,
             },
           ],
-          isFault: true,
           name: "LV Heartbeat Dead Trip",
         },
         {
@@ -771,7 +704,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.LvHighCurrentTrip,
             },
           ],
-          isFault: true,
           name: "LV High Current Trip",
         },
         {
@@ -782,7 +714,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.MotorHeartbeatDeadTrip,
             },
           ],
-          isFault: true,
           name: "Motor Heartbeat Dead Trip",
         },
         {
@@ -793,7 +724,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.MotorHighCurrentTrip,
             },
           ],
-          isFault: true,
           name: "Motor High Current Trip",
         },
         {
@@ -804,7 +734,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.MpsDisabledTrip,
             },
           ],
-          isFault: true,
           name: "MPS Disabled Trip",
         },
         {
@@ -815,7 +744,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.OrionMessageTimeoutTrip,
             },
           ],
-          isFault: true,
           name: "Orion Message Timeout Trip",
         },
         {
@@ -826,7 +754,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ProtectionTrip,
             },
           ],
-          isFault: true,
           name: "Protection Trip",
         },
         {
@@ -837,7 +764,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.StrobeBmsLight,
             },
           ],
-          isFault: true,
           name: "Strobe SOS",
         },
       ],
@@ -850,7 +776,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ArrayHighCurrentWarning,
             },
           ],
-          isFault: true,
           name: "Array High Current Warning",
         },
         {
@@ -861,7 +786,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.CanOc12VWarning,
             },
           ],
-          isFault: true,
           name: "CAN OC 12V Warning",
         },
         {
@@ -872,7 +796,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.ChargeHighCurrentWarning,
             },
           ],
-          isFault: true,
           name: "Charge High Current Warning",
         },
         {
@@ -883,7 +806,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.CommonHighCurrentWarning,
             },
           ],
-          isFault: true,
           name: "Common High Current Warning",
         },
         {
@@ -894,7 +816,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.HighCellVoltageWarning,
             },
           ],
-          isFault: true,
           name: "High Cell Voltage Warning",
         },
         {
@@ -905,7 +826,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.LvHighCurrentWarning,
             },
           ],
-          isFault: true,
           name: "LV High Current Warning",
         },
         {
@@ -916,7 +836,6 @@ const Faults = (): I_PIS => {
               value: MBMS?.MotorHighCurrentWarning,
             },
           ],
-          isFault: true,
           name: "Motor High Current Warning",
         },
       ],
@@ -931,7 +850,6 @@ const Faults = (): I_PIS => {
               value: MotorDetails0?.ErrorFlags,
             },
           ],
-          isFault: true,
           name: "Error Flag Raised In Left Motor",
         },
         {
@@ -942,7 +860,6 @@ const Faults = (): I_PIS => {
               value: MotorDetails0?.RxErrorCount,
             },
           ],
-          isFault: true,
           name: "Rx Error Raised In Left Motor",
         },
         {
@@ -953,7 +870,6 @@ const Faults = (): I_PIS => {
               value: MotorDetails0?.TxErrorCount,
             },
           ],
-          isFault: true,
           name: "Tx Error Raised In Left Motor",
         },
         {
@@ -964,7 +880,6 @@ const Faults = (): I_PIS => {
               value: MotorDetails1?.ErrorFlags,
             },
           ],
-          isFault: true,
           name: "Error Flag Raised In Right Motor",
         },
         {
@@ -975,7 +890,6 @@ const Faults = (): I_PIS => {
               value: MotorDetails1?.RxErrorCount,
             },
           ],
-          isFault: true,
           name: "Rx Error Raised In Right Motor",
         },
         {
@@ -986,7 +900,6 @@ const Faults = (): I_PIS => {
               value: MotorDetails1?.TxErrorCount,
             },
           ],
-          isFault: true,
           name: "Tx Error Raised In Right Motor",
         },
       ],

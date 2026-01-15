@@ -126,17 +126,15 @@ function FieldPrinter(props: FieldPrinterProps): JSX.Element {
 
   return (
     <div className="group mt-1 flex items-center justify-between text-xs">
-      {!field.isFault && (
-        <span
-          className="mt-1 hidden cursor-pointer items-center whitespace-nowrap text-xs font-bold text-helios group-hover:flex"
-          onClick={handleAddToFavourites}
-        >
-          Add to Favourites
-        </span>
-      )}
+      <span
+        className="mt-1 hidden cursor-pointer items-center whitespace-nowrap text-xs font-bold text-helios group-hover:flex"
+        onClick={handleAddToFavourites}
+      >
+        Add to Favourites
+      </span>
       <div className="flex w-full items-center justify-between gap-2">
         <p
-          className={`mt-1 flex items-center justify-between text-xs ${field.isFault ? "" : "group-hover:hidden"}`}
+          className={`mt-1 flex items-center justify-between text-xs group-hover:hidden`}
         >
           {field.name}
         </p>
