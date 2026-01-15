@@ -5,7 +5,6 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { twMerge } from "tailwind-merge";
 
 import { TrackList } from "@/components/molecules/MapMolecules/Map";
-import { useAppState } from "@/stores/useAppState";
 import { Coords } from "@shared/helios-types/src/types";
 
 type MapStates = {

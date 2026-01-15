@@ -27,7 +27,6 @@ const duration = 500;
 
 const CarGraphicComponent = () => {
   const { currentPacket } = usePacketStore();
-  const { currentAppState } = useAppState();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
     battery: ISeverity.CLEAR,

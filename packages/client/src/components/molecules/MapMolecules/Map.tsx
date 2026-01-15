@@ -18,7 +18,6 @@ import ReactMapGL, {
 } from "react-map-gl";
 
 import HeliosModel from "@/assets/HeliosBirdseye.png";
-import { useAppState } from "@/stores/useAppState";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import {
   type Coords,

@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useTheme } from "next-themes";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { columns } from "@/components/config/lapTableConfig";
 import ColumnFilters from "@/components/molecules/RaceTabMolecules/ColumnFilters";
 import DriverFilter from "@/components/molecules/RaceTabMolecules/DriverFilter";
 import RaceTabTable from "@/components/molecules/RaceTabMolecules/RaceTabTable";
-import { useAppState } from "@/stores/useAppState";
 import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
