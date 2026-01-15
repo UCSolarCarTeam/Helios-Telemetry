@@ -10,7 +10,6 @@ import type {
   IndicationLocations,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
