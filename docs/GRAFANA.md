@@ -71,9 +71,3 @@ http://localhost:3000
 ```
 
 Login as `admin` / `admin` and verify the dashboards and data source configuration.
-
-## WebSocket (Grafana) — quick setup
-
-In Grafana (open `http://localhost:3000` and login): - Click **Explore** in the left-hand menu. - For **Data source**, choose **WebSocket API** (the WebSocket data source in the Telemetry-Visualizer setup). - In the **Field** input enter: `$.data`
-
-You should now see the telemetry payload returned by the backend (the `data` object) in the Explore panel. The backend uses the `/grafana-ws` path for the WebSocket endpoint.

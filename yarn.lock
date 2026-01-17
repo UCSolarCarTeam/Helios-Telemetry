@@ -22551,7 +22551,6 @@ __metadata:
     "@types/node": "npm:^20.14.10"
     "@types/prettier": "npm:^3.0.0"
     "@types/sqlite3": "npm:^3.1.11"
-    "@types/ws": "npm:^8.18.1"
     "@typescript-eslint/eslint-plugin": "npm:^7.4.0"
     "@typescript-eslint/parser": "npm:^7.4.0"
     aedes: "npm:^0.51.2"
@@ -22579,7 +22578,6 @@ __metadata:
     ts-node: "npm:^10.9.2"
     tsconfig-paths: "npm:^4.2.0"
     typescript: "npm:^5.5.3"
-    ws: "npm:^8.18.3"
   languageName: unknown
   linkType: soft
 
