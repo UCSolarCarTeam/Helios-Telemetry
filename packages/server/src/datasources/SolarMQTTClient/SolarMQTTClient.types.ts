@@ -13,6 +13,7 @@ export const options: IClientOptions = {
 export const topics = {
   carConnect: "carConnect",
   carDisconnect: "carDisconnect",
+  lapdataTopic: "lapdata",
   packetTopic: "packet",
   pingTopic: "ping",
   pongTopic: "pong",
