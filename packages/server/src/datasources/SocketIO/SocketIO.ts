@@ -74,7 +74,7 @@ export class SocketIO implements SocketIOType {
         newCoordInfo: CoordInfoUpdate,
         callback: (response: CoordUpdateResponse) => void,
       ) => {
-        const { lat, long, password } = newCoordInfo;
+        const { lat, long } = newCoordInfo;
 
         logger.info("UPDATED COORDS: ");
         logger.info("lat: ", lat, "long: ", long);
