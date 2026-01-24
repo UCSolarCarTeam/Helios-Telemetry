@@ -28,14 +28,14 @@ const logger = createLightweightApplicationLogger("LapController.ts");
  *
  * this controller is responsible for handling lap data, including:
  * - setting the finish line location (do we even do this anymore)
- * - handling sending lap data to dynamo based on if a lap has been finished or not
+ * - handling sending lap data to timescale based on if a lap has been finished or not
  * - also has other helper functions that are used to calculate the lap data
  *
  * basically the main thing function is handlePacket() which creates a lapData object
- * and sends it to dynamo only when a lap has been completed
+ * and sends it to timescale only when a lap has been completed
  *
  * then handleLapData() is called to broadcast the lap data to the frontend for real time changes
- * as well as to insert the lap data into the dynamo database
+ * as well as to insert the lap data into the timescale database
  */
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
@@ -158,12 +158,12 @@ export class LapController implements LapControllerType {
   // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.dynamoDB.insertLapData(lapData);
+    await this.backendController.timescaleDB.insertLapData(lapData);
   }
 
   // this function is for calling when lap completes via geofence
   public async handleGeofenceLap(rfid: string, timestamp: number) {
-    await this.backendController.dynamoDB.insertIntoGpsLapCountTable(
+    await this.backendController.timescaleDB.insertIntoGpsLapCountTable(
       rfid,
       timestamp,
     );

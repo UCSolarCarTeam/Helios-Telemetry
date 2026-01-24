@@ -216,7 +216,7 @@ export class DatabaseService {
     }
   }
 
-  public async getPacketDate(timestamp: string) {
+  public async getPacketData(timestamp: string) {
     if (!this.isConnected) {
       throw new Error("Database not connected");
     }
@@ -233,7 +233,7 @@ export class DatabaseService {
     }
   }
 
-  public async scanPacketBetweenDates(
+  public async scanPacketDataBetweenDates(
     startUTCDate: number,
     endUTCDate: number,
   ) {
@@ -278,8 +278,8 @@ export class DatabaseService {
   }
 
   public async getFirstAndLastPacketDates(): Promise<{
-    firstPacketDateUTC: number | null;
-    lastPacketDateUTC: number | null;
+    firstDateUTC: number | null;
+    lastDateUTC: number | null;
   }> {
     if (!this.isConnected) {
       throw new Error("Database not connected");
@@ -295,10 +295,10 @@ export class DatabaseService {
       });
 
       return {
-        firstPacketDateUTC: firstPacket
-          ? firstPacket.Timestamp.getTime()
+        firstDateUTC: firstPacket
+          ? Number(firstPacket.Timestamp.getTime())
           : null,
-        lastPacketDateUTC: lastPacket ? lastPacket.Timestamp.getTime() : null,
+        lastDateUTC: lastPacket ? Number(lastPacket.Timestamp.getTime()) : null,
       };
     } catch (error: unknown) {
       throw new Error(

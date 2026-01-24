@@ -17,7 +17,7 @@ export const getPacket = async (request: Request, response: Response) => {
     const timestamp = request.params.timestamp;
 
     const packetData =
-      await backendController.dynamoDB.getPacketData(timestamp);
+      await backendController.timescaleDB.getPacketData(timestamp);
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = { data: packetData, message: "OK" };
@@ -48,9 +48,9 @@ export const getPacketDataBetweenDates = async (
 
     const endTime = Number(request.query.endTime);
 
-    // Fetch data from DynamoDB
+    // Fetch data from timescaleDB
     const packetData =
-      await backendController.dynamoDB.scanPacketDataBetweenDates(
+      await backendController.timescaleDB.scanPacketDataBetweenDates(
         startTime,
         endTime,
       );
@@ -78,7 +78,7 @@ export const getFirstAndLastPacket = async (
   );
   try {
     const { firstDateUTC, lastDateUTC } =
-      await backendController.dynamoDB.getFirstAndLastPacketDates();
+      await backendController.timescaleDB.getFirstAndLastPacketDates();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
