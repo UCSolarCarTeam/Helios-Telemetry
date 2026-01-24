@@ -19,74 +19,74 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class B3 {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "float" })
-  acceleration!: number;
+  Acceleration!: number;
 
   @Column({ type: "boolean" })
-  b3_heartbeat!: boolean;
+  B3Heartbeat!: boolean;
 
   @Column({ type: "boolean" })
-  brake_light_signal_status!: boolean;
+  BrakeLightSignalStatus!: boolean;
 
   @Column({ type: "boolean" })
-  brake_switch_digital!: boolean;
+  BrakeSwitchDigital!: boolean;
 
   @Column({ type: "boolean" })
-  daytime_running_light_signal_status!: boolean;
+  DaytimeRunningLightSignalStatus!: boolean;
 
   @Column({ type: "boolean" })
-  forward_digital!: boolean;
+  ForwardDigital!: boolean;
 
   @Column({ type: "boolean" })
-  handbrake_switch_digital!: boolean;
+  HandbrakeSwitchDigital!: boolean;
 
   @Column({ type: "boolean" })
-  hazard_lights_input!: boolean;
+  HazardLightsInput!: boolean;
 
   @Column({ type: "boolean" })
-  headlights_switch_input!: boolean;
+  HeadlightsSwitchInput!: boolean;
 
   @Column({ type: "boolean" })
-  headlight_signal_status!: boolean;
+  HeadlightSignalStatus!: boolean;
 
   @Column({ type: "boolean" })
-  horn_signal_status!: boolean;
+  HornSignalStatus!: boolean;
 
   @Column({ type: "boolean" })
-  horn_switch_digital!: boolean;
+  HornSwitchDigital!: boolean;
 
   @Column({ type: "boolean" })
-  lap_digital!: boolean;
+  LapDigital!: boolean;
 
   @Column({ type: "boolean" })
-  left_signal_input!: boolean;
+  LeftSignalInput!: boolean;
 
   @Column({ type: "boolean" })
-  left_signal_status!: boolean;
+  LeftSignalStatus!: boolean;
 
   @Column({ type: "boolean" })
-  motor_reset_digital!: boolean;
+  MotorResetDigital!: boolean;
 
   @Column({ type: "boolean" })
-  neutral_digital!: boolean;
+  NeutralDigital!: boolean;
 
   @Column({ type: "boolean" })
-  race_mode_digital!: boolean;
+  RaceModeDigital!: boolean;
 
   @Column({ type: "float" })
-  regen_braking!: number;
+  RegenBraking!: number;
 
   @Column({ type: "boolean" })
-  reverse_digital!: boolean;
+  ReverseDigital!: boolean;
 
   @Column({ type: "boolean" })
-  right_signal_input!: boolean;
+  RightSignalInput!: boolean;
 
   @Column({ type: "boolean" })
-  right_signal_status!: boolean;
+  RightSignalStatus!: boolean;
 }

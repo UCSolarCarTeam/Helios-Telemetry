@@ -12,6 +12,7 @@ import { MPPT } from "../entities/MPPT.entity";
 import { ProximitySensors } from "../entities/ProximitySensors.entity";
 import { Telemetry } from "../entities/Telemetry.entity";
 import { TelemetryMetadata } from "../entities/TelemetryMetadata.entity";
+import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
 
 export interface IBaseRepository<T> {
   create(entity: DeepPartial<T>): Promise<T>;
@@ -52,3 +53,6 @@ export interface ITelemetryRepository extends IBaseRepository<Telemetry> {}
 
 export interface ITelemetryMetadataRepository
   extends IBaseRepository<TelemetryMetadata> {}
+
+export interface ITelemetryPacketRepository
+  extends IBaseRepository<TelemetryPacket> {}

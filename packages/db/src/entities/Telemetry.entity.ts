@@ -19,64 +19,64 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class Telemetry {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   // GPS Data
   @Column({ type: "float" })
-  gps_additional_flags!: number;
+  GpsAdditionalFlags!: number;
 
   @Column({ type: "float" })
-  gps_day!: number;
+  GpsDay!: number;
 
   @Column({ type: "float" })
-  gps_fix_status_flags!: number;
+  GpsFixStatusFlags!: number;
 
   @Column({ type: "float" })
-  gps_hour!: number;
+  GpsHour!: number;
 
   @Column({ type: "float" })
-  gps_latitude!: number;
+  GpsLatitude!: number;
 
   @Column({ type: "float" })
-  gps_longitude!: number;
+  GpsLongitude!: number;
 
   @Column({ type: "float" })
-  gps_minute!: number;
+  GpsMinute!: number;
 
   @Column({ type: "float" })
-  gps_month!: number;
+  GpsMonth!: number;
 
   @Column({ type: "float" })
-  gps_second!: number;
+  GpsSecond!: number;
 
   @Column({ type: "float" })
-  gps_validity_flags!: number;
+  GpsValidityFlags!: number;
 
   @Column({ type: "float" })
-  gps_year!: number;
+  GpsYear!: number;
 
   // MPU (Motion Processing Unit) Data
   @Column({ type: "float" })
-  mpu_acceleration_x!: number;
+  MpuAccelerationX!: number;
 
   @Column({ type: "float" })
-  mpu_acceleration_y!: number;
+  MpuAccelerationY!: number;
 
   @Column({ type: "float" })
-  mpu_acceleration_z!: number;
+  MpuAccelerationZ!: number;
 
   @Column({ type: "float" })
-  mpu_rotation_x!: number;
+  MpuRotationX!: number;
 
   @Column({ type: "float" })
-  mpu_rotation_y!: number;
+  MpuRotationY!: number;
 
   @Column({ type: "float" })
-  mpu_rotation_z!: number;
+  MpuRotationZ!: number;
 
   @Column({ type: "float" })
-  mpu_temperature!: number;
+  MpuTemperature!: number;
 }
