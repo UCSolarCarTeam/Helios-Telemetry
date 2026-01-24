@@ -2,14 +2,21 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { ITelemetryData } from "@shared/helios-types";
 import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
+import { Driver } from "../entities/Driver.entity";
+import { Lap } from "../entities/Lap.entity";
 
 export class DatabaseService {
   private isConnected = false;
   private static instance: DatabaseService;
   private telemetryPacketRepo: Repository<TelemetryPacket>;
+  private driverRepo: Repository<Driver>;
+  private lapRepo: Repository<Lap>;
+  private isInitialized: boolean = false;
 
   constructor() {
     this.telemetryPacketRepo = AppDataSource.getRepository(TelemetryPacket);
+    this.driverRepo = AppDataSource.getRepository(Driver);
+    this.lapRepo = AppDataSource.getRepository(Lap);
   }
 
   async initialize() {
@@ -26,9 +33,6 @@ export class DatabaseService {
     return DatabaseService.instance;
   }
 
-  /**
-   * Helper function to flatten ITelemetryData into TelemetryPacket format
-   */
   private flattenTelemetryData(
     packet: ITelemetryData,
   ): Partial<TelemetryPacket> {
