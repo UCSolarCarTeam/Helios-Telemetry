@@ -4,6 +4,7 @@ import { ITelemetryData } from "@shared/helios-types";
 import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
 import { Driver } from "../entities/Driver.entity";
 import { Lap } from "../entities/Lap.entity";
+import { GenericResponse } from "./DatabaseService.types";
 
 export class DatabaseService {
   private isConnected = false;
@@ -220,6 +221,158 @@ export class DatabaseService {
     if (this.isConnected) {
       await AppDataSource.destroy();
       console.log("Database connection closed");
+    }
+  }
+
+  public async getPacketDate(timestamp: string) {
+    if (!this.isConnected) {
+      throw new Error("Database not connected");
+    }
+
+    try {
+      const packet = await this.telemetryPacketRepo.findOneBy({
+        Timestamp: new Date(timestamp),
+      });
+      return packet;
+    } catch (error: unknown) {
+      throw new Error(
+        "Failed to retrieve packet date: " + (error as Error).message,
+      );
+    }
+  }
+
+  public async scanPacketBetweenDates(
+    startUTCDate: number,
+    endUTCDate: number,
+  ) {
+    if (!this.isConnected) {
+      throw new Error("Database not connected");
+    }
+
+    try {
+      const packets =
+        await this.telemetryPacketRepo.createQueryBuilder("packet");
+      packets.where("packet.Timestamp BETWEEN :start AND :end", {
+        end: new Date(endUTCDate),
+        start: new Date(startUTCDate),
+      });
+
+      return await packets.getMany();
+    } catch (error: unknown) {
+      throw new Error(
+        "Failed to scan packets between dates: " + (error as Error).message,
+      );
+    }
+  }
+
+  public async insertPacketData(
+    packet: ITelemetryData,
+  ): Promise<GenericResponse> {
+    if (!this.isConnected) {
+      throw new Error("Database not connected");
+    }
+    try {
+      const flattenedData = this.flattenTelemetryData(packet);
+      await this.telemetryPacketRepo.save(flattenedData);
+      return {
+        httpsStatusCode: 201,
+        message: "Packet data inserted successfully",
+      };
+    } catch (error: unknown) {
+      throw new Error(
+        "Failed to insert packet data: " + (error as Error).message,
+      );
+    }
+  }
+
+  public async getFirstAndLastPacketDates(): Promise<{
+    firstPacketDateUTC: number | null;
+    lastPacketDateUTC: number | null;
+  }> {
+    if (!this.isConnected) {
+      throw new Error("Database not connected");
+    }
+
+    try {
+      const firstPacket = await this.telemetryPacketRepo.findOne({
+        order: { Timestamp: "ASC" },
+      });
+
+      const lastPacket = await this.telemetryPacketRepo.findOne({
+        order: { Timestamp: "DESC" },
+      });
+
+      return {
+        firstPacketDateUTC: firstPacket
+          ? firstPacket.Timestamp.getTime()
+          : null,
+        lastPacketDateUTC: lastPacket ? lastPacket.Timestamp.getTime() : null,
+      };
+    } catch (error: unknown) {
+      throw new Error(
+        "Failed to retrieve first and last packet dates: " +
+          (error as Error).message,
+      );
+    }
+  }
+
+  public async insertLapData(lapData: Partial<Lap>): Promise<GenericResponse> {
+    if (!this.isConnected) {
+      throw new Error("Database not connected");
+    }
+
+    try {
+      await this.lapRepo.save(lapData);
+      return {
+        httpsStatusCode: 201,
+        message: "Lap data inserted successfully",
+      };
+    } catch (error: unknown) {
+      return {
+        httpsStatusCode: 500,
+        message: "Failed to insert lap data: " + (error as Error).message,
+      };
+    }
+  }
+
+  public async getLapData(): Promise<Lap[]> {
+    if (!this.isConnected) {
+      throw new Error("Database not connected");
+    }
+
+    try {
+      const laps = await this.lapRepo.find();
+      return laps;
+    } catch (error: unknown) {
+      throw new Error(
+        "Failed to retrieve lap data: " + (error as Error).message,
+      );
+    }
+  }
+
+  public async insertIntoGpsLapCountTable(
+    rfid: string,
+    timestamp: number,
+  ): Promise<GenericResponse> {
+    if (!this.isConnected) {
+      throw new Error("Database not connected");
+    }
+
+    try {
+      await this.lapRepo.save({
+        Rfid: rfid ?? "unknown driver",
+        Timestamp: timestamp ?? new Date().getTime(),
+        Type: "gps-lap",
+      });
+      return {
+        httpsStatusCode: 201,
+        message: "Inserted into GPS lap count table successfully",
+      };
+    } catch (error: unknown) {
+      throw new Error(
+        "Failed to insert into GPS lap count table: " +
+          (error as Error).message,
+      );
     }
   }
 }
