@@ -354,7 +354,7 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     DATABASE_URL: ecs.Secret.fromSecretsManager(
       TimescaleConnectionString,
       "DATABASE_URL",
-    ), 
+    ),
     MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "password",
