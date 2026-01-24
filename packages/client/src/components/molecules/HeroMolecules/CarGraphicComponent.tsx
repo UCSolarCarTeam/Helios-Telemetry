@@ -10,7 +10,7 @@ import type {
   IndicationLocations,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
 import { ISeverity } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { usePacket } from "@/contexts/PacketContext";
+import { usePacketStore } from "@/stores/usePacket";
 import { ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { calculateVehicleVelocity } from "@shared/helios-types";
@@ -25,7 +25,7 @@ const targetIntensity = 0.8;
 const duration = 500;
 
 const CarGraphicComponent = () => {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const [isClear, changeClear] = useState(false);
   const [indications, setIndications] = useState<IndicationLocations>({
     battery: ISeverity.CLEAR,

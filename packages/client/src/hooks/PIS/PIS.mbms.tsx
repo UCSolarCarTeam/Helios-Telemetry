@@ -1,10 +1,10 @@
-import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
 import { UnitType } from "@/objects/PIS/PIS.interface";
+import { usePacketStore } from "@/stores/usePacket";
 
 const Mbms = (): I_PIS => {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const { Battery, Contactor, MBMS } = currentPacket;
   const data = {
     Contactor: [

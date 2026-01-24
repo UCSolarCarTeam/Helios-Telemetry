@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import { useAppState } from "@/contexts/AppStateContext";
-import { usePlaybackContext } from "@/contexts/PlayBackContext";
+import { useAppState } from "@/stores/useAppState";
+import { usePlaybackStore } from "@/stores/usePlayback";
 import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
@@ -108,7 +108,10 @@ function PlaybackDatePicker() {
   const [confirmedPlaybackDateTime, setConfirmedPlaybackDateTime] =
     useState<IPlaybackDateTime>(playbackDateTime);
 
-  const { playbackData, setPlaybackData } = usePlaybackContext();
+  const { playbackData, setPlaybackData } = usePlaybackStore((state) => ({
+    playbackData: state.playbackData,
+    setPlaybackData: state.setPlaybackData,
+  }));
 
   const fetchPlaybackData = async () => {
     if (

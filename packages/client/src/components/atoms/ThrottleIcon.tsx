@@ -1,7 +1,7 @@
-import { usePacket } from "@/contexts/PacketContext";
+import { usePacketStore } from "@/stores/usePacket";
 
 function ThrottleIcon() {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const gasPos = currentPacket.B3.Acceleration;
   const regenPos = currentPacket.B3.RegenBraking;
 

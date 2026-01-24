@@ -9,6 +9,7 @@ import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
 
+import { DatabaseManager } from "@/database/DatabaseManager";
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
 
