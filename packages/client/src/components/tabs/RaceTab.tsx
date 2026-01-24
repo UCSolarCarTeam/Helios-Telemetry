@@ -1,12 +1,11 @@
 import axios from "axios";
-import { useTheme } from "next-themes";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { columns } from "@/components/config/lapTableConfig";
 import ColumnFilters from "@/components/molecules/RaceTabMolecules/ColumnFilters";
 import DriverFilter from "@/components/molecules/RaceTabMolecules/DriverFilter";
 import RaceTabTable from "@/components/molecules/RaceTabMolecules/RaceTabTable";
-import { useLapData } from "@/contexts/LapDataContext";
+import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { type IFormattedLapData, prodURL } from "@shared/helios-types";
@@ -37,7 +36,7 @@ function RaceTab() {
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
-  const { formatLapData, lapData } = useLapData();
+  const { fetchLapData, formatLapData, lapData } = useLapDataStore();
   const [filteredLaps, setFilteredLaps] =
     useState<IFormattedLapData[]>(lapData);
   const [sorting, setSorting] = useState<SortingState>([
@@ -121,6 +120,7 @@ function RaceTab() {
 
   // fetching driver names when component mounts
   useEffect(() => {
+    fetchLapData();
     fetchDriverNames()
       .then((response) => {
         const driverData = response.data.map((driver: IDriverData) => ({

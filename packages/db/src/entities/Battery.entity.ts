@@ -19,110 +19,110 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 export class Battery {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  timestamp!: Date;
+  Timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  rfid!: string;
+  Rfid!: string;
 
   @Column({ type: "boolean" })
-  always_on_signal_status!: boolean;
+  AlwaysOnSignalStatus!: boolean;
 
   @Column({ type: "float" })
-  average_cell_voltage!: number;
+  AverageCellVoltage!: number;
 
   @Column({ type: "float" })
-  average_temperature!: number;
+  AverageTemperature!: number;
 
   @Column({ type: "integer" })
-  bmu_alive!: number;
+  BmuAlive!: number;
 
   @Column({ type: "boolean" })
-  charge_relay_enabled!: boolean;
+  ChargeRelayEnabled!: boolean;
 
   @Column({ type: "boolean" })
-  charger_safety_enabled!: boolean;
+  ChargerSafetyEnabled!: boolean;
 
   @Column({ type: "boolean" })
-  discharge_relay_enabled!: boolean;
+  DischargeRelayEnabled!: boolean;
 
   @Column({ type: "float" })
-  fan_speed!: number;
+  FanSpeed!: number;
 
   @Column({ type: "float" })
-  fan_voltage!: number;
+  FanVoltage!: number;
 
   @Column({ type: "float" })
-  high_cell_voltage!: number;
+  HighCellVoltage!: number;
 
   @Column({ type: "integer" })
-  high_cell_voltage_id!: number;
+  HighCellVoltageId!: number;
 
   @Column({ type: "float" })
-  high_temperature!: number;
+  HighTemperature!: number;
 
   @Column({ type: "integer" })
-  high_thermistor_id!: number;
+  HighThermistorId!: number;
 
   @Column({ type: "float" })
-  input_12v!: number;
+  Input12v!: number;
 
   @Column({ type: "float" })
-  internal_temperature!: number;
+  InternalTemperature!: number;
 
   @Column({ type: "boolean" })
-  is_charging_signal_status!: boolean;
+  IsChargingSignalStatus!: boolean;
 
   @Column({ type: "boolean" })
-  is_ready_signal_status!: boolean;
+  IsReadySignalStatus!: boolean;
 
   @Column({ type: "float" })
-  low_cell_voltage!: number;
+  LowCellVoltage!: number;
 
   @Column({ type: "integer" })
-  low_cell_voltage_id!: number;
+  LowCellVoltageId!: number;
 
   @Column({ type: "float" })
-  low_temperature!: number;
+  LowTemperature!: number;
 
   @Column({ type: "integer" })
-  low_thermistor_id!: number;
+  LowThermistorId!: number;
 
   @Column({ type: "boolean" })
-  malfunction_indicator_active!: boolean;
+  MalfunctionIndicatorActive!: boolean;
 
   @Column({ type: "float" })
-  maximum_cell_voltage!: number;
+  MaximumCellVoltage!: number;
 
   @Column({ type: "float" })
-  maximum_pack_voltage!: number;
+  MaximumPackVoltage!: number;
 
   @Column({ type: "float" })
-  minimum_cell_voltage!: number;
+  MinimumCellVoltage!: number;
 
   @Column({ type: "float" })
-  minimum_pack_voltage!: number;
+  MinimumPackVoltage!: number;
 
   @Column({ type: "boolean" })
-  multi_purpose_input_signal_status!: boolean;
+  MultiPurposeInputSignalStatus!: boolean;
 
   @Column({ type: "float" })
-  pack_amphours!: number;
+  PackAmphours!: number;
 
   @Column({ type: "float" })
-  pack_current!: number;
+  PackCurrent!: number;
 
   @Column({ type: "float" })
-  pack_depth_of_discharge!: number;
+  PackDepthOfDischarge!: number;
 
   @Column({ type: "float" })
-  pack_state_of_charge!: number;
+  PackStateOfCharge!: number;
 
   @Column({ type: "float" })
-  pack_voltage!: number;
+  PackVoltage!: number;
 
   @Column({ type: "integer" })
-  populated_cells!: number;
+  PopulatedCells!: number;
 
   @Column({ type: "float" })
-  requested_fan_speed!: number;
+  RequestedFanSpeed!: number;
 }

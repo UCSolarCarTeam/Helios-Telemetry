@@ -52,16 +52,10 @@ const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
   },
 );
 
-const TelemetryBackendSecretsDatabaseCredentials = new secretsmanager.Secret(
+const timescaleConnectionString = secretsmanager.Secret.fromSecretNameV2(
   TelemetryBackendStack,
-  "HeliosTelemetryDBCredentials",
-  {
-    secretName: "HeliosTelemetryDBCredentials" + backend.stack.stackName,
-    secretObjectValue: {
-      POSTGRES_PASSWORD: cdk.SecretValue.unsafePlainText(""),
-      POSTGRES_USERNAME: cdk.SecretValue.unsafePlainText(""),
-    },
-  },
+  "TimescaleConnectionString",
+  "timescale-connection-string",
 );
 
 const TelemetryBackendImageRepository = new ecr.Repository(
@@ -326,9 +320,6 @@ const TelemetryBackendVPC = new ec2.Vpc(
 
 TelemetryECSTaskDefinition.addContainer("TheContainer", {
   environment: {
-    // DB_HOST: dbInstance.instancePrivateIp,
-    DB_NAME: "postgres",
-    DB_PORT: "5432",
     DRIVER_TABLE_NAME: driverDataTable.tableName,
     GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName,
     LAP_TABLE_NAME: lapDataTable.tableName,
@@ -360,6 +351,10 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerCertificate,
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
+    DATABASE_URL: ecs.Secret.fromSecretsManager(
+      timescaleConnectionString,
+      "DATABASE_URL",
+    ), // pass db url
     MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "password",
@@ -368,21 +363,13 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerMQTTCredentials,
       "username",
     ),
-    POSTGRES_PASSWORD: ecs.Secret.fromSecretsManager(
-      TelemetryBackendSecretsDatabaseCredentials,
-      "POSTGRES_PASSWORD",
-    ), // pass DB password
-    POSTGRES_USERNAME: ecs.Secret.fromSecretsManager(
-      TelemetryBackendSecretsDatabaseCredentials,
-      "POSTGRES_USERNAME",
-    ), // pass DB username,
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
   },
 });
 
-// Allow ECS Task to read the Secrets Manager Store
+// Allow ECS Task to read the TimescaleDB connection string
 TelemetryBackendSecretsManagerPrivKey.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
@@ -395,6 +382,7 @@ TelemetryBackendSecretsManagerCertificate.grantRead(
 TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
+timescaleConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
 
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,

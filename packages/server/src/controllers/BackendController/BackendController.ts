@@ -1,3 +1,4 @@
+import { DatabaseService } from "db";
 import type { IncomingMessage, Server, ServerResponse } from "http";
 
 import type { BackendControllerTypes } from "@/controllers/BackendController/BackendController.types";
@@ -7,7 +8,6 @@ import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
-import { DatabaseManager } from "@/database/DatabaseManager";
 
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
@@ -18,7 +18,7 @@ export class BackendController implements BackendControllerTypes {
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
-  public databaseManager: DatabaseManager;
+  public databaseService: DatabaseService;
   public carLatency: number;
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
@@ -27,7 +27,7 @@ export class BackendController implements BackendControllerTypes {
     this.socketIO = new SocketIO(httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
-    this.databaseManager = DatabaseManager.getInstance();
+    this.databaseService = DatabaseService.getInstance();
     this.establishCarPinging();
     this.carLatency = 0;
     this.initializeDatabase();
@@ -36,7 +36,7 @@ export class BackendController implements BackendControllerTypes {
 
   private async initializeDatabase() {
     try {
-      await this.databaseManager.initialize();
+      await this.databaseService.initialize();
       logger.info("Database connection established successfully");
     } catch (error) {
       logger.error("Failed to initialize database:", error);
@@ -63,6 +63,8 @@ export class BackendController implements BackendControllerTypes {
     // Insert the packet into the database
     this.dynamoDB.insertPacketData(message);
 
+    this.databaseService.insertPacketData(message);
+
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
 
@@ -83,7 +85,7 @@ export class BackendController implements BackendControllerTypes {
 
   public async cleanup() {
     try {
-      await this.databaseManager.close();
+      await this.databaseService.close();
       logger.info("Database connection closed successfully");
     } catch (error) {
       logger.error("Error closing database connection:", error);

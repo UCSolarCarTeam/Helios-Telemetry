@@ -87,6 +87,7 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 - [Main Goals of Telemetry ML](./docs/ML.md#main-goals-of-telemetry-ml)
 - [Tools Used](./docs/ML.md#we-are-exploring-how-to-do-this-through-tools-like)
 - [Other Responsibilities](./docs/ML.md#the-telemetry-ml-team-does-not-solely-focus-on-machine-learning-models-however-there-are-several-considerations-that-need-to-be-made-in-the-following-areas)
+- [Grafana + Visualizer Setup](./docs/GRAFANA.md)
 
 ### Development Setup
 
