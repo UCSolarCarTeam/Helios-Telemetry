@@ -50,7 +50,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         this.backendController.carLatency?.toString() || "-1";
       try {
         const driverName = this.latestRfid
-          ? await this.backendController.dynamoDB.getDriverNameUsingRfid(
+          ? await this.backendController.timescaleDB.getDriverNameUsingRfid(
               this.latestRfid,
             )
           : "Rfid not scanned";
