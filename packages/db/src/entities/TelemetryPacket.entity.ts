@@ -955,7 +955,7 @@ export class TelemetryPacket {
   ProximitySensor2?: number;
 
   @Column({ type: "float", nullable: true })
-  RroximitySensor3?: number;
+  ProximitySensor3?: number;
 
   @Column({ type: "float", nullable: true })
   ProximitySensor4?: number;
