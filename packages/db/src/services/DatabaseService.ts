@@ -137,14 +137,6 @@ export class DatabaseService {
     };
   }
 
-  async insertPacketData(message: ITelemetryData): Promise<void> {
-    if (this.isConnected) {
-      console.log("Inserting packet data into database");
-      const flattenedData = this.flattenTelemetryData(message);
-      await this.telemetryPacketRepo.save(flattenedData);
-    }
-  }
-
   public async getDrivers() {
     try {
       const drivers = await this.driverRepo.find();
