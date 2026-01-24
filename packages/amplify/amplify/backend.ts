@@ -52,10 +52,10 @@ const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
   },
 );
 
-const timescaleConnectionString = secretsmanager.Secret.fromSecretNameV2(
+const TimescaleConnectionString = secretsmanager.Secret.fromSecretNameV2(
   TelemetryBackendStack,
   "TimescaleConnectionString",
-  "timescale-connection-string",
+  "TimescaleConnectionString",
 );
 
 const TelemetryBackendImageRepository = new ecr.Repository(
@@ -352,7 +352,7 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
     DATABASE_URL: ecs.Secret.fromSecretsManager(
-      timescaleConnectionString,
+      TimescaleConnectionString,
       "DATABASE_URL",
     ), // pass db url
     MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
@@ -382,7 +382,7 @@ TelemetryBackendSecretsManagerCertificate.grantRead(
 TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
-timescaleConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
+TimescaleConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
 
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,
