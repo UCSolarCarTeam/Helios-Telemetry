@@ -7,7 +7,7 @@ import { Driver } from "./entities/Driver.entity";
 import { Lap } from "./entities/Lap.entity";
 import { TelemetryPacket } from "./entities/TelemetryPacket.entity";
 
-dotenv.config({ path: ".db.env" });
+dotenv.config();
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is required in .db.env file");
