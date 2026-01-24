@@ -17,8 +17,8 @@ const SetFinishLineLocation = () => {
     socketIO.emit(
       "setLapCoords",
       {
-        lat: (currentPacket?.Telemetry.GpsLatitude).toString() || "0",
-        long: (currentPacket?.Telemetry.GpsLongitude).toString() || "0",
+        lat: String(currentPacket?.Telemetry?.GpsLatitude ?? 0),
+        long: String(currentPacket?.Telemetry?.GpsLongitude ?? 0),
         password: password,
       },
       (response: CoordUpdateResponse) => {

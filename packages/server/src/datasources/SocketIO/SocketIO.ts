@@ -72,7 +72,7 @@ export class SocketIO implements SocketIOType {
       "setLapCoords",
       (
         newCoordInfo: CoordInfoUpdate,
-        callback: (response: CoordUpdateResponse) => void,
+        callback?: (response: CoordUpdateResponse) => void,
       ) => {
         const { lat, long } = newCoordInfo;
 
@@ -87,7 +87,9 @@ export class SocketIO implements SocketIOType {
           this.broadcastLapCoords(res);
         }
 
-        callback(res);
+        if (typeof callback === "function") {
+          callback(res);
+        }
       },
     );
     socket.on("disconnect", () => {
