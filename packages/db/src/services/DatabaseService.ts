@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { ITelemetryData } from "@shared/helios-types";
 import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
