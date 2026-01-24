@@ -2,11 +2,11 @@ import {
   FaultLocations,
   ISeverity,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
+import { usePacketStore } from "@/stores/usePacket";
 
 const Faults = (): I_PIS => {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const { BatteryFaults, Contactor, MBMS, MotorDetails0, MotorDetails1 } =
     currentPacket;
   const data = {

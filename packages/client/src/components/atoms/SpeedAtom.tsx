@@ -1,12 +1,12 @@
 import React from "react";
 
-import { usePacket } from "@/contexts/PacketContext";
 import useUnitsHandler from "@/hooks/PIS/useUnitsHandler";
 import { UnitType } from "@/objects/PIS/PIS.interface";
+import { usePacketStore } from "@/stores/usePacket";
 import { calculateVehicleVelocity } from "@shared/helios-types";
 
 function SpeedAtom() {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
 
   const speedValue = React.useMemo(
     () =>

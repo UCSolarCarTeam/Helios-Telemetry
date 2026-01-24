@@ -2,13 +2,13 @@ import {
   FaultLocations,
   ISeverity,
 } from "@/components/molecules/HeroMolecules/HeroTypes";
-import { usePacket } from "@/contexts/PacketContext";
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
 import { UnitType } from "@/objects/PIS/PIS.interface";
+import { usePacketStore } from "@/stores/usePacket";
 
 const Battery = (): I_PIS => {
-  const { currentPacket } = usePacket();
+  const { currentPacket } = usePacketStore();
   const { Battery } = currentPacket;
   //  Battery will now have be split into the faults and the warning and here we will simply show what everything means
   const data = {
