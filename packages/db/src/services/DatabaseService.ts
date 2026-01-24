@@ -11,7 +11,6 @@ export class DatabaseService {
   private telemetryPacketRepo: Repository<TelemetryPacket>;
   private driverRepo: Repository<Driver>;
   private lapRepo: Repository<Lap>;
-  private isInitialized: boolean = false;
 
   constructor() {
     this.telemetryPacketRepo = AppDataSource.getRepository(TelemetryPacket);
@@ -142,6 +141,78 @@ export class DatabaseService {
       console.log("Inserting packet data into database");
       const flattenedData = this.flattenTelemetryData(message);
       await this.telemetryPacketRepo.save(flattenedData);
+    }
+  }
+
+  public async getDrivers() {
+    try {
+      const drivers = await this.driverRepo.find();
+      return drivers.map((driver) => ({
+        Rfid: driver.Rfid,
+        driver: driver.Name,
+      }));
+    } catch (error: unknown) {
+      console.error("Error getting drivers");
+    }
+  }
+
+  public async getDriverNameUsingRfid(Rfid: string) {
+    try {
+      const driver = await this.driverRepo.findOne({
+        where: { Rfid },
+      });
+
+      if (!driver) {
+        console.error(`No driver found for Rfid: ${Rfid}`);
+        return "Driver not found";
+      }
+
+      return driver.Name;
+    } catch (error: unknown) {
+      console.error("Error getting driver name using the given Rfid");
+      throw new Error((error as Error).message);
+    }
+  }
+
+  public async getDriverLaps(Rfid: string) {
+    try {
+      const laps = await this.lapRepo.find({
+        order: { Timestamp: "DESC" },
+        where: { Rfid },
+      });
+      return laps;
+    } catch (error: unknown) {
+      console.error("Error getting lap data for driver", error);
+      throw new Error(
+        (error as Error).message || "Failed to fetch driver laps",
+      );
+    }
+  }
+
+  public async updateDriverInfo(Rfid: string, name: string) {
+    try {
+      if (typeof Rfid !== "string") {
+        throw new Error("Rfid must be a string");
+      }
+
+      const existingDriver = await this.driverRepo.findOne({
+        where: { Rfid },
+      });
+
+      if (!existingDriver) {
+        return { message: "Driver Rfid not found in driver table" };
+      }
+
+      const oldName = existingDriver.Name;
+      existingDriver.Name = name;
+      await this.driverRepo.save(existingDriver);
+
+      return {
+        message: `Driver name updated from ${oldName} to ${name}`,
+      };
+    } catch (error: unknown) {
+      console.error("Error updating driver info: " + (error as Error).message);
+      throw new Error((error as Error).message);
     }
   }
 
