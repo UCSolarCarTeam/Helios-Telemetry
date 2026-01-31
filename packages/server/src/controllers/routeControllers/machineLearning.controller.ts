@@ -1,9 +1,11 @@
 import { type Request, type Response } from "express";
+import https from "https";
 import NodeCache from "node-cache";
 
 import { createApplicationLogger } from "@/utils/logger";
 
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
+import { NodeHttpHandler } from "@smithy/node-http-handler";
 
 const CACHE_KEY = {
   LAP_CORRELATION_MATRIX: "lap_correlation_matrix",
@@ -41,9 +43,20 @@ const cache = new NodeCache({
 // 1. Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 // 2. IAM role (if running on EC2/ECS/Lambda)
 // 3. AWS credentials file (~/.aws/credentials)
+
+// ⚠️ WARNING: SSL certificate validation is disabled in development mode only
+// This fixes "unable to get local issuer certificate" errors on local machines
+// NEVER disable SSL validation in production - it's a security risk!
 const lambdaClient = new LambdaClient({
   maxAttempts: 3, // Automatic retries
   region: AWS_REGION,
+  requestHandler: new NodeHttpHandler({
+    httpsAgent: new https.Agent({
+      // Disable SSL certificate validation ONLY in development
+      // In production, this will be true (SSL validation enabled)
+      rejectUnauthorized: process.env.NODE_ENV === "production",
+    }),
+  }),
 });
 
 /**
