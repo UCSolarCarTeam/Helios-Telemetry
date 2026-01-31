@@ -36,7 +36,7 @@ const cache = new NodeCache({
 // Custom HTTPS agent to handle SSL/TLS certificate validation
 // This fixes the "unable to get local issuer certificate" error
 const httpsAgent = new https.Agent({
-  rejectUnauthorized: false, // Disable SSL certificate validation for AWS Lambda URLs
+  rejectUnauthorized: process.env.NODE_ENV !== "development", // Disable SSL certificate validation for AWS Lambda URLs only on local
 });
 
 // Create axios instance with custom HTTPS agent for Lambda calls
