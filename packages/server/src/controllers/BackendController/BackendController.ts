@@ -60,8 +60,6 @@ export class BackendController implements BackendControllerTypes {
     // Insert the packet into the database
     this.timescaleDB.insertPacketData(message);
 
-    this.timescaleDB.insertPacketData(message);
-
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
 

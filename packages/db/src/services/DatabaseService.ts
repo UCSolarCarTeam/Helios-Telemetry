@@ -213,6 +213,7 @@ export class DatabaseService {
     if (this.isConnected) {
       await AppDataSource.destroy();
       console.log("Database connection closed");
+      this.isConnected = false;
     }
   }
 
@@ -267,7 +268,7 @@ export class DatabaseService {
       const flattenedData = this.flattenTelemetryData(packet);
       await this.telemetryPacketRepo.save(flattenedData);
       return {
-        httpsStatusCode: 201,
+        httpStatusCode: 201,
         message: "Packet data inserted successfully",
       };
     } catch (error: unknown) {
@@ -316,14 +317,11 @@ export class DatabaseService {
     try {
       await this.lapRepo.save(lapData);
       return {
-        httpsStatusCode: 201,
+        httpStatusCode: 201,
         message: "Lap data inserted successfully",
       };
     } catch (error: unknown) {
-      return {
-        httpsStatusCode: 500,
-        message: "Failed to insert lap data: " + (error as Error).message,
-      };
+      throw new Error("Failed to insert lap data: " + (error as Error).message);
     }
   }
 
@@ -357,7 +355,7 @@ export class DatabaseService {
         Type: "gps-lap",
       });
       return {
-        httpsStatusCode: 201,
+        httpStatusCode: 201,
         message: "Inserted into GPS lap count table successfully",
       };
     } catch (error: unknown) {
