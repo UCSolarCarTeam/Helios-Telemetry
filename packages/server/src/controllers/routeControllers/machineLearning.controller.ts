@@ -5,6 +5,8 @@ import NodeCache from "node-cache";
 
 import { createApplicationLogger } from "@/utils/logger";
 
+const mlLogger = createApplicationLogger("machineLearning.controller.ts");
+
 const CACHE_KEY = {
   LAP_CORRELATION_MATRIX: "lap_correlation_matrix",
   PACKET_CORRELATION_MATRIX: "packet_correlation_matrix",
@@ -12,16 +14,17 @@ const CACHE_KEY = {
 
 // Validate and extract environment variables at startup
 const PACKET_CORRELATION_MATRIX_URL =
-  process.env.GET_PACKET_CORRELATION_MATRIX_URL;
-const LAP_CORRELATION_MATRIX_URL = process.env.GET_LAP_CORRELATION_MATRIX_URL;
+  process.env.GET_PACKET_CORRELATION_MATRIX_URL ?? "";
+const LAP_CORRELATION_MATRIX_URL =
+  process.env.GET_LAP_CORRELATION_MATRIX_URL ?? "";
 
 if (!PACKET_CORRELATION_MATRIX_URL) {
-  throw new Error(
+  mlLogger.error(
     "GET_PACKET_CORRELATION_MATRIX_URL environment variable is not defined",
   );
 }
 if (!LAP_CORRELATION_MATRIX_URL) {
-  throw new Error(
+  mlLogger.error(
     "GET_LAP_CORRELATION_MATRIX_URL environment variable is not defined",
   );
 }
