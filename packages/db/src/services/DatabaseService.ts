@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { ITelemetryData } from "@shared/helios-types";
 import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
@@ -243,14 +243,12 @@ export class DatabaseService {
     }
 
     try {
-      const packets =
-        await this.telemetryPacketRepo.createQueryBuilder("packet");
-      packets.where("packet.Timestamp BETWEEN :start AND :end", {
-        end: new Date(endUTCDate),
-        start: new Date(startUTCDate),
+      const packets = await this.telemetryPacketRepo.find({
+        where: {
+          Timestamp: Between(new Date(startUTCDate), new Date(endUTCDate)),
+        },
       });
-
-      return await packets.getMany();
+      return packets;
     } catch (error: unknown) {
       throw new Error(
         "Failed to scan packets between dates: " + (error as Error).message,
