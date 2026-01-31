@@ -7,8 +7,8 @@ import { useAppState } from "@/stores/useAppState";
 
 function BottomInformationContainer() {
   const { currentAppState, setCurrentAppState } = useAppState();
-  const { battery, motor, mppt } = usePIS();
-  const dataArray = [battery, motor, mppt].filter(
+  const { battery, mbms, motor, mppt } = usePIS();
+  const dataArray = [battery, motor, mppt, mbms].filter(
     (data) => data !== undefined,
   ) as I_PIS[];
   const lookupTable = useFavouriteLookupTable(dataArray);
@@ -28,6 +28,18 @@ function BottomInformationContainer() {
     [currentAppState, favourites],
   );
 
+  const formatPathLabel = (path: string) =>
+    path
+      .split(".")
+      .map(
+        (segment) =>
+          segment
+            .replace(/([a-z])([A-Z])/g, "$1 $2") // lowerUpper → lower Upper
+            .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2") // ABCDef → ABC Def
+            .replace(/([a-zA-Z])(\d)/g, "$1 $2"), // Unit3 → Unit 3
+      )
+      .join(" "); // use " " or " →" or " / " if preferred
+
   return (
     <div className="align-middle">
       <div className="flex h-full flex-row flex-wrap justify-evenly gap-4 pt-1 text-center text-base md:gap-2 2xl:text-xl">
@@ -37,7 +49,7 @@ function BottomInformationContainer() {
               className="text-xs hover:cursor-pointer 2xl:text-sm"
               onClick={() => handleRemoveFavourite(favourite)}
             >
-              {favourite}
+              {formatPathLabel(favourite)}
             </div>
             <div className="text-helios">
               {/*Search for the value associated with the favourite name string in the lookupTable */

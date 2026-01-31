@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import I_PIS from "@/objects/PIS/PIS.interface";
+import I_PIS, { I_PISField } from "@/objects/PIS/PIS.interface";
 
 export const useFavouriteLookupTable = (
   dataArray: I_PIS[],
@@ -8,37 +8,37 @@ export const useFavouriteLookupTable = (
   return useMemo(() => {
     const table: Record<string, () => string | number | undefined> = {};
 
-    for (const data of dataArray) {
-      if (!data) continue;
+    const extractFields = (node: unknown, path: string[] = []) => {
+      if (!node || typeof node !== "object") return;
 
-      const flatten = (obj: I_PIS, prefix = "") => {
-        for (const key in obj) {
-          const value = obj[key];
-          const path = prefix ? `${prefix}.${key}` : key;
-
-          if (
-            value !== null &&
-            typeof value === "object" &&
-            !Array.isArray(value)
-          ) {
-            flatten(value, path);
-          } else {
-            table[path] = () => {
-              if (Array.isArray(value)) return undefined;
-              if (typeof value === "boolean") return value ? "T" : "F";
-              if (
-                typeof value === "string" ||
-                typeof value === "number" ||
-                typeof value === "undefined"
-              )
-                return value;
-              return undefined;
-            };
-          }
+      // If node is an array of I_PISField
+      if (
+        Array.isArray(node) &&
+        node.length &&
+        typeof node[0] === "object" &&
+        "name" in node[0] &&
+        "data" in node[0]
+      ) {
+        for (const field of node as I_PISField[]) {
+          if (!field?.name) continue;
+          const fullPath = [...path, field.name].join(".");
+          table[fullPath] = () => {
+            const value = field.data?.[0]?.value;
+            if (typeof value === "boolean") return value ? "T" : "F";
+            return value;
+          };
         }
-      };
+        return;
+      }
 
-      flatten(data);
+      // Traverse nested properties
+      for (const key of Object.keys(node)) {
+        extractFields((node as Record<string, unknown>)[key], [...path, key]);
+      }
+    };
+
+    for (const data of dataArray) {
+      extractFields(data);
     }
 
     return table;

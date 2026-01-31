@@ -97,7 +97,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.InternalCommunicationFault,
             },
           ],
-          isFault: true,
           name: "Internal Communication Fault",
         },
         {
@@ -109,7 +108,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.InternalConversionFault,
             },
           ],
-          isFault: true,
           name: "Internal Conversion Fault",
         },
         {
@@ -120,7 +118,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.WeakCellFault,
             },
           ],
-          isFault: true,
           name: "Weak Cell Fault",
         },
         {
@@ -131,7 +128,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.LowCellVoltageFault,
             },
           ],
-          isFault: true,
           name: "Low Cell Voltage Fault",
         },
         {
@@ -142,7 +138,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.OpenWiringFault,
             },
           ],
-          isFault: true,
           name: "Open Wiring Fault",
         },
         {
@@ -153,7 +148,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.CurrentSensorFault,
             },
           ],
-          isFault: true,
           name: "Current Sensor Fault",
         },
         {
@@ -164,7 +158,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.PackVoltageSensorFault,
             },
           ],
-          isFault: true,
           name: "Pack Voltage Sensor Fault",
         },
         {
@@ -175,7 +168,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.WeakPackFault,
             },
           ],
-          isFault: true,
           name: "Weak Pack Fault",
         },
         {
@@ -186,7 +178,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.VoltageRedundancyFault,
             },
           ],
-          isFault: true,
           name: "Voltage Redundancy Fault",
         },
         {
@@ -197,7 +188,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.FanMonitorFault,
             },
           ],
-          isFault: true,
           name: "Fan Monitor Fault",
         },
         {
@@ -208,7 +198,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.ThermistorFault,
             },
           ],
-          isFault: true,
           name: "Thermistor Fault",
         },
         {
@@ -220,7 +209,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.CanbusCommunicationFault,
             },
           ],
-          isFault: true,
           name: "CANBUS Communications Fault",
         },
         {
@@ -231,7 +219,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.AlwaysOnSupplyFault,
             },
           ],
-          isFault: true,
           name: "Always On Supply Fault",
         },
         {
@@ -243,7 +230,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.HighVoltageIsolationFault,
             },
           ],
-          isFault: true,
           name: "High Voltage Isolation Fault",
         },
         {
@@ -254,7 +240,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.PowerSupply12VFault,
             },
           ],
-          isFault: true,
           name: "12V Power Supply Fault",
         },
         {
@@ -266,7 +251,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.ChargeLimitEnforcementFault,
             },
           ],
-          isFault: true,
           name: "Charge Limit Enforcement Fault",
         },
         {
@@ -278,7 +262,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.ChargerSafetyRelayFault,
             },
           ],
-          isFault: true,
           name: "Charge Safety Relay Fault",
         },
         {
@@ -291,7 +274,6 @@ const Battery = (): I_PIS => {
                   .DischargeLimitEnforcementFault,
             },
           ],
-          isFault: true,
           name: "Discharge Limit Enforcement Fault",
         },
         {
@@ -303,7 +285,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.ChargerSafetyRelayFault,
             },
           ],
-          isFault: true,
           name: "Charger Safety Relay Fault",
         },
         {
@@ -314,7 +295,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.InternalMemoryFault,
             },
           ],
-          isFault: true,
           name: "Internal Memory Fault",
         },
         {
@@ -326,7 +306,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Errors.InternalThermistorFault,
             },
           ],
-          isFault: true,
           name: "Internal Thermistors Fault",
         },
         {
@@ -337,7 +316,6 @@ const Battery = (): I_PIS => {
               value: currentPacket?.BatteryFaults.Errors.InternalLogicFault,
             },
           ],
-          isFault: true,
           name: "Internal Logic Fault",
         },
       ],
@@ -351,7 +329,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Warnings.DclReducedDueToLowSoc,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due To Low Soc",
         },
         {
@@ -364,7 +341,6 @@ const Battery = (): I_PIS => {
                   .DclReducedDueToHighCellResistance,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to HighCell Resistance",
         },
         {
@@ -377,7 +353,6 @@ const Battery = (): I_PIS => {
                   .DclReducedDueToTemperature,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to Temperature",
         },
         {
@@ -390,7 +365,6 @@ const Battery = (): I_PIS => {
                   .DclReducedDueToLowCellVoltage,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to Low Cell Voltage",
         },
         {
@@ -403,7 +377,6 @@ const Battery = (): I_PIS => {
                   .DclReducedDueToLowPackVoltage,
             },
           ],
-          isFault: true,
           name: "Dcl Reduced Due to Low Pack Voltage",
         },
         {
@@ -416,7 +389,6 @@ const Battery = (): I_PIS => {
                   .DclAndCclReducedDueToVoltageFailsafe,
             },
           ],
-          isFault: true,
           name: "Dcl and Ccl Reduced Due to Voltage Fail Safe",
         },
         {
@@ -429,7 +401,6 @@ const Battery = (): I_PIS => {
                   .DclAndCclReducedDueToCommunicationFailsafe,
             },
           ],
-          isFault: true,
           name: "Dcl and Ccl Reduced Due to Communication Fail Safe",
         },
         {
@@ -441,7 +412,6 @@ const Battery = (): I_PIS => {
                 currentPacket?.BatteryFaults.Warnings.CclReducedDueToHighSoc,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to High Soc",
         },
         {
@@ -454,7 +424,6 @@ const Battery = (): I_PIS => {
                   .CclReducedDueToHighCellResistance,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced to High Cell Resistance",
         },
         {
@@ -467,7 +436,6 @@ const Battery = (): I_PIS => {
                   .CclReducedDueToTemperature,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to Temperature",
         },
         {
@@ -480,7 +448,6 @@ const Battery = (): I_PIS => {
                   .CclReducedDueToHighCellVoltage,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to High Cell Voltage",
         },
         {
@@ -493,7 +460,6 @@ const Battery = (): I_PIS => {
                   .CclReducedDueToHighPackVoltage,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to High Pack Voltage",
         },
         {
@@ -506,7 +472,6 @@ const Battery = (): I_PIS => {
                   .CclReducedDueToChargerLatch,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to Charger Latch",
         },
         {
@@ -519,7 +484,6 @@ const Battery = (): I_PIS => {
                   .CclReducedDueToAlternateCurrentLimit,
             },
           ],
-          isFault: true,
           name: "Ccl Reduced Due to Alternate Current Limit",
         },
       ],
