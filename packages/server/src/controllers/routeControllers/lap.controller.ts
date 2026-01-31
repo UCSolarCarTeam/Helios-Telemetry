@@ -14,7 +14,7 @@ export const getLapData = async (request: Request, response: Response) => {
     response,
   );
   try {
-    const lapData = await backendController.dynamoDB.getLapData();
+    const lapData = await backendController.timescaleDB.getLapData();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
