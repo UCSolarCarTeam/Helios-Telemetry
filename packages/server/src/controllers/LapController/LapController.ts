@@ -208,25 +208,21 @@ export class LapController implements LapControllerType {
       );
 
       const lapData: ILapData = {
+        AmpHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
+        AveragePackCurrent: averagePackCurrent,
+        AverageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
+        BatterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
+          amphoursValue,
+          averagePackCurrent,
+        ),
+        Distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+        EnergyConsumed: this.getEnergyConsumption(this.lastLapPackets),
+        LapTime: this.calculateLapTime(this.lastLapPackets),
+        NetPowerOut: this.netPower(this.lastLapPackets),
         Rfid: packet.Pi.Rfid,
-        data: {
-          ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
-          averagePackCurrent: averagePackCurrent,
-          averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
-          batterySecondsRemaining:
-            this.getSecondsRemainingUntilChargedOrDepleted(
-              amphoursValue,
-              averagePackCurrent,
-            ),
-          distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
-          energyConsumed: this.getEnergyConsumption(this.lastLapPackets),
-          lapTime: this.calculateLapTime(this.lastLapPackets),
-          netPowerOut: this.netPower(this.lastLapPackets),
-          timeStamp: packet.TimeStamp,
-          totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
-          totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
-        },
-        timestamp: packet.TimeStamp,
+        TimeStamp: packet.TimeStamp,
+        TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
+        TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
 
       logger.info("Lap data inserted into database: ", lapData);
