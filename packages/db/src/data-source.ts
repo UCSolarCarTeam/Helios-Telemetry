@@ -37,9 +37,6 @@ export const AppDataSource = new DataSource({
   username: process.env.DATABASE_USERNAME,
   ...(isProd && {
     ssl: {
-      ca: process.env.CHAIN,
-      cert: process.env.CERTIFICATE,
-      key: process.env.PRIVATE_KEY,
       rejectUnauthorized: false,
     },
   }),
