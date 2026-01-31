@@ -69,8 +69,12 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     }, milliseconds);
   }
 
-  public publishLapData(lapdata: ILapData) {
-    this.client.publish(lapdataTopic, JSON.stringify(lapdata));
+  public async publishLapData(lapdata: ILapData) {
+    try {
+      this.client.publish(lapdataTopic, JSON.stringify(lapdata));
+    } catch (error) {
+      logger.error("Error publishing lap data: ", error);
+    }
   }
 
   public async connectToAedes(options: IClientOptions) {
