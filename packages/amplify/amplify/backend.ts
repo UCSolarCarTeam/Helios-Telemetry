@@ -351,9 +351,21 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerCertificate,
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
-    DATABASE_URL: ecs.Secret.fromSecretsManager(
+    DATABASE_HOST: ecs.Secret.fromSecretsManager(
       TimescaleConnectionString,
-      "DATABASE_URL",
+      "DATABASE_HOST",
+    ),
+    DATABASE_PASSWORD: ecs.Secret.fromSecretsManager(
+      TimescaleConnectionString,
+      "DATABASE_PASSWORD",
+    ),
+    DATABASE_PORT: ecs.Secret.fromSecretsManager(
+      TimescaleConnectionString,
+      "DATABASE_PORT",
+    ),
+    DATABASE_USERNAME: ecs.Secret.fromSecretsManager(
+      TimescaleConnectionString,
+      "DATABASE_USERNAME",
     ),
     MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
