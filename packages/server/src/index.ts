@@ -12,6 +12,7 @@ import "module-alias";
 
 import driverRouter from "@/routes/driver.route";
 import healthRouter from "@/routes/health.route";
+import machineLearningRouter from "@/routes/machineLearning.route";
 import playbackRouter from "@/routes/playback.route";
 
 import {
@@ -45,6 +46,7 @@ app.use("/", healthRouter);
 app.use("/", playbackRouter);
 app.use("/", lapRouter);
 app.use("/", driverRouter);
+app.use("/", machineLearningRouter);
 
 export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
