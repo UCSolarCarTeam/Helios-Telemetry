@@ -1,5 +1,5 @@
 export interface GenericResponse {
-  httpsStatusCode?: number;
+  httpStatusCode?: number;
   requestId?: string;
   message?: string;
 }
