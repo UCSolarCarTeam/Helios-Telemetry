@@ -374,22 +374,22 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       "DATABASE_USERNAME",
     ),
 
-    GET_LAP_CORRELATION_MATRIX_URL: ecs.Secret.fromSecretsManager(
+    LAP_CORRELATION_MATRIX_FUNCTION_NAME: ecs.Secret.fromSecretsManager(
       MLCorrelationMatrixSecrets,
-      "GET_LAP_CORRELATION_MATRIX_URL",
+      "LAP_CORRELATION_MATRIX_FUNCTION_NAME",
     ),
-    GET_PACKET_CORRELATION_MATRIX_URL: ecs.Secret.fromSecretsManager(
-      MLCorrelationMatrixSecrets,
-      "GET_PACKET_CORRELATION_MATRIX_URL",
-    ),
-
     MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "password",
     ),
+
     MQTT_USERNAME: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "username",
+    ),
+    PACKET_CORRELATION_MATRIX_FUNCTION_NAME: ecs.Secret.fromSecretsManager(
+      MLCorrelationMatrixSecrets,
+      "PACKET_CORRELATION_MATRIX_FUNCTION_NAME",
     ),
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,

@@ -2820,7 +2820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-lambda@npm:^3":
+"@aws-sdk/client-lambda@npm:^3, @aws-sdk/client-lambda@npm:^3.980.0":
   version: 3.980.0
   resolution: "@aws-sdk/client-lambda@npm:3.980.0"
   dependencies:
@@ -22693,6 +22693,7 @@ __metadata:
   resolution: "server@workspace:packages/server"
   dependencies:
     "@aws-sdk/client-dynamodb": "npm:^3.682.0"
+    "@aws-sdk/client-lambda": "npm:^3.980.0"
     "@aws-sdk/lib-dynamodb": "npm:^3.682.0"
     "@faker-js/faker": "npm:^9.0.3"
     "@godaddy/terminus": "npm:^4.12.1"
