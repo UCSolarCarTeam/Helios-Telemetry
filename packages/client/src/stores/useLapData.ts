@@ -5,31 +5,25 @@ import { notifications } from "@mantine/notifications";
 import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 
 export const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
+  AmpHours: parseFloat(lapPacket.AmpHours.toFixed(2)),
+  AveragePackCurrent: parseFloat(lapPacket.AveragePackCurrent.toFixed(2)),
+  AverageSpeed: parseFloat(lapPacket.AverageSpeed.toFixed(2)),
+  BatterySecondsRemaining: parseFloat(
+    lapPacket.BatterySecondsRemaining.toFixed(2),
+  ),
+  Distance: parseFloat(lapPacket.Distance.toFixed(2)),
+  EnergyConsumed: parseFloat(lapPacket.EnergyConsumed.toFixed(2)),
+  LapTime: parseFloat(lapPacket.LapTime.toFixed(2)),
+  NetPowerOut: parseFloat(lapPacket.NetPowerOut.toFixed(2)),
   Rfid: lapPacket.Rfid,
-  data: {
-    ampHours: parseFloat(lapPacket.data.ampHours.toFixed(2)),
-    averagePackCurrent: parseFloat(
-      lapPacket.data.averagePackCurrent.toFixed(2),
-    ),
-    averageSpeed: parseFloat(lapPacket.data.averageSpeed.toFixed(2)),
-    batterySecondsRemaining: parseFloat(
-      lapPacket.data.batterySecondsRemaining.toFixed(2),
-    ),
-    distance: parseFloat(lapPacket.data.distance.toFixed(2)),
-    energyConsumed: parseFloat(lapPacket.data.energyConsumed.toFixed(2)),
-    lapTime: parseFloat(lapPacket.data.lapTime.toFixed(2)),
-    netPowerOut: parseFloat(lapPacket.data.netPowerOut.toFixed(2)),
-    timeStamp: new Date(lapPacket.data.timeStamp).toLocaleString("en-US"),
-    totalPowerIn: parseFloat(lapPacket.data.totalPowerIn.toFixed(2)),
-    totalPowerOut: parseFloat(lapPacket.data.totalPowerOut.toFixed(2)),
-  },
-  timestamp: lapPacket.timestamp,
+  TimeStamp: new Date(lapPacket.TimeStamp).toLocaleString("en-US"),
+  TotalPowerIn: parseFloat(lapPacket.TotalPowerIn.toFixed(2)),
+  TotalPowerOut: parseFloat(lapPacket.TotalPowerOut.toFixed(2)),
 });
 
 interface LapDataState {
   formatLapData: (lapPacket: ILapData) => IFormattedLapData;
   lapData: IFormattedLapData[];
-  setLapData: (data: IFormattedLapData[]) => void;
   addLapData: (data: IFormattedLapData) => void;
   clearLapData: () => void;
   fetchLapData: () => Promise<void>;
@@ -51,9 +45,9 @@ export const useLapDataStore = create<LapDataState>((set) => ({
         throw new Error("Invalid API response format");
       }
 
-      set({
-        lapData: response.data.data.map(formatLapData),
-      });
+      const formattedLaps: IFormattedLapData[] =
+        response.data.data.map(formatLapData);
+      set({ lapData: formattedLaps });
     } catch (error) {
       notifications.show({
         color: "red",
@@ -64,5 +58,4 @@ export const useLapDataStore = create<LapDataState>((set) => ({
   },
   formatLapData: formatLapData,
   lapData: [],
-  setLapData: (data) => set({ lapData: data }),
 }));

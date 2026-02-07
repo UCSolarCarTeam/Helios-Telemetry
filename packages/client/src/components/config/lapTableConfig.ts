@@ -9,7 +9,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 const columnHelper = createColumnHelper<IFormattedLapData>();
 
 export const columns = [
-  columnHelper.accessor("data.timeStamp", {
+  columnHelper.accessor("TimeStamp", {
     cell: (info) => info.getValue(),
     header: "Time Stamp",
     sortingFn: (rowA, rowB, columnId) => {
@@ -36,44 +36,44 @@ export const columns = [
       return dateB - dateA;
     },
   }),
-  columnHelper.accessor("data.ampHours", {
+  columnHelper.accessor("AmpHours", {
     cell: (info) => info.getValue(),
     header: "Amp Hours",
   }),
-  columnHelper.accessor("data.averagePackCurrent", {
+  columnHelper.accessor("AveragePackCurrent", {
     cell: (info) => info.getValue(),
     header: "Average Pack Current",
   }),
-  columnHelper.accessor("data.averageSpeed", {
+  columnHelper.accessor("AverageSpeed", {
     cell: (info) => info.getValue(),
     header: "Average Speed",
   }),
-  columnHelper.accessor("data.batterySecondsRemaining", {
+  columnHelper.accessor("BatterySecondsRemaining", {
     cell: (info) => info.getValue(),
     header: "Battery Seconds Remaining",
   }),
-  columnHelper.accessor("data.distance", {
+  columnHelper.accessor("Distance", {
     cell: (info) => info.getValue(),
     header: "Distance",
   }),
-  columnHelper.accessor("data.energyConsumed", {
+  columnHelper.accessor("EnergyConsumed", {
     cell: (info) => info.getValue(),
     header: "Energy Consumed",
   }),
-  columnHelper.accessor("data.lapTime", {
+  columnHelper.accessor("LapTime", {
     cell: (info) => info.getValue(),
     header: "Lap Time",
   }),
-  columnHelper.accessor("data.netPowerOut", {
+  columnHelper.accessor("NetPowerOut", {
     cell: (info) => info.getValue(),
     header: "Net Power Out",
   }),
 
-  columnHelper.accessor("data.totalPowerIn", {
+  columnHelper.accessor("TotalPowerIn", {
     cell: (info) => info.getValue(),
     header: "Total Power In",
   }),
-  columnHelper.accessor("data.totalPowerOut", {
+  columnHelper.accessor("TotalPowerOut", {
     cell: (info) => info.getValue(),
     header: "Total Power Out",
   }),
