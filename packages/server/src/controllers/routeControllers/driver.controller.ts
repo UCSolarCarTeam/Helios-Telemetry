@@ -15,7 +15,7 @@ export const getDrivers = async (request: Request, response: Response) => {
   );
 
   try {
-    const driverData = await backendController.dynamoDB.getDrivers();
+    const driverData = await backendController.timescaleDB.getDrivers();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
@@ -44,7 +44,7 @@ export const getDriverLaps = async (request: Request, response: Response) => {
 
   try {
     const Rfid = request.params.Rfid;
-    const driverLaps = await backendController.dynamoDB.getDriverLaps(Rfid);
+    const driverLaps = await backendController.timescaleDB.getDriverLaps(Rfid);
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
@@ -82,7 +82,7 @@ export const updateDriverInfo = async (
   request: Request,
   response: Response,
 ) => {
-  const { name, Rfid } = request.body;
+  const { Rfid, name } = request.body;
 
   if (!name || !Rfid) {
     return response
@@ -100,10 +100,8 @@ export const updateDriverInfo = async (
   );
 
   try {
-    const responseMessage = await backendController.dynamoDB.updateDriverInfo(
-      Rfid,
-      name,
-    );
+    const responseMessage =
+      await backendController.timescaleDB.updateDriverInfo(Rfid, name);
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {

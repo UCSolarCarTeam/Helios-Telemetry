@@ -158,12 +158,13 @@ export class LapController implements LapControllerType {
   // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.dynamoDB.insertLapData(lapData);
+    await this.backendController.mqtt.publishLapData(lapData);
+    await this.backendController.timescaleDB.insertLapData(lapData);
   }
 
   // this function is for calling when lap completes via geofence
   public async handleGeofenceLap(rfid: string, timestamp: number) {
-    await this.backendController.dynamoDB.insertIntoGpsLapCountTable(
+    await this.backendController.timescaleDB.insertIntoGpsLapCountTable(
       rfid,
       timestamp,
     );
