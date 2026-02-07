@@ -59,7 +59,7 @@ export function useMLCorrelationMatrix({
   const query = useQuery({
     // Only enable query when theme is resolved
     // This prevents unnecessary fetches before theme is ready
-    enabled: !!resolvedTheme && resolvedTheme !== undefined,
+    enabled: !!resolvedTheme,
 
     // Fetch function - uses axios with 30s timeout
     queryFn: () => fetchCorrelationMatrix(plotType),
