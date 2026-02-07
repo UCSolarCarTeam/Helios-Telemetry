@@ -155,17 +155,22 @@ function PlaybackDatePicker() {
     }
 
     try {
-      const response = await axios.get(`${prodURL}/packetsBetween`, {
-        params: { endTime: endTimeUTC, startTime: startTimeUTC },
-      });
+      const response = await axios.get<IPlaybackDataResponse[]>(
+        `${prodURL}/packetsBetween`,
+        {
+          params: { endTime: endTimeUTC, startTime: startTimeUTC },
+        },
+      );
 
-      const extractedData: ITelemetryData[] = response.data.data.map(
+      const extractedData: ITelemetryData[] = response.data.map(
         (item: IPlaybackDataResponse) => item.data,
       );
 
       setPlaybackData(extractedData);
     } catch (error) {
-      throw new Error(`Error fetching playback data: ${error}`);
+      throw new Error(
+        `Error fetching playback data: ${error instanceof Error ? error.message : String(error)}`,
+      );
     } finally {
       setLoading(false);
     }
@@ -178,7 +183,7 @@ function PlaybackDatePicker() {
       currentAppState.playbackDateTime?.date
     ) {
       setPlaybackDateTime(currentAppState.playbackDateTime);
-      fetchPlaybackData();
+      void fetchPlaybackData();
     }
   }, [currentAppState.playbackSwitch]);
 

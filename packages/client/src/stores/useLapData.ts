@@ -45,7 +45,7 @@ export const useLapDataStore = create<LapDataState>((set) => ({
 
   fetchLapData: async () => {
     try {
-      const response = await axios.get(`${prodURL}/laps`);
+      const response = await axios.get<{ data: ILapData[] }>(`${prodURL}/laps`);
 
       if (!Array.isArray(response.data?.data)) {
         throw new Error("Invalid API response format");
@@ -57,7 +57,7 @@ export const useLapDataStore = create<LapDataState>((set) => ({
     } catch (error) {
       notifications.show({
         color: "red",
-        message: "Failed to fetch lap data from the server.",
+        message: `Failed to fetch lap data from the server: ${error instanceof Error ? error.message : "Unknown error"}`,
         title: "Error",
       });
     }

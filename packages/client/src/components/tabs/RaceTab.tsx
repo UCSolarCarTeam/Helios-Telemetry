@@ -9,7 +9,7 @@ import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { type IFormattedLapData, prodURL } from "@shared/helios-types";
-import { IDriverData } from "@shared/helios-types/src/types";
+import { IDriverData, ILapData } from "@shared/helios-types/src/types";
 import {
   SortingState,
   getCoreRowModel,
@@ -61,8 +61,8 @@ function RaceTab() {
   );
 
   // copy rfid to clipboard
-  const handleCopy = () => {
-    navigator.clipboard.writeText(String(Rfid));
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(String(Rfid));
     setCopy(1);
     setTimeout(() => setCopy(0), 5000);
     onCopied();
@@ -88,7 +88,7 @@ function RaceTab() {
         setFilteredLaps(lapData);
       } else {
         await fetchFilteredLaps(Number(newRFID)).then((response) => {
-          const formattedData = response.data.map(formatLapData);
+          const formattedData = response.map(formatLapData);
           setFilteredLaps(formattedData);
         });
       }
@@ -99,7 +99,7 @@ function RaceTab() {
   // fetch the driver names from dynamo
   const fetchDriverNames = async () => {
     try {
-      const response = await axios.get(`${prodURL}/drivers`);
+      const response = await axios.get<IDriverData[]>(`${prodURL}/drivers`);
 
       return response.data;
     } catch (error) {
@@ -110,32 +110,37 @@ function RaceTab() {
   // get the driver laps based on the selected rfid
   const fetchFilteredLaps = async (Rfid: number) => {
     try {
-      const response = await axios.get(`${prodURL}/driver/${Rfid}`);
+      const response = await axios.get<ILapData[]>(`${prodURL}/driver/${Rfid}`);
       return response.data;
     } catch (error) {
       setFilteredLaps([]);
-      return { error: "Error fetching driver laps" };
+      return [];
     }
   };
 
   // fetching driver names when component mounts
   useEffect(() => {
-    fetchLapData();
-    fetchDriverNames()
-      .then((response) => {
+    void (async (): Promise<void> => {
+      try {
+        await fetchLapData();
+
+        const response = await fetchDriverNames();
+
         if (!Array.isArray(response)) {
           setDriverData([]);
           return;
         }
+
         const driverData = response.map((driver: IDriverData) => ({
           Rfid: driver.Rfid,
           driver: driver.driver,
         }));
+
         setDriverData(driverData);
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+      } catch (error) {
+        setDriverData([]);
+      }
+    })();
   }, []);
 
   return (

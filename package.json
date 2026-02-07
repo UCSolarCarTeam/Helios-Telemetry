@@ -30,12 +30,16 @@
     "schema:drop": "lerna run schema:drop --scope=db"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@next/eslint-plugin-next": "^16.1.6",
     "@types/eslint": "^9.6.0",
     "eslint": "9.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-sort-destructure-keys": "^2.0.0",
     "eslint-plugin-sort-keys": "^2.3.5",
     "husky": "^8.0.3",
@@ -62,9 +66,5 @@
   "resolutions": {
     "nx": "20.6.4"
   },
-  "packageManager": "yarn@4.6.0",
-  "dependencies": {
-    "@next/eslint-plugin-next": "^16.1.6",
-    "eslint-plugin-react": "^7.37.5"
-  }
+  "packageManager": "yarn@4.6.0"
 }
