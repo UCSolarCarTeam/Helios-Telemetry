@@ -500,7 +500,7 @@ function calculateLapStats(packets: TelemetryPacket[]) {
     }, 0) / packets.length
   );
   
-  const netPowerOut = totalPowerIn - totalPowerOut;
+  const netPowerOut = totalPowerIn - totalPowerOut; // Note: This matches LapController.netPower() calculation
   const energyConsumed = lapTime * netPowerOut;
   
   // Calculate battery seconds remaining
