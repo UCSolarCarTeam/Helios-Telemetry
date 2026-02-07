@@ -516,6 +516,20 @@ const dynamoDbAccessPolicy = new iam.PolicyStatement({
 // Attach the policy to the ECS Task Role
 TelemetryECSTaskDefinition.taskRole.addToPrincipalPolicy(dynamoDbAccessPolicy);
 
+// Grant Lambda invocation permissions for ML correlation matrix functions
+const lambdaInvokePolicy = new iam.PolicyStatement({
+  actions: ["lambda:InvokeFunction"],
+  effect: iam.Effect.ALLOW,
+  resources: [
+    // Allow invocation of the specific Lambda functions
+    `arn:aws:lambda:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:function:get-packet-correlation-matrix`,
+    `arn:aws:lambda:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:function:get-lap-correlation-matrix`,
+  ],
+});
+
+// Attach the Lambda invoke policy to the ECS Task Role
+TelemetryECSTaskDefinition.taskRole.addToPrincipalPolicy(lambdaInvokePolicy);
+
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
 const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(
   TelemetryBackendStack,
