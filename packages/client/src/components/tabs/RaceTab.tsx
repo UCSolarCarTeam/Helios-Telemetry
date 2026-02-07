@@ -36,11 +36,11 @@ function RaceTab() {
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
-  const { fetchLapData, formatLapData, lapData } = useLapDataStore();
+  const { formatLapData, lapData } = useLapDataStore();
   const [filteredLaps, setFilteredLaps] =
     useState<IFormattedLapData[]>(lapData);
   const [sorting, setSorting] = useState<SortingState>([
-    { desc: false, id: "data_timeStamp" },
+    { desc: false, id: "TimeStamp" },
   ]);
 
   const table = useReactTable({
@@ -50,7 +50,7 @@ function RaceTab() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      sorting: [{ desc: false, id: "data_timeStamp" }],
+      sorting: [{ desc: false, id: "TimeStamp" }],
     },
     onSortingChange: setSorting,
     state: { sorting },
@@ -122,8 +122,6 @@ function RaceTab() {
   useEffect(() => {
     void (async (): Promise<void> => {
       try {
-        await fetchLapData();
-
         const response = await fetchDriverNames();
 
         if (!Array.isArray(response)) {
