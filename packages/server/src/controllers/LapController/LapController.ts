@@ -28,14 +28,14 @@ const logger = createLightweightApplicationLogger("LapController.ts");
  *
  * this controller is responsible for handling lap data, including:
  * - setting the finish line location (do we even do this anymore)
- * - handling sending lap data to dynamo based on if a lap has been finished or not
+ * - handling sending lap data to timescale based on if a lap has been finished or not
  * - also has other helper functions that are used to calculate the lap data
  *
  * basically the main thing function is handlePacket() which creates a lapData object
- * and sends it to dynamo only when a lap has been completed
+ * and sends it to timescale only when a lap has been completed
  *
  * then handleLapData() is called to broadcast the lap data to the frontend for real time changes
- * as well as to insert the lap data into the dynamo database
+ * as well as to insert the lap data into the timescale database
  */
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
@@ -158,12 +158,13 @@ export class LapController implements LapControllerType {
   // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
     await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.dynamoDB.insertLapData(lapData);
+    await this.backendController.mqtt.publishLapData(lapData);
+    await this.backendController.timescaleDB.insertLapData(lapData);
   }
 
   // this function is for calling when lap completes via geofence
   public async handleGeofenceLap(rfid: string, timestamp: number) {
-    await this.backendController.dynamoDB.insertIntoGpsLapCountTable(
+    await this.backendController.timescaleDB.insertIntoGpsLapCountTable(
       rfid,
       timestamp,
     );
@@ -207,25 +208,21 @@ export class LapController implements LapControllerType {
       );
 
       const lapData: ILapData = {
+        AmpHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
+        AveragePackCurrent: averagePackCurrent,
+        AverageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
+        BatterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
+          amphoursValue,
+          averagePackCurrent,
+        ),
+        Distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+        EnergyConsumed: this.getEnergyConsumption(this.lastLapPackets),
+        LapTime: this.calculateLapTime(this.lastLapPackets),
+        NetPowerOut: this.netPower(this.lastLapPackets),
         Rfid: packet.Pi.Rfid,
-        data: {
-          ampHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
-          averagePackCurrent: averagePackCurrent,
-          averageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
-          batterySecondsRemaining:
-            this.getSecondsRemainingUntilChargedOrDepleted(
-              amphoursValue,
-              averagePackCurrent,
-            ),
-          distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
-          energyConsumed: this.getEnergyConsumption(this.lastLapPackets),
-          lapTime: this.calculateLapTime(this.lastLapPackets),
-          netPowerOut: this.netPower(this.lastLapPackets),
-          timeStamp: packet.TimeStamp,
-          totalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
-          totalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
-        },
-        timestamp: packet.TimeStamp,
+        TimeStamp: packet.TimeStamp,
+        TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
+        TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
       };
 
       logger.info("Lap data inserted into database: ", lapData);

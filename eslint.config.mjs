@@ -98,7 +98,7 @@ export default [
       "react/jsx-sort-props": "error",
       "react/sort-comp": "off",
       "react/react-in-jsx-scope": "off",
-      "@next/next/no-html-link-for-pages": ["error", "packages/client/src/pages"],
+      "@next/next/no-html-link-for-pages": ["error", "packages/client/src"],
     },
   },
 

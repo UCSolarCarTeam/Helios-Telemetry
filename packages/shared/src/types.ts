@@ -419,21 +419,18 @@ export interface IDriverData {
 }
 
 export interface ILapData {
-  data: {
-    ampHours: number;
-    averagePackCurrent: number;
-    averageSpeed: number;
-    batterySecondsRemaining: number;
-    distance: number;
-    energyConsumed: number;
-    lapTime: number;
-    netPowerOut: number;
-    timeStamp: number;
-    totalPowerIn: number;
-    totalPowerOut: number;
-  };
+  AmpHours: number;
+  AveragePackCurrent: number;
+  AverageSpeed: number;
+  BatterySecondsRemaining: number;
+  Distance: number;
+  EnergyConsumed: number;
+  LapTime: number;
+  NetPowerOut: number;
+  TimeStamp: number;
+  TotalPowerIn: number;
+  TotalPowerOut: number;
   Rfid: string;
-  timestamp: number;
 }
 
 export class LapData {
@@ -494,19 +491,16 @@ export interface IPlaybackDynamoResponse {
 }
 
 export interface IFormattedLapData {
-  data: {
-    ampHours: number;
-    averagePackCurrent: number;
-    averageSpeed: number;
-    batterySecondsRemaining: number;
-    distance: number;
-    energyConsumed: number;
-    lapTime: number;
-    netPowerOut: number;
-    timeStamp: string;
-    totalPowerIn: number;
-    totalPowerOut: number;
-  };
-  timestamp: number;
+  AmpHours: number;
+  AveragePackCurrent: number;
+  AverageSpeed: number;
+  BatterySecondsRemaining: number;
+  Distance: number;
+  EnergyConsumed: number;
+  LapTime: number;
+  NetPowerOut: number;
+  TimeStamp: string;
+  TotalPowerIn: number;
+  TotalPowerOut: number;
   Rfid: string;
 }

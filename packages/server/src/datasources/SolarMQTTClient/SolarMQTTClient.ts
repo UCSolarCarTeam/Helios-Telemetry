@@ -9,11 +9,12 @@ import {
 
 import { createLightweightApplicationLogger } from "@/utils/logger";
 
-import { validateTelemetryData } from "@shared/helios-types";
+import { ILapData, validateTelemetryData } from "@shared/helios-types";
 
 const {
   carConnect,
   carDisconnect,
+  lapdataTopic,
   packetTopic,
   pingTopic,
   pongTopic,
@@ -50,7 +51,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         this.backendController.carLatency?.toString() || "-1";
       try {
         const driverName = this.latestRfid
-          ? await this.backendController.dynamoDB.getDriverNameUsingRfid(
+          ? await this.backendController.timescaleDB.getDriverNameUsingRfid(
               this.latestRfid,
             )
           : "Rfid not scanned";
@@ -66,6 +67,14 @@ export class SolarMQTTClient implements SolarMQTTClientType {
         logger.error("Error fetching driver name using Rfid: ", error.message);
       }
     }, milliseconds);
+  }
+
+  public async publishLapData(lapdata: ILapData) {
+    try {
+      this.client.publish(lapdataTopic, JSON.stringify(lapdata));
+    } catch (error) {
+      logger.error("Error publishing lap data: ", error);
+    }
   }
 
   public async connectToAedes(options: IClientOptions) {
