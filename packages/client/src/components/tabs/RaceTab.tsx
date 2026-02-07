@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { columns } from "@/components/config/lapTableConfig";
 import ColumnFilters from "@/components/molecules/RaceTabMolecules/ColumnFilters";
@@ -36,12 +36,17 @@ function RaceTab() {
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
-  const { formatLapData, lapData } = useLapDataStore();
-  const [filteredLaps, setFilteredLaps] =
-    useState<IFormattedLapData[]>(lapData);
+  const { fetchLapData, lapData } = useLapDataStore();
   const [sorting, setSorting] = useState<SortingState>([
     { desc: false, id: "TimeStamp" },
   ]);
+
+  const filteredLaps = useMemo(() => {
+    if (Rfid === "" || Rfid === "Show all data") {
+      return lapData;
+    }
+    return lapData.filter((lap) => String(lap.Rfid) === String(Rfid));
+  }, [Rfid, lapData]);
 
   const table = useReactTable({
     columns,
@@ -85,15 +90,10 @@ function RaceTab() {
       setCopy(0);
 
       if (Number.isNaN(newRFID) || newRFID === "Show all data") {
-        setFilteredLaps(lapData);
-      } else {
-        await fetchFilteredLaps(Number(newRFID)).then((response) => {
-          const formattedData = response.data.map(formatLapData);
-          setFilteredLaps(formattedData);
-        });
+        setDriverRFID("");
       }
     },
-    [formatLapData, lapData],
+    [],
   );
 
   // fetch the driver names from dynamo
@@ -113,13 +113,13 @@ function RaceTab() {
       const response = await axios.get(`${prodURL}/driver/${Rfid}`);
       return response.data;
     } catch (error) {
-      setFilteredLaps([]);
       return { error: "Error fetching driver laps" };
     }
   };
 
-  // fetching driver names when component mounts
+  // fetching driver names and lap data when component mounts
   useEffect(() => {
+    fetchLapData();
     fetchDriverNames()
       .then((response) => {
         const driverData = response.data.map((driver: IDriverData) => ({
