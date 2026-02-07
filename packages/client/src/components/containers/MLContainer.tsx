@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import type { PlotParams } from "react-plotly.js";
@@ -26,9 +27,9 @@ export default function MLContainer({
   useEffect(() => {
     const fetchPlot = async () => {
       try {
-        const response = await fetch(plotType);
-        const graph = await response.json();
-        const data = JSON.parse(graph) as PlotParams;
+        // TODO: check to see if data is being parsed correctly.
+        const response = await axios.get<string>(plotType);
+        const data = JSON.parse(response.data) as PlotParams;
         const layout: PlotParams["layout"] = {
           autosize: true,
           font: {
@@ -49,7 +50,8 @@ export default function MLContainer({
         setPlot({ error: true });
       }
     };
-    fetchPlot();
+
+    void fetchPlot();
   }, [plotType, resolvedTheme]);
 
   if (!plot || !resolvedTheme || resolvedTheme === undefined) {

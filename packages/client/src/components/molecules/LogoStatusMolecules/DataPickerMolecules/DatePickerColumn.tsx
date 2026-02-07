@@ -30,7 +30,7 @@ const DataPickerColumn = ({
     React.SetStateAction<IPlaybackDateTime>
   >;
   playbackDateTime: IPlaybackDateTime;
-  fetchPlaybackData: () => void;
+  fetchPlaybackData: () => Promise<void>;
 }) => {
   const { setCurrentAppState } = useAppState();
 
@@ -79,7 +79,7 @@ const DataPickerColumn = ({
       },
     }));
     setConfirmedPlaybackDateTime(playbackDateTime);
-    fetchPlaybackData();
+    void fetchPlaybackData();
   };
   // Handle TimeInput change to update startTime or endTime
   const handleTimeChange = (

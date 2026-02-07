@@ -1,3 +1,4 @@
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { prodURL } from "@shared/helios-types";
@@ -9,16 +10,16 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const result = await fetch(BACKEND_ROUTE);
+    // TODO: check to see if this is parsing correctly (json vs string)
+    const response = await axios.get<string>(BACKEND_ROUTE);
 
-    if (!result.ok) {
-      const errorData = await result.json().catch(() => ({}));
-      return res.status(result.status).json({
-        error: errorData.error || "Failed to fetch correlation matrix data",
+    if (!response.status || response.status !== 200) {
+      return res.status(response.status).json({
+        error: "Failed to fetch correlation matrix data",
       });
     }
 
-    const graph = await result.json();
+    const graph = response.data;
     res.status(200).json(graph);
   } catch (err) {
     res.status(500).json({

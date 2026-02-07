@@ -2,7 +2,113 @@
 
 import { useCallback, useEffect } from "react";
 
-import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
+import { APPUNITS, CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
+
+type AppStateStore = ReturnType<typeof useAppState>;
+type AppState = AppStateStore extends { currentAppState: infer T } ? T : never;
+
+type SerializedPlaybackDateTime = {
+  date: string | null;
+  endTime: string | null;
+  startTime: string | null;
+};
+
+type PersistedSettings = Partial<
+  Pick<AppState, "appUnits" | "connectionType" | "lapCoords"> & {
+    playbackDateTime: SerializedPlaybackDateTime | null;
+  }
+>;
+
+const DEFAULT_FAVOURITES = [
+  "Motor Temp",
+  "Battery Cell Voltage",
+  "Vehicle Velocity",
+  "Pack Voltage",
+  "Pack Current",
+  "Battery Average Voltage",
+];
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const parseJson = <T,>(value: string): T | null => {
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return null;
+  }
+};
+
+const parseFavourites = (value: string | null): string[] | null => {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = parseJson<unknown>(value);
+
+  if (
+    Array.isArray(parsed) &&
+    parsed.every((item) => typeof item === "string")
+  ) {
+    return parsed;
+  }
+
+  return null;
+};
+
+const parseAppUnits = (value: unknown): AppState["appUnits"] | null =>
+  Object.values(APPUNITS).includes(value as APPUNITS)
+    ? (value as AppState["appUnits"])
+    : null;
+
+const parseConnectionType = (
+  value: unknown,
+): AppState["connectionType"] | null =>
+  Object.values(CONNECTIONTYPES).includes(value as CONNECTIONTYPES)
+    ? (value as AppState["connectionType"])
+    : null;
+
+const parseCoords = (value: unknown): AppState["lapCoords"] | null => {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const { lat, long } = value;
+
+  if (typeof lat !== "number" || typeof long !== "number") {
+    return null;
+  }
+
+  return { lat, long } as AppState["lapCoords"];
+};
+
+const parseDateValue = (value: unknown): Date | null => {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const timestamp = Date.parse(value);
+
+  return Number.isNaN(timestamp) ? null : new Date(timestamp);
+};
+
+const parsePlaybackDateTime = (
+  value: unknown,
+): AppState["playbackDateTime"] => {
+  if (!isRecord(value)) {
+    return {
+      date: null,
+      endTime: null,
+      startTime: null,
+    } as AppState["playbackDateTime"];
+  }
+
+  return {
+    date: parseDateValue(value.date),
+    endTime: parseDateValue(value.endTime),
+    startTime: parseDateValue(value.startTime),
+  } as AppState["playbackDateTime"];
+};
 
 export default function AppStateEffects() {
   const { currentAppState, setCurrentAppState } = useAppState();
@@ -36,7 +142,6 @@ export default function AppStateEffects() {
         loading: !currentAppState.radioConnected,
       }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     currentAppState.socketConnected,
     currentAppState.radioConnected,
@@ -56,49 +161,34 @@ export default function AppStateEffects() {
     const savedSettings = localStorage.getItem("settings");
     const favourites = localStorage.getItem("favourites");
 
-    if (savedSettings) {
-      const parsedSettings = JSON.parse(savedSettings);
-
-      const parsedFavourites = favourites
-        ? (JSON.parse(favourites) as string[])
-        : [
-            "Motor Temp",
-            "Battery Cell Voltage",
-            "Vehicle Velocity",
-            "Pack Voltage",
-            "Pack Current",
-            "Battery Average Voltage",
-          ];
-
-      const hasPlaybackDateTime = !!parsedSettings.playbackDateTime;
-
-      const parsedPlaybackDateTime = hasPlaybackDateTime
-        ? {
-            date: parsedSettings.playbackDateTime!.date
-              ? new Date(parsedSettings.playbackDateTime!.date)
-              : null,
-            endTime: parsedSettings.playbackDateTime!.endTime
-              ? new Date(parsedSettings.playbackDateTime!.endTime)
-              : null,
-            startTime: parsedSettings.playbackDateTime!.startTime
-              ? new Date(parsedSettings.playbackDateTime!.startTime)
-              : null,
-          }
-        : {
-            date: null,
-            endTime: null,
-            startTime: null,
-          };
-
-      setCurrentAppState((prev) => ({
-        ...prev,
-        appUnits: parsedSettings.appUnits ?? prev.appUnits,
-        connectionType: parsedSettings.connectionType ?? prev.connectionType,
-        favourites: parsedFavourites,
-        lapCoords: parsedSettings.lapCoords ?? prev.lapCoords,
-        playbackDateTime: parsedPlaybackDateTime,
-      }));
+    if (!savedSettings) {
+      return;
     }
+
+    const parsedSettings = parseJson<PersistedSettings>(savedSettings);
+
+    if (!parsedSettings) {
+      return;
+    }
+
+    const parsedFavourites = parseFavourites(favourites) ?? DEFAULT_FAVOURITES;
+    const parsedPlaybackDateTime = parsePlaybackDateTime(
+      parsedSettings.playbackDateTime,
+    );
+    const parsedAppUnits = parseAppUnits(parsedSettings.appUnits);
+    const parsedConnectionType = parseConnectionType(
+      parsedSettings.connectionType,
+    );
+    const parsedLapCoords = parseCoords(parsedSettings.lapCoords);
+
+    setCurrentAppState((prev) => ({
+      ...prev,
+      appUnits: parsedAppUnits ?? prev.appUnits,
+      connectionType: parsedConnectionType ?? prev.connectionType,
+      favourites: parsedFavourites,
+      lapCoords: parsedLapCoords ?? prev.lapCoords,
+      playbackDateTime: parsedPlaybackDateTime,
+    }));
   }, [setCurrentAppState]);
 
   const saveSettingsToLocalStorage = useCallback(() => {
