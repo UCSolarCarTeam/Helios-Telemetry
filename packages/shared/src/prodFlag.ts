@@ -4,7 +4,9 @@ export const socketURL =
     : "http://localhost:3001";
 
 export const prodURL =
-  process.env.NEXT_PUBLIC_PROD_URL ||
+  (process.env.NEXT_PUBLIC_PROD_URL &&
+    process.env.NEXT_PUBLIC_PROD_URL.trim() !== "") ?
+  process.env.NEXT_PUBLIC_PROD_URL :
   (process.env.NODE_ENV === "production"
     ? "https://aedes.calgarysolarcar.ca:3001"
     : "http://localhost:3001");
