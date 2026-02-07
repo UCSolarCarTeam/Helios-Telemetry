@@ -22481,6 +22481,7 @@ __metadata:
     lint-staged: "npm:^13.2.2"
     prettier: "npm:^3.3.3"
     prettier-plugin-tailwindcss: "npm:^0.6.6"
+    tsx: "npm:^4.21.0"
     typescript: "npm:^5.5.4"
     uuid: "npm:^11.0.5"
   languageName: unknown
@@ -24312,7 +24313,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.16.2, tsx@npm:^4.6.1":
+"tsx@npm:^4.16.2, tsx@npm:^4.21.0, tsx@npm:^4.6.1":
   version: 4.21.0
   resolution: "tsx@npm:4.21.0"
   dependencies:
