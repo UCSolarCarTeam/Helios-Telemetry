@@ -52,6 +52,12 @@ const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
   },
 );
 
+const MLCorrelationMatrixSecrets = secretsmanager.Secret.fromSecretNameV2(
+  TelemetryBackendStack,
+  "MLCorrelationMatrixSecrets",
+  "MLCorrelationMatrixSecrets",
+);
+
 const TimescaleConnectionString = secretsmanager.Secret.fromSecretNameV2(
   TelemetryBackendStack,
   "TimescaleConnectionString",
@@ -367,13 +373,23 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       TimescaleConnectionString,
       "DATABASE_USERNAME",
     ),
+
+    LAP_CORRELATION_MATRIX_FUNCTION_NAME: ecs.Secret.fromSecretsManager(
+      MLCorrelationMatrixSecrets,
+      "LAP_CORRELATION_MATRIX_FUNCTION_NAME",
+    ),
     MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "password",
     ),
+
     MQTT_USERNAME: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "username",
+    ),
+    PACKET_CORRELATION_MATRIX_FUNCTION_NAME: ecs.Secret.fromSecretsManager(
+      MLCorrelationMatrixSecrets,
+      "PACKET_CORRELATION_MATRIX_FUNCTION_NAME",
     ),
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
@@ -395,6 +411,7 @@ TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
 TimescaleConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
+MLCorrelationMatrixSecrets.grantRead(TelemetryECSTaskDefinition.taskRole);
 
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,

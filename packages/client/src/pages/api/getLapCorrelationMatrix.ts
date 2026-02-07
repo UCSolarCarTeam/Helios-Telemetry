@@ -1,18 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const API_ROUTE = process.env.GET_LAP_CORRELATION_MATRIX_URL;
-if (!API_ROUTE) {
-  throw new Error("GET_LAP_CORRELATION_MATRIX_URL is not defined");
-}
+import { prodURL } from "@shared/helios-types";
+
+const BACKEND_ROUTE = `${prodURL}/ml/correlation-matrix/lap`;
+
 export default async function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
 ) {
   try {
-    const result = await fetch(API_ROUTE as string);
+    const result = await fetch(BACKEND_ROUTE);
+
+    if (!result.ok) {
+      const errorData = await result.json().catch(() => ({}));
+      return res.status(result.status).json({
+        error: errorData.error || "Failed to fetch correlation matrix data",
+      });
+    }
+
     const graph = await result.json();
     res.status(200).json(graph);
   } catch (err) {
-    res.status(500).json({ error: "failed to load data" + err });
+    res.status(500).json({
+      error: `Failed to load data: ${err instanceof Error ? err.message : String(err)}`,
+    });
   }
 }
