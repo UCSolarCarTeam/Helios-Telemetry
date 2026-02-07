@@ -123,15 +123,15 @@ function RaceTab() {
     fetchLapData();
     fetchDriverNames()
       .then((response) => {
-        if (!response.data) {
+        if (!Array.isArray(response)) {
           setDriverData([]);
-        } else {
-          const driverData = response.data.map((driver: IDriverData) => ({
-            Rfid: driver.Rfid,
-            driver: driver.driver,
-          }));
-          setDriverData(driverData);
+          return;
         }
+        const driverData = response.map((driver: IDriverData) => ({
+          Rfid: driver.Rfid,
+          driver: driver.driver,
+        }));
+        setDriverData(driverData);
       })
       .catch((error) => {
         throw new Error(error);
