@@ -22,6 +22,8 @@
  */
 import axios, { type AxiosInstance } from "axios";
 
+import { prodURL } from "@shared/helios-types";
+
 /**
  * Default timeout for all API requests (30 seconds)
  * This prevents requests from hanging indefinitely
@@ -60,10 +62,6 @@ export const api: AxiosInstance = axios.create({
  * Note: Import prodURL dynamically to avoid issues with environment variables
  */
 const createBackendApi = (): AxiosInstance => {
-  // Dynamic import to handle environment-specific URLs
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { prodURL } = require("@shared/helios-types");
-
   return axios.create({
     baseURL: prodURL,
     headers: {
