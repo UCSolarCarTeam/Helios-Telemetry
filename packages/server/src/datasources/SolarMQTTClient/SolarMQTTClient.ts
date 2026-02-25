@@ -69,7 +69,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     }, milliseconds);
   }
 
-  public async publishLapData(lapdata: ILapData) {
+  public publishLapData(lapdata: ILapData) {
     try {
       this.client.publish(lapdataTopic, JSON.stringify(lapdata));
     } catch (error) {
@@ -77,7 +77,7 @@ export class SolarMQTTClient implements SolarMQTTClientType {
     }
   }
 
-  public async connectToAedes(options: IClientOptions) {
+  public connectToAedes(options: IClientOptions) {
     try {
       this.client = connect(options);
       this.initializeListeners();
