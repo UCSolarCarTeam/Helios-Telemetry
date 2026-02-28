@@ -427,10 +427,10 @@ export interface ILapData {
   EnergyConsumed: number;
   LapTime: number;
   NetPowerOut: number;
-  TimeStamp: number;
+  timestamp: Date;
   TotalPowerIn: number;
   TotalPowerOut: number;
-  Rfid: string;
+  rfid: string;
 }
 
 export class LapData {
