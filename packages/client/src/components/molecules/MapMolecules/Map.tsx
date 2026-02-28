@@ -13,7 +13,6 @@ import ReactMapGL, {
   Marker,
   Popup,
   Source,
-  SourceProps,
   ViewState,
 } from "react-map-gl";
 
@@ -47,12 +46,16 @@ export type PacketMarkerData = {
   open: boolean;
 };
 
+type TrackSourceProps = {
+  id: string;
+  type: "geojson";
+  data: FeatureCollection<LineString>;
+};
+
 // this is for the demo mode when default tracks are shown in demo mode
 export type TrackList = {
   layerProps: LayerProps & Partial<LineLayerSpecification>;
-  sourceProps: SourceProps & {
-    data: FeatureCollection<LineString>;
-  };
+  sourceProps: TrackSourceProps;
   trackName: string;
 };
 if (!process.env.NEXT_PUBLIC_MAPSAPIKEY)
