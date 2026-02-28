@@ -1,1 +1,2 @@
 packages/db/src/entities/*.ts
+scripts/*.ts

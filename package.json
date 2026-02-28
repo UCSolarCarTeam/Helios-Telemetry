@@ -27,7 +27,8 @@
     "migrate:revert": "lerna run migrate:revert --scope=db",
     "migrate:reset": "lerna run migrate:reset --scope=db",
     "schema:sync": "lerna run schema:sync --scope=db",
-    "schema:drop": "lerna run schema:drop --scope=db"
+    "schema:drop": "lerna run schema:drop --scope=db",
+    "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
     "@mantine/dates": "^8.0.1",
@@ -53,6 +54,7 @@
     "lint-staged": "^13.2.2",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
+    "tsx": "^4.21.0",
     "typescript": "^5.5.4"
   },
   "workspaces": [
