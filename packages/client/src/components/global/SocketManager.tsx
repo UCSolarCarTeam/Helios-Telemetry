@@ -17,7 +17,10 @@ import { socketURL } from "@shared/helios-types";
 
 interface ClientToServerEvents {
   ping: (cb: (val: number) => void) => void;
-  setLapCoords: (coords: CoordInfoUpdate) => void;
+  setLapCoords: (
+    coords: CoordInfoUpdate,
+    callback: (response: CoordUpdateResponse) => void,
+  ) => void;
 }
 
 interface ServerToClientEvents {

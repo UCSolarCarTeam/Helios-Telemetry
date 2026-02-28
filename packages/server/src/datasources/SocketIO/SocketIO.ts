@@ -68,17 +68,30 @@ export class SocketIO implements SocketIOType {
     socket.on("ping", (callback: () => void) => {
       callback();
     });
-    socket.on("setLapCoords", (newCoordInfo: CoordInfoUpdate) => {
-      const { lat, long, password } = newCoordInfo;
-      logger.info("UPDATED COORDS: ");
-      logger.info("lat: ", lat, "long: ", long);
-      const res =
-        this.backendController.lapController.setFinishLineLocation(
-          newCoordInfo,
-        );
+    socket.on(
+      "setLapCoords",
+      (
+        newCoordInfo: CoordInfoUpdate,
+        callback?: (response: CoordUpdateResponse) => void,
+      ) => {
+        const { lat, long } = newCoordInfo;
 
-      this.broadcastLapCoords(res);
-    });
+        logger.info("UPDATED COORDS: ");
+        logger.info("lat: ", lat, "long: ", long);
+        const res =
+          this.backendController.lapController.setFinishLineLocation(
+            newCoordInfo,
+          );
+        // Only broadcast if successful
+        if (!("error" in res)) {
+          this.broadcastLapCoords(res);
+        }
+
+        if (typeof callback === "function") {
+          callback(res);
+        }
+      },
+    );
     socket.on("disconnect", () => {
       logger.info("Client disconnected");
     });

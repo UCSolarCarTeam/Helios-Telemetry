@@ -1,9 +1,9 @@
 import { useTheme } from "next-themes";
 import { useCallback, useState } from "react";
 
+import SetFinishLineLocation from "@/components/molecules/LogoStatusMolecules/Settings/SetFinishLineLocation";
 import { APPUNITS, CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { helios, heliosCompliment, sand } from "@/styles/colors";
-import { TimeInput } from "@mantine/dates";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Modal from "@mui/material/Modal";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -242,6 +242,7 @@ function SettingsComponent() {
             </div>
           </div>
           <DriverNameUpdate />
+          <SetFinishLineLocation />
         </div>
       </Modal>
     </div>
