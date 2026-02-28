@@ -6,16 +6,16 @@ import { TimeColumn } from "@timescaledb/typeorm";
  * Stores computed lap metrics for each lap
  */
 @Entity("lap")
-@Index(["Rfid", "Timestamp"])
+@Index(["rfid", "timestamp"])
 export class Lap {
   @PrimaryGeneratedColumn("uuid")
   Id!: string;
 
   @TimeColumn()
-  Timestamp!: Date;
+  timestamp!: Date;
 
   @Column({ type: "text" })
-  Rfid!: string;
+  rfid!: string;
 
   @Column({ type: "float" })
   LapTime!: number;

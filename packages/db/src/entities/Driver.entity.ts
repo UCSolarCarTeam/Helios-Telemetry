@@ -13,7 +13,7 @@ import {
 @Entity("driver")
 export class Driver {
   @PrimaryColumn({ type: "text" })
-  Rfid!: string;
+  rfid!: string;
 
   @Column({ type: "text" })
   Name!: string;

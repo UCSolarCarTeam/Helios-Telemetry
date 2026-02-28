@@ -21,6 +21,7 @@ import {
 } from "@/utils/logger";
 
 import { getCredentials } from "@/credentials";
+import { errorHandler } from "@/middleware/errorHandler";
 import { type TerminusOptions, createTerminus } from "@godaddy/terminus";
 
 dotenv.config();
@@ -47,6 +48,8 @@ app.use("/", playbackRouter);
 app.use("/", lapRouter);
 app.use("/", driverRouter);
 app.use("/", machineLearningRouter);
+
+app.use(errorHandler);
 
 export const logger = createLightweightApplicationLogger("index.ts");
 axiosRetry(axios, {
