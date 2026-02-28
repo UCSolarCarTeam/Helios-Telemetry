@@ -1,19 +1,15 @@
-import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { columns } from "@/components/config/lapTableConfig";
 import ColumnFilters from "@/components/molecules/RaceTabMolecules/ColumnFilters";
 import DriverFilter from "@/components/molecules/RaceTabMolecules/DriverFilter";
 import RaceTabTable from "@/components/molecules/RaceTabMolecules/RaceTabTable";
+import { useDriverLaps } from "@/hooks/useDriverLaps";
+import { useDrivers } from "@/hooks/useDrivers";
 import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
-import {
-  IDriverData,
-  type IFormattedLapData,
-  ILapData,
-  prodURL,
-} from "@shared/helios-types";
+import { type IFormattedLapData } from "@shared/helios-types";
 import {
   SortingState,
   getCoreRowModel,
@@ -37,8 +33,7 @@ import {
  * When the column filter is changed, the setColumnName() is called to set the column name
  */
 function RaceTab() {
-  const [Rfid, setDriverRFID] = useState<number | string>("");
-  const [driverData, setDriverData] = useState<IDriverData[]>([]);
+  const [driverRFID, setDriverRFID] = useState<string>("");
   const [copy, setCopy] = useState<number>(0);
   const { formatLapData, lapData } = useLapDataStore();
   const [filteredLaps, setFilteredLaps] =
@@ -46,6 +41,25 @@ function RaceTab() {
   const [sorting, setSorting] = useState<SortingState>([
     { desc: false, id: "TimeStamp" },
   ]);
+
+  // Use TanStack Query hooks for data fetching
+  const { data: drivers } = useDrivers();
+  const { data: driverLaps } = useDriverLaps({
+    enabled:
+      driverRFID.length > 0 &&
+      driverRFID !== "Show all data" &&
+      driverRFID !== "",
+    rfid: driverRFID,
+  });
+
+  useEffect(() => {
+    if (driverRFID === "" || driverRFID === "Show all data") {
+      setFilteredLaps(lapData);
+      return;
+    }
+
+    setFilteredLaps(driverLaps.map(formatLapData));
+  }, [driverLaps, driverRFID, formatLapData, lapData]);
 
   const table = useReactTable({
     columns,
@@ -67,7 +81,7 @@ function RaceTab() {
   // copy rfid to clipboard
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(String(Rfid));
+      await navigator.clipboard.writeText(String(driverRFID));
       setCopy(1);
       setTimeout(() => setCopy(0), 5000);
       notifications.show({
@@ -85,77 +99,21 @@ function RaceTab() {
   };
 
   // dropdown handler for the drivers
-  const handleDropdown = useCallback(
-    async (event: SelectChangeEvent<number | string>) => {
-      const newRFID = event.target.value;
-      setDriverRFID(newRFID);
-      setCopy(0);
-
-      if (Number.isNaN(newRFID) || newRFID === "Show all data") {
-        setFilteredLaps(lapData);
-      } else {
-        const response = await fetchFilteredLaps(Number(newRFID));
-        const formattedData = response.map(formatLapData);
-        setFilteredLaps(formattedData);
-      }
-    },
-    [formatLapData, lapData],
-  );
-
-  // fetch the driver names from timescale
-  const fetchDriverNames = async () => {
-    try {
-      const response = await axios.get<IDriverData[]>(`${prodURL}/drivers`);
-
-      return response.data;
-    } catch (error) {
-      return { error: "Error fetching drivers" };
-    }
+  // dropdown handler for the drivers
+  const handleDropdown = (event: SelectChangeEvent<string>) => {
+    const newRFID = String(event.target.value);
+    setDriverRFID(newRFID);
+    setCopy(0);
   };
-
-  // get the driver laps based on the selected rfid
-  const fetchFilteredLaps = async (Rfid: number) => {
-    try {
-      const response = await axios.get<ILapData[]>(`${prodURL}/driver/${Rfid}`);
-      return response.data;
-    } catch (error) {
-      setFilteredLaps([]);
-      return [];
-    }
-  };
-
-  // fetching driver names when component mounts
-  useEffect(() => {
-    void (async (): Promise<void> => {
-      try {
-        const response = await fetchDriverNames();
-
-        if (!Array.isArray(response)) {
-          setDriverData([]);
-          return;
-        }
-
-        const driverData = response.map((driver: IDriverData) => ({
-          Rfid: driver.Rfid,
-          driver: driver.driver,
-        }));
-
-        setDriverData(driverData);
-      } catch (error) {
-        setDriverData([]);
-      }
-    })();
-  }, []);
-
   return (
     <div className="m-3 flex flex-col justify-center gap-4">
       <p className="-mb-2 font-bold text-helios">Lap Data</p>
       <hr className="border-[1.4px] border-helios" />
       <div className="flex w-full flex-col items-center gap-2 sm:flex-row">
         <DriverFilter
-          Rfid={Rfid}
+          Rfid={driverRFID}
           copy={copy}
-          driverData={driverData}
+          driverData={drivers ?? []}
           handleCopy={handleCopy}
           handleDropdown={handleDropdown}
         />

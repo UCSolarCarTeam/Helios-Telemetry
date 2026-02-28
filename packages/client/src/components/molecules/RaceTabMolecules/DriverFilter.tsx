@@ -7,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
+import { IDriverData } from "@shared/helios-types";
 
 /*
  * This component is used to filter the drivers of the lap data table
@@ -19,8 +20,8 @@ export default function DriverFilter({
   handleCopy,
   handleDropdown,
 }: {
-  driverData: { Rfid: string; driver: string }[];
-  handleDropdown: (event: SelectChangeEvent<string>) => Promise<void>;
+  driverData: IDriverData[];
+  handleDropdown: (event: SelectChangeEvent<string>) => void;
   handleCopy: () => Promise<void>;
   Rfid: string | number;
   copy: number;

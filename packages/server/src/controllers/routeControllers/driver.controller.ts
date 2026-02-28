@@ -3,6 +3,7 @@ import { BackendController } from "../BackendController/BackendController";
 import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
+import { validateDriverUpdatePassword } from "@/utils/validatePassword";
 
 export const getDrivers = async (request: Request, response: Response) => {
   const backendController = request.app.locals
@@ -72,22 +73,32 @@ export const updateDriverInfo = async (
   request: Request,
   response: Response,
 ) => {
-  const { Rfid, name } = request.body;
-
-  if (!name || !Rfid) {
-    return response
-      .status(400)
-      .json({ error: "Name and Rfid fields are required" });
-  }
-
-  const backendController = request.app.locals
-    .backendController as BackendController;
+  const { Rfid, name, password } = request.body;
 
   const logger = createApplicationLogger(
     "driver.controller.ts",
     request,
     response,
   );
+  if (!name || !Rfid || !password) {
+    logger.warn(
+      `Missing required fields - Rfid: ${!!Rfid}, name: ${!!name}, password: ${!!password}`,
+    );
+    return response.status(400).json({
+      error: "Name, Rfid, and password fields are required",
+    });
+  }
+
+  // Validate password
+  if (!validateDriverUpdatePassword(password)) {
+    logger.warn(`Invalid password attempt for driver update - Rfid: ${Rfid}`);
+    return response.status(401).json({
+      error: "Invalid password",
+    });
+  }
+
+  const backendController = request.app.locals
+    .backendController as BackendController;
 
   const responseMessage = await backendController.timescaleDB.updateDriverInfo(
     Rfid,

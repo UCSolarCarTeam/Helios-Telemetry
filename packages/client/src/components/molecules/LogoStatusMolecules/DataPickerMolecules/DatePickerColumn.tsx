@@ -30,7 +30,7 @@ const DataPickerColumn = ({
     React.SetStateAction<IPlaybackDateTime>
   >;
   playbackDateTime: IPlaybackDateTime;
-  fetchPlaybackData: () => Promise<void>;
+  fetchPlaybackData: () => void;
 }) => {
   const { setCurrentAppState } = useAppState();
 

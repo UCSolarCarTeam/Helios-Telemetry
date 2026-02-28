@@ -1,8 +1,6 @@
-import axios from "axios";
 import { create } from "zustand";
 
-import { notifications } from "@mantine/notifications";
-import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
+import { IFormattedLapData, ILapData } from "@shared/helios-types";
 
 export const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
   AmpHours: parseFloat(lapPacket.AmpHours.toFixed(2)),
@@ -27,7 +25,7 @@ interface LapDataState {
   lapData: IFormattedLapData[];
   addLapData: (data: IFormattedLapData) => void;
   clearLapData: () => void;
-  fetchLapData: () => Promise<void>;
+  setLapData: (data: IFormattedLapData[]) => void;
 }
 
 export const useLapDataStore = create<LapDataState>((set) => ({
@@ -37,26 +35,10 @@ export const useLapDataStore = create<LapDataState>((set) => ({
     })),
 
   clearLapData: () => set({ lapData: [] }),
-
-  fetchLapData: async () => {
-    try {
-      const response = await axios.get<{ data: ILapData[] }>(`${prodURL}/laps`);
-
-      if (!Array.isArray(response.data?.data)) {
-        throw new Error("Invalid API response format");
-      }
-
-      const formattedLaps: IFormattedLapData[] =
-        response.data.data.map(formatLapData);
-      set({ lapData: formattedLaps });
-    } catch (error) {
-      notifications.show({
-        color: "red",
-        message: `Failed to fetch lap data from the server: ${error instanceof Error ? error.message : "Unknown error"}`,
-        title: "Error",
-      });
-    }
-  },
   formatLapData: formatLapData,
+
   lapData: [],
+
+  // Simple setter instead of async fetch - use useLaps() hook for fetching
+  setLapData: (data) => set({ lapData: data }),
 }));
