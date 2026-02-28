@@ -3,6 +3,7 @@ import { BackendController } from "../BackendController/BackendController";
 import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
+import { validateDriverUpdatePassword } from "@/utils/validatePassword";
 
 export const getDrivers = async (request: Request, response: Response) => {
   const backendController = request.app.locals
@@ -82,16 +83,7 @@ export const updateDriverInfo = async (
   request: Request,
   response: Response,
 ) => {
-  const { Rfid, name } = request.body;
-
-  if (!name || !Rfid) {
-    return response
-      .status(400)
-      .json({ error: "Name and Rfid fields are required" });
-  }
-
-  const backendController = request.app.locals
-    .backendController as BackendController;
+  const { Rfid, name, password } = request.body;
 
   const logger = createApplicationLogger(
     "driver.controller.ts",
@@ -99,11 +91,33 @@ export const updateDriverInfo = async (
     response,
   );
 
+  logger.info(`ENTRY - ${request.method} ${request.url}`);
+
+  // Validate required fields
+  if (!name || !Rfid || !password) {
+    logger.warn(
+      `Missing required fields - Rfid: ${!!Rfid}, name: ${!!name}, password: ${!!password}`,
+    );
+    return response.status(400).json({
+      error: "Name, Rfid, and password fields are required",
+    });
+  }
+
+  // Validate password
+  if (!validateDriverUpdatePassword(password)) {
+    logger.warn(`Invalid password attempt for driver update - Rfid: ${Rfid}`);
+    return response.status(401).json({
+      error: "Invalid password",
+    });
+  }
+
+  const backendController = request.app.locals
+    .backendController as BackendController;
+
   try {
     const responseMessage =
       await backendController.timescaleDB.updateDriverInfo(Rfid, name);
 
-    logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
       message: responseMessage.message,
       uptime: process.uptime() + " seconds",
@@ -112,7 +126,14 @@ export const updateDriverInfo = async (
 
     return response.status(200).json(data);
   } catch (err) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: err });
+    logger.error(
+      `ERROR - ${request.method} ${request.url} - ${err instanceof Error ? err.message : String(err)}`,
+    );
+    return response.status(500).json({
+      error:
+        err instanceof Error
+          ? err.message
+          : "Failed to update driver information",
+    });
   }
 };

@@ -1,6 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+import { usePlaybackData } from "@/hooks/usePlaybackData";
+import { downloadCSV } from "@/lib/utils";
 import { useAppState } from "@/stores/useAppState";
 import { usePlaybackStore } from "@/stores/usePlayback";
 import { notifications } from "@mantine/notifications";
@@ -8,7 +9,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { Modal } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { ITelemetryData, convertToCSV, prodURL } from "@shared/helios-types";
+import { ITelemetryData, convertToCSV } from "@shared/helios-types";
 
 import DatePickerColumn from "./DataPickerMolecules/DatePickerColumn";
 import DatePickerResultColumn from "./DataPickerMolecules/DatePickerResultColumn";
@@ -47,52 +48,19 @@ export type IPlaybackDataResponse = {
  * downloadable file.
  */
 
-const createDateTime = (time: Date, year: number, month: number, day: number) =>
+const createDateTime = (time: Date, day: Date) =>
   new Date(
-    year,
-    month,
-    day,
+    day.getFullYear(),
+    day.getMonth(),
+    day.getDate(),
     time.getHours(),
     time.getMinutes(),
     time.getSeconds(),
   );
 
-function handleDownloadCSV(
-  csv: string,
-  confirmedPlaybackDateTime: IPlaybackDateTime,
-) {
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  const now = new Date();
-  const dateStr = now.toLocaleDateString().replace(/\//g, "-");
-  // Use the selected playback start and end times for the filename
-  const start = confirmedPlaybackDateTime?.startTime
-    ? confirmedPlaybackDateTime.startTime
-    : new Date();
-  const end = confirmedPlaybackDateTime?.endTime
-    ? confirmedPlaybackDateTime.endTime
-    : new Date();
-
-  const formatTime = (date: Date) =>
-    date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-  const timeStr = `${formatTime(start)}_to_${formatTime(end)}`;
-  a.setAttribute("download", `Helios Packet Data - ${dateStr} ${timeStr}.csv`);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
 function PlaybackDatePicker() {
   const { currentAppState } = useAppState();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [playbackDateTime, setPlaybackDateTime] = useState<IPlaybackDateTime>(
     () => {
       return currentAppState.playbackDateTime?.date
@@ -113,7 +81,54 @@ function PlaybackDatePicker() {
     setPlaybackData: state.setPlaybackData,
   }));
 
-  const fetchPlaybackData = async () => {
+  // Calculate time range for TanStack Query
+  const startTimeUTC =
+    confirmedPlaybackDateTime.date && confirmedPlaybackDateTime.startTime
+      ? createDateTime(
+          confirmedPlaybackDateTime.startTime,
+          confirmedPlaybackDateTime.date,
+        ).getTime()
+      : 0;
+
+  const endTimeUTC =
+    confirmedPlaybackDateTime.date && confirmedPlaybackDateTime.endTime
+      ? createDateTime(
+          confirmedPlaybackDateTime.endTime,
+          confirmedPlaybackDateTime.date,
+        ).getTime()
+      : 0;
+
+  // Use TanStack Query hook for data fetching
+  const { data: fetchedPlaybackData, isLoading } = usePlaybackData({
+    enabled: startTimeUTC > 0 && endTimeUTC > startTimeUTC,
+    endTime: endTimeUTC,
+    startTime: startTimeUTC,
+  });
+
+  // Sync fetched playback data to Zustand store
+  useEffect(() => {
+    if (fetchedPlaybackData) {
+      setPlaybackData(fetchedPlaybackData);
+    }
+  }, [fetchedPlaybackData, setPlaybackData]);
+
+  // When the playback switch is on, auto-load the date if stored in local storage
+  useEffect(() => {
+    if (
+      currentAppState.playbackSwitch &&
+      currentAppState.playbackDateTime?.date
+    ) {
+      setPlaybackDateTime(currentAppState.playbackDateTime);
+      setConfirmedPlaybackDateTime(currentAppState.playbackDateTime);
+    }
+  }, [currentAppState.playbackSwitch, currentAppState.playbackDateTime]);
+
+  /**
+   * Validates the time range before confirming the playback date/time.
+   * Shows an error notification if the range is too large (max 60 minutes).
+   * This is called by the DatePickerColumn when the user clicks the confirm button.
+   */
+  const validateAndConfirmDateTime = () => {
     if (
       !playbackDateTime.date ||
       !playbackDateTime.startTime ||
@@ -122,72 +137,54 @@ function PlaybackDatePicker() {
       return;
     }
 
-    setLoading(true);
-    const year = playbackDateTime.date.getFullYear();
-    const month = playbackDateTime.date.getMonth();
-    const day = playbackDateTime.date.getDate();
-
     const startDateTime = createDateTime(
       playbackDateTime.startTime,
-      year,
-      month,
-      day,
+      playbackDateTime.date,
     );
     const endDateTime = createDateTime(
       playbackDateTime.endTime,
-      year,
-      month,
-      day,
+      playbackDateTime.date,
     );
 
-    const startTimeUTC = Math.floor(startDateTime.getTime());
-    const endTimeUTC = Math.floor(endDateTime.getTime());
-
-    const maxInterval = 60 * 60 * 1000; // 60 minutes in ms
+    const startTimeUTC = startDateTime.getTime();
+    const endTimeUTC = endDateTime.getTime();
+    const minutes = 60;
+    const maxInterval = minutes * 60 * 1000; // 60 minutes in ms
     if (endTimeUTC - startTimeUTC > maxInterval) {
       notifications.show({
         color: "red",
-        message: `Please select a range of maximum ${maxInterval / 1000 / 60} minutes.`,
+        message: `Please select a range of maximum ${minutes} minutes.`,
         title: "Error",
       });
-      setLoading(false);
       return;
     }
 
-    try {
-      const response = await axios.get(`${prodURL}/packetsBetween`, {
-        params: { endTime: endTimeUTC, startTime: startTimeUTC },
-      });
-
-      const extractedData: ITelemetryData[] = response.data.data.map(
-        (item: IPlaybackDataResponse) => item.data,
-      );
-
-      setPlaybackData(extractedData);
-    } catch (error) {
-      throw new Error(`Error fetching playback data: ${error}`);
-    } finally {
-      setLoading(false);
-    }
+    // Validation passed - the DatePickerColumn will call setConfirmedPlaybackDateTime
+    // which will trigger the usePlaybackData hook to fetch data automatically
   };
-
-  // When the playback switch is on, auto-fetch the data if a date was stored in local storage
-  useEffect(() => {
-    if (
-      currentAppState.playbackSwitch &&
-      currentAppState.playbackDateTime?.date
-    ) {
-      setPlaybackDateTime(currentAppState.playbackDateTime);
-      fetchPlaybackData();
-    }
-  }, [currentAppState.playbackSwitch]);
 
   const updatePlaybackTime: React.Dispatch<
     React.SetStateAction<IPlaybackDateTime>
   > = (time) => {
-    setLoading(false);
     setPlaybackDateTime(time);
   };
+  const handleDownloadCSV = () => {
+    // Generate filename with date and time range
+    const now = new Date();
+    const dateStr = now.toLocaleDateString().replace(/\//g, "-");
+    const start = confirmedPlaybackDateTime.startTime ?? new Date();
+    const end = confirmedPlaybackDateTime.endTime ?? new Date();
+    const formatTime = (date: Date) =>
+      date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    const timeStr = `${formatTime(start)}_to_${formatTime(end)}`;
+    const filename = `Helios Packet Data - ${dateStr} ${timeStr}.csv`;
+    const data = convertToCSV(playbackData);
+    downloadCSV(data, filename);
+  };
+
   return (
     <>
       {currentAppState.playbackSwitch && (
@@ -205,14 +202,14 @@ function PlaybackDatePicker() {
             <div className="relative flex h-auto w-full max-w-lg rounded-lg border-none bg-white p-6 shadow-lg outline-none sm:max-w-xl md:max-w-2xl">
               <div className="flex w-full flex-col gap-6 sm:flex-row">
                 <DatePickerColumn
-                  fetchPlaybackData={fetchPlaybackData}
+                  fetchPlaybackData={validateAndConfirmDateTime}
                   playbackDateTime={playbackDateTime}
                   setConfirmedPlaybackDateTime={setConfirmedPlaybackDateTime}
                   setPlaybackDateTime={updatePlaybackTime}
                 />
                 <DatePickerResultColumn
                   confirmedPlaybackDateTime={confirmedPlaybackDateTime}
-                  loading={loading}
+                  loading={isLoading}
                   playbackData={playbackData}
                 />
               </div>
@@ -220,12 +217,7 @@ function PlaybackDatePicker() {
                 <Tooltip arrow title="Download to CSV">
                   <button
                     className="absolute right-7 top-5"
-                    onClick={() =>
-                      handleDownloadCSV(
-                        convertToCSV(playbackData),
-                        confirmedPlaybackDateTime,
-                      )
-                    }
+                    onClick={handleDownloadCSV}
                   >
                     <FileDownloadOutlinedIcon />
                   </button>

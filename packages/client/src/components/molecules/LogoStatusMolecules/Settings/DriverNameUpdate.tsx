@@ -1,7 +1,13 @@
-import axios from "axios";
 import { useTheme } from "next-themes";
 import React, { useState } from "react";
 
+import { useUpdateDriverInfo } from "@/hooks/useUpdateDriverInfo";
+import {
+  type ValidationSchema,
+  driverName,
+  rfid,
+  validateData,
+} from "@/lib/validation";
 import { helios, heliosCompliment, sand } from "@/styles/colors";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
@@ -12,12 +18,19 @@ import {
   TextField,
 } from "@mui/material";
 import { IDriverNameUpdate } from "@shared/helios-types";
-import { prodURL } from "@shared/helios-types";
 
 const driverDetailsText: IDriverNameUpdate = {
   Rfid: "Rfid",
   name: "Name",
 } as const;
+
+/**
+ * Validation schema for driver information
+ */
+const driverValidationSchema: ValidationSchema<IDriverNameUpdate> = {
+  Rfid: [rfid()],
+  name: [driverName()],
+};
 
 export default function DriverUpdate() {
   const { resolvedTheme } = useTheme();
@@ -31,80 +44,45 @@ export default function DriverUpdate() {
   const [errorMessages, setErrorMessages] = useState<
     Partial<IDriverNameUpdate>
   >({});
-  const [statusMessage, setStatusMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
+  // Use TanStack Query mutation hook
+  // Success and error notifications are handled automatically inside the hook
+  const { isPending: isUpdatingDriver, mutate: updateDriver } =
+    useUpdateDriverInfo({
+      onSuccess: () => {
+        // Reset form after successful update
+        setDriverDetails({ Rfid: "", name: "" });
+        setPassword("");
+      },
+    });
+
+  const loading = isUpdatingDriver;
+
+  /**
+   * Validates driver details using the standardized validation schema
+   */
   const validateInputs = () => {
-    const newErrors = new Set<keyof IDriverNameUpdate>();
-    const newErrorMessages: Partial<IDriverNameUpdate> = {};
+    const result = validateData(driverDetails, driverValidationSchema);
 
-    if (
-      typeof driverDetails.name !== "string" ||
-      driverDetails.name.trim() === "" ||
-      /\d/.test(driverDetails.name)
-    ) {
-      newErrors.add("name");
-      newErrorMessages.name =
-        "Name must be a non-empty string and should not contain digits.";
-    }
+    setErrors(result.errors);
+    setErrorMessages(result.errorMessages);
 
-    if (
-      typeof driverDetails.Rfid !== "string" ||
-      driverDetails.Rfid.trim() === "" ||
-      isNaN(Number(driverDetails.Rfid))
-    ) {
-      newErrors.add("Rfid");
-      newErrorMessages.Rfid = "Rfid must not be empty and must be a number.";
-    }
-
-    setErrors(newErrors);
-    setErrorMessages(newErrorMessages);
-
-    return newErrors.size === 0;
+    return result.isValid;
   };
 
-  const checkMQTTPassword = async () => {
-    try {
-      const res = await axios.post("/api/checkMQTTPassword", { password });
-      if (res.status === 200) {
-        return true;
-      }
-      return false;
-    } catch (e) {
-      setStatusMessage("Error checking password");
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setErrorMessages({});
-    setStatusMessage("");
-    if (validateInputs()) {
-      if (await checkMQTTPassword()) {
-        axios
-          .post(`${prodURL}/updatedriverinfo`, {
-            Rfid: driverDetails.Rfid,
-            name: driverDetails.name,
-          })
-          .then((res) => {
-            if (res.status === 200) {
-              setStatusMessage(res.data.message);
-              setLoading(false);
-            } else {
-              setStatusMessage("Error updating driver info 1");
-              setLoading(false);
-            }
-          })
-          .catch(() => {
-            setStatusMessage("Error updating driver info 2");
-            setLoading(false);
-          });
-      } else {
-        setStatusMessage("Incorrect password, please try again.");
-        setLoading(false);
-      }
+
+    if (!validateInputs()) {
+      return;
     }
+
+    // Update driver with password validation
+    updateDriver({
+      ...driverDetails,
+      password,
+    });
   };
 
   return (
@@ -201,9 +179,6 @@ export default function DriverUpdate() {
           <div className="flex justify-center">
             <CircularProgress size="2rem" />
           </div>
-        )}
-        {statusMessage && (
-          <div className="text-green-500 mt-2 text-center">{statusMessage}</div>
         )}
       </form>
     </div>
