@@ -1,4 +1,4 @@
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider, useTheme } from "next-themes";
 import type { AppProps } from "next/app";
 
 import { EffectsProvider } from "@/components/global/EffectsProvider";
@@ -33,19 +33,28 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+function AppContent({ Component, pageProps }: AppProps) {
+  const { resolvedTheme } = useTheme();
+
+  return (
+    <MantineProvider
+      forceColorScheme={resolvedTheme === "dark" ? "dark" : "light"}
+    >
+      <Notifications zIndex={1400} />
+      {/* Initialize side-effect logic for Zustand store state files */}
+      <EffectsProvider />
+      <LoadingWrapper>
+        <Component {...pageProps} />
+      </LoadingWrapper>
+    </MantineProvider>
+  );
+}
+export default function App(props: AppProps) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <MantineProvider>
-            <Notifications zIndex={1400} />
-            {/* Initialize side-effect logic for Zustand store state files */}
-            <EffectsProvider />
-            <LoadingWrapper>
-              <Component {...pageProps} />
-            </LoadingWrapper>
-          </MantineProvider>
+          <AppContent {...props} />
         </ThemeProvider>
         {/* React Query DevTools - only visible in development */}
         <ReactQueryDevtools initialIsOpen={false} />
