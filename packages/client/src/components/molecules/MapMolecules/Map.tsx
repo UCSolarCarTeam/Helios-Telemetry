@@ -119,7 +119,7 @@ export default function Map({
     );
 
     // if the distance is greater than 10 km, update the current car location without animations/lerp
-    // if the disatnce isn't, just animate it like normal
+    // if the distance isn't, just animate it like normal
 
     if (distance < 10) {
       const time = 1 / 60; // run at 60fps

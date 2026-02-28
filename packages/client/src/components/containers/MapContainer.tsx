@@ -37,7 +37,7 @@ function MapContainer(): JSX.Element {
         if (positionPacket >= TRACK_COORDINATES.length) {
           positionPacket = 0;
         }
-      }, 1000);
+      }, 2000);
 
       return () => clearInterval(interval);
     }
