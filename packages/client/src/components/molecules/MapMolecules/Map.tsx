@@ -28,7 +28,7 @@ import {
 
 import MapControls from "./MapControls";
 import {
-  Hydrated_Grand_Full_course,
+  Hydrated_Brainerd_International_Raceway_Track,
   TRACK_LIST,
   mapCameraControls,
 } from "./MapSetup";
@@ -98,7 +98,7 @@ export default function Map({
   const [popupOpen, setPopupOpen] = useState(false);
   const [viewTracks, setViewTracks] = useState(TRACK_LIST.map(() => true));
   const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
-    Hydrated_Grand_Full_course,
+    Hydrated_Brainerd_International_Raceway_Track,
   );
   const [mapControlsAdded, setMapControlsAdded] = useState(false);
 

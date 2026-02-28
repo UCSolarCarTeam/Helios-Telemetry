@@ -9,9 +9,10 @@ import { Coords } from "@shared/helios-types";
 import { GEO_DATA } from "../molecules/MapMolecules/MapSetup";
 
 const {
-  raceTrackGeoJSON_GRAND_FULL_COURSE: { features },
+  raceTrackGeoJSON_BRAINERD_INTERNATIONAL_RACEWAY_TRACK: { features },
 } = GEO_DATA;
 const TRACK_COORDINATES = features[0].geometry.coordinates;
+// Previous 2025 track: raceTrackGeoJSON_GRAND_FULL_COURSE
 const startingLocation: Coords = {
   lat: TRACK_COORDINATES[0]![1]!,
   long: TRACK_COORDINATES[0]![0]!,
