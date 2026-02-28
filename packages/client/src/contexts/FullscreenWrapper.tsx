@@ -42,9 +42,9 @@ const FullscreenWrapper = ({
       return;
     }
     if (!document.fullscreenElement) {
-      void elementReferenced.requestFullscreen();
+      elementReferenced.requestFullscreen();
     } else {
-      void document.exitFullscreen?.();
+      document.exitFullscreen?.();
     }
   }
 

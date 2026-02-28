@@ -4,12 +4,29 @@
     "checkJs": true,
     "baseUrl": ".",
     "paths": {
-      "plotly.js-dist-min": ["node_modules/@types/plotly.js"],
-      "@/*": ["./src/*", "./public/*"],
-      "@/server/*": ["../server/src/*"]
+      "plotly.js-dist-min": [
+        "node_modules/@types/plotly.js"
+      ],
+      "@/*": [
+        "./src/*",
+        "./public/*",
+      ],
+      "@/server/*": [
+        "../server/src/*"
+      ]
     },
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
-  "exclude": ["node_modules", "tailwind.config.ts"]
+  "include": [
+    ".eslintrc.cjs",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "tailwind.config.ts"
+  ]
 }

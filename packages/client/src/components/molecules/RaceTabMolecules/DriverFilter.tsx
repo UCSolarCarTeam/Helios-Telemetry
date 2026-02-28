@@ -20,8 +20,8 @@ export default function DriverFilter({
   handleDropdown,
 }: {
   driverData: { Rfid: string; driver: string }[];
-  handleDropdown: (event: SelectChangeEvent<string>) => Promise<void>;
-  handleCopy: () => Promise<void>;
+  handleDropdown: (event: SelectChangeEvent<string>) => void;
+  handleCopy: () => void;
   Rfid: string | number;
   copy: number;
 }) {
@@ -53,7 +53,7 @@ export default function DriverFilter({
               },
             }}
             label="Driver"
-            onChange={(event) => void handleDropdown(event)}
+            onChange={handleDropdown}
             sx={{
               "& .MuiMenuItem-root": {
                 "&:hover": {
@@ -91,7 +91,7 @@ export default function DriverFilter({
       </Box>
       {Number.isNaN(Rfid) || Rfid === "Show all data" ? "" : Rfid}
       {Rfid && Rfid !== "Show all data" ? (
-        <button className="items-center" onClick={() => void handleCopy()}>
+        <button className="items-center" onClick={handleCopy}>
           {copy === 0 ? <ContentCopy /> : <ContentCopyTwoTone />}
         </button>
       ) : (

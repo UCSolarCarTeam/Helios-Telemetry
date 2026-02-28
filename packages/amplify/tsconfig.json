@@ -1,4 +1,7 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["amplify"]
+  "include": [
+    "amplify",
+    ".eslintrc.cjs"
+  ],
 }

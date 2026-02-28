@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import type I_PIS from "@/objects/PIS/PIS.interface";
 import { type I_PISField } from "@/objects/PIS/PIS.interface";
 import { UnitType } from "@/objects/PIS/PIS.interface";
