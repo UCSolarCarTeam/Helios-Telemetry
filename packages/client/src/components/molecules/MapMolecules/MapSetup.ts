@@ -686,7 +686,7 @@ const BRAINERD_INTERNATIONAL_RACEWAY_TRACK_GEO_JSON = {
     {
       geometry: { coordinates: [-94.276205759, 46.420077242], type: "Point" },
       id: "sm24b474a4",
-      properties: { name: "1. start" },
+      properties: { name: "1. start line" },
       type: "Feature",
     },
     {
@@ -855,6 +855,12 @@ const BRAINERD_INTERNATIONAL_RACEWAY_TRACK_GEO_JSON = {
       geometry: { coordinates: [-94.278989896, 46.421138573], type: "Point" },
       id: "smcc59c350",
       properties: { name: "29" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.276205759, 46.420077242], type: "Point" },
+      id: "sm24b474a4",
+      properties: { name: "30. finish line" },
       type: "Feature",
     },
   ],
