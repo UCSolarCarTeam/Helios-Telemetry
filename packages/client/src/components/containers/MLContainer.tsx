@@ -51,7 +51,7 @@ export default function MLContainer({
         </div>
         <button
           className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-          onClick={() => refetch()}
+          onClick={() => void refetch()}
         >
           Retry
         </button>
@@ -75,7 +75,7 @@ export default function MLContainer({
       <button
         className="text-gray-700 dark:text-gray-200 absolute right-2 top-2 z-10 rounded-md bg-gray-200 px-3 py-1 text-xs font-semibold transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
         disabled={isFetching}
-        onClick={() => refetch()}
+        onClick={() => void refetch()}
         title="Refresh data"
       >
         {isFetching ? "Refreshing..." : "Refresh"}

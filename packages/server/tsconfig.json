@@ -21,6 +21,6 @@
     "jsx": "react-jsx",
     "resolveJsonModule": true
   },
-  "include": [".eslintrc.cjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
+  "include": ["src/**/*", "**/*.cjs", "**/*.mjs"],
   "exclude": ["dist", "../client"]
 }

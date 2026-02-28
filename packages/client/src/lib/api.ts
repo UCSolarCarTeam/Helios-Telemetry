@@ -101,7 +101,9 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(
+      error instanceof Error ? error : new Error(String(error)),
+    );
   },
 );
 
@@ -116,7 +118,9 @@ api.interceptors.response.use(
   (error) => {
     // Global error handling can go here
     // For now, just pass the error through
-    return Promise.reject(error);
+    return Promise.reject(
+      error instanceof Error ? error : new Error(String(error)),
+    );
   },
 );
 

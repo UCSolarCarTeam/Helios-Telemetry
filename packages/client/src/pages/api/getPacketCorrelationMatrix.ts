@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const { data } = await backendApi.get(
+    const { data } = await backendApi.get<{ data: string }>(
       BACKEND_ROUTES.ml.packetCorrelationMatrix,
     );
     res.status(200).json(data);
