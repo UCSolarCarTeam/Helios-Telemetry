@@ -24,7 +24,7 @@ export const AppDataSource = new DataSource({
   database: "tsdb",
   entities: [TelemetryPacket, Driver, Lap],
   host: process.env.DATABASE_HOST,
-  logging: !isProd,
+  logging: false,
   migrations: [__dirname + "/migrations/*.{js,ts}"],
   password: process.env.DATABASE_PASSWORD,
 
