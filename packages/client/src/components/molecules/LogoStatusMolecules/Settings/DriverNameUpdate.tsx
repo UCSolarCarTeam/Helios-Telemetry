@@ -178,6 +178,7 @@ export default function DriverUpdate() {
         />
         <Button
           className="mt-2 w-fit self-center"
+          disabled={loading}
           sx={{
             "&:hover": {
               backgroundColor: heliosCompliment,
@@ -193,7 +194,7 @@ export default function DriverUpdate() {
           type="submit"
           variant="outlined"
         >
-          Submit
+          {loading ? "Submitting..." : "Submit"}
         </Button>
 
         {loading && (
