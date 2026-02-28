@@ -190,9 +190,15 @@ function SettingsComponent() {
 
                     return (
                       <ToggleButton
-                        className="flex w-1/3 text-sm"
+                        className="flex w-1/3 text-sm dark:text-white"
                         disabled={disabled}
                         key={key}
+                        sx={{
+                          "&.Mui-disabled": {
+                            color:
+                              resolvedTheme === "dark" ? "#BFBFBF" : undefined,
+                          },
+                        }}
                         value={key}
                       >
                         {key}
