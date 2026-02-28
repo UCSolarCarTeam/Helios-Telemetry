@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import React, { useState } from "react";
 
 import { sand } from "@/styles/colors";

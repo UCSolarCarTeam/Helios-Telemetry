@@ -62,20 +62,23 @@ function RaceTab() {
 
   // copy rfid to clipboard
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(String(Rfid));
-    setCopy(1);
-    setTimeout(() => setCopy(0), 5000);
-    onCopied();
+    try {
+      await navigator.clipboard.writeText(String(Rfid));
+      setCopy(1);
+      setTimeout(() => setCopy(0), 5000);
+      notifications.show({
+        color: "green",
+        message: "Copied to clipboard",
+        title: "Copied",
+      });
+    } catch (error) {
+      notifications.show({
+        color: "red",
+        message: `Error copying to clipboard: ${error instanceof Error ? error.message : String(error)}`,
+        title: "Error",
+      });
+    }
   };
-
-  // copy helper
-  const onCopied = useCallback(() => {
-    notifications.show({
-      color: "green",
-      message: "Copied to clipboard",
-      title: "Copied",
-    });
-  }, []);
 
   // dropdown handler for the drivers
   const handleDropdown = useCallback(
@@ -87,10 +90,9 @@ function RaceTab() {
       if (Number.isNaN(newRFID) || newRFID === "Show all data") {
         setFilteredLaps(lapData);
       } else {
-        await fetchFilteredLaps(Number(newRFID)).then((response) => {
-          const formattedData = response.map(formatLapData);
-          setFilteredLaps(formattedData);
-        });
+        const response = await fetchFilteredLaps(Number(newRFID));
+        const formattedData = response.map(formatLapData);
+        setFilteredLaps(formattedData);
       }
     },
     [formatLapData, lapData],

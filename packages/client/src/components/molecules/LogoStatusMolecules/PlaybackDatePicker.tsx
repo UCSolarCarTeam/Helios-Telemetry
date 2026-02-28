@@ -168,9 +168,11 @@ function PlaybackDatePicker() {
 
       setPlaybackData(extractedData);
     } catch (error) {
-      throw new Error(
-        `Error fetching playback data: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      notifications.show({
+        color: "red",
+        message: `Error fetching playback data: ${error instanceof Error ? error.message : String(error)}`,
+        title: "Error",
+      });
     } finally {
       setLoading(false);
     }

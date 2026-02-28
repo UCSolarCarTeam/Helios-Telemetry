@@ -68,7 +68,6 @@ export default [
       "prettier/prettier": ["error", prettierConfig],
 
       "sort-destructure-keys/sort-destructure-keys": "error",
-      "sort-keys": "error",
       "sort-keys/sort-keys-fix": "error",
     },
   },
@@ -94,6 +93,7 @@ export default [
     rules: {
       ...reactPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
+      ...reactHooks.configs.recommended.rules,
 
       "react/jsx-sort-props": "error",
       "react/sort-comp": "off",
