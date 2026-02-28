@@ -155,14 +155,13 @@ export class LapController implements LapControllerType {
     }
   }
 
-  // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
-    await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.mqtt.publishLapData(lapData);
     try {
+      await this.backendController.socketIO.broadcastLapData(lapData);
+      await this.backendController.mqtt.publishLapData(lapData);
       await this.backendController.timescaleDB.insertLapData(lapData);
     } catch (error) {
-      console.error("Failed to insert lap data:", error);
+      logger.error("Failed to handle lap data:", error as Error);
     }
   }
 

@@ -15,8 +15,8 @@ export const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
   EnergyConsumed: parseFloat(lapPacket.EnergyConsumed.toFixed(2)),
   LapTime: parseFloat(lapPacket.LapTime.toFixed(2)),
   NetPowerOut: parseFloat(lapPacket.NetPowerOut.toFixed(2)),
-  Rfid: lapPacket.Rfid,
-  TimeStamp: new Date(lapPacket.TimeStamp).toLocaleString("en-US"),
+  Rfid: lapPacket.rfid,
+  TimeStamp: new Date(lapPacket.timestamp).toLocaleString("en-US"),
   TotalPowerIn: parseFloat(lapPacket.TotalPowerIn.toFixed(2)),
   TotalPowerOut: parseFloat(lapPacket.TotalPowerOut.toFixed(2)),
 });
