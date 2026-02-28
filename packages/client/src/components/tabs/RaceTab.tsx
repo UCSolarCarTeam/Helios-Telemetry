@@ -8,8 +8,12 @@ import RaceTabTable from "@/components/molecules/RaceTabMolecules/RaceTabTable";
 import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { type IFormattedLapData, prodURL } from "@shared/helios-types";
-import { IDriverData, ILapData } from "@shared/helios-types/src/types";
+import {
+  IDriverData,
+  type IFormattedLapData,
+  ILapData,
+  prodURL,
+} from "@shared/helios-types";
 import {
   SortingState,
   getCoreRowModel,

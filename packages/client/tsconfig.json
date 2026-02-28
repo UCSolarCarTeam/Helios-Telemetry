@@ -8,7 +8,8 @@
       "@/*": ["./src/*", "./public/*"],
       "@/server/*": ["../server/src/*"]
     },
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": ["node"] // if you are missing global types, you may have to add them here.
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
   "exclude": ["node_modules", "tailwind.config.ts"]

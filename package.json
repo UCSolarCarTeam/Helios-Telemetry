@@ -30,10 +30,10 @@
     "schema:drop": "lerna run schema:drop --scope=db"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "9.39.3",
     "@next/eslint-plugin-next": "^16.1.6",
     "@types/eslint": "^9.6.0",
-    "eslint": "9.0.0",
+    "eslint": "9.7.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.5.5",

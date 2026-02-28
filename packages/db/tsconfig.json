@@ -10,7 +10,8 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true
+    "strict": true,
+    "types": ["node"] // if you are missing global types, you may have to add them here.
   },
   "include": ["src", "migrations"],
   "exclude": ["node_modules", "dist"]
