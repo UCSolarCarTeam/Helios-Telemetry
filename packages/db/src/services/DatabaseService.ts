@@ -326,8 +326,7 @@ export class DatabaseService {
 
   public async getLapData(): Promise<Lap[]> {
     if (!this.isConnected) {
-      console.warn("Database not connected");
-      return [];
+      throw new Error("Database not connected");
     }
 
     try {
