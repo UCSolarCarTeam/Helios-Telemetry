@@ -680,6 +680,195 @@ const GRAND_MAX_STRAIGHT_GEO_JSON = {
   id: "root",
   type: "FeatureCollection",
 };
+// Brainerd International Raceway Track - the full 3.1 mile Donneybrooke Road Course (Summer 2026 race)
+const BRAINERD_INTERNATIONAL_RACEWAY_TRACK_GEO_JSON = {
+  features: [
+    {
+      geometry: { coordinates: [-94.276205759, 46.420077242], type: "Point" },
+      id: "sm24b474a4",
+      properties: { name: "1. start line" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.273893695, 46.419208195], type: "Point" },
+      id: "sme5b2f727",
+      properties: { name: "2" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.27169965, 46.418405694], type: "Point" },
+      id: "sm2ca61b84",
+      properties: { name: "3" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.269553883, 46.4175773], type: "Point" },
+      id: "sm48578c39",
+      properties: { name: "4" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.267257912, 46.416379065], type: "Point" },
+      id: "sm2a2024e4",
+      properties: { name: "5" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.266592725, 46.414884933], type: "Point" },
+      id: "sm354047e5",
+      properties: { name: "6" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.266742928, 46.413228026], type: "Point" },
+      id: "smf0521e67",
+      properties: { name: "7" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.267000421, 46.411763397], type: "Point" },
+      id: "smb88f023c",
+      properties: { name: "8" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.268180592, 46.4103875], type: "Point" },
+      id: "sm7fc7a11d",
+      properties: { name: "9" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.271131021, 46.409862279], type: "Point" },
+      id: "sm80b68752",
+      properties: { name: "10" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.27399562, 46.409677341], type: "Point" },
+      id: "smbb7bca34",
+      properties: { name: "11" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.274532062, 46.409906664], type: "Point" },
+      id: "sme8455cc6",
+      properties: { name: "12" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.274564249, 46.410468868], type: "Point" },
+      id: "sme983e385",
+      properties: { name: "13" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.273555738, 46.411674631], type: "Point" },
+      id: "sm34871bb8",
+      properties: { name: "14" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.272579416, 46.412865572], type: "Point" },
+      id: "sme050ff0b",
+      properties: { name: "15" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.272933467, 46.413412953], type: "Point" },
+      id: "sm8a014c7c",
+      properties: { name: "16" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.274714454, 46.413634862], type: "Point" },
+      id: "sm455856ca",
+      properties: { name: "17" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.275132879, 46.414063884], type: "Point" },
+      id: "sm9bc54c61",
+      properties: { name: "18" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.275004132, 46.415935271], type: "Point" },
+      id: "smfea857b6",
+      properties: { name: "19" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.275562032, 46.416297706], type: "Point" },
+      id: "sm101cb7e8",
+      properties: { name: "20" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.279145465, 46.41612019], type: "Point" },
+      id: "sm830f76f8",
+      properties: { name: "21" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.280229077, 46.415595026], type: "Point" },
+      id: "sm05807733",
+      properties: { name: "22" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.283029305, 46.416423451], type: "Point" },
+      id: "sm511c7930",
+      properties: { name: "23" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.283522831, 46.416992984], type: "Point" },
+      id: "smd876e646",
+      properties: { name: "24" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.283512103, 46.418856876], type: "Point" },
+      id: "smba7a94ae",
+      properties: { name: "25" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.283501374, 46.42075768], type: "Point" },
+      id: "sm418112e4",
+      properties: { name: "26" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.283410177, 46.422070454], type: "Point" },
+      id: "smced09393",
+      properties: { name: "27" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.282433853, 46.422381078], type: "Point" },
+      id: "smfcfcdb85",
+      properties: { name: "28" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.278989896, 46.421138573], type: "Point" },
+      id: "smcc59c350",
+      properties: { name: "29" },
+      type: "Feature",
+    },
+    {
+      geometry: { coordinates: [-94.276205759, 46.420077242], type: "Point" },
+      id: "sm24b474a4",
+      properties: { name: "30. finish line" },
+      type: "Feature",
+    },
+  ],
+  id: "root",
+  type: "FeatureCollection",
+};
+
+// Previous (Summer 2025) track (Grand Full Course) - kept for reference, commented out in TRACK_LIST
 const GRAND_FULL_COURSE_GEO_JSON = {
   features: [
     {
@@ -1145,6 +1334,9 @@ const GRAND_MAX_STRAIGHT = GRAND_MAX_STRAIGHT_GEO_JSON.features.map(
 const GRAND_FULL_COURSE = GRAND_FULL_COURSE_GEO_JSON.features.map(
   (feature) => feature.geometry.coordinates,
 );
+const NEW_TRACK = BRAINERD_INTERNATIONAL_RACEWAY_TRACK_GEO_JSON.features.map(
+  (feature) => feature.geometry.coordinates,
+);
 const raceTrackGeoJSON = {
   features: [
     {
@@ -1204,6 +1396,19 @@ const raceTrackGeoJSON_GRAND_FULL_COURSE = {
     {
       geometry: {
         coordinates: GRAND_FULL_COURSE,
+        type: "LineString",
+      },
+      properties: {},
+      type: "Feature",
+    },
+  ],
+  type: "FeatureCollection",
+} as const satisfies FeatureCollection<LineString>;
+const raceTrackGeoJSON_BRAINERD_INTERNATIONAL_RACEWAY_TRACK = {
+  features: [
+    {
+      geometry: {
+        coordinates: NEW_TRACK,
         type: "LineString",
       },
       properties: {},
@@ -1282,47 +1487,63 @@ const isOutsideBounds = (
 export const GEO_DATA = {
   raceTrackGeoJSON,
   raceTrackGeoJSON2,
+  raceTrackGeoJSON_BRAINERD_INTERNATIONAL_RACEWAY_TRACK,
   raceTrackGeoJSON_CORVETTE_RACE_LOOP,
   raceTrackGeoJSON_GRAND_FULL_COURSE,
   raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
 };
 export const TRACK_LIST: TrackList[] = [
-  {
-    layerProps: {
-      ...trackLayerStyle,
-      paint: { ...trackLayerStyle.paint, "line-color": "#ff0000" },
-    },
-    sourceProps: {
-      data: raceTrackGeoJSON_CORVETTE_RACE_LOOP,
-      id: "layer1",
-      type: "geojson",
-    },
-    trackName: "Corvette Race Loop",
-  },
+  // 2025 Summer track - kept for reference
+  // {
+  //   layerProps: {
+  //     ...trackLayerStyle,
+  //     paint: { ...trackLayerStyle.paint, "line-color": "#ff0000" },
+  //   },
+  //   sourceProps: {
+  //     data: raceTrackGeoJSON_CORVETTE_RACE_LOOP,
+  //     id: "layer1",
+  //     type: "geojson",
+  //   },
+  //   trackName: "Corvette Race Loop",
+  // },
   {
     layerProps: {
       ...trackLayerStyle,
       paint: { ...trackLayerStyle.paint, "line-color": "#0f00ff" },
     },
     sourceProps: {
-      data: raceTrackGeoJSON_GRAND_FULL_COURSE,
+      data: raceTrackGeoJSON_BRAINERD_INTERNATIONAL_RACEWAY_TRACK,
       id: "layer2",
       type: "geojson",
     },
-    trackName: "Grand Full Course",
+    trackName: "Brainerd International Raceway 3.1mi",
   },
-  {
-    layerProps: {
-      ...trackLayerStyle,
-      paint: { ...trackLayerStyle.paint, "line-color": "#ff00ff" },
-    },
-    sourceProps: {
-      data: raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
-      id: "layer3",
-      type: "geojson",
-    },
-    trackName: "Grand Max Straight",
-  },
+  // 2025 Summer track - kept for reference
+  // {
+  //   layerProps: {
+  //     ...trackLayerStyle,
+  //     paint: { ...trackLayerStyle.paint, "line-color": "#0f00ff" },
+  //   },
+  //   sourceProps: {
+  //     data: raceTrackGeoJSON_GRAND_FULL_COURSE,
+  //     id: "layer2",
+  //     type: "geojson",
+  //   },
+  //   trackName: "Grand Full Course",
+  // },
+  // 2025 Summer track - kept for reference
+  // {
+  //   layerProps: {
+  //     ...trackLayerStyle,
+  //     paint: { ...trackLayerStyle.paint, "line-color": "#ff00ff" },
+  //   },
+  //   sourceProps: {
+  //     data: raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
+  //     id: "layer3",
+  //     type: "geojson",
+  //   },
+  //   trackName: "Grand Max Straight",
+  // },
 ] as const;
 
 const distance = (x1: number, y1: number, x2: number, y2: number): number => {
@@ -1335,8 +1556,9 @@ export const mapCameraControls = {
   lerp,
 };
 
-export const Hydrated_Grand_Full_course: PacketMarkerData[] =
-  raceTrackGeoJSON_GRAND_FULL_COURSE.features[0].geometry.coordinates.map(
+// Demo mode packet markers for new track
+export const Hydrated_Brainerd_International_Raceway_Track: PacketMarkerData[] =
+  raceTrackGeoJSON_BRAINERD_INTERNATIONAL_RACEWAY_TRACK.features[0].geometry.coordinates.map(
     (coords) => {
       const newPacketMarker: PacketMarkerData = {
         data: generateFakeTelemetryData(),
@@ -1349,3 +1571,19 @@ export const Hydrated_Grand_Full_course: PacketMarkerData[] =
       return newPacketMarker;
     },
   );
+
+// Previous demo track markers - kept for reference
+// export const Hydrated_Grand_Full_course: PacketMarkerData[] =
+//   raceTrackGeoJSON_GRAND_FULL_COURSE.features[0].geometry.coordinates.map(
+//     (coords) => {
+//       const newPacketMarker: PacketMarkerData = {
+//         data: generateFakeTelemetryData(),
+//         markerCoords: {
+//           latitude: coords[1]!,
+//           longitude: coords[0]!,
+//         },
+//         open: false,
+//       };
+//       return newPacketMarker;
+//     },
+//   );
