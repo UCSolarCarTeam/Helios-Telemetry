@@ -8,22 +8,22 @@ import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 @Hypertable({
   compression: {
     compress: true,
-    compress_segmentby: "Rfid",
-    compress_orderby: "Timestamp",
+    compress_segmentby: "rfid",
+    compress_orderby: "timestamp",
     policy: {
       schedule_interval: "7 days",
     },
   },
 })
-@Index(["Rfid", "Timestamp"])
-@Index(["RaceName", "Timestamp"])
+@Index(["rfid", "timestamp"])
+@Index(["RaceName", "timestamp"])
 export class TelemetryPacket {
   @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
-  Timestamp!: Date;
+  timestamp!: Date;
 
   @PrimaryColumn({ type: "text" })
-  Rfid!: string;
+  rfid!: string;
 
   // ===============================================
   // Metadata Fields (from TelemetryMetadata)

@@ -9,15 +9,35 @@ import { TelemetryPacket } from "./entities/TelemetryPacket.entity";
 
 dotenv.config();
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is required in .db.env file");
+if (
+  !process.env.DATABASE_HOST ||
+  !process.env.DATABASE_PORT ||
+  !process.env.DATABASE_USERNAME ||
+  !process.env.DATABASE_PASSWORD
+) {
+  throw new Error("Database configuration environment variables are not set.");
 }
 
+const isProd = process.env.NODE_ENV === "production";
+
 export const AppDataSource = new DataSource({
+  database: "tsdb",
   entities: [TelemetryPacket, Driver, Lap],
-  logging: process.env.NODE_ENV === "development",
+  host: process.env.DATABASE_HOST,
+  logging: !isProd,
   migrations: [__dirname + "/migrations/*.{js,ts}"],
-  synchronize: process.env.NODE_ENV === "development",
+  password: process.env.DATABASE_PASSWORD,
+
+  port: process.env.DATABASE_PORT
+    ? parseInt(process.env.DATABASE_PORT, 10)
+    : 5432,
+  synchronize: !isProd,
+
   type: "postgres",
-  url: process.env.DATABASE_URL,
+  username: process.env.DATABASE_USERNAME,
+  ...(isProd && {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  }),
 });

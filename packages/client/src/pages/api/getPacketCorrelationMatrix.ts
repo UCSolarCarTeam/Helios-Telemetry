@@ -1,18 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const API_ROUTE = process.env.GET_PACKET_CORRELATION_MATRIX_URL;
-if (!API_ROUTE) {
-  throw new Error("GET_PACKET_CORRELATION_MATRIX_URL is not defined");
-}
+import { BACKEND_ROUTES } from "@/constants/apiRoutes";
+import { backendApi } from "@/lib/api";
+
 export default async function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
 ) {
   try {
-    const result = await fetch(API_ROUTE as string);
-    const graph = await result.json();
-    res.status(200).json(graph);
+    const { data } = await backendApi.get(
+      BACKEND_ROUTES.ml.packetCorrelationMatrix,
+    );
+    res.status(200).json(data);
   } catch (err) {
-    res.status(500).json({ error: "failed to load data" + err });
+    res.status(500).json({
+      error: `Failed to load data: ${err instanceof Error ? err.message : String(err)}`,
+    });
   }
 }

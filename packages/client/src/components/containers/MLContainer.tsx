@@ -1,73 +1,86 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import type { PlotParams } from "react-plotly.js";
-
+import { API_ROUTES } from "@/constants/apiRoutes";
 import useWindowDimensions from "@/hooks/PIS/useWindowDimensions";
+import {
+  type PlotTypes,
+  useMLCorrelationMatrix,
+} from "@/hooks/useMLCorrelationMatrix";
 
 import Plotly from "./Plotly";
 
 const SMALL_SCREEN = 380;
 
-type PlotTypes =
-  | "/api/getPacketCorrelationMatrix"
-  | "/api/getLapCorrelationMatrix";
-
 export default function MLContainer({
-  plotType = "/api/getPacketCorrelationMatrix",
+  plotType = API_ROUTES.ml.packetCorrelationMatrix,
 }: {
   plotType?: PlotTypes;
 }) {
-  const [plot, setPlot] = useState<PlotParams | { error: boolean }>();
   const { width } = useWindowDimensions();
-  const { resolvedTheme } = useTheme();
 
-  useEffect(() => {
-    const fetchPlot = async () => {
-      try {
-        const response = await fetch(plotType);
-        const graph = await response.json();
-        const data = JSON.parse(graph) as PlotParams;
-        const layout: PlotParams["layout"] = {
-          autosize: true,
-          font: {
-            color: resolvedTheme
-              ? resolvedTheme === "dark"
-                ? "white"
-                : "black"
-              : "black",
-          },
-          margin: { l: 175, t: 75 },
-          paper_bgcolor: "rgba(0,0,0,0)",
-          title: data.layout.title,
-        };
-        data.layout = layout;
+  // Fetch and transform correlation matrix data using TanStack Query
+  // The hook handles both fetching and theme-aware layout transformation
+  const {
+    data: plotData,
+    error,
+    isFetching,
+    isLoading,
+    refetch,
+  } = useMLCorrelationMatrix({
+    plotType,
+  });
 
-        setPlot(data);
-      } catch (e) {
-        setPlot({ error: true });
-      }
-    };
-    fetchPlot();
-  }, [plotType, resolvedTheme]);
-
-  if (!plot || !resolvedTheme || resolvedTheme === undefined) {
+  // Loading state
+  if (isLoading) {
     return (
       <div className="flex h-72 items-center justify-center rounded-lg bg-white p-2 text-3xl font-bold dark:bg-arsenic dark:text-white">
-        Loading...
+        {isFetching ? "Fetching data..." : "Loading..."}
       </div>
     );
   }
-  if ("error" in plot || !resolvedTheme || resolvedTheme === undefined) {
+
+  // Error state with retry button
+  if (error) {
     return (
-      <div className="flex h-72 items-center justify-center rounded-lg bg-white p-2 text-3xl font-bold dark:bg-arsenic dark:text-white">
-        Error loading data
+      <div className="flex h-72 flex-col items-center justify-center gap-4 rounded-lg bg-white p-2 dark:bg-arsenic dark:text-white">
+        <div className="text-xl font-bold text-red-600 dark:text-red-400">
+          Error loading data
+        </div>
+        <div className="text-gray-600 dark:text-gray-400 text-sm">
+          {error instanceof Error ? error.message : "Unknown error occurred"}
+        </div>
+        <button
+          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+          onClick={() => refetch()}
+        >
+          Retry
+        </button>
       </div>
     );
   }
+
+  // No data state (shouldn't happen if query is enabled correctly)
+  if (!plotData) {
+    return (
+      <div className="flex h-72 items-center justify-center rounded-lg bg-white p-2 text-3xl font-bold dark:bg-arsenic dark:text-white">
+        No data available
+      </div>
+    );
+  }
+
+  // Success state - render the plot
   return (
-    <div className="flex h-72 items-center gap-4 overflow-x-auto overflow-y-hidden rounded-lg bg-white p-2 text-3xl font-bold dark:bg-arsenic dark:text-white sm:justify-center">
+    <div className="relative flex h-72 items-center gap-4 overflow-x-auto overflow-y-hidden rounded-lg bg-white p-2 text-3xl font-bold dark:bg-arsenic dark:text-white sm:justify-center">
+      {/* Refresh button - positioned in top-right corner */}
+      <button
+        className="text-gray-700 dark:text-gray-200 absolute right-2 top-2 z-10 rounded-md bg-gray-200 px-3 py-1 text-xs font-semibold transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+        disabled={isFetching}
+        onClick={() => refetch()}
+        title="Refresh data"
+      >
+        {isFetching ? "Refreshing..." : "Refresh"}
+      </button>
+
       <Plotly
         className="h-72 w-max bg-inherit"
         config={{
@@ -82,8 +95,8 @@ export default function MLContainer({
           scrollZoom: true,
           staticPlot: width < SMALL_SCREEN,
         }}
-        data={plot.data}
-        layout={plot.layout}
+        data={plotData.data}
+        layout={plotData.layout}
       />
     </div>
   );
