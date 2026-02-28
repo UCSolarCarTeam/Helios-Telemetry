@@ -4,6 +4,7 @@ import type { PlotParams } from "react-plotly.js";
 
 import { API_ROUTES } from "@/constants/apiRoutes";
 import { api } from "@/lib/api";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 
 export type PlotTypes =
@@ -13,6 +14,23 @@ export type PlotTypes =
 interface UseMLCorrelationMatrixOptions {
   plotType: PlotTypes;
 }
+
+/**
+ * Return type for the useMLCorrelationMatrix hook
+ *
+ * Extends the standard TanStack Query result with:
+ * - Theme-transformed plot data (or null if not loaded)
+ * - Enhanced isLoading state that includes theme resolution check
+ */
+export type UseMLCorrelationMatrixResult = Omit<
+  UseQueryResult<PlotParams, Error>,
+  "data" | "isLoading"
+> & {
+  /** Theme-transformed plot data, or null if not yet loaded */
+  data: PlotParams | null;
+  /** True if query is loading OR theme is not yet resolved */
+  isLoading: boolean;
+};
 
 /**
  * Fetches correlation matrix data from the API with a 30-second timeout.
@@ -50,10 +68,25 @@ async function fetchCorrelationMatrix(
  * @param options - Configuration options
  * @param options.plotType - The API endpoint to fetch from
  * @returns Query result with theme-transformed plot data
+ *
+ * @example
+ * ```tsx
+ * function CorrelationPlot() {
+ *   const { data, isLoading, error } = useMLCorrelationMatrix({
+ *     plotType: API_ROUTES.ml.packetCorrelationMatrix
+ *   });
+ *
+ *   if (isLoading) return <Spinner />;
+ *   if (error) return <Error message={error.message} />;
+ *   if (!data) return null;
+ *
+ *   return <Plot data={data.data} layout={data.layout} />;
+ * }
+ * ```
  */
 export function useMLCorrelationMatrix({
   plotType,
-}: UseMLCorrelationMatrixOptions) {
+}: UseMLCorrelationMatrixOptions): UseMLCorrelationMatrixResult {
   const { resolvedTheme } = useTheme();
   // Fetch raw data from API
   const query = useQuery({

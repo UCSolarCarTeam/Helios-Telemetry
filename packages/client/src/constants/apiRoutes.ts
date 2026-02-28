@@ -56,7 +56,9 @@ export const BACKEND_ROUTES = {
     /** Get all drivers */
     base: "/drivers",
     /** Get driver by RFID */
-    byRfid: (rfid: number) => `/driver/${rfid}`,
+    byRfid: (rfid: string) => `/driver/${rfid}`,
+    /** Update driver information */
+    updateInfo: "/updatedriverinfo",
   },
 
   /**
