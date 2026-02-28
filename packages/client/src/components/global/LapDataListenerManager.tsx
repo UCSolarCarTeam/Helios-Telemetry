@@ -12,7 +12,7 @@ export function LapListenerManager(): React.ReactElement | null {
 
   // Fetch initial lap data when manager mounts
   useEffect(() => {
-    void fetchLapData();
+    fetchLapData();
   }, [fetchLapData]);
 
   // Handle connection type changes

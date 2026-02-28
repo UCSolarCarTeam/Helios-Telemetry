@@ -9,7 +9,7 @@ import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { type IFormattedLapData, prodURL } from "@shared/helios-types";
-import { IDriverData, ILapData } from "@shared/helios-types/src/types";
+import { IDriverData } from "@shared/helios-types/src/types";
 import {
   SortingState,
   getCoreRowModel,
@@ -61,24 +61,21 @@ function RaceTab() {
   );
 
   // copy rfid to clipboard
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(String(Rfid));
-      setCopy(1);
-      setTimeout(() => setCopy(0), 5000);
-      notifications.show({
-        color: "green",
-        message: "Copied to clipboard",
-        title: "Copied",
-      });
-    } catch (error) {
-      notifications.show({
-        color: "red",
-        message: `Error copying to clipboard: ${error instanceof Error ? error.message : String(error)}`,
-        title: "Error",
-      });
-    }
+  const handleCopy = () => {
+    navigator.clipboard.writeText(String(Rfid));
+    setCopy(1);
+    setTimeout(() => setCopy(0), 5000);
+    onCopied();
   };
+
+  // copy helper
+  const onCopied = useCallback(() => {
+    notifications.show({
+      color: "green",
+      message: "Copied to clipboard",
+      title: "Copied",
+    });
+  }, []);
 
   // dropdown handler for the drivers
   const handleDropdown = useCallback(
@@ -90,9 +87,10 @@ function RaceTab() {
       if (Number.isNaN(newRFID) || newRFID === "Show all data") {
         setFilteredLaps(lapData);
       } else {
-        const response = await fetchFilteredLaps(Number(newRFID));
-        const formattedData = response.map(formatLapData);
-        setFilteredLaps(formattedData);
+        await fetchFilteredLaps(Number(newRFID)).then((response) => {
+          const formattedData = response.data.map(formatLapData);
+          setFilteredLaps(formattedData);
+        });
       }
     },
     [formatLapData, lapData],
@@ -101,7 +99,7 @@ function RaceTab() {
   // fetch the driver names from dynamo
   const fetchDriverNames = async () => {
     try {
-      const response = await axios.get<IDriverData[]>(`${prodURL}/drivers`);
+      const response = await axios.get(`${prodURL}/drivers`);
 
       return response.data;
     } catch (error) {
@@ -112,35 +110,27 @@ function RaceTab() {
   // get the driver laps based on the selected rfid
   const fetchFilteredLaps = async (Rfid: number) => {
     try {
-      const response = await axios.get<ILapData[]>(`${prodURL}/driver/${Rfid}`);
+      const response = await axios.get(`${prodURL}/driver/${Rfid}`);
       return response.data;
     } catch (error) {
       setFilteredLaps([]);
-      return [];
+      return { error: "Error fetching driver laps" };
     }
   };
 
   // fetching driver names when component mounts
   useEffect(() => {
-    void (async (): Promise<void> => {
-      try {
-        const response = await fetchDriverNames();
-
-        if (!Array.isArray(response)) {
-          setDriverData([]);
-          return;
-        }
-
-        const driverData = response.map((driver: IDriverData) => ({
+    fetchDriverNames()
+      .then((response) => {
+        const driverData = response.data.map((driver: IDriverData) => ({
           Rfid: driver.Rfid,
           driver: driver.driver,
         }));
-
         setDriverData(driverData);
-      } catch (error) {
-        setDriverData([]);
-      }
-    })();
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
   }, []);
 
   return (

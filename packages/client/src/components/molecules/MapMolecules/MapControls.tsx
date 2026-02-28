@@ -90,7 +90,7 @@ export default function MapControls({
         <div
           className={`absolute left-12 flex flex-col gap-2 rounded bg-inherit p-4 transition-opacity duration-300 ${viewRaceTracks ? "opacity-100" : "pointer-events-none opacity-0"}`}
         >
-          {trackList.map((track: TrackList, index) => {
+          {trackList.map((track, index) => {
             return (
               <button
                 className={`flex size-full items-center gap-2 text-nowrap text-end transition-transform duration-500 ${!viewRaceTracks && "-translate-y-10"}`}

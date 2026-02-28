@@ -32,11 +32,9 @@ const Plotly = dynamic(
           useEffect(() => {
             let instance: Plotly.PlotlyHTMLElement | undefined;
             if (originRef.current) {
-              void newPlot(originRef.current, data, layout, config).then(
-                (ref) => {
-                  setHandle((instance = ref));
-                },
-              );
+              newPlot(originRef.current, data, layout, config).then((ref) => {
+                setHandle((instance = ref));
+              });
             }
             return () => {
               if (instance) {
