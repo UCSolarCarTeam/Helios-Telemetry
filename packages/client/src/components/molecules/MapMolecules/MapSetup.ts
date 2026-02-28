@@ -1487,18 +1487,19 @@ export const GEO_DATA = {
   raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
 };
 export const TRACK_LIST: TrackList[] = [
-  {
-    layerProps: {
-      ...trackLayerStyle,
-      paint: { ...trackLayerStyle.paint, "line-color": "#ff0000" },
-    },
-    sourceProps: {
-      data: raceTrackGeoJSON_CORVETTE_RACE_LOOP,
-      id: "layer1",
-      type: "geojson",
-    },
-    trackName: "Corvette Race Loop",
-  },
+  // 2025 Summer track - kept for reference
+  // {
+  //   layerProps: {
+  //     ...trackLayerStyle,
+  //     paint: { ...trackLayerStyle.paint, "line-color": "#ff0000" },
+  //   },
+  //   sourceProps: {
+  //     data: raceTrackGeoJSON_CORVETTE_RACE_LOOP,
+  //     id: "layer1",
+  //     type: "geojson",
+  //   },
+  //   trackName: "Corvette Race Loop",
+  // },
   {
     layerProps: {
       ...trackLayerStyle,
@@ -1509,9 +1510,9 @@ export const TRACK_LIST: TrackList[] = [
       id: "layer2",
       type: "geojson",
     },
-    trackName: "New Track",
+    trackName: "Brainerd International Raceway 3.1mi",
   },
-  // Previous demo track - kept for reference
+  // 2025 Summer track - kept for reference
   // {
   //   layerProps: {
   //     ...trackLayerStyle,
@@ -1524,18 +1525,19 @@ export const TRACK_LIST: TrackList[] = [
   //   },
   //   trackName: "Grand Full Course",
   // },
-  {
-    layerProps: {
-      ...trackLayerStyle,
-      paint: { ...trackLayerStyle.paint, "line-color": "#ff00ff" },
-    },
-    sourceProps: {
-      data: raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
-      id: "layer3",
-      type: "geojson",
-    },
-    trackName: "Grand Max Straight",
-  },
+  // 2025 Summer track - kept for reference
+  // {
+  //   layerProps: {
+  //     ...trackLayerStyle,
+  //     paint: { ...trackLayerStyle.paint, "line-color": "#ff00ff" },
+  //   },
+  //   sourceProps: {
+  //     data: raceTrackGeoJSON_GRAND_MAX_STRAIGHT,
+  //     id: "layer3",
+  //     type: "geojson",
+  //   },
+  //   trackName: "Grand Max Straight",
+  // },
 ] as const;
 
 const distance = (x1: number, y1: number, x2: number, y2: number): number => {
