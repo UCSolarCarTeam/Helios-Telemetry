@@ -58,7 +58,11 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    this.timescaleDB.insertPacketData(message);
+    try {
+      await this.timescaleDB.insertPacketData(message);
+    } catch (error) {
+      logger.error("Failed to insert packet data:", error);
+    }
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);

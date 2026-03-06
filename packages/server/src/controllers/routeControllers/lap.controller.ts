@@ -1,10 +1,14 @@
 import { BackendController } from "../BackendController/BackendController";
 
-import { type Request, type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
 
-export const getLapData = async (request: Request, response: Response) => {
+export const getLapData = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -26,8 +30,7 @@ export const getLapData = async (request: Request, response: Response) => {
 
     return response.status(200).json(data);
   } catch (err) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: `Server Error: ${err}` });
+    next(err);
   }
 };
 

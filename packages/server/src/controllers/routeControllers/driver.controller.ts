@@ -1,10 +1,14 @@
 import { BackendController } from "../BackendController/BackendController";
 
-import { type Request, type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
 
-export const getDrivers = async (request: Request, response: Response) => {
+export const getDrivers = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -27,12 +31,15 @@ export const getDrivers = async (request: Request, response: Response) => {
 
     return response.status(200).json(data);
   } catch (err) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: `Server Error: ${err}` });
+    next(err);
   }
 };
 
-export const getDriverLaps = async (request: Request, response: Response) => {
+export const getDriverLaps = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -56,8 +63,7 @@ export const getDriverLaps = async (request: Request, response: Response) => {
 
     return response.status(200).json(data);
   } catch (err) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: `Server Error: ${err}` });
+    next(err);
   }
 };
 
@@ -81,6 +87,7 @@ export const getDriverHealth = (request: Request, response: Response) => {
 export const updateDriverInfo = async (
   request: Request,
   response: Response,
+  next: NextFunction,
 ) => {
   const { Rfid, name } = request.body;
 
@@ -112,7 +119,6 @@ export const updateDriverInfo = async (
 
     return response.status(200).json(data);
   } catch (err) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${err.message}`);
-    response.status(500).json({ message: err });
+    next(err);
   }
 };

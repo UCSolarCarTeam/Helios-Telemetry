@@ -8,8 +8,8 @@ import { ObjectLiteral, FindOneOptions } from "typeorm";
 
 // every entity has either timestamp (car parts) and/or rfid (driver and car parts) as its primary key
 interface BaseEntity {
-  Timestamp?: Date;
-  Rfid?: string;
+  timestamp?: Date;
+  rfid?: string;
 }
 
 export abstract class BaseRepository<T extends ObjectLiteral & BaseEntity> {

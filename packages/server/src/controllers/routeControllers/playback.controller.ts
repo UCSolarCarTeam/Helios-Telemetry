@@ -1,10 +1,14 @@
 import { BackendController } from "../BackendController/BackendController";
 
-import { type Request, type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
 
-export const getPacket = async (request: Request, response: Response) => {
+export const getPacket = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -25,14 +29,14 @@ export const getPacket = async (request: Request, response: Response) => {
 
     return response.status(200).json(data);
   } catch (error) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    response.status(500).json({ message: `Server Error: ${error}` });
+    next(error);
   }
 };
 
 export const getPacketDataBetweenDates = async (
   request: Request,
   response: Response,
+  next: NextFunction,
 ) => {
   const backendController = request.app.locals
     .backendController as BackendController;
@@ -59,14 +63,14 @@ export const getPacketDataBetweenDates = async (
 
     return response.status(200).json({ data: packetData, message: "OK" });
   } catch (error) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    return response.status(500).json({ message: "Internal Server Error" });
+    next(error);
   }
 };
 
 export const getFirstAndLastPacket = async (
   request: Request,
   response: Response,
+  next: NextFunction,
 ) => {
   const backendController = request.app.locals
     .backendController as BackendController;
@@ -90,8 +94,7 @@ export const getFirstAndLastPacket = async (
 
     return response.status(200).json(data);
   } catch (error) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    response.status(500).json({ message: `Server Error: ${error}` });
+    next(error);
   }
 };
 
