@@ -156,7 +156,7 @@ export class LapController implements LapControllerType {
   }
 
   public async handleLapData(lapData: ILapData) {
-    await Promise.all([
+    await Promise.allSettled([
       Promise.resolve(
         this.backendController.socketIO.broadcastLapData(lapData),
       ).catch((err) => logger.error("SocketIO failed", err)),
