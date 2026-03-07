@@ -34,7 +34,7 @@ export class BackendController implements BackendControllerTypes {
   private async initializeDatabase() {
     try {
       await this.timescaleDB.initialize();
-      logger.info("Database connection established successfully");
+      logger.info("Database connection established successfully!");
     } catch (error) {
       logger.error("Failed to initialize database:", error);
       // Optionally throw or handle gracefully based on your needs
