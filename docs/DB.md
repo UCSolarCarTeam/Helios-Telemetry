@@ -4,6 +4,15 @@ _last updated March 7th, 2026_
 
 This document explains how the backend connects to TimescaleDB, where the connection is created, and what environment variables are required.
 
+## Manually inserting data
+
+```SQL
+INSERT INTO "public"."driver" (Rfid, "Name", "CreatedAt", "UpdatedAt")
+VALUES ('1', 'asdf', NOW(), NOW());
+```
+
+Because of the uppercase names you have to add quotations to the uppercased ones (not the primary column though)
+
 ## High-Level Flow
 
 1. The server starts and creates a `BackendController`.
