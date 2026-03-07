@@ -73,7 +73,6 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
   - [Controllers](#controllers)
     - [Backend Controller](#backend-controller)
     - [Lap Controller](#lap-controller)
-    - [DynamoDB Controller](#dynamo-db-controller)
 
 ### [Shared Folder](./docs/SHARED.md)
 
