@@ -83,7 +83,7 @@ export default function DriverUpdate() {
     if (validateInputs()) {
       if (await checkMQTTPassword()) {
         axios
-          .post(`${prodURL}/updatedriverinfo`, {
+          .post<{ message: string }>(`${prodURL}/updatedriverinfo`, {
             Rfid: driverDetails.Rfid,
             name: driverDetails.name,
           })
@@ -112,7 +112,10 @@ export default function DriverUpdate() {
       <div className="col-span-1">
         <label className="mr-2">Update Driver Info:</label>
       </div>
-      <form className="col-span-1 flex flex-col gap-2" onSubmit={handleSubmit}>
+      <form
+        className="col-span-1 flex flex-col gap-2"
+        onSubmit={(e) => void handleSubmit(e)}
+      >
         {Object.keys(driverDetailsText).map((key) => (
           <TextField
             error={errors.has(key as keyof IDriverNameUpdate)}
