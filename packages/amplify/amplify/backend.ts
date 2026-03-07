@@ -404,6 +404,10 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       HeliosPasswords,
       "DRIVER_NAME_UPDATE_PASSWORD",
     ),
+    LAP_POSITION_PASSWORD: ecs.Secret.fromSecretsManager(
+      HeliosPasswords,
+      "LAP_POSITION_PASSWORD",
+    ),
   },
 });
 
