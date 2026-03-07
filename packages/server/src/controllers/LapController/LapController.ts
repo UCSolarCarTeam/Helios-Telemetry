@@ -156,13 +156,17 @@ export class LapController implements LapControllerType {
   }
 
   public async handleLapData(lapData: ILapData) {
-    try {
-      await this.backendController.socketIO.broadcastLapData(lapData);
-      await this.backendController.mqtt.publishLapData(lapData);
-      await this.backendController.timescaleDB.insertLapData(lapData);
-    } catch (error) {
-      logger.error("Failed to handle lap data:", error as Error);
-    }
+    await Promise.all([
+      Promise.resolve(
+        this.backendController.socketIO.broadcastLapData(lapData),
+      ).catch((err) => logger.error("SocketIO failed", err)),
+      this.backendController.mqtt
+        .publishLapData(lapData)
+        .catch((err) => logger.error("MQTT failed", err)),
+      this.backendController.timescaleDB
+        .insertLapData(lapData)
+        .catch((err) => logger.error("DB insertion failed", err)),
+    ]);
   }
 
   public async handlePacket(packet: ITelemetryData) {
@@ -214,10 +218,10 @@ export class LapController implements LapControllerType {
         EnergyConsumed: this.getEnergyConsumption(this.lastLapPackets),
         LapTime: this.calculateLapTime(this.lastLapPackets),
         NetPowerOut: this.netPower(this.lastLapPackets),
-        rfid: packet.Pi.Rfid,
-        timestamp: new Date(packet.TimeStamp * 1000),
         TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
         TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
+        rfid: packet.Pi.Rfid,
+        timestamp: new Date(packet.TimeStamp * 1000),
       };
 
       this.handleLapData(lapData);
