@@ -2,7 +2,7 @@ _last updated March 29th, 2025_
 
 # Server Folder Documentation
 
-We use Express.js, MQTT, the DynamoSDK, and Socket.io as our main tech on the backend.
+We use Express.js, MQTT, TimescaleDB, and Socket.io as our main tech on the backend.
 
 Our `index.ts` file handles the 'initiation' of our backend. You can find that file [here](../packages/server/src/index.ts)
 
@@ -88,7 +88,7 @@ export const getDrivers = async (request: Request, response: Response) => {
   );
 
   try {
-    const driverData = await backendController.dynamoDB.getDrivers();
+    const driverData = await backendController.timescaleDB.getDrivers();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data = {
@@ -118,13 +118,13 @@ Our controllers handle the main logic of our backend. They are classes that cont
 
 #### Backend Controller
 
-The Backend Controller serves as the central hub for managing backend services. It initializes and maintains instances of DynamoDB, SocketIO, MQTT, and LapController, passing itself (this) to allow interaction between them.
+The Backend Controller serves as the central hub for managing backend services. It initializes and maintains instances of TimescaleDB, SocketIO, MQTT, and LapController, passing itself (this) to allow interaction between them.
 
 ```typescript
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
   ) {
-    this.dynamoDB = new DynamoDB(this);
+    this.timescaleDB = new TimescaleDB(this);
     this.socketIO = new SocketIO(httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
@@ -146,9 +146,3 @@ The lap controller handles three main functionalities:
 - Logic for calculating to see if the lap has been completed
   - This is handled by the 'checkLap()' member function\
   - The checklap function basically just checks to see whether the car is in the radius of the flag position
-
-#### Dynamo DB Controller
-
-Idk why this name doesn't actually have the name of controller but it does control the data flow and requests of what we are requesting or posting to dynamo.
-
-Each function in here is pretty self explanatory as to what it does, and it fetches data for our three tables, as described [here](./AMPLIFY.md#our-tables)

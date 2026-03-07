@@ -25,10 +25,10 @@ You will run three repositories locally (or in Docker):
 yarn dev:server
 ```
 
-Note: When running test MQTT publishers you may not want those fake packets written into DynamoDB. Locate the packet handler in the server code (the `handlePacketReceive` flow) and comment out the DB insert line when running locally:
+Note: When running test MQTT publishers you may not want those fake packets written into TimescaleDB. Locate the packet handler in the server code (the `handlePacketReceive` flow) and comment out the DB insert line when running locally:
 
 ```typescript
-// this.dynamoDB.insertPacketData(message); // comment out for local testing
+// this.timescaleDB.insertPacketData(message); // comment out for local testing
 ```
 
 ## 2) Telemetry-Visualizer

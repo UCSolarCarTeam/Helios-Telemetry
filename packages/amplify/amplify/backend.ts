@@ -10,7 +10,6 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as eventbridge from "aws-cdk-lib/aws-events";
 import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
 import * as url from "node:url";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -130,49 +129,6 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
 );
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
-
-const packetDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "packet_data_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
-  },
-);
-
-const lapDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "lap_data_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "Rfid", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
-  },
-);
-
-const driverDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "driver_data_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "Rfid", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-  },
-);
-
-const gpsCalculatedLapDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "gps_lap_count_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "Rfid", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
-  },
-);
 
 const TelemetryECSTaskDefinition = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
@@ -332,11 +288,7 @@ const TelemetryBackendVPC = new ec2.Vpc(
 
 TelemetryECSTaskDefinition.addContainer("TheContainer", {
   environment: {
-    DRIVER_TABLE_NAME: driverDataTable.tableName,
-    GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName,
-    LAP_TABLE_NAME: lapDataTable.tableName,
     NODE_ENV: "production",
-    PACKET_TABLE_NAME: packetDataTable.tableName,
   },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "TelemetryBackend" }),
@@ -507,29 +459,6 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   ec2.Port.tcp(1883),
   "Aedes - Allow inbound traffic on port 1883",
 );
-
-// Give DynamoDB Permissions to hte packet data and lap data
-const dynamoDbAccessPolicy = new iam.PolicyStatement({
-  actions: [
-    "dynamodb:PutItem",
-    "dynamodb:GetItem",
-    "dynamodb:UpdateItem",
-    "dynamodb:Scan",
-    "dynamodb:Query",
-  ],
-  effect: iam.Effect.ALLOW,
-
-  resources: [
-    packetDataTable.tableArn,
-    `${packetDataTable.tableArn}/index/type-timestamp-index`,
-    lapDataTable.tableArn,
-    driverDataTable.tableArn,
-    gpsCalculatedLapDataTable.tableArn,
-  ],
-});
-
-// Attach the policy to the ECS Task Role
-TelemetryECSTaskDefinition.taskRole.addToPrincipalPolicy(dynamoDbAccessPolicy);
 
 // Grant Lambda invocation permissions for ML correlation matrix functions
 const lambdaInvokePolicy = new iam.PolicyStatement({
