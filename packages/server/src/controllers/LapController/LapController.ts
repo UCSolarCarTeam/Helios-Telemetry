@@ -155,19 +155,18 @@ export class LapController implements LapControllerType {
     }
   }
 
-  // this function is for calling when lap completes via lap digital being true
   public async handleLapData(lapData: ILapData) {
-    await this.backendController.socketIO.broadcastLapData(lapData);
-    await this.backendController.mqtt.publishLapData(lapData);
-    await this.backendController.timescaleDB.insertLapData(lapData);
-  }
-
-  // this function is for calling when lap completes via geofence
-  public async handleGeofenceLap(rfid: string, timestamp: number) {
-    await this.backendController.timescaleDB.insertIntoGpsLapCountTable(
-      rfid,
-      timestamp,
-    );
+    await Promise.allSettled([
+      Promise.resolve(
+        this.backendController.socketIO.broadcastLapData(lapData),
+      ).catch((err) => logger.error("SocketIO failed", err)),
+      this.backendController.mqtt
+        .publishLapData(lapData)
+        .catch((err) => logger.error("MQTT failed", err)),
+      this.backendController.timescaleDB
+        .insertLapData(lapData)
+        .catch((err) => logger.error("DB insertion failed", err)),
+    ]);
   }
 
   public async handlePacket(packet: ITelemetryData) {
@@ -188,7 +187,7 @@ export class LapController implements LapControllerType {
 
     if (this.checkLap(packet) && this.lastLapPackets.length > 5) {
       logger.info("lap completed for geofence");
-      this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
+      // this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
     }
 
     if (
@@ -219,13 +218,11 @@ export class LapController implements LapControllerType {
         EnergyConsumed: this.getEnergyConsumption(this.lastLapPackets),
         LapTime: this.calculateLapTime(this.lastLapPackets),
         NetPowerOut: this.netPower(this.lastLapPackets),
-        Rfid: packet.Pi.Rfid,
-        TimeStamp: packet.TimeStamp,
         TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
         TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
+        rfid: packet.Pi.Rfid,
+        timestamp: new Date(packet.TimeStamp * 1000),
       };
-
-      logger.info("Lap data inserted into database: ", lapData);
 
       this.handleLapData(lapData);
       this.lastLapPackets = [];
