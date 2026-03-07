@@ -1,7 +1,8 @@
 import axios from "axios";
+import { useTheme } from "next-themes";
 import React, { useState } from "react";
 
-import { sand } from "@/styles/colors";
+import { helios, heliosCompliment, sand } from "@/styles/colors";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
@@ -19,6 +20,7 @@ const driverDetailsText: IDriverNameUpdate = {
 } as const;
 
 export default function DriverUpdate() {
+  const { resolvedTheme } = useTheme();
   const [driverDetails, setDriverDetails] = useState<IDriverNameUpdate>({
     Rfid: "",
     name: "",
@@ -106,12 +108,12 @@ export default function DriverUpdate() {
   };
 
   return (
-    <div className="mb-4 grid grid-cols-2 items-center justify-between">
+    <div className="mb-4 grid grid-cols-[40%_60%] items-center justify-between">
       <div className="col-span-1">
         <label className="mr-2">Update Driver Info:</label>
       </div>
       <form
-        className="col-span-1 flex flex-col"
+        className="col-span-1 flex flex-col gap-2"
         onSubmit={(e) => void handleSubmit(e)}
       >
         {Object.keys(driverDetailsText).map((key) => (
@@ -130,22 +132,28 @@ export default function DriverUpdate() {
               }));
             }}
             sx={{
-              "& .MuiInputBase-input": {
-                color: sand,
-              },
-              "& .MuiInputBase-input::placeholder": {
+              "& .MuiOutlinedInput-input::placeholder": {
                 color: sand,
                 opacity: 1,
               },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: sand },
+                "&.Mui-focused fieldset": { borderColor: helios },
+                "&:hover fieldset": { borderColor: helios },
+                color: sand,
+              },
             }}
-            variant="filled"
+            variant="outlined"
           />
         ))}
         <TextField
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword((prev) => !prev)}>
+                <IconButton
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  sx={{ color: resolvedTheme === "dark" ? "white" : "black" }}
+                >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -156,21 +164,42 @@ export default function DriverUpdate() {
           }}
           onChange={(e) => setPassword(e.target.value)}
           sx={{
-            "& .MuiInputBase-input": {
-              color: sand,
-            },
             "& .MuiInputBase-input::placeholder": {
               color: sand,
               opacity: 1,
             },
+            "& .MuiInputBase-root": {
+              "& fieldset": { borderColor: sand },
+              "&.Mui-focused fieldset": { borderColor: helios },
+              "&:hover fieldset": { borderColor: helios },
+              color: sand,
+            },
           }}
           type={showPassword ? "text" : "password"}
           value={password}
-          variant="filled"
+          variant="outlined"
         />
-        <Button className="dark:text-sand" type="submit">
-          Submit
+        <Button
+          className="mt-2 w-fit self-center"
+          disabled={loading}
+          sx={{
+            "&:hover": {
+              backgroundColor: heliosCompliment,
+              borderColor: helios,
+              color: "white",
+            },
+            backgroundColor: resolvedTheme === "dark" ? helios : "white",
+            border: "1px solid",
+            borderColor: sand,
+            color: "black",
+            px: 8,
+          }}
+          type="submit"
+          variant="outlined"
+        >
+          {loading ? "Submitting..." : "Submit"}
         </Button>
+
         {loading && (
           <div className="flex justify-center">
             <CircularProgress size="2rem" />
