@@ -58,6 +58,12 @@ const MLCorrelationMatrixSecrets = secretsmanager.Secret.fromSecretNameV2(
   "MLCorrelationMatrixSecrets",
 );
 
+const HeliosPasswords = secretsmanager.Secret.fromSecretNameV2(
+  TelemetryBackendStack,
+  "HeliosPasswords",
+  "HeliosPasswords",
+);
+
 const TimescaleConnectionString = secretsmanager.Secret.fromSecretNameV2(
   TelemetryBackendStack,
   "TimescaleConnectionString",
@@ -394,6 +400,14 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
+    DRIVER_NAME_UPDATE_PASSWORD: ecs.Secret.fromSecretsManager(
+      HeliosPasswords,
+      "DRIVER_NAME_UPDATE_PASSWORD",
+    ),
+    LAP_POSITION_PASSWORD: ecs.Secret.fromSecretsManager(
+      HeliosPasswords,
+      "LAP_POSITION_PASSWORD",
+    ),
   },
 });
 
@@ -412,6 +426,7 @@ TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
 );
 TimescaleConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
 MLCorrelationMatrixSecrets.grantRead(TelemetryECSTaskDefinition.taskRole);
+HeliosPasswords.grantRead(TelemetryECSTaskDefinition.taskRole);
 
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,

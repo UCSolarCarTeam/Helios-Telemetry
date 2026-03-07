@@ -1,6 +1,6 @@
 import { Between, Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { ITelemetryData } from "@shared/helios-types";
+import { ILapData, ITelemetryData } from "@shared/helios-types";
 import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
 import { Driver } from "../entities/Driver.entity";
 import { Lap } from "../entities/Lap.entity";
@@ -142,7 +142,7 @@ export class DatabaseService {
     try {
       const drivers = await this.driverRepo.find();
       return drivers.map((driver) => ({
-        rfid: driver.Rfid,
+        rfid: driver.rfid,
         driver: driver.Name,
       }));
     } catch (error: unknown) {
@@ -153,7 +153,7 @@ export class DatabaseService {
   public async getDriverNameUsingRfid(Rfid: string) {
     try {
       const driver = await this.driverRepo.findOne({
-        where: { Rfid },
+        where: { rfid: Rfid },
       });
 
       if (!driver) {
@@ -171,8 +171,8 @@ export class DatabaseService {
   public async getDriverLaps(Rfid: string) {
     try {
       const laps = await this.lapRepo.find({
-        order: { Timestamp: "DESC" },
-        where: { Rfid },
+        order: { timestamp: "DESC" },
+        where: { rfid: Rfid },
       });
       return laps;
     } catch (error: unknown) {
@@ -190,7 +190,7 @@ export class DatabaseService {
       }
 
       const existingDriver = await this.driverRepo.findOne({
-        where: { Rfid },
+        where: { rfid: Rfid },
       });
 
       if (!existingDriver) {
@@ -308,7 +308,7 @@ export class DatabaseService {
     }
   }
 
-  public async insertLapData(lapData: Partial<Lap>): Promise<GenericResponse> {
+  public async insertLapData(lapData: ILapData): Promise<GenericResponse> {
     if (!this.isConnected) {
       throw new Error("Database not connected");
     }
@@ -335,32 +335,6 @@ export class DatabaseService {
     } catch (error: unknown) {
       throw new Error(
         "Failed to retrieve lap data: " + (error as Error).message,
-      );
-    }
-  }
-
-  public async insertIntoGpsLapCountTable(
-    rfid: string,
-    timestamp: number,
-  ): Promise<GenericResponse> {
-    if (!this.isConnected) {
-      throw new Error("Database not connected");
-    }
-
-    try {
-      await this.lapRepo.save({
-        Rfid: rfid ?? "unknown driver",
-        Timestamp: timestamp ?? new Date().getTime(),
-        Type: "gps-lap",
-      });
-      return {
-        httpStatusCode: 201,
-        message: "Inserted into GPS lap count table successfully",
-      };
-    } catch (error: unknown) {
-      throw new Error(
-        "Failed to insert into GPS lap count table: " +
-          (error as Error).message,
       );
     }
   }
