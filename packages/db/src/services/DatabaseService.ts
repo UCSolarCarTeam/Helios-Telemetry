@@ -33,6 +33,7 @@ export class DatabaseService {
     return DatabaseService.instance;
   }
 
+  // TODO: Check every once in a while if Rfid and Timestamp can be made back into Uppercase
   private flattenTelemetryData(
     packet: ITelemetryData,
   ): Partial<TelemetryPacket> {
@@ -42,9 +43,9 @@ export class DatabaseService {
     return {
       // Metadata
       RaceName: packet.Title,
-      Rfid,
+      rfid: Rfid,
       // Primary keys
-      Timestamp: timestamp,
+      timestamp: timestamp,
       Title: packet.Title,
 
       // B3 data
@@ -141,7 +142,7 @@ export class DatabaseService {
     try {
       const drivers = await this.driverRepo.find();
       return drivers.map((driver) => ({
-        Rfid: driver.Rfid,
+        rfid: driver.Rfid,
         driver: driver.Name,
       }));
     } catch (error: unknown) {
@@ -224,7 +225,7 @@ export class DatabaseService {
 
     try {
       const packet = await this.telemetryPacketRepo.findOneBy({
-        Timestamp: new Date(timestamp),
+        timestamp: new Date(timestamp),
       });
       return packet;
     } catch (error: unknown) {
@@ -245,7 +246,7 @@ export class DatabaseService {
     try {
       const packets = await this.telemetryPacketRepo.find({
         where: {
-          Timestamp: Between(new Date(startUTCDate), new Date(endUTCDate)),
+          timestamp: Between(new Date(startUTCDate), new Date(endUTCDate)),
         },
       });
       return packets;
@@ -286,18 +287,18 @@ export class DatabaseService {
 
     try {
       const firstPacket = await this.telemetryPacketRepo.findOne({
-        order: { Timestamp: "ASC" },
+        order: { timestamp: "ASC" },
       });
 
       const lastPacket = await this.telemetryPacketRepo.findOne({
-        order: { Timestamp: "DESC" },
+        order: { timestamp: "DESC" },
       });
 
       return {
         firstDateUTC: firstPacket
-          ? Number(firstPacket.Timestamp.getTime())
+          ? Number(firstPacket.timestamp.getTime())
           : null,
-        lastDateUTC: lastPacket ? Number(lastPacket.Timestamp.getTime()) : null,
+        lastDateUTC: lastPacket ? Number(lastPacket.timestamp.getTime()) : null,
       };
     } catch (error: unknown) {
       throw new Error(
