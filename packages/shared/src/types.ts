@@ -484,12 +484,6 @@ export interface IRaceInfo {
   totalDistance: number;
 }
 
-export interface IPlaybackDynamoResponse {
-  data: ITelemetryData;
-  id: string;
-  timestamp: number;
-}
-
 export interface IFormattedLapData {
   AmpHours: number;
   AveragePackCurrent: number;
