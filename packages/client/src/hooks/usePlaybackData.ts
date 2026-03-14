@@ -10,11 +10,12 @@ import { useQuery } from "@tanstack/react-query";
  * Response structure from the /packetsBetween endpoint
  */
 interface PlaybackDataResponse {
-  data: Array<{
-    data: ITelemetryData;
-    timestamp: number;
-    id: string;
-  }>;
+  data: Array<
+    ITelemetryData & {
+      timestamp: number;
+      id: string;
+    }
+  >;
 }
 
 /**
@@ -58,7 +59,7 @@ async function fetchPlaybackData(
   }
 
   // Extract telemetry data from response
-  return response.data.data.map((item) => item.data);
+  return response.data.data;
 }
 
 /**

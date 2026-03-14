@@ -189,49 +189,45 @@ function PlaybackDatePicker() {
   };
 
   return (
-    <>
-      {currentAppState.playbackSwitch && (
-        <div>
-          <h2 className="text-text-gray dark:text-text-gray-dark w-fit cursor-pointer text-sm font-black">
-            <CalendarMonthIcon onClick={() => setOpen(true)} />
-          </h2>
-          <Modal
-            aria-describedby="modal-modal-description"
-            aria-labelledby="modal-modal-title"
-            className="flex items-center justify-center"
-            onClose={() => setOpen(false)}
-            open={open}
-          >
-            <div className="relative flex h-auto w-full max-w-lg rounded-lg border-none bg-white p-6 shadow-lg outline-none sm:max-w-xl md:max-w-2xl">
-              <div className="flex w-full flex-col gap-6 sm:flex-row">
-                <DatePickerColumn
-                  fetchPlaybackData={validateAndConfirmDateTime}
-                  playbackDateTime={playbackDateTime}
-                  setConfirmedPlaybackDateTime={setConfirmedPlaybackDateTime}
-                  setPlaybackDateTime={updatePlaybackTime}
-                />
-                <DatePickerResultColumn
-                  confirmedPlaybackDateTime={confirmedPlaybackDateTime}
-                  loading={isLoading}
-                  playbackData={playbackData}
-                />
-              </div>
-              {(playbackData?.length ?? 0) > 0 && (
-                <Tooltip arrow title="Download to CSV">
-                  <button
-                    className="absolute right-7 top-5"
-                    onClick={handleDownloadCSV}
-                    disabled={playbackData?.length === 0}
-                  >
-                    <FileDownloadOutlinedIcon />
-                  </button>
-                </Tooltip>
-              )}
-            </div>
-          </Modal>
+    <div>
+      <h2 className="text-text-gray dark:text-text-gray-dark w-fit cursor-pointer text-sm font-black">
+        <CalendarMonthIcon onClick={() => setOpen(true)} />
+      </h2>
+      <Modal
+        aria-describedby="modal-modal-description"
+        aria-labelledby="modal-modal-title"
+        className="flex items-center justify-center"
+        onClose={() => setOpen(false)}
+        open={open}
+      >
+        <div className="relative flex h-auto w-full max-w-lg rounded-lg border-none bg-white p-6 shadow-lg outline-none sm:max-w-xl md:max-w-2xl">
+          <div className="flex w-full flex-col gap-6 sm:flex-row">
+            <DatePickerColumn
+              fetchPlaybackData={validateAndConfirmDateTime}
+              playbackDateTime={playbackDateTime}
+              setConfirmedPlaybackDateTime={setConfirmedPlaybackDateTime}
+              setPlaybackDateTime={updatePlaybackTime}
+            />
+            <DatePickerResultColumn
+              confirmedPlaybackDateTime={confirmedPlaybackDateTime}
+              loading={isLoading}
+              playbackData={playbackData}
+            />
+          </div>
+          {(playbackData?.length ?? 0) > 0 && (
+            <Tooltip arrow title="Download to CSV">
+              <button
+                className="absolute right-7 top-5"
+                disabled={playbackData?.length === 0}
+                onClick={handleDownloadCSV}
+              >
+                <FileDownloadOutlinedIcon />
+              </button>
+            </Tooltip>
+          )}
         </div>
-      )}
-    </>
+      </Modal>
+    </div>
   );
 }
 

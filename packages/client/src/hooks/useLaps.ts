@@ -47,36 +47,14 @@ async function fetchLaps(): Promise<ILapData[]> {
  * - Consistent error handling with user-friendly messages
  *
  * @returns Query result with lap data
- *
- * @example
- * ```tsx
- * function LapDataComponent() {
- *   const { data: laps, isLoading, error, refetch } = useLaps();
- *
- *   if (isLoading) return <div>Loading...</div>;
- *   if (error) return <div>Error: {error.message}</div>;
- *
- *   return (
- *     <div>
- *       {laps?.map(lap => <LapRow key={lap.TimeStamp} lap={lap} />)}
- *     </div>
- *   );
- * }
- * ```
  */
 export function useLaps() {
   const query = useQuery({
-    // Unused data stays in cache for 10 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
-
     // Fetch function - uses backendApi with 30s timeout
     queryFn: fetchLaps,
 
     // Query key: ['laps']
     queryKey: ["laps"] as const,
-
-    // Refetch on window focus to get latest lap data
-    refetchOnWindowFocus: true,
 
     // Data is considered fresh for 5 minutes (lap data changes frequently)
     staleTime: 1000 * 60 * 5, // 5 minutes
