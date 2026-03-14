@@ -63,7 +63,7 @@ function AnalysisTab() {
         className="flex w-full items-center justify-between gap-y-2 border-b-[1px] border-black"
         id="navbar"
       >
-        <div className="flex items-center justify-center gap-x-2">
+        {/* <div className="flex items-center justify-center gap-x-2">
           <Image
             alt="pfp"
             className="rounded-full border-2 border-helios object-cover p-2"
@@ -72,7 +72,7 @@ function AnalysisTab() {
             width={50}
           />
           <span className="text-sm">Insert Name</span>
-        </div>
+        </div> */}
 
         <ThemeProvider theme={color}>
           <Tabs
@@ -99,7 +99,7 @@ function AnalysisTab() {
 
       {/* MAIN */}
       <div className="flex flex-col justify-between gap-4 md:flex-row">
-        <div className="flex max-w-44 flex-col gap-1 md:w-auto">
+        {/* <div className="flex max-w-44 flex-col gap-1 md:w-auto">
           {filters.map((filter) => (
             <div className="flex items-center" key={filter}>
               <label className="flex cursor-pointer items-center gap-x-2">
@@ -115,7 +115,7 @@ function AnalysisTab() {
               </label>
             </div>
           ))}
-        </div>
+        </div> */}
 
         <div className="w-full flex-1 justify-center gap-4" id="main-content">
           <TabContent
