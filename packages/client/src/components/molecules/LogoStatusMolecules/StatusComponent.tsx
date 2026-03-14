@@ -38,7 +38,7 @@ function StatusComponent() {
   const userConnection = currentAppState.socketConnected;
   const { resolvedTheme } = useTheme();
   // TODO: change carConnection from socketIO.connected to carConnection.connected
-  const carConnection = currentAppState.socketConnected;
+  const carConnection = currentAppState.mqttConnected;
   const colorTheme = resolvedTheme === "dark" ? "white" : "black";
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = currentAppState.socketConnected

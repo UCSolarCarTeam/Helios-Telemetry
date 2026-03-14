@@ -184,7 +184,7 @@ function SettingsComponent() {
                   (key) => {
                     const disabled =
                       (key === CONNECTIONTYPES.NETWORK &&
-                        !currentAppState.socketConnected) ||
+                        !currentAppState.mqttConnected) ||
                       (key === CONNECTIONTYPES.RADIO &&
                         !currentAppState.radioConnected);
 
@@ -213,7 +213,7 @@ function SettingsComponent() {
                   (key) => {
                     const disabledText =
                       (key === CONNECTIONTYPES.NETWORK &&
-                        !currentAppState.socketConnected &&
+                        !currentAppState.mqttConnected &&
                         "Can not connect to AWS") ||
                       (key === CONNECTIONTYPES.RADIO &&
                         !currentAppState.radioConnected &&

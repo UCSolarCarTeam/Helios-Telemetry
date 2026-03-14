@@ -114,35 +114,78 @@ export default function AppStateEffects() {
   const { currentAppState, setCurrentAppState } = useAppState();
 
   useEffect(() => {
-    if (currentAppState.connectionType === CONNECTIONTYPES.DEMO) {
-      if (currentAppState.socketConnected) {
-        setCurrentAppState((prev) => ({
+    setCurrentAppState((prev) => {
+      if (
+        prev.connectionType === CONNECTIONTYPES.NETWORK &&
+        (!prev.mqttConnected || !prev.socketConnected)
+      ) {
+        return {
           ...prev,
-          connectionType: CONNECTIONTYPES.NETWORK,
+          connectionType: CONNECTIONTYPES.DEMO,
           loading: false,
-        }));
+        };
       }
-      if (currentAppState.radioConnected) {
-        setCurrentAppState((prev) => ({
+
+      if (
+        prev.connectionType === CONNECTIONTYPES.RADIO &&
+        !prev.radioConnected
+      ) {
+        return {
           ...prev,
-          connectionType: CONNECTIONTYPES.RADIO,
+          connectionType: CONNECTIONTYPES.DEMO,
           loading: false,
-        }));
+        };
       }
-    }
-    if (currentAppState.connectionType === CONNECTIONTYPES.NETWORK) {
-      setCurrentAppState((prev) => ({
-        ...prev,
-        loading: !currentAppState.socketConnected,
-      }));
-    }
-    if (currentAppState.connectionType === CONNECTIONTYPES.RADIO) {
-      setCurrentAppState((prev) => ({
-        ...prev,
-        loading: !currentAppState.radioConnected,
-      }));
-    }
+
+      if (prev.connectionType === CONNECTIONTYPES.DEMO) {
+        if (prev.mqttConnected) {
+          return {
+            ...prev,
+            connectionType: CONNECTIONTYPES.NETWORK,
+            loading: false,
+          };
+        }
+
+        if (prev.radioConnected) {
+          return {
+            ...prev,
+            connectionType: CONNECTIONTYPES.RADIO,
+            loading: false,
+          };
+        }
+
+        if (prev.loading) {
+          return {
+            ...prev,
+            loading: false,
+          };
+        }
+      }
+
+      if (prev.connectionType === CONNECTIONTYPES.NETWORK) {
+        const nextLoading = !prev.socketConnected;
+        if (prev.loading !== nextLoading) {
+          return {
+            ...prev,
+            loading: nextLoading,
+          };
+        }
+      }
+
+      if (prev.connectionType === CONNECTIONTYPES.RADIO) {
+        const nextLoading = !prev.radioConnected;
+        if (prev.loading !== nextLoading) {
+          return {
+            ...prev,
+            loading: nextLoading,
+          };
+        }
+      }
+
+      return prev;
+    });
   }, [
+    currentAppState.mqttConnected,
     currentAppState.socketConnected,
     currentAppState.radioConnected,
     setCurrentAppState,
