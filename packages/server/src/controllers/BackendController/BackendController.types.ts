@@ -1,19 +1,18 @@
+import { DatabaseService } from "db";
+
 import type { LapController } from "@/controllers/LapController/LapController";
 
-import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import type { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import type { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
-import type { NativeWebSocket } from "@/datasources/WebSocket/WebSocket";
 
 import type { ITelemetryData } from "@shared/helios-types";
 
 export interface BackendControllerTypes {
-  dynamoDB: DynamoDB;
+  timescaleDB: DatabaseService;
   establishCarPinging(): void;
   handleTelemetryToCar(carLatency: number): void;
   handlePacketReceive(message: ITelemetryData): void;
   lapController: LapController;
   mqtt: SolarMQTTClient;
   socketIO: SocketIO;
-  webSocket: NativeWebSocket;
 }

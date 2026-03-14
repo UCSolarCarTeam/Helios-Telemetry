@@ -6,7 +6,7 @@ import {
 } from "typeorm";
 import { ObjectLiteral, FindOneOptions } from "typeorm";
 
-// every entity has either timestamp (car parts) or rfid (driver and car parts) as its primary key
+// every entity has either timestamp (car parts) and/or rfid (driver and car parts) as its primary key
 interface BaseEntity {
   timestamp?: Date;
   rfid?: string;

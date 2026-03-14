@@ -13,21 +13,16 @@ export const getPacket = async (request: Request, response: Response) => {
     request,
     response,
   );
-  try {
-    const timestamp = request.params.timestamp;
+  const timestamp = request.params.timestamp;
 
-    const packetData =
-      await backendController.dynamoDB.getPacketData(timestamp);
+  const packetData =
+    await backendController.timescaleDB.getPacketData(timestamp);
 
-    logger.info(`ENTRY - ${request.method} ${request.url}`);
-    const data = { data: packetData, message: "OK" };
-    logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
+  logger.info(`ENTRY - ${request.method} ${request.url}`);
+  const data = { data: packetData, message: "OK" };
+  logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
 
-    return response.status(200).json(data);
-  } catch (error) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    response.status(500).json({ message: `Server Error: ${error}` });
-  }
+  return response.status(200).json(data);
 };
 
 export const getPacketDataBetweenDates = async (
@@ -42,26 +37,21 @@ export const getPacketDataBetweenDates = async (
     response,
   );
 
-  try {
-    // Extract query params safely
-    const startTime = Number(request.query.startTime);
+  // Extract query params safely
+  const startTime = Number(request.query.startTime);
 
-    const endTime = Number(request.query.endTime);
+  const endTime = Number(request.query.endTime);
 
-    // Fetch data from DynamoDB
-    const packetData =
-      await backendController.dynamoDB.scanPacketDataBetweenDates(
-        startTime,
-        endTime,
-      );
+  // Fetch data from timescaleDB
+  const packetData =
+    await backendController.timescaleDB.scanPacketDataBetweenDates(
+      startTime,
+      endTime,
+    );
 
-    logger.info(`ENTRY - ${request.method} ${request.url}`);
+  logger.info(`ENTRY - ${request.method} ${request.url}`);
 
-    return response.status(200).json({ data: packetData, message: "OK" });
-  } catch (error) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    return response.status(500).json({ message: "Internal Server Error" });
-  }
+  return response.status(200).json({ data: packetData, message: "OK" });
 };
 
 export const getFirstAndLastPacket = async (
@@ -76,23 +66,18 @@ export const getFirstAndLastPacket = async (
     request,
     response,
   );
-  try {
-    const { firstDateUTC, lastDateUTC } =
-      await backendController.dynamoDB.getFirstAndLastPacketDates();
+  const { firstDateUTC, lastDateUTC } =
+    await backendController.timescaleDB.getFirstAndLastPacketDates();
 
-    logger.info(`ENTRY - ${request.method} ${request.url}`);
-    const data = {
-      firstDate: firstDateUTC,
-      lastDate: lastDateUTC,
-      message: "OK",
-    };
-    logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
+  logger.info(`ENTRY - ${request.method} ${request.url}`);
+  const data = {
+    firstDate: firstDateUTC,
+    lastDate: lastDateUTC,
+    message: "OK",
+  };
+  logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
 
-    return response.status(200).json(data);
-  } catch (error) {
-    logger.error(`ERROR - ${request.method} ${request.url} - ${error.message}`);
-    response.status(500).json({ message: `Server Error: ${error}` });
-  }
+  return response.status(200).json(data);
 };
 
 export const getHealthPlayback = (request: Request, response: Response) => {

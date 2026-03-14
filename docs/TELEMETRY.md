@@ -127,7 +127,6 @@ This site uses:
 - Socket.io
 - Vercel
 - AWS Services
-  - DynamoDB (databse for our tables)
   - AWS Amplify (no clue why we need this lowk)
   - AWS CodePipeline (Commit, Build and Deploy)
   - AWS ECR and ECS (deploying our ec2 instances)
@@ -210,7 +209,7 @@ More explanation [here](#pis-idek-what-this-stands-for-blame-ideen)
 
 ### Race tab
 
-This is the tab named Race, and we use this tab for viewing the laps of the drivers who drove them. We store the drivers in Dynamo in the [driver table](./AMPLIFY.md#driver-table), and the laps in the [lap table](./AMPLIFY.md#lap-table). The drivers and the laps are associated by a partition key of [Rfid](./TELEMETRY.md#rfid).
+This is the tab named Race, and we use this tab for viewing the laps of the drivers who drove them. We store the drivers in TimescaleDB in the [driver table](./AMPLIFY.md#driver-table), and the laps in the [lap table](./AMPLIFY.md#lap-table). The drivers and the laps are associated by a partition key of [Rfid](./TELEMETRY.md#rfid).
 
 There are multiple fields that are calculated in the lap object, such as the Amp Hours or Average speed of the car. Again, who knows what these fields actually mean. Ask your tech lead, or if you really need to, Viscomm. If they don't know, ask Electrical.
 

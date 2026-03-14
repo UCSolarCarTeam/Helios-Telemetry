@@ -19,8 +19,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "jsx": "react-jsx",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"] // if you are missing global types, you may have to add them here.
   },
-  "include": [".eslintrc.cjs", "src/**/*", "**/*.cjs", "**/*.mjs"],
+  "include": ["src/**/*", "**/*.cjs", "**/*.mjs"],
   "exclude": ["dist", "../client"]
 }

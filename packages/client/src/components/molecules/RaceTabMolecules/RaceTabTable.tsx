@@ -50,7 +50,7 @@ export default function RaceTabTable({
             >
               {row.getVisibleCells().map((cell) => (
                 <td
-                  className={`text-gray-900 w-fullpx-4 sticky w-24 border-b-2 border-r-2 border-helios py-2 text-center text-sm first:border-l-2 dark:text-white ${cell.id.includes("data_timeStamp") ? "left-0 z-10" : ""}`}
+                  className={`text-gray-900 sticky w-24 border-b-2 border-r-2 border-helios px-4 text-center text-sm first:border-l-2 dark:text-white ${cell.id.includes("data_timeStamp") ? "left-0 z-10" : ""}`}
                   key={cell.id}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

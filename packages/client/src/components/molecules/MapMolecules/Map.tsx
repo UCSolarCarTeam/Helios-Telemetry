@@ -13,7 +13,6 @@ import ReactMapGL, {
   Marker,
   Popup,
   Source,
-  SourceProps,
   ViewState,
 } from "react-map-gl";
 
@@ -28,7 +27,7 @@ import {
 
 import MapControls from "./MapControls";
 import {
-  Hydrated_Grand_Full_course,
+  Hydrated_Brainerd_International_Raceway_Track,
   TRACK_LIST,
   mapCameraControls,
 } from "./MapSetup";
@@ -47,12 +46,16 @@ export type PacketMarkerData = {
   open: boolean;
 };
 
+type TrackSourceProps = {
+  id: string;
+  type: "geojson";
+  data: FeatureCollection<LineString>;
+};
+
 // this is for the demo mode when default tracks are shown in demo mode
 export type TrackList = {
   layerProps: LayerProps & Partial<LineLayerSpecification>;
-  sourceProps: SourceProps & {
-    data: FeatureCollection<LineString>;
-  };
+  sourceProps: TrackSourceProps;
   trackName: string;
 };
 if (!process.env.NEXT_PUBLIC_MAPSAPIKEY)
@@ -98,7 +101,7 @@ export default function Map({
   const [popupOpen, setPopupOpen] = useState(false);
   const [viewTracks, setViewTracks] = useState(TRACK_LIST.map(() => true));
   const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
-    Hydrated_Grand_Full_course,
+    Hydrated_Brainerd_International_Raceway_Track,
   );
   const [mapControlsAdded, setMapControlsAdded] = useState(false);
 
@@ -119,7 +122,7 @@ export default function Map({
     );
 
     // if the distance is greater than 10 km, update the current car location without animations/lerp
-    // if the disatnce isn't, just animate it like normal
+    // if the distance isn't, just animate it like normal
 
     if (distance < 10) {
       const time = 1 / 60; // run at 60fps

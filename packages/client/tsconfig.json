@@ -4,29 +4,13 @@
     "checkJs": true,
     "baseUrl": ".",
     "paths": {
-      "plotly.js-dist-min": [
-        "node_modules/@types/plotly.js"
-      ],
-      "@/*": [
-        "./src/*",
-        "./public/*",
-      ],
-      "@/server/*": [
-        "../server/src/*"
-      ]
+      "plotly.js-dist-min": ["node_modules/@types/plotly.js"],
+      "@/*": ["./src/*", "./public/*"],
+      "@/server/*": ["../server/src/*"]
     },
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": ["node"] // if you are missing global types, you may have to add them here.
   },
-  "include": [
-    ".eslintrc.cjs",
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.cjs",
-    "**/*.mjs"
-  ],
-  "exclude": [
-    "node_modules",
-    "tailwind.config.ts"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+  "exclude": ["node_modules", "tailwind.config.ts"]
 }

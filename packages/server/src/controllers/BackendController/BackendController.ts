@@ -1,38 +1,30 @@
+import { DatabaseService } from "db";
 import type { IncomingMessage, Server, ServerResponse } from "http";
 
 import type { BackendControllerTypes } from "@/controllers/BackendController/BackendController.types";
 import { LapController } from "@/controllers/LapController/LapController";
 
-import DynamoDB from "@/datasources/DynamoDB/DynamoDB";
 import { SocketIO } from "@/datasources/SocketIO/SocketIO";
 import { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTClient";
 import { options } from "@/datasources/SolarMQTTClient/SolarMQTTClient.types";
-import { NativeWebSocket } from "@/datasources/WebSocket/WebSocket";
 
-import { DatabaseManager } from "@/database/DatabaseManager";
 import { logger } from "@/index";
 import { type ITelemetryData } from "@shared/helios-types";
 
-const grafanaWsPath = "/grafana-ws";
-
 //getDriverInfo
 export class BackendController implements BackendControllerTypes {
-  public dynamoDB: DynamoDB;
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
-  public webSocket: NativeWebSocket;
-  public databaseManager: DatabaseManager;
+  public timescaleDB: DatabaseService;
   public carLatency: number;
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
   ) {
-    this.dynamoDB = new DynamoDB(this);
     this.socketIO = new SocketIO(httpsServer, this);
-    this.webSocket = new NativeWebSocket(grafanaWsPath, httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
-    this.databaseManager = DatabaseManager.getInstance();
+    this.timescaleDB = DatabaseService.getInstance();
     this.establishCarPinging();
     this.carLatency = 0;
     this.initializeDatabase();
@@ -41,8 +33,8 @@ export class BackendController implements BackendControllerTypes {
 
   private async initializeDatabase() {
     try {
-      await this.databaseManager.initialize();
-      logger.info("Database connection established successfully");
+      await this.timescaleDB.initialize();
+      logger.info("Database connection established successfully!");
     } catch (error) {
       logger.error("Failed to initialize database:", error);
       // Optionally throw or handle gracefully based on your needs
@@ -66,13 +58,14 @@ export class BackendController implements BackendControllerTypes {
 
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
-    this.dynamoDB.insertPacketData(message);
+    try {
+      await this.timescaleDB.insertPacketData(message);
+    } catch (error) {
+      logger.error("Failed to insert packet data:", error);
+    }
 
     // Broadcast the packet to the frontend
     this.socketIO.broadcastPacket(message);
-
-    // Broadcast the packet to the native web socket
-    // this.webSocket.broadcastPacket(message); // The line is commented out because, at the moment, the WebSocket used by Grafana is only intended to broadcast lapData, not packet data. Packet data is retrieved directly from the database (via MQTT), so there is no need to broadcast it through the WebSocket.
 
     // Handle the packet in the lap controller
     await this.lapController.handlePacket(message);
@@ -91,7 +84,7 @@ export class BackendController implements BackendControllerTypes {
 
   public async cleanup() {
     try {
-      await this.databaseManager.close();
+      await this.timescaleDB.close();
       logger.info("Database connection closed successfully");
     } catch (error) {
       logger.error("Error closing database connection:", error);

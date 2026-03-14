@@ -10,7 +10,6 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as eventbridge from "aws-cdk-lib/aws-events";
 import * as eventbridgetargets from "aws-cdk-lib/aws-events-targets";
 import * as url from "node:url";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
 import { defineBackend } from "@aws-amplify/backend";
 
@@ -52,16 +51,22 @@ const TelemetryBackendSecretsManagerMQTTCredentials = new secretsmanager.Secret(
   },
 );
 
-const TelemetryBackendSecretsDatabaseCredentials = new secretsmanager.Secret(
+const MLCorrelationMatrixSecrets = secretsmanager.Secret.fromSecretNameV2(
   TelemetryBackendStack,
-  "HeliosTelemetryDBCredentials",
-  {
-    secretName: "HeliosTelemetryDBCredentials" + backend.stack.stackName,
-    secretObjectValue: {
-      POSTGRES_PASSWORD: cdk.SecretValue.unsafePlainText(""),
-      POSTGRES_USERNAME: cdk.SecretValue.unsafePlainText(""),
-    },
-  },
+  "MLCorrelationMatrixSecrets",
+  "MLCorrelationMatrixSecrets",
+);
+
+const HeliosPasswords = secretsmanager.Secret.fromSecretNameV2(
+  TelemetryBackendStack,
+  "HeliosPasswords",
+  "HeliosPasswords",
+);
+
+const TimescaleConnectionString = secretsmanager.Secret.fromSecretNameV2(
+  TelemetryBackendStack,
+  "TimescaleConnectionString",
+  "TimescaleConnectionString",
 );
 
 const TelemetryBackendImageRepository = new ecr.Repository(
@@ -118,55 +123,18 @@ const TelemetryBackendCodeBuildProject = new codebuild.Project(
         )
           .andBranchIs("main")
           .andFilePathIs("packages/server/*"),
+        codebuild.FilterGroup.inEventOf(
+          codebuild.EventAction.PULL_REQUEST_MERGED,
+          codebuild.EventAction.PUSH,
+        )
+          .andBranchIs("main")
+          .andFilePathIs("packages/amplify/*"),
       ],
     }),
   },
 );
 
 TelemetryBackendImageRepository.grantPush(TelemetryBackendCodeBuildProject);
-
-const packetDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "packet_data_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
-  },
-);
-
-const lapDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "lap_data_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "Rfid", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
-  },
-);
-
-const driverDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "driver_data_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "Rfid", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-  },
-);
-
-const gpsCalculatedLapDataTable = new dynamodb.Table(
-  TelemetryBackendStack,
-  "gps_lap_count_table",
-  {
-    billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-    partitionKey: { name: "Rfid", type: dynamodb.AttributeType.STRING },
-    removalPolicy: cdk.RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE,
-    sortKey: { name: "timestamp", type: dynamodb.AttributeType.NUMBER },
-  },
-);
 
 const TelemetryECSTaskDefinition = new ecs.Ec2TaskDefinition(
   TelemetryBackendStack,
@@ -326,14 +294,7 @@ const TelemetryBackendVPC = new ec2.Vpc(
 
 TelemetryECSTaskDefinition.addContainer("TheContainer", {
   environment: {
-    // DB_HOST: dbInstance.instancePrivateIp,
-    DB_NAME: "postgres",
-    DB_PORT: "5432",
-    DRIVER_TABLE_NAME: driverDataTable.tableName,
-    GPS_CALCULATED_LAP_DATA_TABLE: gpsCalculatedLapDataTable.tableName,
-    LAP_TABLE_NAME: lapDataTable.tableName,
     NODE_ENV: "production",
-    PACKET_TABLE_NAME: packetDataTable.tableName,
   },
   image: ecs.ContainerImage.fromEcrRepository(TelemetryBackendImageRepository),
   logging: ecs.LogDrivers.awsLogs({ streamPrefix: "TelemetryBackend" }),
@@ -360,29 +321,55 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       TelemetryBackendSecretsManagerCertificate,
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
+    DATABASE_HOST: ecs.Secret.fromSecretsManager(
+      TimescaleConnectionString,
+      "DATABASE_HOST",
+    ),
+    DATABASE_PASSWORD: ecs.Secret.fromSecretsManager(
+      TimescaleConnectionString,
+      "DATABASE_PASSWORD",
+    ),
+    DATABASE_PORT: ecs.Secret.fromSecretsManager(
+      TimescaleConnectionString,
+      "DATABASE_PORT",
+    ),
+    DATABASE_USERNAME: ecs.Secret.fromSecretsManager(
+      TimescaleConnectionString,
+      "DATABASE_USERNAME",
+    ),
+
+    LAP_CORRELATION_MATRIX_FUNCTION_NAME: ecs.Secret.fromSecretsManager(
+      MLCorrelationMatrixSecrets,
+      "LAP_CORRELATION_MATRIX_FUNCTION_NAME",
+    ),
     MQTT_PASSWORD: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "password",
     ),
+
     MQTT_USERNAME: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerMQTTCredentials,
       "username",
     ),
-    POSTGRES_PASSWORD: ecs.Secret.fromSecretsManager(
-      TelemetryBackendSecretsDatabaseCredentials,
-      "POSTGRES_PASSWORD",
-    ), // pass DB password
-    POSTGRES_USERNAME: ecs.Secret.fromSecretsManager(
-      TelemetryBackendSecretsDatabaseCredentials,
-      "POSTGRES_USERNAME",
-    ), // pass DB username,
+    PACKET_CORRELATION_MATRIX_FUNCTION_NAME: ecs.Secret.fromSecretsManager(
+      MLCorrelationMatrixSecrets,
+      "PACKET_CORRELATION_MATRIX_FUNCTION_NAME",
+    ),
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
+    ),
+    DRIVER_NAME_UPDATE_PASSWORD: ecs.Secret.fromSecretsManager(
+      HeliosPasswords,
+      "DRIVER_NAME_UPDATE_PASSWORD",
+    ),
+    LAP_POSITION_PASSWORD: ecs.Secret.fromSecretsManager(
+      HeliosPasswords,
+      "LAP_POSITION_PASSWORD",
     ),
   },
 });
 
-// Allow ECS Task to read the Secrets Manager Store
+// Allow ECS Task to read the TimescaleDB connection string
 TelemetryBackendSecretsManagerPrivKey.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
@@ -395,6 +382,9 @@ TelemetryBackendSecretsManagerCertificate.grantRead(
 TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
+TimescaleConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
+MLCorrelationMatrixSecrets.grantRead(TelemetryECSTaskDefinition.taskRole);
+HeliosPasswords.grantRead(TelemetryECSTaskDefinition.taskRole);
 
 const TelemetryBackendVPCSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
   TelemetryBackendStack,
@@ -476,28 +466,19 @@ TelemetryECSService.cluster.connections.allowFromAnyIpv4(
   "Aedes - Allow inbound traffic on port 1883",
 );
 
-// Give DynamoDB Permissions to hte packet data and lap data
-const dynamoDbAccessPolicy = new iam.PolicyStatement({
-  actions: [
-    "dynamodb:PutItem",
-    "dynamodb:GetItem",
-    "dynamodb:UpdateItem",
-    "dynamodb:Scan",
-    "dynamodb:Query",
-  ],
+// Grant Lambda invocation permissions for ML correlation matrix functions
+const lambdaInvokePolicy = new iam.PolicyStatement({
+  actions: ["lambda:InvokeFunction"],
   effect: iam.Effect.ALLOW,
-
   resources: [
-    packetDataTable.tableArn,
-    `${packetDataTable.tableArn}/index/type-timestamp-index`,
-    lapDataTable.tableArn,
-    driverDataTable.tableArn,
-    gpsCalculatedLapDataTable.tableArn,
+    // Allow invocation of the specific Lambda functions
+    `arn:aws:lambda:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:function:get-packet-correlation-matrix`,
+    `arn:aws:lambda:${cdk.Stack.of(TelemetryBackendStack).region}:${cdk.Stack.of(TelemetryBackendStack).account}:function:get-lap-correlation-matrix`,
   ],
 });
 
-// Attach the policy to the ECS Task Role
-TelemetryECSTaskDefinition.taskRole.addToPrincipalPolicy(dynamoDbAccessPolicy);
+// Attach the Lambda invoke policy to the ECS Task Role
+TelemetryECSTaskDefinition.taskRole.addToPrincipalPolicy(lambdaInvokePolicy);
 
 // const SolarCarHostedZone = route53.HostedZone.fromLookup(
 const SolarCarHostedZone = route53.HostedZone.fromHostedZoneAttributes(

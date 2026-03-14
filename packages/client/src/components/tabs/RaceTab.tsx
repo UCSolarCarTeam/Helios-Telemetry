@@ -8,8 +8,12 @@ import RaceTabTable from "@/components/molecules/RaceTabMolecules/RaceTabTable";
 import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { type IFormattedLapData, prodURL } from "@shared/helios-types";
-import { IDriverData } from "@shared/helios-types/src/types";
+import {
+  IDriverData,
+  type IFormattedLapData,
+  ILapData,
+  prodURL,
+} from "@shared/helios-types";
 import {
   SortingState,
   getCoreRowModel,
@@ -26,8 +30,8 @@ import {
  * Tanstack table is used to display the data in a table format
  *
  * The flow of data is as follows:
- * Lap data is initially fetched from dynamoDB with useLapData()
- * Driver names are also fetched from dynamoDB in the useEffect() with the fetchDriveNames()
+ * Lap data is initially fetched from timescale with useLapData()
+ * Driver names are also fetched from timescale in the useEffect() with the fetchDriveNames()
  * When the dropdown is pressed for the driver, the handleDropdown() is called and then the
  * fetchFilteredLaps() is called to get the lap data for the selected driver
  * When the column filter is changed, the setColumnName() is called to set the column name
@@ -36,11 +40,11 @@ function RaceTab() {
   const [Rfid, setDriverRFID] = useState<number | string>("");
   const [driverData, setDriverData] = useState<IDriverData[]>([]);
   const [copy, setCopy] = useState<number>(0);
-  const { fetchLapData, formatLapData, lapData } = useLapDataStore();
+  const { formatLapData, lapData } = useLapDataStore();
   const [filteredLaps, setFilteredLaps] =
     useState<IFormattedLapData[]>(lapData);
   const [sorting, setSorting] = useState<SortingState>([
-    { desc: false, id: "data_timeStamp" },
+    { desc: false, id: "TimeStamp" },
   ]);
 
   const table = useReactTable({
@@ -50,7 +54,7 @@ function RaceTab() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      sorting: [{ desc: false, id: "data_timeStamp" }],
+      sorting: [{ desc: false, id: "TimeStamp" }],
     },
     onSortingChange: setSorting,
     state: { sorting },
@@ -61,21 +65,24 @@ function RaceTab() {
   );
 
   // copy rfid to clipboard
-  const handleCopy = () => {
-    navigator.clipboard.writeText(String(Rfid));
-    setCopy(1);
-    setTimeout(() => setCopy(0), 5000);
-    onCopied();
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(String(Rfid));
+      setCopy(1);
+      setTimeout(() => setCopy(0), 5000);
+      notifications.show({
+        color: "green",
+        message: "Copied to clipboard",
+        title: "Copied",
+      });
+    } catch (error) {
+      notifications.show({
+        color: "red",
+        message: `Error copying to clipboard: ${error instanceof Error ? error.message : String(error)}`,
+        title: "Error",
+      });
+    }
   };
-
-  // copy helper
-  const onCopied = useCallback(() => {
-    notifications.show({
-      color: "green",
-      message: "Copied to clipboard",
-      title: "Copied",
-    });
-  }, []);
 
   // dropdown handler for the drivers
   const handleDropdown = useCallback(
@@ -87,19 +94,18 @@ function RaceTab() {
       if (Number.isNaN(newRFID) || newRFID === "Show all data") {
         setFilteredLaps(lapData);
       } else {
-        await fetchFilteredLaps(Number(newRFID)).then((response) => {
-          const formattedData = response.data.map(formatLapData);
-          setFilteredLaps(formattedData);
-        });
+        const response = await fetchFilteredLaps(Number(newRFID));
+        const formattedData = response.map(formatLapData);
+        setFilteredLaps(formattedData);
       }
     },
     [formatLapData, lapData],
   );
 
-  // fetch the driver names from dynamo
+  // fetch the driver names from timescale
   const fetchDriverNames = async () => {
     try {
-      const response = await axios.get(`${prodURL}/drivers`);
+      const response = await axios.get<IDriverData[]>(`${prodURL}/drivers`);
 
       return response.data;
     } catch (error) {
@@ -110,28 +116,35 @@ function RaceTab() {
   // get the driver laps based on the selected rfid
   const fetchFilteredLaps = async (Rfid: number) => {
     try {
-      const response = await axios.get(`${prodURL}/driver/${Rfid}`);
+      const response = await axios.get<ILapData[]>(`${prodURL}/driver/${Rfid}`);
       return response.data;
     } catch (error) {
       setFilteredLaps([]);
-      return { error: "Error fetching driver laps" };
+      return [];
     }
   };
 
   // fetching driver names when component mounts
   useEffect(() => {
-    fetchLapData();
-    fetchDriverNames()
-      .then((response) => {
-        const driverData = response.data.map((driver: IDriverData) => ({
+    void (async (): Promise<void> => {
+      try {
+        const response = await fetchDriverNames();
+
+        if (!Array.isArray(response)) {
+          setDriverData([]);
+          return;
+        }
+
+        const driverData = response.map((driver: IDriverData) => ({
           Rfid: driver.Rfid,
           driver: driver.driver,
         }));
+
         setDriverData(driverData);
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+      } catch (error) {
+        setDriverData([]);
+      }
+    })();
   }, []);
 
   return (

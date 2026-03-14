@@ -4,11 +4,10 @@ import {
   PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  Index,
 } from "typeorm";
 
 /**
- * Driver table (not a hypertable)
+ * Driver table
  * Stores driver information linked by RFID
  */
 @Entity("driver")
@@ -17,11 +16,11 @@ export class Driver {
   rfid!: string;
 
   @Column({ type: "text" })
-  name!: string;
+  Name!: string;
 
   @CreateDateColumn()
-  created_at!: Date;
+  CreatedAt!: Date;
 
   @UpdateDateColumn()
-  updated_at!: Date;
+  UpdatedAt!: Date;
 }
