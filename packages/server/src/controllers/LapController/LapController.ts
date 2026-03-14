@@ -173,6 +173,7 @@ export class LapController implements LapControllerType {
 
   public async handlePacket(packet: ITelemetryData) {
     // Always buffer packets so a lap boundary has data available for calculations.
+    // NOTE: The lastLapPackets will grow indefinitely if LapDigital is never triggered.
     this.lastLapPackets.push(packet);
 
     const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
@@ -251,6 +252,7 @@ export class LapController implements LapControllerType {
       };
 
       this.handleLapData(lapData);
+      this.raceInfo.lapNumber += 1;
       this.lastLapPackets = [];
     }
 
