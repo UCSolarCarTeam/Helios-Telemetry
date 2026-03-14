@@ -9,7 +9,7 @@ type SECRETS_SCHEMA = {
     username: string;
     password: string;
   };
-  HeliosLapPositionPassword: { LAP_POSITION_PASSWORD: string };
+  HeliosLapPositionPassword: { FINISH_LINE_UPDATE_PASSWORD: string };
 };
 
 const client = new SecretsManagerClient({

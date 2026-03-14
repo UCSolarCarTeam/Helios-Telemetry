@@ -124,7 +124,7 @@ Specific functions of the website require you to have certain environment variab
 In packages/server `.env`:
 
 ```
-LAP_POSITION_PASSWORD=
+FINISH_LINE_UPDATE_PASSWORD=
 LAP_TABLE_NAME=
 PACKET_TABLE_NAME=
 DRIVER_TABLE_NAME=
