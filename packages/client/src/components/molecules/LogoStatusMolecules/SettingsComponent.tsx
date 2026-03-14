@@ -184,7 +184,7 @@ function SettingsComponent() {
                   (key) => {
                     const disabled =
                       (key === CONNECTIONTYPES.NETWORK &&
-                        !currentAppState.socketConnected) ||
+                        !currentAppState.mqttConnected) ||
                       (key === CONNECTIONTYPES.RADIO &&
                         !currentAppState.radioConnected);
 
@@ -213,11 +213,11 @@ function SettingsComponent() {
                   (key) => {
                     const disabledText =
                       (key === CONNECTIONTYPES.NETWORK &&
-                        !currentAppState.socketConnected &&
-                        "Can not connect to AWS") ||
+                        !currentAppState.mqttConnected &&
+                        "Unable to connect to the car") ||
                       (key === CONNECTIONTYPES.RADIO &&
                         !currentAppState.radioConnected &&
-                        "Can not connect to USB Radio Board");
+                        "Unable to connect to USB Radio Board");
 
                     return (
                       <div

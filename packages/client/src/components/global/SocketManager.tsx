@@ -68,7 +68,11 @@ export default function SocketManager() {
   }, [setCurrentAppState]);
 
   const onCarDisconnect = useCallback(() => {
-    setCurrentAppState((prev) => ({ ...prev, mqttConnected: false }));
+    setCurrentAppState((prev) => ({
+      ...prev,
+      carLatency: 0,
+      mqttConnected: false,
+    }));
     notifications.show({
       color: "red",
       message: "Car has disconnected!",
@@ -100,7 +104,11 @@ export default function SocketManager() {
     });
 
     socketIO.on("disconnect", () => {
-      setCurrentAppState((prev) => ({ ...prev, socketConnected: false }));
+      setCurrentAppState((prev) => ({
+        ...prev,
+        socketConnected: false,
+        userLatency: 0,
+      }));
     });
 
     return () => {
