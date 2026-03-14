@@ -138,7 +138,7 @@ export default function AppStateEffects() {
       }
 
       if (prev.connectionType === CONNECTIONTYPES.DEMO) {
-        if (prev.mqttConnected) {
+        if (prev.mqttConnected && prev.socketConnected) {
           return {
             ...prev,
             connectionType: CONNECTIONTYPES.NETWORK,
