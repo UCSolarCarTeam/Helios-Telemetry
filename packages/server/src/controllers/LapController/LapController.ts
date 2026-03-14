@@ -250,41 +250,11 @@ export class LapController implements LapControllerType {
         timestamp: new Date(packet.TimeStamp * 1000),
       };
 
-      if (!this.hasValidLapCalculations(lapData)) {
-        logger.warn(
-          "Ignoring lap boundary: lap calculations are not valid yet.",
-        );
-        this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
-        return;
-      }
-
       this.handleLapData(lapData);
       this.lastLapPackets = [];
     }
 
     this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
-  }
-
-  // Helper function to ensure that lap calculations are valid before broadcasting/inserting lap data
-  private hasValidLapCalculations(lapData: ILapData): boolean {
-    return (
-      this.isFiniteNumber(lapData.AmpHours) &&
-      this.isFiniteNumber(lapData.AveragePackCurrent) &&
-      this.isFiniteNumber(lapData.AverageSpeed) &&
-      this.isFiniteNumber(lapData.BatterySecondsRemaining) &&
-      this.isFiniteNumber(lapData.Distance) &&
-      this.isFiniteNumber(lapData.EnergyConsumed) &&
-      this.isFiniteNumber(lapData.LapTime) &&
-      this.isFiniteNumber(lapData.NetPowerOut) &&
-      this.isFiniteNumber(lapData.TotalPowerIn) &&
-      this.isFiniteNumber(lapData.TotalPowerOut) &&
-      lapData.LapTime > 0
-    );
-  }
-
-  // Helper function to check if a value is a finite number (not NaN, not Infinity, and of type 'number')
-  private isFiniteNumber(value: number): boolean {
-    return typeof value === "number" && Number.isFinite(value);
   }
 
   public getLastPacket(): ITelemetryData[] {
