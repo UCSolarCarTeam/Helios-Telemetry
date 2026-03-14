@@ -46,4 +46,7 @@ export class Lap {
 
   @Column({ type: "float" })
   AverageSpeed!: number;
+
+  @Column({ type: "float" })
+  AverageMotorWattage!: number;
 }

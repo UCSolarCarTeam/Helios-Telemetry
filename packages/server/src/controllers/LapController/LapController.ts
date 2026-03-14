@@ -246,6 +246,9 @@ export class LapController implements LapControllerType {
         AverageSpeed: this.calculateAverageLapSpeed(
           this.lastLapPackets.toArray(),
         ),
+        AverageMotorWattage: this.getAverageMotorWattage(
+          this.lastLapPackets.toArray(),
+        ),
         BatterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
           averagePackCurrent,
           amphoursValue,
@@ -480,6 +483,27 @@ export class LapController implements LapControllerType {
     const avgRegenPower = regenPowerSum / packetArray.length;
 
     return Math.abs(mpptPowerIn + avgRegenPower);
+  }
+
+  public getAverageMotorWattage(packetArray: ITelemetryData[]): number {
+    // If no packets, then no power out
+    if (packetArray.length === 0) {
+      return 0;
+    }
+
+    const totalWattage = packetArray.reduce((sum, packet) => {
+      let wattage = 0;
+
+      const motorDetails = [packet.MotorDetails0, packet.MotorDetails1];
+
+      for (const motor of motorDetails) {
+        wattage += motor.BusCurrent * motor.BusVoltage;
+      }
+
+      return sum + wattage;
+    }, 0);
+
+    return totalWattage;
   }
 
   public getAveragePowerOut(packetArray: ITelemetryData[]): number {
