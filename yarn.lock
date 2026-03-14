@@ -12358,7 +12358,6 @@ __metadata:
     aws-cdk-lib: "npm:^2.149.0"
     aws-lambda: "npm:^1.0.7"
     constructs: "npm:^10.3.0"
-    esbuild: "npm:^0.23.0"
     tsx: "npm:^4.16.2"
     typescript: "npm:^5.5.3"
   languageName: unknown
@@ -22380,6 +22379,7 @@ __metadata:
     "@eslint/js": "npm:9.39.3"
     "@next/eslint-plugin-next": "npm:^16.1.6"
     "@types/eslint": "npm:^9.6.0"
+    esbuild: "npm:^0.23.0"
     eslint: "npm:9.7.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-import: "npm:^2.29.1"
