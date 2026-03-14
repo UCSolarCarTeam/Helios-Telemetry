@@ -187,7 +187,6 @@ export class LapController implements LapControllerType {
 
     if (this.checkLap(packet) && this.lastLapPackets.length > 5) {
       logger.info("lap completed for geofence");
-      // this.handleGeofenceLap(packet.Pi.Rfid, packet.TimeStamp);
     }
 
     if (
