@@ -503,7 +503,7 @@ export class LapController implements LapControllerType {
       return sum + wattage;
     }, 0);
 
-    return totalWattage;
+    return totalWattage / packetArray.length;
   }
 
   public getAveragePowerOut(packetArray: ITelemetryData[]): number {
