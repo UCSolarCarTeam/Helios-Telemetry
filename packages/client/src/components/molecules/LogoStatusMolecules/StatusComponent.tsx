@@ -35,11 +35,12 @@ function PlaybackPickerComponent() {
 function StatusComponent() {
   const { currentAppState } = useAppState();
   const { currentPacket } = usePacketStore();
-  const userConnection = currentAppState.socketConnected;
   const { resolvedTheme } = useTheme();
-  // TODO: change carConnection from socketIO.connected to carConnection.connected
+
+  const userConnection = currentAppState.socketConnected;
   const carConnection = currentAppState.mqttConnected;
   const colorTheme = resolvedTheme === "dark" ? "white" : "black";
+
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = currentAppState.socketConnected
     ? new Date(currentPacket.TimeStamp).toLocaleString()
