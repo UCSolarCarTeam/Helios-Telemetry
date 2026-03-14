@@ -56,9 +56,6 @@ export function useLaps() {
     // Query key: ['laps']
     queryKey: ["laps"] as const,
 
-    // Data is considered fresh for 5 minutes (lap data changes frequently)
-    staleTime: 1000 * 60 * 5, // 5 minutes
-
     // Don't throw errors to error boundary - handle in hook
     throwOnError: false,
   });

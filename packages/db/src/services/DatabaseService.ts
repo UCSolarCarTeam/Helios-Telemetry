@@ -5,6 +5,7 @@ import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
 import { Driver } from "../entities/Driver.entity";
 import { Lap } from "../entities/Lap.entity";
 import { GenericResponse } from "./DatabaseService.types";
+import { TelemetryTransformer } from "../utils";
 
 export class DatabaseService {
   private isConnected = false;
@@ -113,7 +114,9 @@ export class DatabaseService {
     }
   }
 
-  public async getPacketData(timestamp: string) {
+  public async getPacketData(
+    timestamp: string,
+  ): Promise<ITelemetryData | null> {
     if (!this.isConnected) {
       throw new Error("Database not connected");
     }
@@ -122,7 +125,7 @@ export class DatabaseService {
       const packet = await this.telemetryPacketRepo.findOneBy({
         timestamp: new Date(timestamp),
       });
-      return packet;
+      return packet ? TelemetryTransformer.inflate(packet) : null;
     } catch (error: unknown) {
       throw new Error(
         "Failed to retrieve packet date: " + (error as Error).message,
@@ -133,7 +136,7 @@ export class DatabaseService {
   public async scanPacketDataBetweenDates(
     startUTCDate: number,
     endUTCDate: number,
-  ) {
+  ): Promise<ITelemetryData[]> {
     if (!this.isConnected) {
       throw new Error("Database not connected");
     }
@@ -144,7 +147,7 @@ export class DatabaseService {
           timestamp: Between(new Date(startUTCDate), new Date(endUTCDate)),
         },
       });
-      return packets;
+      return packets.map((packet) => TelemetryTransformer.inflate(packet));
     } catch (error: unknown) {
       throw new Error(
         "Failed to scan packets between dates: " + (error as Error).message,

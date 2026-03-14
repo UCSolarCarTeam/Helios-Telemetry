@@ -3,20 +3,11 @@ import { useEffect } from "react";
 import { BACKEND_ROUTES } from "@/constants/apiRoutes";
 import { backendApi } from "@/lib/api";
 import { notifications } from "@mantine/notifications";
-import type { ITelemetryData } from "@shared/helios-types";
+import type {
+  ITelemetryData,
+  PlaybackDataResponseDTO,
+} from "@shared/helios-types";
 import { useQuery } from "@tanstack/react-query";
-
-/**
- * Response structure from the /packetsBetween endpoint
- */
-interface PlaybackDataResponse {
-  data: Array<
-    ITelemetryData & {
-      timestamp: number;
-      id: string;
-    }
-  >;
-}
 
 /**
  * Options for the usePlaybackData hook
@@ -29,6 +20,9 @@ interface UsePlaybackDataOptions {
   /** Whether to enable the query (default: true) */
   enabled?: boolean;
 }
+
+export const getPlaybackDataQueryKey = (startTime: number, endTime: number) =>
+  ["playback-data", startTime, endTime] as const;
 
 /**
  * Fetches playback telemetry data between a time range.
@@ -47,7 +41,7 @@ async function fetchPlaybackData(
   startTime: number,
   endTime: number,
 ): Promise<ITelemetryData[]> {
-  const response = await backendApi.get<PlaybackDataResponse>(
+  const response = await backendApi.get<PlaybackDataResponseDTO>(
     BACKEND_ROUTES.playback.packetsBetween,
     {
       params: { endTime, startTime },
@@ -57,7 +51,6 @@ async function fetchPlaybackData(
   if (!Array.isArray(response.data?.data)) {
     throw new Error("Invalid API response format");
   }
-
   // Extract telemetry data from response
   return response.data.data;
 }
@@ -78,40 +71,6 @@ async function fetchPlaybackData(
  * @param options.endTime - End time in UTC milliseconds
  * @param options.enabled - Whether to enable the query (default: true)
  * @returns Query result with playback telemetry data
- *
- * @example
- * ```tsx
- * function PlaybackViewer() {
- *   const startTime = new Date('2024-01-01T10:00:00Z').getTime();
- *   const endTime = new Date('2024-01-01T11:00:00Z').getTime();
- *
- *   const { data: packets, isLoading, error } = usePlaybackData({
- *     startTime,
- *     endTime,
- *   });
- *
- *   if (isLoading) return <div>Loading playback data...</div>;
- *   if (error) return <div>Error: {error.message}</div>;
- *
- *   return <div>{packets?.length ?? 0} packets loaded</div>;
- * }
- * ```
- *
- * @example
- * ```tsx
- * // Conditionally fetch based on time selection
- * function PlaybackSelector() {
- *   const [timeRange, setTimeRange] = useState<{start: number, end: number} | null>(null);
- *
- *   const { data: packets } = usePlaybackData({
- *     startTime: timeRange?.start ?? 0,
- *     endTime: timeRange?.end ?? 0,
- *     enabled: timeRange !== null,
- *   });
- *
- *   return <div>{packets?.length ?? 0} packets</div>;
- * }
- * ```
  */
 export function usePlaybackData({
   enabled = true,
@@ -122,21 +81,14 @@ export function usePlaybackData({
     // Only enable query when time range is valid and enabled is true
     enabled: enabled && startTime > 0 && endTime > startTime,
 
-    // Unused data stays in cache for 1 hour
-    gcTime: 1000 * 60 * 60, // 1 hour
-
-    // Fetch function - uses backendApi with 30s timeout
     queryFn: () => fetchPlaybackData(startTime, endTime),
 
     // Query key: ['playback-data', startTime, endTime]
     // This ensures separate cache entries per time range
-    queryKey: ["playback-data", startTime, endTime] as const,
+    queryKey: getPlaybackDataQueryKey(startTime, endTime),
 
     // Don't refetch on window focus (historical data is immutable)
     refetchOnWindowFocus: false,
-
-    // Data is considered fresh for 30 minutes (historical data doesn't change)
-    staleTime: 1000 * 60 * 30, // 30 minutes
 
     // Don't throw errors to error boundary - handle in hook
     throwOnError: false,
