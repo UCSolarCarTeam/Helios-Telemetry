@@ -22,6 +22,7 @@ import type {
 } from "@shared/helios-types";
 
 const logger = createLightweightApplicationLogger("LapController.ts");
+const MIN_PACKETS_FOR_LAP = 5;
 /**
  *
  * There is some general documentation on this file in the docs, but it is not very detailed
@@ -39,6 +40,7 @@ const logger = createLightweightApplicationLogger("LapController.ts");
  */
 export class LapController implements LapControllerType {
   public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
+  public previousLapDigital: boolean | null = null;
   public previouslyInFinishLineProximity = false;
   public passedDebouncedCheckpoint = false;
   public totalTime = 3600 * 1000 * 8; // 1000 ms/sec * 3600 sec/hr * 8 hr
@@ -170,6 +172,9 @@ export class LapController implements LapControllerType {
   }
 
   public async handlePacket(packet: ITelemetryData) {
+    // Always buffer packets so a lap boundary has data available for calculations.
+    this.lastLapPackets.push(packet);
+
     const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
     const motorDetails1 = packet.MotorDetails1.VehicleVelocity;
     if (this.raceInfo.raceDay >= 3)
@@ -185,15 +190,37 @@ export class LapController implements LapControllerType {
       this.calculateRaceDistance(motorDetails0, motorDetails1);
     }
 
-    if (this.checkLap(packet) && this.lastLapPackets.length > 5) {
-      logger.info("lap completed for geofence");
+    const lapDigital = Boolean(packet.B3.LapDigital);
+
+    // Single source of truth for LapDigital-triggered laps:
+    // only fire on a false -> true transition after we have a previous sample.
+    const canInsertLapFromDigital =
+      this.previousLapDigital !== null &&
+      this.previousLapDigital === false &&
+      lapDigital === true;
+
+    // Update state for next packet.
+    this.previousLapDigital = lapDigital;
+
+    if (lapDigital) {
+      // logger.info("lap completed for geofence");
+      logger.info("LapDigital is true, lap completed.");
     }
 
     if (
       // TEST: The condition was commented out because, in the current fakePacket data, packet.B3.LapDigital is always false. As a result, the code for broadcasting lap data (broadcastLapData) would never execute during testing with fakePacket. By commenting out this condition, it allows the code to proceed and broadcast lap data even when LapDigital is false.
       // packet.B3.LapDigital &&
-      this.lastLapPackets.length > 5
+      // this.lastLapPackets.length > 5
+      canInsertLapFromDigital
     ) {
+      if (this.lastLapPackets.length < MIN_PACKETS_FOR_LAP) {
+        logger.warn(
+          `Ignoring lap boundary: only ${this.lastLapPackets.length} packet(s) buffered, need at least ${MIN_PACKETS_FOR_LAP}.`,
+        );
+        this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
+        return;
+      }
+
       await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
@@ -210,8 +237,8 @@ export class LapController implements LapControllerType {
         AveragePackCurrent: averagePackCurrent,
         AverageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
         BatterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
-          amphoursValue,
           averagePackCurrent,
+          amphoursValue,
         ),
         Distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
         EnergyConsumed: this.getEnergyConsumption(this.lastLapPackets),
@@ -223,12 +250,41 @@ export class LapController implements LapControllerType {
         timestamp: new Date(packet.TimeStamp * 1000),
       };
 
+      if (!this.hasValidLapCalculations(lapData)) {
+        logger.warn(
+          "Ignoring lap boundary: lap calculations are not valid yet.",
+        );
+        this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
+        return;
+      }
+
       this.handleLapData(lapData);
       this.lastLapPackets = [];
     }
 
     this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
-    this.lastLapPackets.push(packet);
+  }
+
+  // Helper function to ensure that lap calculations are valid before broadcasting/inserting lap data
+  private hasValidLapCalculations(lapData: ILapData): boolean {
+    return (
+      this.isFiniteNumber(lapData.AmpHours) &&
+      this.isFiniteNumber(lapData.AveragePackCurrent) &&
+      this.isFiniteNumber(lapData.AverageSpeed) &&
+      this.isFiniteNumber(lapData.BatterySecondsRemaining) &&
+      this.isFiniteNumber(lapData.Distance) &&
+      this.isFiniteNumber(lapData.EnergyConsumed) &&
+      this.isFiniteNumber(lapData.LapTime) &&
+      this.isFiniteNumber(lapData.NetPowerOut) &&
+      this.isFiniteNumber(lapData.TotalPowerIn) &&
+      this.isFiniteNumber(lapData.TotalPowerOut) &&
+      lapData.LapTime > 0
+    );
+  }
+
+  // Helper function to check if a value is a finite number (not NaN, not Infinity, and of type 'number')
+  private isFiniteNumber(value: number): boolean {
+    return typeof value === "number" && Number.isFinite(value);
   }
 
   public getLastPacket(): ITelemetryData[] {
@@ -251,6 +307,7 @@ export class LapController implements LapControllerType {
   }
 
   // checks if lap has been acheived (using geofencing)
+  // if geofence approach is used, use this function to check if lap has been completed instead of using LapDigital
   private checkLap(packet: ITelemetryData) {
     const inProximity =
       haversineDistance(
