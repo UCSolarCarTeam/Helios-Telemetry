@@ -132,7 +132,7 @@ export class LapController implements LapControllerType {
   ): CoordUpdateResponse {
     logger.info(JSON.stringify(newCoordInfo));
     const { lat, long, password } = newCoordInfo;
-    if (password !== process.env.LAP_POSITION_PASSWORD) {
+    if (password !== process.env.FINISH_LINE_UPDATE_PASSWORD) {
       logger.error("Invalid Password: " + password);
       return { error: "Invalid Password", invalidFields: ["password"] };
     }
