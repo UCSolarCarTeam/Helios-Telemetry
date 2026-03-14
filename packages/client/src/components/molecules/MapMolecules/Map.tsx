@@ -103,14 +103,8 @@ export default function Map({
   const [dataPoints, setDataPoints] = useState<PacketMarkerData[]>(
     Hydrated_Brainerd_International_Raceway_Track,
   );
-  const [mapControlsAdded, setMapControlsAdded] = useState(false);
 
   const mapRef = useRef<MapRef | undefined>(undefined);
-
-  if (mapRef.current && !mapControlsAdded) {
-    mapRef.current.addControl(new mapboxgl.FullscreenControl(), "top-right");
-    setMapControlsAdded(true);
-  }
 
   // calculation for the car marker animation
   useEffect(() => {
@@ -227,6 +221,10 @@ export default function Map({
         onLoad={() => {
           if (!mapRef.current) return;
           fitBounds(mapRef.current, carLocation, lapLocation);
+          mapRef.current.addControl(
+            new mapboxgl.FullscreenControl(),
+            "top-right",
+          );
         }}
         onMove={(evt) => setViewState(evt.viewState)}
         ref={(instance) => {
