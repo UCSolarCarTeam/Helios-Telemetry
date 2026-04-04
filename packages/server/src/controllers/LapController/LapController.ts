@@ -23,6 +23,7 @@ import type {
 
 const logger = createLightweightApplicationLogger("LapController.ts");
 const MIN_PACKETS_FOR_LAP = 5;
+const MAX_LAST_LAP_PACKETS = 7200;
 /**
  *
  * There is some general documentation on this file in the docs, but it is not very detailed
@@ -173,8 +174,11 @@ export class LapController implements LapControllerType {
 
   public async handlePacket(packet: ITelemetryData) {
     // Always buffer packets so a lap boundary has data available for calculations.
-    // NOTE: The lastLapPackets will grow indefinitely if LapDigital is never triggered.
+    // Keep only the most recent bounded window of packets.
     this.lastLapPackets.push(packet);
+    if (this.lastLapPackets.length > MAX_LAST_LAP_PACKETS) {
+      this.lastLapPackets.shift();
+    }
 
     const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
     const motorDetails1 = packet.MotorDetails1.VehicleVelocity;
