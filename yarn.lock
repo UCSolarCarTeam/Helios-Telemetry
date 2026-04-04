@@ -14705,6 +14705,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"denque@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "denque@npm:2.1.0"
+  checksum: 10c0/f9ef81aa0af9c6c614a727cb3bd13c5d7db2af1abf9e6352045b86e85873e629690f6222f4edd49d10e4ccf8f078bbeec0794fafaf61b659c0589d0c511ec363
+  languageName: node
+  linkType: hard
+
 "depd@npm:2.0.0, depd@npm:~2.0.0":
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
@@ -22623,6 +22630,7 @@ __metadata:
     axios-retry: "npm:^4.0.0"
     cors: "npm:^2.8.5"
     db: "npm:*"
+    denque: "npm:^2.1.0"
     dotenv: "npm:^16.4.5"
     express: "npm:^4.19.2"
     globals: "npm:^15.8.0"
