@@ -6,6 +6,7 @@ import { IFormattedLapData, ILapData, prodURL } from "@shared/helios-types";
 
 export const formatLapData = (lapPacket: ILapData): IFormattedLapData => ({
   AmpHours: parseFloat(lapPacket.AmpHours.toFixed(2)),
+  AverageMotorWattage: parseFloat(lapPacket.AverageMotorWattage.toFixed(2)),
   AveragePackCurrent: parseFloat(lapPacket.AveragePackCurrent.toFixed(2)),
   AverageSpeed: parseFloat(lapPacket.AverageSpeed.toFixed(2)),
   BatterySecondsRemaining: parseFloat(

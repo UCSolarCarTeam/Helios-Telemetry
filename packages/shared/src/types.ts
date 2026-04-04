@@ -420,6 +420,7 @@ export interface IDriverData {
 
 export interface ILapData {
   AmpHours: number;
+  AverageMotorWattage: number;
   AveragePackCurrent: number;
   AverageSpeed: number;
   BatterySecondsRemaining: number;
@@ -486,6 +487,7 @@ export interface IRaceInfo {
 
 export interface IFormattedLapData {
   AmpHours: number;
+  AverageMotorWattage: number;
   AveragePackCurrent: number;
   AverageSpeed: number;
   BatterySecondsRemaining: number;
