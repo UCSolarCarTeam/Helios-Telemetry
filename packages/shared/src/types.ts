@@ -423,7 +423,6 @@ export interface ILapData {
   AverageMotorWattage: number;
   AveragePackCurrent: number;
   AverageSpeed: number;
-  AverageMotorWattage: number;
   BatterySecondsRemaining: number;
   Distance: number;
   EnergyConsumed: number;
@@ -491,7 +490,6 @@ export interface IFormattedLapData {
   AverageMotorWattage: number;
   AveragePackCurrent: number;
   AverageSpeed: number;
-  AverageMotorWattage: number;
   BatterySecondsRemaining: number;
   Distance: number;
   EnergyConsumed: number;
