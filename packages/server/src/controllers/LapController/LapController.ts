@@ -1,3 +1,5 @@
+import Denque from "denque";
+
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
@@ -40,7 +42,7 @@ const MAX_LAST_LAP_PACKETS = 7200;
  * as well as to insert the lap data into the timescale database
  */
 export class LapController implements LapControllerType {
-  public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
+  private lastLapPackets: Denque<ITelemetryData> = new Denque<ITelemetryData>();
   public previousLapDigital: boolean | null = null;
   public previouslyInFinishLineProximity = false;
   public passedDebouncedCheckpoint = false;
@@ -177,7 +179,7 @@ export class LapController implements LapControllerType {
     // Keep only the most recent bounded window of packets.
     this.lastLapPackets.push(packet);
     if (this.lastLapPackets.length > MAX_LAST_LAP_PACKETS) {
-      this.lastLapPackets.shift();
+      this.lastLapPackets.shift(); // remove the oldest packet to maintain the size limit
     }
 
     const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
@@ -231,40 +233,45 @@ export class LapController implements LapControllerType {
       // send lap over socket
 
       // update last lap packet
-      const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
-        ?.Battery.PackAmphours as number;
+      const amphoursValue = this.lastLapPackets.get(
+        this.lastLapPackets.length - 1,
+      )?.Battery.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
-        this.lastLapPackets,
+        this.lastLapPackets.toArray(),
       );
 
       const lapData: ILapData = {
         AmpHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
         AveragePackCurrent: averagePackCurrent,
-        AverageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
+        AverageSpeed: this.calculateAverageLapSpeed(
+          this.lastLapPackets.toArray(),
+        ),
         BatterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
           averagePackCurrent,
           amphoursValue,
         ),
-        Distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
-        EnergyConsumed: this.getEnergyConsumption(this.lastLapPackets),
-        LapTime: this.calculateLapTime(this.lastLapPackets),
-        NetPowerOut: this.netPower(this.lastLapPackets),
-        TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
-        TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
+        Distance: this.getDistanceTravelled(this.lastLapPackets.toArray()), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+        EnergyConsumed: this.getEnergyConsumption(
+          this.lastLapPackets.toArray(),
+        ),
+        LapTime: this.calculateLapTime(this.lastLapPackets.toArray()),
+        NetPowerOut: this.netPower(this.lastLapPackets.toArray()),
+        TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets.toArray()),
+        TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets.toArray()),
         rfid: packet.Pi.Rfid,
         timestamp: new Date(packet.TimeStamp * 1000),
       };
 
       this.handleLapData(lapData);
       this.raceInfo.lapNumber += 1;
-      this.lastLapPackets = [];
+      this.lastLapPackets = new Denque<ITelemetryData>(); // clear the lap packets for the next lap
     }
 
     this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
   }
 
   public getLastPacket(): ITelemetryData[] {
-    return this.lastLapPackets;
+    return this.lastLapPackets.toArray();
   }
 
   private checkDebounce(packet: ITelemetryData) {

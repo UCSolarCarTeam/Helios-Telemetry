@@ -22,7 +22,6 @@ export interface LapControllerType {
     packAmpHours: number,
   ): number;
   handlePacket(packet: ITelemetryData): void;
-  lastLapPackets: ITelemetryData[];
   netPower(packetArray: ITelemetryData[]): number;
   previouslyInFinishLineProximity: boolean;
   setFinishLineLocation(coords: CoordInfoUpdate): void;
