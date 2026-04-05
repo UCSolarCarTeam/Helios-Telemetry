@@ -1,21 +1,27 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
+import path from "path";
 
 // import your entities/tables here
 import { Driver } from "./entities/Driver.entity";
 import { Lap } from "./entities/Lap.entity";
 import { TelemetryPacket } from "./entities/TelemetryPacket.entity";
 
-dotenv.config();
+const packageRoot = path.resolve(__dirname, "..");
 
-if (
-  !process.env.DATABASE_HOST ||
-  !process.env.DATABASE_PORT ||
-  !process.env.DATABASE_USERNAME ||
-  !process.env.DATABASE_PASSWORD
-) {
-  throw new Error("Database configuration environment variables are not set.");
+dotenv.config({ path: path.join(packageRoot, ".env") });
+dotenv.config({ path: path.join(packageRoot, ".db.env") });
+
+const databaseHost = process.env.DATABASE_HOST ?? "localhost";
+const databasePort = process.env.DATABASE_PORT ?? "5432";
+const databaseUsername = process.env.DATABASE_USERNAME ?? process.env.POSTGRES_USER;
+const databasePassword = process.env.DATABASE_PASSWORD ?? process.env.POSTGRES_PASSWORD;
+
+if (!databaseUsername || !databasePassword) {
+  throw new Error(
+    "Database credentials are not set. Configure DATABASE_USERNAME/DATABASE_PASSWORD or POSTGRES_USER/POSTGRES_PASSWORD."
+  );
 }
 
 const isProd = process.env.NODE_ENV === "production";
@@ -23,18 +29,16 @@ const isProd = process.env.NODE_ENV === "production";
 export const AppDataSource = new DataSource({
   database: "tsdb",
   entities: [TelemetryPacket, Driver, Lap],
-  host: process.env.DATABASE_HOST,
+  host: databaseHost,
   logging: false,
   migrations: [__dirname + "/migrations/*.{js,ts}"],
-  password: process.env.DATABASE_PASSWORD,
+  password: databasePassword,
 
-  port: process.env.DATABASE_PORT
-    ? parseInt(process.env.DATABASE_PORT, 10)
-    : 5432,
+  port: parseInt(databasePort, 10),
   synchronize: !isProd,
 
   type: "postgres",
-  username: process.env.DATABASE_USERNAME,
+  username: databaseUsername,
   ...(isProd && {
     ssl: {
       rejectUnauthorized: false,

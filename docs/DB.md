@@ -1,141 +1,141 @@
-_last updated March 7th, 2026_
+# Database
 
-# Database Connection Documentation
+This is the single quick reference for running the local TimescaleDB instance and connecting the server to it.
 
-This document explains how the backend connects to TimescaleDB, where the connection is created, and what environment variables are required.
+## Prerequisites
 
-## Manually inserting data
+- Node.js 18+
+- Yarn
+- Docker
 
-```SQL
-INSERT INTO "public"."driver" (Rfid, "Name", "CreatedAt", "UpdatedAt")
-VALUES ('1', 'asdf', NOW(), NOW());
-```
+## Local Setup
 
-Because of the uppercase names you have to add quotations to the uppercased ones (not the primary column though)
+### 1. Start the database
 
-## High-Level Flow
-
-1. The server starts and creates a `BackendController`.
-2. `BackendController` gets a singleton `DatabaseService` instance.
-3. `DatabaseService.initialize()` calls `AppDataSource.initialize()` (TypeORM connection).
-4. Backend methods use repository objects (`TelemetryPacket`, `Driver`, `Lap`) to read/write data.
-5. On shutdown (`SIGINT`/`SIGTERM`), backend cleanup closes the DB connection.
-
-## Where The Connection Is Wired
-
-### 1) Backend bootstrapping
-
-File: `packages/server/src/controllers/BackendController/BackendController.ts`
-
-- The backend imports `DatabaseService` from the `db` package.
-- In the constructor, it sets:
-  - `this.timescaleDB = DatabaseService.getInstance()`
-- It then calls `this.initializeDatabase()`.
-- `initializeDatabase()` awaits `this.timescaleDB.initialize()` and logs success/failure.
-
-This means DB setup happens once when the backend controller starts.
-
-### 2) Singleton service + repositories
-
-File: `packages/db/src/services/DatabaseService.ts`
-
-- `DatabaseService` is a singleton (`private static instance`).
-- Constructor creates TypeORM repositories:
-  - `telemetryPacketRepo`
-  - `driverRepo`
-  - `lapRepo`
-- `initialize()` checks `isConnected` before calling `AppDataSource.initialize()`.
-- `close()` calls `AppDataSource.destroy()` and flips `isConnected` to `false`.
-
-This avoids duplicate connections and gives a single DB access layer used across controllers.
-
-### 3) DataSource configuration
-
-File: `packages/db/src/data-source.ts`
-
-`AppDataSource` is configured with TypeORM using `type: "postgres"` (TimescaleDB runs on Postgres).
-
-Important behavior:
-
-- Required env vars at startup:
-  - `DATABASE_HOST`
-  - `DATABASE_PORT`
-  - `DATABASE_USERNAME`
-  - `DATABASE_PASSWORD`
-- If any are missing, startup throws:
-  - `Database configuration environment variables are not set.`
-- Database name is hardcoded as `tsdb`.
-- In development (`NODE_ENV !== "production"`):
-  - `synchronize: true`
-  - `logging: true`
-- In production (`NODE_ENV === "production"`):
-  - `synchronize: false`
-  - `logging: false`
-  - SSL is enabled with `rejectUnauthorized: false`.
-
-## Runtime Usage In Backend
-
-File: `packages/server/src/controllers/BackendController/BackendController.ts`
-
-- Incoming telemetry packets call:
-  - `this.timescaleDB.insertPacketData(message)`
-- Driver/lap routes call other methods in `DatabaseService` (get drivers, laps, update driver name, etc.).
-
-All DB reads/writes go through the service methods in `packages/db/src/services/DatabaseService.ts`.
-
-## Graceful Shutdown
-
-File: `packages/server/src/server.ts`
-
-- On `SIGTERM` or `SIGINT`, server runs `gracefulShutdown()`.
-- `gracefulShutdown()` gets the backend controller and calls:
-  - `await backendController.cleanup()`
-- `cleanup()` calls `this.timescaleDB.close()`, which destroys the TypeORM connection.
-
-This prevents hanging DB connections on stop/redeploy.
-
-## Environment Variables You Need
-
-At minimum for backend DB connectivity:
+From `packages/db`:
 
 ```bash
-DATABASE_HOST=<hostname>
-DATABASE_PORT=5432
-DATABASE_USERNAME=<username>
-DATABASE_PASSWORD=<password>
-NODE_ENV=development # or production
+cp .db.env.example .db.env
 ```
 
-Notes:
+Set values in `packages/db/.db.env`:
 
-- The DB package targets database `tsdb`.
-- In cloud deploys, these values should come from secret management (for example ECS task secrets).
+```env
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_local_password
+POSTGRES_DB=tsdb
+```
 
-## Local Development With Docker (db package)
-
-File: `packages/db/docker-compose.yml`
-
-- Spins up `timescale/timescaledb:latest-pg17`
-- Exposes `5432:5432`
-- Loads env from `.db.env`
-- Uses a persistent volume mapping
-
-Useful scripts:
+Then start the container:
 
 ```bash
-# from packages/db
 yarn db:up
-yarn db:logs
-yarn db:down
 ```
 
-If you run the backend locally, ensure the backend process has the `DATABASE_*` variables above.
+If you run `db` package scripts directly (for example `yarn db:seed`), they will use the same `packages/db/.db.env` file in local development.
 
-## Quick Troubleshooting
+### 2. Configure the server
 
-- Error: `Database configuration environment variables are not set.`
-  - One or more required `DATABASE_*` vars are missing.
-- Error: connection refused / timeout
-  - Host or port is wrong, DB container is down, or network/security rules block access.
-- App starts but schema is missing in dev
-  - Check `NODE_ENV`; schema sync runs only when not production.
+From `packages/server`:
+
+```bash
+cp .env.example .env
+```
+
+Set these values in `packages/server/.env`:
+
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=your_local_password
+NODE_ENV=development
+```
+
+`DATABASE_PASSWORD` must match `POSTGRES_PASSWORD`.
+
+### 3. Start the server
+
+From the repository root:
+
+```bash
+yarn dev:server
+```
+
+## Verify It Works
+
+- Database logs: `cd packages/db && yarn db:logs`
+- Server logs should include `Database connection established`
+- Optional: seed sample data with `cd packages/db && yarn db:seed`
+
+To open a SQL shell:
+
+```bash
+cd packages/db && docker-compose exec db psql -U postgres -d tsdb
+```
+
+## Useful Commands
+
+From `packages/db`:
+
+- `yarn db:up` — start DB
+- `yarn db:down` — stop DB
+- `yarn db:logs` — view DB logs
+- `yarn db:seed` — insert sample data
+- `yarn db:reset` — restart and reseed
+
+## Common Issues
+
+### Missing `DATABASE_*` variables
+
+Make sure `packages/server/.env` includes `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD`.
+
+For `packages/db` scripts, local credentials can come from either:
+
+- `packages/db/.env` using `DATABASE_*`, or
+- `packages/db/.db.env` using `POSTGRES_*`
+
+### Connection refused
+
+The DB container is not running, or port `5432` is unavailable.
+
+Check:
+
+- `cd packages/db && yarn db:up`
+- `lsof -i :5432`
+
+### Password authentication failed
+
+Make sure:
+
+- `packages/db/.db.env` → `POSTGRES_PASSWORD`
+- `packages/server/.env` → `DATABASE_PASSWORD`
+
+match exactly.
+
+### Reset local DB
+
+This deletes local data:
+
+```bash
+cd packages/db && docker-compose down -v && yarn db:up
+```
+
+## How the App Connects
+
+- The server initializes `DatabaseService` on startup.
+- `DatabaseService` uses `AppDataSource` in `packages/db/src/data-source.ts`.
+- The app connects to PostgreSQL/TimescaleDB database `tsdb`.
+- In development, TypeORM schema sync and logging are enabled.
+- On shutdown, the server closes the DB connection cleanly.
+
+Key files:
+
+- `packages/server/src/controllers/BackendController/BackendController.ts`
+- `packages/db/src/services/DatabaseService.ts`
+- `packages/db/src/data-source.ts`
+
+## Related Docs
+
+- `packages/db/README.md`
+- `docs/SERVER.md`

@@ -9,7 +9,9 @@
     "test": "jest --runInBand",
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down",
-    "db:logs": "docker-compose logs -f timescaledb",
+    "db:logs": "docker-compose logs -f db",
+    "db:seed": "tsx src/scripts/seed.ts",
+    "db:reset": "yarn db:down && yarn db:up && sleep 10 && yarn db:seed",
     "migrate:generate": "typeorm-ts-node-commonjs migration:generate -d src/data-source.ts",
     "migrate:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
     "migrate:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.ts",
@@ -18,6 +20,7 @@
     "schema:drop": "typeorm-ts-node-commonjs schema:drop -d src/data-source.ts"
   },
   "dependencies": {
+    "@shared/helios-types": "workspace:*",
     "@timescaledb/core": "^0.0.1",
     "@timescaledb/schemas": "^0.0.1",
     "@timescaledb/typeorm": "^0.0.1",
@@ -28,8 +31,8 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.3.0",
     "@types/pg": "^8.11.0",
+    "tsx": "^4.7.0",
     "typescript": "^5.5.3"
   }
 }

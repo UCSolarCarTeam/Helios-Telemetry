@@ -88,6 +88,11 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 - [Other Responsibilities](./docs/ML.md#the-telemetry-ml-team-does-not-solely-focus-on-machine-learning-models-however-there-are-several-considerations-that-need-to-be-made-in-the-following-areas)
 - [Grafana + Visualizer Setup](./docs/GRAFANA.md)
 
+### [Database Setup](./docs/DB.md)
+
+- [Complete Database Documentation](./packages/db/README.md) - Full package documentation
+- [Database Architecture](./docs/DB.md) - How the backend connects to the database
+
 ### Development Setup
 
 - Make sure you're using Node 18+
