@@ -17,14 +17,6 @@
  */
 export const API_ROUTES = {
   /**
-   * Authentication/Security endpoints
-   */
-  auth: {
-    /** Check MQTT password for driver updates */
-    checkMQTTPassword: "/api/checkMQTTPassword",
-  },
-
-  /**
    * Health check endpoint
    */
   health: {

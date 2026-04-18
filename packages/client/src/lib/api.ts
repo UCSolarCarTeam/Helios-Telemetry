@@ -15,9 +15,6 @@
  *
  * // Simple GET request
  * const response = await api.get(API_ROUTES.ml.packetCorrelationMatrix);
- *
- * // POST request with data
- * const response = await api.post(API_ROUTES.auth.checkMQTTPassword, { password: 'secret' });
  * ```
  */
 import axios, { type AxiosInstance } from "axios";

@@ -87,7 +87,7 @@ export class DatabaseService {
   public async updateDriverInfo(
     Rfid: string,
     name: string,
-  ): Promise<Pick<UpdateDriverInfoResponseDTO, "message">> {
+  ): Promise<Pick<UpdateDriverInfoResponseDTO, "message"> | null> {
     try {
       if (typeof Rfid !== "string") {
         throw new Error("Rfid must be a string");
@@ -98,7 +98,7 @@ export class DatabaseService {
       });
 
       if (!existingDriver) {
-        return { message: "Driver Rfid not found in driver table" };
+        return null;
       }
 
       const oldName = existingDriver.Name;

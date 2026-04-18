@@ -125,6 +125,13 @@ export const updateDriverInfo = async (
     name,
   );
 
+  if (!responseMessage) {
+    logger.warn(`Driver update failed - Rfid not found: ${Rfid}`);
+    return response.status(404).json({
+      error: "Driver Rfid not found in driver table",
+    });
+  }
+
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data: UpdateDriverInfoResponseDTO = {
     message: responseMessage.message,
