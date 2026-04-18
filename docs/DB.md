@@ -1,4 +1,4 @@
-_last updated March 7th, 2026_
+_last updated April 18th, 2026_
 
 # Database Connection Documentation
 
@@ -89,7 +89,6 @@ Important behavior:
   - `synchronize: true`
 - In production (`NODE_ENV === "production"`):
   - `synchronize: false`
-  - SSL is enabled with `rejectUnauthorized: false`.
 
 ## Verify It Works
 

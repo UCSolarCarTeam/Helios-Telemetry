@@ -50,7 +50,6 @@ yarn db:up
 This command:
 
 - Pulls the Postgres image (if not already present)
-- Starts a PostgreSQL container with Postgres extension
 - Exposes the database on port `5432`
 - Creates a persistent volume to store data
 
