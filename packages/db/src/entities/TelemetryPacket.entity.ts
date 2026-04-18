@@ -1,24 +1,12 @@
 import { Entity, Column, Index, PrimaryColumn } from "typeorm";
-import { Hypertable, TimeColumn } from "@timescaledb/typeorm";
 
 /**
  * Combines all sensor data into a single wide table for simplified insertions and queries
  */
 @Entity("telemetry_packet")
-@Hypertable({
-  compression: {
-    compress: true,
-    compress_segmentby: "rfid",
-    compress_orderby: "timestamp",
-    policy: {
-      schedule_interval: "7 days",
-    },
-  },
-})
 @Index(["rfid", "timestamp"])
 @Index(["RaceName", "timestamp"])
 export class TelemetryPacket {
-  @TimeColumn()
   @PrimaryColumn({ type: "timestamptz" })
   timestamp!: Date;
 

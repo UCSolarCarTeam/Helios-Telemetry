@@ -8,7 +8,7 @@ import type { SolarMQTTClient } from "@/datasources/SolarMQTTClient/SolarMQTTCli
 import type { ITelemetryData } from "@shared/helios-types";
 
 export interface BackendControllerTypes {
-  timescaleDB: DatabaseService;
+  databaseService: DatabaseService;
   establishCarPinging(): void;
   handleTelemetryToCar(carLatency: number): void;
   handlePacketReceive(message: ITelemetryData): void;

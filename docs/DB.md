@@ -1,48 +1,32 @@
-# Database
+_last updated March 7th, 2026_
 
-This is the single quick reference for running the local TimescaleDB instance and connecting the server to it.
+# Database Connection Documentation
 
-## Prerequisites
+This document explains how the backend connects to PostgreSQL, where the connection is created, and what environment variables are required.
 
-- Node.js 18+
-- Yarn
-- Docker
+## High-Level Flow
+
+1. The server starts and creates a `BackendController`.
+2. `BackendController` gets a singleton `DatabaseService` instance.
+3. `DatabaseService.initialize()` calls `AppDataSource.initialize()`.
+4. Backend methods use repository objects (`TelemetryPacket`, `Driver`, `Lap`) to read and write data.
+5. On shutdown (`SIGINT`/`SIGTERM`), backend cleanup closes the DB connection.
 
 ## Local Setup
 
-### 1. Start the database
+### 1) Start the database
 
 From `packages/db`:
-
-```bash
-cp .db.env.example .db.env
-```
-
-Set values in `packages/db/.db.env`:
-
-```env
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_local_password
-POSTGRES_DB=tsdb
-```
-
-Then start the container:
 
 ```bash
 yarn db:up
 ```
 
-If you run `db` package scripts directly (for example `yarn db:seed`), they will use the same `packages/db/.db.env` file in local development.
+The database container is defined in [packages/db/docker-compose.yml](../packages/db/docker-compose.yml) and uses `postgres:17`.
 
-### 2. Configure the server
+### 2) Configure the server
 
-From `packages/server`:
-
-```bash
-cp .env.example .env
-```
-
-Set these values in `packages/server/.env`:
+From `packages/server`, set these values in `.env`:
 
 ```env
 DATABASE_HOST=localhost
@@ -52,9 +36,9 @@ DATABASE_PASSWORD=your_local_password
 NODE_ENV=development
 ```
 
-`DATABASE_PASSWORD` must match `POSTGRES_PASSWORD`.
+`DATABASE_PASSWORD` must match the password configured for the database container or remote database.
 
-### 3. Start the server
+### 3) Start the server
 
 From the repository root:
 
@@ -62,27 +46,65 @@ From the repository root:
 yarn dev:server
 ```
 
+## How It Works
+
+### Backend bootstrapping
+
+File: `packages/server/src/controllers/BackendController/BackendController.ts`
+
+- The backend imports `DatabaseService` from the `db` package.
+- In the constructor, it sets `this.databaseService = DatabaseService.getInstance()`.
+- It then calls `this.initializeDatabase()`.
+- `initializeDatabase()` awaits `this.databaseService.initialize()` and logs success or failure.
+
+### Database service
+
+File: `packages/db/src/services/DatabaseService.ts`
+
+- `DatabaseService` is a singleton (`private static instance`).
+- Constructor creates TypeORM repositories:
+  - `telemetryPacketRepo`
+  - `driverRepo`
+  - `lapRepo`
+- `initialize()` checks `isConnected` before calling `AppDataSource.initialize()`.
+- `close()` calls `AppDataSource.destroy()` and flips `isConnected` to `false`.
+
+### DataSource configuration
+
+File: `packages/db/src/data-source.ts`
+
+`AppDataSource` is configured with TypeORM using `type: "postgres"`.
+
+Important behavior:
+
+- Required env vars at startup:
+  - `DATABASE_HOST`
+  - `DATABASE_PORT`
+  - `DATABASE_USERNAME`
+  - `DATABASE_PASSWORD`
+- If any are missing, startup throws:
+  - `Database configuration environment variables are not set.`
+- Database name is hardcoded as `postgres`.
+- In development (`NODE_ENV !== "production"`):
+  - `synchronize: true`
+- In production (`NODE_ENV === "production"`):
+  - `synchronize: false`
+  - SSL is enabled with `rejectUnauthorized: false`.
+
 ## Verify It Works
 
-- Database logs: `cd packages/db && yarn db:logs`
-- Server logs should include `Database connection established`
-- Optional: seed sample data with `cd packages/db && yarn db:seed`
-
-To open a SQL shell:
+- Server logs should include `Database connection established successfully!`
+- To inspect the running database container logs:
 
 ```bash
-cd packages/db && docker-compose exec db psql -U postgres -d tsdb
+cd packages/db && yarn db:logs
 ```
 
-## Useful Commands
+- To open a SQL shell against the local container:
 
-From `packages/db`:
-
-- `yarn db:up` — start DB
-- `yarn db:down` — stop DB
-- `yarn db:logs` — view DB logs
-- `yarn db:seed` — insert sample data
-- `yarn db:reset` — restart and reseed
+```bash
+cd packages/db && docker-compose exec db psql -U postgres -d postgres
+```
 
 ## Common Issues
 
@@ -90,52 +112,20 @@ From `packages/db`:
 
 Make sure `packages/server/.env` includes `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD`.
 
-For `packages/db` scripts, local credentials can come from either:
-
-- `packages/db/.env` using `DATABASE_*`, or
-- `packages/db/.db.env` using `POSTGRES_*`
-
 ### Connection refused
 
 The DB container is not running, or port `5432` is unavailable.
 
-Check:
-
-- `cd packages/db && yarn db:up`
-- `lsof -i :5432`
-
 ### Password authentication failed
 
-Make sure:
+Make sure the database container password and `packages/server/.env` `DATABASE_PASSWORD` match exactly.
 
-- `packages/db/.db.env` → `POSTGRES_PASSWORD`
-- `packages/server/.env` → `DATABASE_PASSWORD`
+## Related Files
 
-match exactly.
-
-### Reset local DB
-
-This deletes local data:
-
-```bash
-cd packages/db && docker-compose down -v && yarn db:up
-```
-
-## How the App Connects
-
-- The server initializes `DatabaseService` on startup.
-- `DatabaseService` uses `AppDataSource` in `packages/db/src/data-source.ts`.
-- The app connects to PostgreSQL/TimescaleDB database `tsdb`.
-- In development, TypeORM schema sync and logging are enabled.
-- On shutdown, the server closes the DB connection cleanly.
-
-Key files:
-
-- `packages/server/src/controllers/BackendController/BackendController.ts`
-- `packages/db/src/services/DatabaseService.ts`
-- `packages/db/src/data-source.ts`
-
-## Related Docs
+- [packages/server/src/controllers/BackendController/BackendController.ts](../packages/server/src/controllers/BackendController/BackendController.ts)
+- [packages/db/src/services/DatabaseService.ts](../packages/db/src/services/DatabaseService.ts)
+- [packages/db/src/data-source.ts](../packages/db/src/data-source.ts)
+- [packages/db/docker-compose.yml](../packages/db/docker-compose.yml)
 
 - `packages/db/README.md`
 - `docs/SERVER.md`

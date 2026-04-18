@@ -1,8 +1,7 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn } from "typeorm";
-import { TimeColumn } from "@timescaledb/typeorm";
 
 /**
- * Lap data hypertable
+ * Lap data table
  * Stores computed lap metrics for each lap
  */
 @Entity("lap")
@@ -11,7 +10,7 @@ export class Lap {
   @PrimaryGeneratedColumn("uuid")
   Id!: string;
 
-  @TimeColumn()
+  @Column({ type: "timestamptz" })
   timestamp!: Date;
 
   @Column({ type: "text" })

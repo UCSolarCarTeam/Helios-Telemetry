@@ -21,7 +21,7 @@ export const getLapData = async (
     request,
     response,
   );
-  const lapData = await backendController.timescaleDB.getLapData();
+  const lapData = await backendController.databaseService.getLapData();
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data: LapDataResponseDTO = {

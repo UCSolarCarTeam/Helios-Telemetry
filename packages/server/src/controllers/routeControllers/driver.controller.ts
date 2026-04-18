@@ -27,7 +27,7 @@ export const getDrivers = async (
     response,
   );
 
-  const driverData = await backendController.timescaleDB.getDrivers();
+  const driverData = await backendController.databaseService.getDrivers();
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data: DriversResponseDTO = {
@@ -54,7 +54,8 @@ export const getDriverLaps = async (
   );
 
   const Rfid = request.params.Rfid;
-  const driverLaps = await backendController.timescaleDB.getDriverLaps(Rfid);
+  const driverLaps =
+    await backendController.databaseService.getDriverLaps(Rfid);
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data: LapDataResponseDTO = {
@@ -120,10 +121,8 @@ export const updateDriverInfo = async (
   const backendController = request.app.locals
     .backendController as BackendController;
 
-  const responseMessage = await backendController.timescaleDB.updateDriverInfo(
-    Rfid,
-    name,
-  );
+  const responseMessage =
+    await backendController.databaseService.updateDriverInfo(Rfid, name);
 
   if (!responseMessage) {
     logger.warn(`Driver update failed - Rfid not found: ${Rfid}`);

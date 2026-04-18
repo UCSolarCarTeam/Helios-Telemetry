@@ -1,6 +1,6 @@
-# Database Package - TimescaleDB Setup
+# Database Package - Postgres Setup
 
-This package manages the TimescaleDB database connection using TypeORM. It provides repositories and services for managing telemetry data, driver information, and lap records.
+This package manages the Postgres database connection using TypeORM. It provides repositories and services for managing telemetry data, driver information, and lap records.
 
 ## Table of Contents
 
@@ -49,8 +49,8 @@ yarn db:up
 
 This command:
 
-- Pulls the TimescaleDB image (if not already present)
-- Starts a PostgreSQL container with TimescaleDB extension
+- Pulls the Postgres image (if not already present)
+- Starts a PostgreSQL container with Postgres extension
 - Exposes the database on port `5432`
 - Creates a persistent volume to store data
 
@@ -135,7 +135,7 @@ yarn start
 
 The server will:
 
-1. Connect to the local TimescaleDB database
+1. Connect to the local Postgres database
 2. Auto-create/sync database tables (in development mode)
 3. Start accepting telemetry data
 
@@ -154,8 +154,6 @@ Run these commands from the `packages/db` directory:
 | `yarn start`    | Run the compiled database service               |
 
 ### TypeORM Migration Commands
-
-**Note:** Migrations require the `timescaledb_toolkit` extension which is not included in the standard TimescaleDB Docker image. For local development, the schema auto-syncs when `NODE_ENV=development`, so migrations are not necessary.
 
 | Command                 | Description                                      | Notes                              |
 | ----------------------- | ------------------------------------------------ | ---------------------------------- |
@@ -217,23 +215,6 @@ yarn db:up
 - Ensure `NODE_ENV=development` in your server environment
 - In production, `synchronize` is disabled to prevent accidental schema changes
 - For local dev, just start the server - tables auto-create on first connection
-
-**Migration errors: "extension 'timescaledb_toolkit' is not available"**
-
-The standard TimescaleDB Docker image doesn't include the toolkit extension. You have two options:
-
-1. **Recommended for local dev**: Skip migrations and use auto-sync
-   - Set `NODE_ENV=development` in your environment
-   - Tables will be created automatically when the server starts
-
-2. **Use toolkit-enabled image** (if you need migrations):
-
-   ```bash
-   # Update docker-compose.yml to use:
-   # image: timescale/timescaledb-ha:pg17
-   ```
-
-   Note: This is a larger image but includes all extensions.
 
 ## Seeding the Database
 
@@ -317,12 +298,11 @@ SELECT * FROM "Driver" LIMIT 10;
   - `DatabaseService.ts` - Singleton service for all DB operations
 
 - **Data Source**: TypeORM configuration (`src/data-source.ts`)
-  - Connects to TimescaleDB (PostgreSQL)
+  - Connects to PostgreSQL
   - Auto-syncs schema in development
   - Uses SSL in production
 
 ## Additional Resources
 
-- [TimescaleDB Documentation](https://docs.timescale.com/)
 - [TypeORM Documentation](https://typeorm.io/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)

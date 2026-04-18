@@ -27,7 +27,7 @@ if (!databaseUsername || !databasePassword) {
 const isProd = process.env.NODE_ENV === "production";
 
 export const AppDataSource = new DataSource({
-  database: "tsdb",
+  database: "postgres",
   entities: [TelemetryPacket, Driver, Lap],
   host: databaseHost,
   logging: false,

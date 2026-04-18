@@ -26,8 +26,8 @@ import {
  * Tanstack table is used to display the data in a table format
  *
  * The flow of data is as follows:
- * Lap data is initially fetched from timescale with useLapData()
- * Driver names are also fetched from timescale in the useEffect() with the fetchDriveNames()
+ * Lap data is initially fetched from the backend with useLapData()
+ * Driver names are also fetched from the backend in the useEffect() with the fetchDriveNames()
  * When the dropdown is pressed for the driver, the handleDropdown() is called and then the
  * fetchFilteredLaps() is called to get the lap data for the selected driver
  * When the column filter is changed, the setColumnName() is called to set the column name

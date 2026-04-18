@@ -26,7 +26,7 @@ export const getPacket = async (
   const timestamp = request.params.timestamp;
 
   const packetData =
-    await backendController.timescaleDB.getPacketData(timestamp);
+    await backendController.databaseService.getPacketData(timestamp);
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data: PlaybackPacketResponseDTO = {
@@ -54,9 +54,9 @@ export const getPacketDataBetweenDates = async (
 
   const endTime = Number(request.query.endTime);
 
-  // Fetch data from timescaleDB
+  // Fetch data from the database service
   const packetData =
-    await backendController.timescaleDB.scanPacketDataBetweenDates(
+    await backendController.databaseService.scanPacketDataBetweenDates(
       startTime,
       endTime,
     );
@@ -84,7 +84,7 @@ export const getFirstAndLastPacket = async (
     response,
   );
   const { firstDateUTC, lastDateUTC } =
-    await backendController.timescaleDB.getFirstAndLastPacketDates();
+    await backendController.databaseService.getFirstAndLastPacketDates();
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data: PlaybackDateRangeResponseDTO = {
