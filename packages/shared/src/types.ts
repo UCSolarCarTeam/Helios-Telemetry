@@ -179,7 +179,7 @@ const IB3Type = t.exact(
     ForwardDigital: t.boolean,
     HandbrakeSwitchDigital: t.boolean,
     HazardLightsInput: t.boolean,
-    HeadightsSwitchInput: t.boolean,
+    HeadlightsSwitchInput: t.boolean,
     HeadlightSignalStatus: t.boolean,
     HornSignalStatus: t.boolean,
     HornSwitchDigital: t.boolean,

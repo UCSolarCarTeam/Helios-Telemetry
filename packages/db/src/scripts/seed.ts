@@ -1,9 +1,6 @@
 import "dotenv/config";
 import { generateFakeTelemetryData } from "@shared/helios-types/src/functions";
-import { AppDataSource } from "../data-source";
-import { Driver } from "../entities/Driver.entity";
-import { Lap } from "../entities/Lap.entity";
-import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
+import { prisma } from "../data-source";
 import { flattenTelemetryData } from "../services/DatabaseService";
 
 /**
@@ -40,23 +37,26 @@ async function seed() {
 
   try {
     // Initialize database connection
-    await AppDataSource.initialize();
+    await prisma.$connect();
     console.log("✅ Database connected");
-
-    const driverRepo = AppDataSource.getRepository(Driver);
-    const lapRepo = AppDataSource.getRepository(Lap);
-    const telemetryRepo = AppDataSource.getRepository(TelemetryPacket);
 
     // Clear existing data (optional - comment out if you want to keep existing data)
     console.log("\n🗑️  Clearing existing data...");
-    await telemetryRepo.clear();
-    await lapRepo.clear();
-    await driverRepo.clear();
+    await prisma.$executeRawUnsafe('DELETE FROM "telemetry_packet"');
+    await prisma.$executeRawUnsafe('DELETE FROM "lap"');
+    await prisma.$executeRawUnsafe('DELETE FROM "driver"');
     console.log("✅ Existing data cleared");
 
     // Seed Drivers
     console.log("\n👤 Seeding drivers...");
-    const drivers = await driverRepo.save(sampleDrivers);
+    for (const driver of sampleDrivers) {
+      await prisma.$executeRawUnsafe(
+        'INSERT INTO "driver" ("rfid", "Name") VALUES ($1, $2)',
+        driver.rfid,
+        driver.Name,
+      );
+    }
+    const drivers = sampleDrivers;
     console.log(`✅ Created ${drivers.length} drivers`);
 
     // Seed Lap Data
@@ -85,7 +85,17 @@ async function seed() {
         });
       }
     }
-    await lapRepo.save(laps);
+    for (const lap of laps) {
+      const entries = Object.entries(lap);
+      const columns = entries.map(([key]) => `"${key}"`).join(", ");
+      const values = entries.map(([, value]) => value);
+      const placeholders = entries.map((_, i) => `$${i + 1}`).join(", ");
+
+      await prisma.$executeRawUnsafe(
+        `INSERT INTO "lap" (${columns}) VALUES (${placeholders})`,
+        ...values,
+      );
+    }
     console.log(`✅ Created ${laps.length} lap records`);
 
     // Seed Telemetry Packets
@@ -113,7 +123,17 @@ async function seed() {
         });
       }
     }
-    await telemetryRepo.save(packets);
+    for (const packet of packets) {
+      const entries = Object.entries(packet).filter(([, value]) => value !== undefined);
+      const columns = entries.map(([key]) => `"${key}"`).join(", ");
+      const values = entries.map(([, value]) => value);
+      const placeholders = entries.map((_, i) => `$${i + 1}`).join(", ");
+
+      await prisma.$executeRawUnsafe(
+        `INSERT INTO "telemetry_packet" (${columns}) VALUES (${placeholders}) ON CONFLICT ("timestamp", "rfid") DO NOTHING`,
+        ...values,
+      );
+    }
     console.log(`✅ Created ${packets.length} telemetry packets`);
 
     // Summary
@@ -134,7 +154,7 @@ async function seed() {
     console.error("\n❌ Error seeding database:", error);
     process.exit(1);
   } finally {
-    await AppDataSource.destroy();
+    await prisma.$disconnect();
     console.log("👋 Database connection closed\n");
   }
 }

@@ -15,5 +15,5 @@ services:
       PATRONI_SCOPE: local-dev
 
 volumes:
-  timescaledb_data: # Named volume for database persistence
+  postgres_data: # Named volume for database persistence
 

@@ -1,32 +1,19 @@
-import { Between, Repository } from "typeorm";
-import { AppDataSource } from "../data-source";
 import {
   ILapData,
   ITelemetryData,
   type UpdateDriverInfoResponseDTO,
 } from "@shared/helios-types";
-import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
-import { Driver } from "../entities/Driver.entity";
-import { Lap } from "../entities/Lap.entity";
+import { prisma } from "../data-source";
 import { GenericResponse } from "./DatabaseService.types";
 import { TelemetryTransformer } from "../utils";
 
 export class DatabaseService {
   private isConnected = false;
   private static instance: DatabaseService;
-  private telemetryPacketRepo: Repository<TelemetryPacket>;
-  private driverRepo: Repository<Driver>;
-  private lapRepo: Repository<Lap>;
-
-  constructor() {
-    this.telemetryPacketRepo = AppDataSource.getRepository(TelemetryPacket);
-    this.driverRepo = AppDataSource.getRepository(Driver);
-    this.lapRepo = AppDataSource.getRepository(Lap);
-  }
 
   async initialize() {
     if (!this.isConnected) {
-      await AppDataSource.initialize();
+      await prisma.$connect();
       this.isConnected = true;
     }
   }
@@ -39,217 +26,204 @@ export class DatabaseService {
   }
 
   public async getDrivers() {
-    try {
-      const drivers = await this.driverRepo.find();
-      return drivers.map((driver) => ({
-        rfid: driver.rfid,
-        driver: driver.Name,
-      }));
-    } catch (error: unknown) {
-      console.error("Error getting drivers");
-      throw new Error((error as Error).message || "Failed to fetch drivers");
-    }
+    this.assertConnected();
+
+    const drivers = (await prisma.$queryRawUnsafe(
+      'SELECT "rfid", "Name" FROM "driver"',
+    )) as Array<{ Name: string; rfid: string }>;
+
+    return drivers.map((driver) => ({
+      driver: driver.Name,
+      rfid: driver.rfid,
+    }));
   }
 
   public async getDriverNameUsingRfid(Rfid: string) {
-    try {
-      const driver = await this.driverRepo.findOne({
-        where: { rfid: Rfid },
-      });
+    this.assertConnected();
 
-      if (!driver) {
-        console.error(`No driver found for Rfid: ${Rfid}`);
-        return "Driver not found";
-      }
+    const rows = (await prisma.$queryRawUnsafe(
+      'SELECT "Name" FROM "driver" WHERE "rfid" = $1 LIMIT 1',
+      Rfid,
+    )) as Array<{ Name: string }>;
 
-      return driver.Name;
-    } catch (error: unknown) {
-      console.error("Error getting driver name using the given Rfid");
-      throw new Error((error as Error).message);
+    if (rows.length === 0) {
+      return "Driver not found";
     }
+
+    return rows[0].Name;
   }
 
-  public async getDriverLaps(Rfid: string): Promise<ILapData[]> {
-    try {
-      const laps = await this.lapRepo.find({
-        order: { timestamp: "DESC" },
-        where: { rfid: Rfid },
-      });
-      return laps;
-    } catch (error: unknown) {
-      console.error("Error getting lap data for driver", error);
-      throw new Error(
-        (error as Error).message || "Failed to fetch driver laps",
-      );
-    }
+  public async getDriverLaps(Rfid: string) {
+    this.assertConnected();
+
+    return prisma.$queryRawUnsafe(
+      'SELECT * FROM "lap" WHERE "rfid" = $1 ORDER BY "timestamp" DESC',
+      Rfid,
+    );
   }
 
-  public async updateDriverInfo(
-    Rfid: string,
-    name: string,
-  ): Promise<Pick<UpdateDriverInfoResponseDTO, "message"> | null> {
-    try {
-      if (typeof Rfid !== "string") {
-        throw new Error("Rfid must be a string");
-      }
+  public async updateDriverInfo(Rfid: string, name: string) {
+    this.assertConnected();
 
-      const existingDriver = await this.driverRepo.findOne({
-        where: { rfid: Rfid },
-      });
-
-      if (!existingDriver) {
-        return null;
-      }
-
-      const oldName = existingDriver.Name;
-      existingDriver.Name = name;
-      await this.driverRepo.save(existingDriver);
-
-      return {
-        message: `Driver name updated from ${oldName} to ${name}`,
-      };
-    } catch (error: unknown) {
-      console.error("Error updating driver info: " + (error as Error).message);
-      throw new Error((error as Error).message);
+    if (typeof Rfid !== "string") {
+      throw new Error("Rfid must be a string");
     }
+
+    const existing = (await prisma.$queryRawUnsafe(
+      'SELECT "Name" FROM "driver" WHERE "rfid" = $1 LIMIT 1',
+      Rfid,
+    )) as Array<{ Name: string }>;
+
+    if (existing.length === 0) {
+      return { message: "Driver Rfid not found in driver table" };
+    }
+
+    const oldName = existing[0].Name;
+    await prisma.$executeRawUnsafe(
+      'UPDATE "driver" SET "Name" = $1 WHERE "rfid" = $2',
+      name,
+      Rfid,
+    );
+
+    return {
+      message: `Driver name updated from ${oldName} to ${name}`,
+    };
   }
 
   async close(): Promise<void> {
     if (this.isConnected) {
-      await AppDataSource.destroy();
-      console.log("Database connection closed");
+      await prisma.$disconnect();
       this.isConnected = false;
     }
   }
 
-  public async getPacketData(
-    timestamp: string,
-  ): Promise<ITelemetryData | null> {
-    if (!this.isConnected) {
-      throw new Error("Database not connected");
-    }
+  public async getPacketData(timestamp: string) {
+    this.assertConnected();
 
-    try {
-      const packet = await this.telemetryPacketRepo.findOneBy({
-        timestamp: new Date(timestamp),
-      });
-      return packet ? TelemetryTransformer.inflate(packet) : null;
-    } catch (error: unknown) {
-      throw new Error(
-        "Failed to retrieve packet date: " + (error as Error).message,
-      );
-    }
+    const rows = (await prisma.$queryRawUnsafe(
+      'SELECT * FROM "telemetry_packet" WHERE "timestamp" = $1 LIMIT 1',
+      new Date(timestamp),
+    )) as unknown[];
+
+    return rows[0] ?? null;
   }
 
   public async scanPacketDataBetweenDates(
     startUTCDate: number,
     endUTCDate: number,
-  ): Promise<ITelemetryData[]> {
-    if (!this.isConnected) {
-      throw new Error("Database not connected");
-    }
+  ) {
+    this.assertConnected();
 
-    try {
-      const packets = await this.telemetryPacketRepo.find({
-        where: {
-          timestamp: Between(new Date(startUTCDate), new Date(endUTCDate)),
-        },
-      });
-      return packets.map((packet) => TelemetryTransformer.inflate(packet));
-    } catch (error: unknown) {
-      throw new Error(
-        "Failed to scan packets between dates: " + (error as Error).message,
-      );
-    }
+    return prisma.$queryRawUnsafe(
+      'SELECT * FROM "telemetry_packet" WHERE "timestamp" BETWEEN $1 AND $2 ORDER BY "timestamp" ASC',
+      new Date(startUTCDate),
+      new Date(endUTCDate),
+    );
   }
 
   public async insertPacketData(
     packet: ITelemetryData,
   ): Promise<GenericResponse> {
-    if (!this.isConnected) {
-      throw new Error("Database not connected");
-    }
-    try {
-      const flattenedData = flattenTelemetryData(packet);
-      await this.telemetryPacketRepo.save(flattenedData);
+    this.assertConnected();
+
+    const flattenedData = flattenTelemetryData(packet);
+    const entries = Object.entries(flattenedData).filter(
+      ([, value]) => value !== undefined,
+    );
+
+    if (entries.length === 0) {
       return {
-        httpStatusCode: 201,
-        message: "Packet data inserted successfully",
+        httpStatusCode: 400,
+        message: "No telemetry data to insert",
       };
-    } catch (error: unknown) {
-      throw new Error(
-        "Failed to insert packet data: " + (error as Error).message,
-      );
     }
+
+    const columns = entries.map(([key]) => quoteIdentifier(key));
+    const values = entries.map(([, value]) => value);
+    const placeholders = entries.map((_, i) => `$${i + 1}`);
+
+    const updateAssignments = entries
+      .filter(([key]) => key !== "timestamp" && key !== "rfid")
+      .map(([key]) => `${quoteIdentifier(key)} = EXCLUDED.${quoteIdentifier(key)}`);
+
+    const conflictClause =
+      updateAssignments.length > 0
+        ? `ON CONFLICT ("timestamp", "rfid") DO UPDATE SET ${updateAssignments.join(", ")}`
+        : 'ON CONFLICT ("timestamp", "rfid") DO NOTHING';
+
+    await prisma.$executeRawUnsafe(
+      `INSERT INTO "telemetry_packet" (${columns.join(", ")}) VALUES (${placeholders.join(", ")}) ${conflictClause}`,
+      ...values,
+    );
+
+    return {
+      httpStatusCode: 201,
+      message: "Packet data inserted successfully",
+    };
   }
 
   public async getFirstAndLastPacketDates(): Promise<{
     firstDateUTC: number | null;
     lastDateUTC: number | null;
   }> {
-    if (!this.isConnected) {
-      throw new Error("Database not connected");
-    }
+    this.assertConnected();
 
-    try {
-      const firstPacket = await this.telemetryPacketRepo.findOne({
-        order: { timestamp: "ASC" },
-      });
+    const firstRows = (await prisma.$queryRawUnsafe(
+      'SELECT "timestamp" FROM "telemetry_packet" ORDER BY "timestamp" ASC LIMIT 1',
+    )) as Array<{ timestamp: Date }>;
 
-      const lastPacket = await this.telemetryPacketRepo.findOne({
-        order: { timestamp: "DESC" },
-      });
+    const lastRows = (await prisma.$queryRawUnsafe(
+      'SELECT "timestamp" FROM "telemetry_packet" ORDER BY "timestamp" DESC LIMIT 1',
+    )) as Array<{ timestamp: Date }>;
 
-      return {
-        firstDateUTC: firstPacket
-          ? Number(firstPacket.timestamp.getTime())
-          : null,
-        lastDateUTC: lastPacket ? Number(lastPacket.timestamp.getTime()) : null,
-      };
-    } catch (error: unknown) {
-      throw new Error(
-        "Failed to retrieve first and last packet dates: " +
-          (error as Error).message,
-      );
-    }
+    return {
+      firstDateUTC: firstRows[0] ? Number(firstRows[0].timestamp.getTime()) : null,
+      lastDateUTC: lastRows[0] ? Number(lastRows[0].timestamp.getTime()) : null,
+    };
   }
 
   public async insertLapData(lapData: ILapData): Promise<GenericResponse> {
+    this.assertConnected();
+
+    const entries = Object.entries(lapData).filter(([, value]) => value !== undefined);
+    const columns = entries.map(([key]) => quoteIdentifier(key));
+    const values = entries.map(([, value]) => value);
+    const placeholders = entries.map((_, i) => `$${i + 1}`);
+
+    await prisma.$executeRawUnsafe(
+      `INSERT INTO "lap" (${columns.join(", ")}) VALUES (${placeholders.join(", ")})`,
+      ...values,
+    );
+
+    return {
+      httpStatusCode: 201,
+      message: "Lap data inserted successfully",
+    };
+  }
+
+  public async getLapData(): Promise<unknown[]> {
+    this.assertConnected();
+
+    return (await prisma.$queryRawUnsafe(
+      'SELECT * FROM "lap" ORDER BY "timestamp" DESC',
+    )) as unknown[];
+  }
+
+  private assertConnected() {
     if (!this.isConnected) {
       throw new Error("Database not connected");
     }
-
-    try {
-      await this.lapRepo.save(lapData);
-      return {
-        httpStatusCode: 201,
-        message: "Lap data inserted successfully",
-      };
-    } catch (error: unknown) {
-      throw new Error("Failed to insert lap data: " + (error as Error).message);
-    }
   }
+}
 
-  public async getLapData(): Promise<Lap[]> {
-    if (!this.isConnected) {
-      throw new Error("Database not connected");
-    }
-
-    try {
-      const laps = await this.lapRepo.find();
-      return laps;
-    } catch (error: unknown) {
-      throw new Error(
-        "Failed to retrieve lap data: " + (error as Error).message,
-      );
-    }
-  }
+function quoteIdentifier(identifier: string): string {
+  return `"${identifier.replace(/"/g, '""')}"`;
 }
 
 // TODO: Check every once in a while if Rfid and Timestamp can be made back into Uppercase
 export function flattenTelemetryData(
   packet: ITelemetryData,
-): Partial<TelemetryPacket> {
+): Record<string, unknown> {
   const timestamp = new Date(packet.TimeStamp * 1000);
   const Rfid = packet.Pi.Rfid;
 

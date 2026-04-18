@@ -19,7 +19,7 @@ export function generateFakeTelemetryData(): ITelemetryData {
       ForwardDigital: faker.datatype.boolean(),
       HandbrakeSwitchDigital: faker.datatype.boolean(),
       HazardLightsInput: faker.datatype.boolean(),
-      HeadightsSwitchInput: faker.datatype.boolean(),
+      HeadlightsSwitchInput: faker.datatype.boolean(),
       HeadlightSignalStatus: faker.datatype.boolean(),
       HornSignalStatus: faker.datatype.boolean(),
       HornSwitchDigital: faker.datatype.boolean(),
