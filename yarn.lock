@@ -6593,7 +6593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@faker-js/faker@npm:^9.0.3, @faker-js/faker@npm:^9.3.0":
+"@faker-js/faker@npm:^9.0.3":
   version: 9.9.0
   resolution: "@faker-js/faker@npm:9.9.0"
   checksum: 10c0/02107cb6915217b4831fa4b261603165972eb7f09d2ab2e1d4b75807df2d425a2bac8621cddbfdcc158c2c447c2bce2e14939d51c4a63fbd832df55452e7f73c
@@ -9076,7 +9076,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shared/helios-types@npm:*, @shared/helios-types@workspace:packages/shared":
+"@shared/helios-types@npm:*, @shared/helios-types@workspace:*, @shared/helios-types@workspace:packages/shared":
   version: 0.0.0-use.local
   resolution: "@shared/helios-types@workspace:packages/shared"
   dependencies:
@@ -14513,7 +14513,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "db@workspace:packages/db"
   dependencies:
-    "@faker-js/faker": "npm:^9.3.0"
+    "@shared/helios-types": "workspace:*"
     "@timescaledb/core": "npm:^0.0.1"
     "@timescaledb/schemas": "npm:^0.0.1"
     "@timescaledb/typeorm": "npm:^0.0.1"
@@ -14522,6 +14522,7 @@ __metadata:
     express: "npm:^4.18.2"
     pg: "npm:^8.11.3"
     reflect-metadata: "npm:^0.1.13"
+    tsx: "npm:^4.7.0"
     typeorm: "npm:^0.3.20"
     typescript: "npm:^5.5.3"
   languageName: unknown
@@ -24193,7 +24194,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.16.2, tsx@npm:^4.6.1":
+"tsx@npm:^4.16.2, tsx@npm:^4.6.1, tsx@npm:^4.7.0":
   version: 4.21.0
   resolution: "tsx@npm:4.21.0"
   dependencies:
