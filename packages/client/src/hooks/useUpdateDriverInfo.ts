@@ -1,24 +1,11 @@
 import { BACKEND_ROUTES } from "@/constants/apiRoutes";
 import { backendApi } from "@/lib/api";
 import { notifications } from "@mantine/notifications";
+import type {
+  UpdateDriverInfoRequestDTO,
+  UpdateDriverInfoResponseDTO,
+} from "@shared/helios-types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-/**
- * Request payload for updating driver information
- */
-interface UpdateDriverInfoRequest {
-  Rfid: string;
-  name: string;
-  password: string;
-}
-
-/**
- * Response structure from the /updatedriverinfo endpoint
- */
-interface UpdateDriverInfoResponse {
-  message: string;
-  uptime?: string;
-}
 
 /**
  * Updates driver information in the database.
@@ -36,9 +23,9 @@ interface UpdateDriverInfoResponse {
  * @throws Error if the request fails, password is invalid, or times out
  */
 async function updateDriverInfo(
-  data: UpdateDriverInfoRequest,
-): Promise<UpdateDriverInfoResponse> {
-  const response = await backendApi.post<UpdateDriverInfoResponse>(
+  data: UpdateDriverInfoRequestDTO,
+): Promise<UpdateDriverInfoResponseDTO> {
+  const response = await backendApi.post<UpdateDriverInfoResponseDTO>(
     BACKEND_ROUTES.drivers.updateInfo,
     data,
   );
@@ -57,6 +44,16 @@ interface UseUpdateDriverInfoOptions {
   onSuccess?: () => void;
 }
 
+interface ErrorResponseDTO {
+  error?: string;
+}
+
+interface ErrorWithResponse {
+  response?: {
+    data?: ErrorResponseDTO;
+  };
+}
+
 /**
  * Custom mutation hook to update driver information using TanStack Query.
  *
@@ -65,7 +62,7 @@ interface UseUpdateDriverInfoOptions {
  * - 30-second timeout to prevent hanging requests
  * - Automatic success notifications (handled inside the hook)
  * - Automatic error notifications (handled inside the hook)
- * - Automatic cache invalidation for drivers and driver laps
+ * - Automatic cache invalidation for drivers
  * - Optional success callback for component-specific logic (e.g., form reset)
  *
  * @param options - Optional configuration
@@ -81,11 +78,13 @@ export function useUpdateDriverInfo(options?: UseUpdateDriverInfoOptions) {
 
     // Handle errors with automatic notification using server error messages
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       // Extract error message from server response, or use default
+      const responseError = (error as ErrorWithResponse).response?.data?.error;
       const message =
-        error.response?.data?.error || "Failed to update driver information.";
+        typeof responseError === "string"
+          ? responseError
+          : "Failed to update driver information.";
 
       notifications.show({
         color: "red",
@@ -104,9 +103,7 @@ export function useUpdateDriverInfo(options?: UseUpdateDriverInfoOptions) {
       });
 
       // Invalidate drivers list to refetch updated data
-      queryClient.invalidateQueries({ queryKey: ["drivers"] });
-      // Invalidate all driver laps queries
-      queryClient.invalidateQueries({ queryKey: ["driver-laps"] });
+      void queryClient.invalidateQueries({ queryKey: ["drivers"] });
 
       // Call component's success callback if provided (for form reset, etc.)
       options?.onSuccess?.();

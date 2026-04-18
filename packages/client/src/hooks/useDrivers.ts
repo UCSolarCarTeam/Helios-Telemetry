@@ -3,15 +3,8 @@ import { useEffect } from "react";
 import { BACKEND_ROUTES } from "@/constants/apiRoutes";
 import { backendApi } from "@/lib/api";
 import { notifications } from "@mantine/notifications";
-import type { IDriverData } from "@shared/helios-types/src/types";
+import type { DriversResponseDTO, IDriverData } from "@shared/helios-types";
 import { useQuery } from "@tanstack/react-query";
-
-/**
- * Response structure from the /drivers endpoint
- */
-interface DriversResponse {
-  data: IDriverData[];
-}
 
 /**
  * Fetches all driver data from the backend API.
@@ -25,7 +18,7 @@ interface DriversResponse {
  * @throws Error if the request fails or times out
  */
 async function fetchDrivers(): Promise<IDriverData[]> {
-  const response = await backendApi.get<DriversResponse>(
+  const response = await backendApi.get<DriversResponseDTO>(
     BACKEND_ROUTES.drivers.base,
   );
 
@@ -47,31 +40,13 @@ async function fetchDrivers(): Promise<IDriverData[]> {
  * - Consistent error handling with user-friendly messages
  *
  * @returns Query result with driver data
- *
- * @example
- * ```tsx
- * function DriverSelector() {
- *   const { data: drivers, isLoading, error } = useDrivers();
- *
- *   if (isLoading) return <div>Loading drivers...</div>;
- *   if (error) return <div>Error: {error.message}</div>;
- *
- *   return (
- *     <select>
- *       {drivers?.map(driver => (
- *         <option key={driver.Rfid} value={driver.Rfid}>
- *           {driver.driver}
- *         </option>
- *       ))}
- *     </select>
- *   );
- * }
- * ```
  */
 export function useDrivers() {
   const query = useQuery({
     // Unused data stays in cache for 2 hours
     gcTime: 1000 * 60 * 60 * 2, // 2 hours
+
+    placeholderData: [],
 
     // Fetch function - uses backendApi with 30s timeout
     queryFn: fetchDrivers,

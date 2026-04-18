@@ -1,6 +1,11 @@
 import { Between, Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { ILapData, ITelemetryData } from "@shared/helios-types";
+import {
+  IDriverData,
+  ILapData,
+  ITelemetryData,
+  type UpdateDriverInfoResponseDTO,
+} from "@shared/helios-types";
 import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
 import { Driver } from "../entities/Driver.entity";
 import { Lap } from "../entities/Lap.entity";
@@ -43,6 +48,7 @@ export class DatabaseService {
       }));
     } catch (error: unknown) {
       console.error("Error getting drivers");
+      throw new Error((error as Error).message || "Failed to fetch drivers");
     }
   }
 
@@ -64,7 +70,7 @@ export class DatabaseService {
     }
   }
 
-  public async getDriverLaps(Rfid: string) {
+  public async getDriverLaps(Rfid: string): Promise<ILapData[]> {
     try {
       const laps = await this.lapRepo.find({
         order: { timestamp: "DESC" },
@@ -79,7 +85,10 @@ export class DatabaseService {
     }
   }
 
-  public async updateDriverInfo(Rfid: string, name: string) {
+  public async updateDriverInfo(
+    Rfid: string,
+    name: string,
+  ): Promise<Pick<UpdateDriverInfoResponseDTO, "message">> {
     try {
       if (typeof Rfid !== "string") {
         throw new Error("Rfid must be a string");

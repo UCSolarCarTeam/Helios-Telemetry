@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 import { socketIO } from "@/components/global/SocketManager";
-import { useLaps } from "@/hooks/useLaps";
 import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { formatLapData, useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
@@ -9,18 +8,12 @@ import type { ILapData } from "@shared/helios-types";
 
 export function LapListenerManager(): React.ReactElement | null {
   const { currentAppState } = useAppState();
-  const { addLapData, clearLapData, setLapData } = useLapDataStore();
+  const { addLapData, clearLapData, fetchLapData } = useLapDataStore();
 
-  // Use TanStack Query hook to fetch lap data
-  const { data: laps } = useLaps();
-
-  // Sync TanStack Query data to Zustand store
+  // Fetch initial lap data when manager mounts
   useEffect(() => {
-    if (laps) {
-      const formattedLaps = laps.map(formatLapData);
-      setLapData(formattedLaps);
-    }
-  }, [laps, setLapData]);
+    void fetchLapData();
+  }, [fetchLapData]);
 
   // Handle connection type changes
   useEffect(() => {

@@ -54,21 +54,23 @@ If you did not know, express.js is how we set up our api routes for requesting d
 
 We define our routes [here](../packages/server/src/routes/).
 
-An example of when we call a route is below:
+An example of a typed client call to a backend route is below:
 
 ```typescript
-  const fetchDriverNames = async () => {
-    try {
-      const response = await axios.get(`${prodURL}/drivers`);
+import { BACKEND_ROUTES } from "@/constants/apiRoutes";
+import { backendApi } from "@/lib/api";
+import type { DriversResponseDTO } from "@shared/helios-types";
 
-      return response.data;
-    } catch (error) {
-      return { error: "Error fetching drivers" };
-    }
-  };
+const fetchDriverNames = async () => {
+  const response = await backendApi.get<DriversResponseDTO>(
+    BACKEND_ROUTES.drivers.base,
+  );
+
+  return response.data.data;
+};
 ```
 
-We use axios to send a GET request in this case to the specific endpoint that we define in our route, namely:
+We use the configured `backendApi` instance to send a GET request to the specific endpoint that we define in our route constants, namely:
 
 ```typescript
 driverRouter.get("/drivers", controllers.getDrivers);
@@ -77,7 +79,13 @@ driverRouter.get("/drivers", controllers.getDrivers);
 To eventually call this function, which is specified in the second parameter (`.getDrivers()`):
 
 ```typescript
-export const getDrivers = async (request: Request, response: Response) => {
+import type { Request, Response } from "express";
+import type { DriversResponseDTO } from "@shared/helios-types";
+
+export const getDrivers = async (
+  request: Request,
+  response: Response<DriversResponseDTO>,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -91,7 +99,7 @@ export const getDrivers = async (request: Request, response: Response) => {
     const driverData = await backendController.timescaleDB.getDrivers();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
-    const data = {
+    const data: DriversResponseDTO = {
       data: driverData,
       message: "OK",
       uptime: process.uptime() + " seconds",
@@ -108,9 +116,17 @@ export const getDrivers = async (request: Request, response: Response) => {
 
 Please note how we are returning and handling errors and successes. This is good practice, so if you define more routes keep doing this.
 
+Also, for any client ↔ server contract:
+
+- define the request/response DTO in `packages/shared/src/dto/`
+- export it through `packages/shared/src/dto/index.ts`
+- import it from `@shared/helios-types` on both the client and server
+
+Avoid duplicating transport interfaces in a client hook and then redefining the same response shape in a server controller.
+
 _Remember to define an `app.use()` in the `index.ts` file._
 
-The prodURL variable is defined [here](../packages/shared/src/prodFlag.ts) as a way to differentiate between running our server locally and when it is actually deployed. There are reasons for this ask ideen lol something about safety and it's not common practice.
+On the client side, prefer `backendApi` plus `BACKEND_ROUTES` instead of manually concatenating `prodURL`.
 
 ### Controllers
 

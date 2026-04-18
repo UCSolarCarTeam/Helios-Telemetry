@@ -1,5 +1,6 @@
 import { useTheme } from "next-themes";
 
+import { useDrivers } from "@/hooks/useDrivers";
 import { gray, helios, heliosCompliment } from "@/styles/colors";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import Box from "@mui/material/Box";
@@ -7,7 +8,6 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
-import { IDriverData } from "@shared/helios-types";
 
 /*
  * This component is used to filter the drivers of the lap data table
@@ -16,17 +16,16 @@ import { IDriverData } from "@shared/helios-types";
 export default function DriverFilter({
   Rfid,
   copy,
-  driverData,
   handleCopy,
   handleDropdown,
 }: {
-  driverData: IDriverData[];
   handleDropdown: (event: SelectChangeEvent<string>) => void;
   handleCopy: () => Promise<void>;
-  Rfid: string | number;
+  Rfid: string;
   copy: number;
 }) {
   const { resolvedTheme } = useTheme();
+  const { data: driverData } = useDrivers();
   return (
     <div className="flex flex-row items-center gap-2">
       <Box className="min-w-[120px]" component="div">
@@ -79,11 +78,11 @@ export default function DriverFilter({
                 borderColor: resolvedTheme === "dark" ? "white" : "",
               },
             }}
-            value={Rfid?.toString()}
+            value={Rfid}
           >
             <MenuItem value={"Show all data"}>Show all data</MenuItem>
-            {driverData.map((driver) => (
-              <MenuItem key={driver.Rfid} value={driver.Rfid}>
+            {driverData?.map((driver) => (
+              <MenuItem key={driver.rfid} value={driver.rfid}>
                 {driver.driver ? `${driver.driver}` : `NO NAME`}
               </MenuItem>
             ))}
@@ -91,12 +90,10 @@ export default function DriverFilter({
         </FormControl>
       </Box>
       {Number.isNaN(Rfid) || Rfid === "Show all data" ? "" : Rfid}
-      {Rfid && Rfid !== "Show all data" ? (
+      {Rfid && Rfid !== "Show all data" && (
         <button className="items-center" onClick={() => void handleCopy()}>
           {copy === 0 ? <ContentCopy /> : <ContentCopyTwoTone />}
         </button>
-      ) : (
-        <></>
       )}
     </div>
   );

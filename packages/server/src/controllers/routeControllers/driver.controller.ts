@@ -5,7 +5,19 @@ import { type Request, type Response } from "express";
 import { createApplicationLogger } from "@/utils/logger";
 import { validateDriverUpdatePassword } from "@/utils/validatePassword";
 
-export const getDrivers = async (request: Request, response: Response) => {
+import {
+  type DriverHealthResponseDTO,
+  type DriversResponseDTO,
+  type LapDataResponseDTO,
+  type UpdateDriverInfoErrorResponseDTO,
+  type UpdateDriverInfoRequestDTO,
+  type UpdateDriverInfoResponseDTO,
+} from "@shared/helios-types";
+
+export const getDrivers = async (
+  request: Request,
+  response: Response<DriversResponseDTO>,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -18,7 +30,7 @@ export const getDrivers = async (request: Request, response: Response) => {
   const driverData = await backendController.timescaleDB.getDrivers();
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
-  const data = {
+  const data: DriversResponseDTO = {
     data: driverData,
     message: "OK",
     uptime: process.uptime() + " seconds",
@@ -28,7 +40,10 @@ export const getDrivers = async (request: Request, response: Response) => {
   return response.status(200).json(data);
 };
 
-export const getDriverLaps = async (request: Request, response: Response) => {
+export const getDriverLaps = async (
+  request: Request,
+  response: Response<LapDataResponseDTO>,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -42,7 +57,7 @@ export const getDriverLaps = async (request: Request, response: Response) => {
   const driverLaps = await backendController.timescaleDB.getDriverLaps(Rfid);
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
-  const data = {
+  const data: LapDataResponseDTO = {
     data: driverLaps,
     message: "OK",
     uptime: process.uptime() + " seconds",
@@ -52,14 +67,17 @@ export const getDriverLaps = async (request: Request, response: Response) => {
   return response.status(200).json(data);
 };
 
-export const getDriverHealth = (request: Request, response: Response) => {
+export const getDriverHealth = (
+  request: Request,
+  response: Response<DriverHealthResponseDTO>,
+) => {
   const logger = createApplicationLogger(
     "driver.controller.ts",
     request,
     response,
   );
   logger.info(`ENTRY - ${request.method} ${request.url}`);
-  const data = {
+  const data: DriverHealthResponseDTO = {
     date: new Date(),
     message: "OK",
     uptime: process.uptime() + " seconds",
@@ -70,8 +88,10 @@ export const getDriverHealth = (request: Request, response: Response) => {
 };
 
 export const updateDriverInfo = async (
-  request: Request,
-  response: Response,
+  request: Request<Record<string, string>, unknown, UpdateDriverInfoRequestDTO>,
+  response: Response<
+    UpdateDriverInfoResponseDTO | UpdateDriverInfoErrorResponseDTO
+  >,
 ) => {
   const { Rfid, name, password } = request.body;
 
@@ -106,7 +126,7 @@ export const updateDriverInfo = async (
   );
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
-  const data = {
+  const data: UpdateDriverInfoResponseDTO = {
     message: responseMessage.message,
     uptime: process.uptime() + " seconds",
   };
