@@ -29,6 +29,7 @@ async function fetchDrivers(): Promise<IDriverData[]> {
   return response.data.data;
 }
 
+export const DRIVERS_QUERY_KEY = "drivers";
 /**
  * Custom hook to fetch and cache all driver data using TanStack Query.
  *
@@ -52,7 +53,7 @@ export function useDrivers() {
     queryFn: fetchDrivers,
 
     // Query key: ['drivers']
-    queryKey: ["drivers"] as const,
+    queryKey: [DRIVERS_QUERY_KEY] as const,
 
     // Don't refetch on window focus (driver data is stable)
     refetchOnWindowFocus: false,

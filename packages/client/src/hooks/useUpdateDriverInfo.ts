@@ -1,4 +1,5 @@
 import { BACKEND_ROUTES } from "@/constants/apiRoutes";
+import { DRIVERS_QUERY_KEY } from "@/hooks/useDrivers";
 import { backendApi } from "@/lib/api";
 import { notifications } from "@mantine/notifications";
 import type {
@@ -103,7 +104,7 @@ export function useUpdateDriverInfo(options?: UseUpdateDriverInfoOptions) {
       });
 
       // Invalidate drivers list to refetch updated data
-      void queryClient.invalidateQueries({ queryKey: ["drivers"] });
+      void queryClient.invalidateQueries({ queryKey: [DRIVERS_QUERY_KEY] });
 
       // Call component's success callback if provided (for form reset, etc.)
       options?.onSuccess?.();

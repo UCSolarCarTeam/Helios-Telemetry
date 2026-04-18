@@ -85,7 +85,7 @@ function RaceTab() {
   // copy rfid to clipboard
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(String(driverRFID));
+      await navigator.clipboard.writeText(driverRFID);
       setCopy(1);
       setTimeout(() => setCopy(0), 5000);
       notifications.show({

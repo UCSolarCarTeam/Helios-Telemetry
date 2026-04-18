@@ -1,7 +1,6 @@
 import { Between, Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import {
-  IDriverData,
   ILapData,
   ITelemetryData,
   type UpdateDriverInfoResponseDTO,
