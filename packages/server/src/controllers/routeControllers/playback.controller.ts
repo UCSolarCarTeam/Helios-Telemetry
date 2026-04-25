@@ -3,6 +3,7 @@ import { BackendController } from "../BackendController/BackendController";
 import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
+import { TelemetryTransformer } from "@/utils/telemetryTransformer";
 
 import {
   type PlaybackDataResponseDTO,
@@ -30,8 +31,8 @@ export const getPacket = async (
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
   const data: PlaybackPacketResponseDTO = {
-    data: packetData,
-    message: "OK",
+    data: packetData ? TelemetryTransformer.inflate(packetData) : null,
+    message: packetData ? "OK" : "Not found",
   };
   logger.info(`EXIT - ${request.method} ${request.url} - ${200}`);
 
@@ -64,7 +65,7 @@ export const getPacketDataBetweenDates = async (
   logger.info(`ENTRY - ${request.method} ${request.url}`);
 
   const data: PlaybackDataResponseDTO = {
-    data: packetData,
+    data: packetData.map(TelemetryTransformer.inflate),
     message: "OK",
   };
 
