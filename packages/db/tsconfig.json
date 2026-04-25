@@ -6,13 +6,11 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "types": ["node"] // if you are missing global types, you may have to add them here.
   },
-  "include": ["src", "migrations"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "migrations"]
 }

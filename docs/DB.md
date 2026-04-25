@@ -1,60 +1,71 @@
-# Database
+_last updated April 18th, 2026_
 
-This is the single quick reference for running the local TimescaleDB instance and connecting the server to it.
+# Database Connection Documentation
 
-## Prerequisites
+This document explains how the backend connects to PostgreSQL using Prisma, where the connection is created, and what environment variables are required.
 
-- Node.js 18+
-- Yarn
-- Docker
+## High-Level Flow
+
+1. The server starts and creates a `BackendController`.
+2. `BackendController` gets a singleton `DatabaseService` instance.
+3. `DatabaseService.initialize()` calls `prisma.$connect()`.
+4. Backend methods call `DatabaseService` methods, which run SQL through Prisma.
+5. On shutdown (`SIGINT`/`SIGTERM`), backend cleanup calls `DatabaseService.close()` and disconnects Prisma.
+
+## Environment Variables
+
+The db package and server package should use Prisma connection URLs.
+
+```env
+# Runtime queries (pooled, Supabase Transaction mode)
+DATABASE_URL=postgresql://<user>:<password>@<host>:6543/postgres?pgbouncer=true
+
+# Direct connection (for prisma migrate / db push / db pull)
+DIRECT_URL=postgresql://<user>:<password>@<host>:5432/postgres
+```
+
+Notes:
+
+- Use `DATABASE_URL` for app runtime.
+- Use `DIRECT_URL` for schema operations and migrations.
 
 ## Local Setup
 
-### 1. Start the database
+### 1) Start local PostgreSQL (optional)
 
 From `packages/db`:
-
-```bash
-cp .db.env.example .db.env
-```
-
-Set values in `packages/db/.db.env`:
-
-```env
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_local_password
-POSTGRES_DB=tsdb
-```
-
-Then start the container:
 
 ```bash
 yarn db:up
 ```
 
-If you run `db` package scripts directly (for example `yarn db:seed`), they will use the same `packages/db/.db.env` file in local development.
+The local database container is defined in [packages/db/docker-compose.yml](../packages/db/docker-compose.yml) and uses `postgres:17`.
 
-### 2. Configure the server
+### 2) Configure environment variables
 
-From `packages/server`:
+Set values in:
+
+- `packages/db/.env` for Prisma CLI operations.
+- `packages/server/.env` for backend runtime.
+
+At minimum, set `DATABASE_URL`. For migration/pull/push commands, also set `DIRECT_URL`.
+
+### 3) Sync Prisma schema and generate client
+
+From `packages/db`:
 
 ```bash
-cp .env.example .env
+yarn db:pull
+yarn db:generate
 ```
 
-Set these values in `packages/server/.env`:
+Or push schema changes:
 
-```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=your_local_password
-NODE_ENV=development
+```bash
+yarn db:push
 ```
 
-`DATABASE_PASSWORD` must match `POSTGRES_PASSWORD`.
-
-### 3. Start the server
+### 4) Start the server
 
 From the repository root:
 
@@ -62,80 +73,122 @@ From the repository root:
 yarn dev:server
 ```
 
+## How It Works
+
+### Backend bootstrapping
+
+File: `packages/server/src/controllers/BackendController/BackendController.ts`
+
+- The backend imports `DatabaseService` from the db package.
+- In the constructor, it sets `this.databaseService = DatabaseService.getInstance()`.
+- It then calls `this.initializeDatabase()`.
+- `initializeDatabase()` awaits `this.databaseService.initialize()` and logs success or failure.
+
+### Database service
+
+File: `packages/db/src/services/DatabaseService.ts`
+
+- `DatabaseService` is a singleton (`private static instance`).
+- `initialize()` checks `isConnected` before calling `prisma.$connect()`.
+- Methods run SQL via Prisma raw-query methods.
+- `close()` calls `prisma.$disconnect()` and flips `isConnected` to `false`.
+
+### Prisma client setup
+
+File: `packages/db/src/data-source.ts`
+
+- Loads env files from the db package (`.env`, `.db.env`).
+- Ensures `DATABASE_URL` exists (or builds one from host/port/username/password).
+- Exports a shared `prisma` client instance.
+
 ## Verify It Works
 
-- Database logs: `cd packages/db && yarn db:logs`
-- Server logs should include `Database connection established`
-- Optional: seed sample data with `cd packages/db && yarn db:seed`
-
-To open a SQL shell:
+- Server logs should include `Database connection established successfully!`
+- To inspect local DB container logs:
 
 ```bash
-cd packages/db && docker-compose exec db psql -U postgres -d tsdb
+cd packages/db && yarn db:logs
 ```
 
-## Useful Commands
+- To open a SQL shell against local container:
 
-From `packages/db`:
+```bash
+cd packages/db && docker-compose exec db psql -U postgres -d postgres
+```
 
-- `yarn db:up` — start DB
-- `yarn db:down` — stop DB
-- `yarn db:logs` — view DB logs
-- `yarn db:seed` — insert sample data
-- `yarn db:reset` — restart and reseed
+## Schema Change Workflow (Add / Remove Fields)
+
+Use this checklist any time telemetry fields are added, renamed, or removed.
+
+### 1) Update shared telemetry contract
+
+- Update field names/types in `packages/shared/src/types.ts`.
+- If needed, update fake packet generators in `packages/shared/src/functions.ts` and client fake data files.
+
+### 2) Update DB flattening logic
+
+- In `packages/db/src/services/DatabaseService.ts`, ensure `flattenTelemetryData()` emits keys that match the shared type names exactly.
+- For nested objects, add or remove explicit mapped keys (for example, motor detail field mappings).
+
+### 3) Update Prisma schema
+
+- Add/remove matching columns in `packages/db/prisma/schema.prisma` under `model telemetry_packet`.
+- Keep column names consistent with flattened packet keys (including exact casing, such as `12V` vs `12v`).
+
+### 4) Push schema + regenerate client
+
+From repo root:
+
+```bash
+yarn workspace db db:push
+yarn workspace db db:generate
+```
+
+### 5) Validate build
+
+```bash
+yarn workspace db build
+yarn workspace server build
+```
+
+### 6) Verify runtime write path
+
+- Run server and insert telemetry (real or fake packet).
+- Confirm inserts succeed and no missing-column errors occur.
+
+### Removing a field safely
+
+1. Remove it from shared types and any packet generators.
+2. Remove it from `flattenTelemetryData()` mapping.
+3. Remove it from Prisma schema.
+4. Run schema sync and builds again.
+5. If production data must be preserved, create and review a migration instead of direct push.
 
 ## Common Issues
 
-### Missing `DATABASE_*` variables
+### Missing `DATABASE_URL`
 
-Make sure `packages/server/.env` includes `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD`.
+Make sure `packages/server/.env` includes `DATABASE_URL`.
 
-For `packages/db` scripts, local credentials can come from either:
+### Prisma command fails to connect
 
-- `packages/db/.env` using `DATABASE_*`, or
-- `packages/db/.db.env` using `POSTGRES_*`
+Make sure `DIRECT_URL` is set and reachable. Supabase schema commands should use the direct `5432` URL.
 
 ### Connection refused
 
-The DB container is not running, or port `5432` is unavailable.
-
-Check:
-
-- `cd packages/db && yarn db:up`
-- `lsof -i :5432`
+If using local DB, ensure the container is running and port `5432` is available.
 
 ### Password authentication failed
 
-Make sure:
+Confirm credentials and host in the URL are correct and URL-encoded if needed.
 
-- `packages/db/.db.env` → `POSTGRES_PASSWORD`
-- `packages/server/.env` → `DATABASE_PASSWORD`
+## Related Files
 
-match exactly.
-
-### Reset local DB
-
-This deletes local data:
-
-```bash
-cd packages/db && docker-compose down -v && yarn db:up
-```
-
-## How the App Connects
-
-- The server initializes `DatabaseService` on startup.
-- `DatabaseService` uses `AppDataSource` in `packages/db/src/data-source.ts`.
-- The app connects to PostgreSQL/TimescaleDB database `tsdb`.
-- In development, TypeORM schema sync and logging are enabled.
-- On shutdown, the server closes the DB connection cleanly.
-
-Key files:
-
-- `packages/server/src/controllers/BackendController/BackendController.ts`
-- `packages/db/src/services/DatabaseService.ts`
-- `packages/db/src/data-source.ts`
-
-## Related Docs
-
-- `packages/db/README.md`
-- `docs/SERVER.md`
+- [packages/server/src/controllers/BackendController/BackendController.ts](../packages/server/src/controllers/BackendController/BackendController.ts)
+- [packages/db/src/services/DatabaseService.ts](../packages/db/src/services/DatabaseService.ts)
+- [packages/db/src/data-source.ts](../packages/db/src/data-source.ts)
+- [packages/db/prisma/schema.prisma](../packages/db/prisma/schema.prisma)
+- [packages/db/prisma.config.ts](../packages/db/prisma.config.ts)
+- [packages/db/docker-compose.yml](../packages/db/docker-compose.yml)
+- [packages/db/README.md](../packages/db/README.md)
+- [docs/SERVER.md](./SERVER.md)

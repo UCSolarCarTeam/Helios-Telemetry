@@ -10,7 +10,7 @@ import { IPlaybackDateTime } from "../PlaybackDatePicker";
 /*
  * This component is used to select a date and time for retrieving playback data.
  * It allows the user to select a date (day of the month) and time range (start and end time).
- * The selected date and time are then used to fetch playback data from TimescaleDB.
+ * The selected date and time are then used to fetch playback data from the database.
  * This component is one of two columns in the PlaybackDatePicker component.
  *
  * handleDateChange: This function is called when the user selects the day of the month in the date picker.

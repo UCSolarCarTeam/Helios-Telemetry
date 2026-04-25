@@ -1,5 +1,6 @@
+import type { telemetry_packet } from "@prisma/client";
+
 import type { ITelemetryData } from "@shared/helios-types";
-import type { TelemetryPacket } from "./entities/TelemetryPacket.entity";
 
 /**
  * Utility class for transforming telemetry data between nested objects and flat database rows.
@@ -15,7 +16,7 @@ export class TelemetryTransformer {
    * @param packet - Nested telemetry data from MQTT
    * @returns Flat object ready for database insertion
    */
-  static flatten(packet: ITelemetryData): Partial<TelemetryPacket> {
+  static flatten(packet: ITelemetryData): Partial<telemetry_packet> {
     const timestamp = new Date(packet.TimeStamp * 1000);
     const Rfid = packet.Pi.Rfid;
 
@@ -123,7 +124,7 @@ export class TelemetryTransformer {
    * @param packet - Flat database row
    * @returns Nested telemetry data structure
    */
-  static inflate(packet: TelemetryPacket): ITelemetryData {
+  static inflate(packet: telemetry_packet): ITelemetryData {
     return {
       B3: {
         Acceleration: packet.Acceleration ?? 0,
@@ -134,7 +135,7 @@ export class TelemetryTransformer {
         ForwardDigital: packet.ForwardDigital ?? false,
         HandbrakeSwitchDigital: packet.HandbrakeSwitchDigital ?? false,
         HazardLightsInput: packet.HazardLightsInput ?? false,
-        HeadightsSwitchInput: packet.HeadlightsSwitchInput ?? false,
+        HeadlightsSwitchInput: packet.HeadlightsSwitchInput ?? false,
         HeadlightSignalStatus: packet.HeadlightSignalStatus ?? false,
         HornSignalStatus: packet.HornSignalStatus ?? false,
         HornSwitchDigital: packet.HornSwitchDigital ?? false,
@@ -163,7 +164,7 @@ export class TelemetryTransformer {
         HighCellVoltageId: packet.HighCellVoltageId ?? 0,
         HighTemperature: packet.HighTemperature ?? 0,
         HighThermistorId: packet.HighThermistorId ?? 0,
-        Input12V: packet.Input12v ?? 0,
+        Input12V: packet.Input12V ?? 0,
         InternalTemperature: packet.InternalTemperature ?? 0,
         IsChargingSignalStatus: packet.IsChargingSignalStatus ?? false,
         IsReadySignalStatus: packet.IsReadySignalStatus ?? false,
@@ -187,59 +188,59 @@ export class TelemetryTransformer {
       },
       BatteryFaults: {
         Errors: {
-          AlwaysOnSupplyFault: packet.ErrorAlwaysOnSupplyFault ?? false,
-          CanbusCommunicationFault: packet.ErrorCanbusCommunicationFault ?? false,
-          ChargeLimitEnforcementFault: packet.ErrorChargeLimitEnforcementFault ?? false,
-          ChargerSafetyRelayFault: packet.ErrorChargerSafetyRelayFault ?? false,
-          CurrentSensorFault: packet.ErrorCurrentSensorFault ?? false,
-          DischargeLimitEnforcementFault: packet.ErrorDischargeLimitEnforcementFault ?? false,
-          FanMonitorFault: packet.ErrorFanMonitorFault ?? false,
-          HighVoltageIsolationFault: packet.ErrorHighVoltageIsolationFault ?? false,
-          InternalCommunicationFault: packet.ErrorInternalCommunicationFault ?? false,
-          InternalConversionFault: packet.ErrorInternalConversionFault ?? false,
-          InternalLogicFault: packet.ErrorInternalLogicFault ?? false,
-          InternalMemoryFault: packet.ErrorInternalMemoryFault ?? false,
-          InternalThermistorFault: packet.ErrorInternalThermistorFault ?? false,
-          LowCellVoltageFault: packet.ErrorLowCellVoltageFault ?? false,
-          OpenWiringFault: packet.ErrorOpenWiringFault ?? false,
-          PackVoltageSensorFault: packet.ErrorPackVoltageSensorFault ?? false,
-          PowerSupply12VFault: packet.ErrorPowerSupply12vFault ?? false,
-          ThermistorFault: packet.ErrorThermistorFault ?? false,
-          VoltageRedundancyFault: packet.ErrorVoltageRedundancyFault ?? false,
-          WeakCellFault: packet.ErrorWeakCellFault ?? false,
-          WeakPackFault: packet.ErrorWeakPackFault ?? false,
+          AlwaysOnSupplyFault: packet.AlwaysOnSupplyFault ?? false,
+          CanbusCommunicationFault: packet.CanbusCommunicationFault ?? false,
+          ChargeLimitEnforcementFault: packet.ChargeLimitEnforcementFault ?? false,
+          ChargerSafetyRelayFault: packet.ChargerSafetyRelayFault ?? false,
+          CurrentSensorFault: packet.CurrentSensorFault ?? false,
+          DischargeLimitEnforcementFault: packet.DischargeLimitEnforcementFault ?? false,
+          FanMonitorFault: packet.FanMonitorFault ?? false,
+          HighVoltageIsolationFault: packet.HighVoltageIsolationFault ?? false,
+          InternalCommunicationFault: packet.InternalCommunicationFault ?? false,
+          InternalConversionFault: packet.InternalConversionFault ?? false,
+          InternalLogicFault: packet.InternalLogicFault ?? false,
+          InternalMemoryFault: packet.InternalMemoryFault ?? false,
+          InternalThermistorFault: packet.InternalThermistorFault ?? false,
+          LowCellVoltageFault: packet.LowCellVoltageFault ?? false,
+          OpenWiringFault: packet.OpenWiringFault ?? false,
+          PackVoltageSensorFault: packet.PackVoltageSensorFault ?? false,
+          PowerSupply12VFault: packet.PowerSupply12VFault ?? false,
+          ThermistorFault: packet.ThermistorFault ?? false,
+          VoltageRedundancyFault: packet.VoltageRedundancyFault ?? false,
+          WeakCellFault: packet.WeakCellFault ?? false,
+          WeakPackFault: packet.WeakPackFault ?? false,
         },
         Warnings: {
           CclReducedDueToAlternateCurrentLimit:
-            packet.WarningCclReducedDueToAlternateCurrentLimit ?? false,
+            packet.CclReducedDueToAlternateCurrentLimit ?? false,
           CclReducedDueToChargerLatch:
-            packet.WarningCclReducedDueToChargerLatch ?? false,
+            packet.CclReducedDueToChargerLatch ?? false,
           CclReducedDueToHighCellResistance:
-            packet.WarningCclReducedDueToHighCellResistance ?? false,
+            packet.CclReducedDueToHighCellResistance ?? false,
           CclReducedDueToHighCellVoltage:
-            packet.WarningCclReducedDueToHighCellVoltage ?? false,
+            packet.CclReducedDueToHighCellVoltage ?? false,
           CclReducedDueToHighPackVoltage:
-            packet.WarningCclReducedDueToHighPackVoltage ?? false,
-          CclReducedDueToHighSoc: packet.WarningCclReducedDueToHighSoc ?? false,
+            packet.CclReducedDueToHighPackVoltage ?? false,
+          CclReducedDueToHighSoc: packet.CclReducedDueToHighSoc ?? false,
           CclReducedDueToTemperature:
-            packet.WarningCclReducedDueToTemperature ?? false,
+            packet.CclReducedDueToTemperature ?? false,
           DclAndCclReducedDueToCommunicationFailsafe:
-            packet.WarningDclAndCclReducedDueToCommunicationFailsafe ?? false,
+            packet.DclAndCclReducedDueToCommunicationFailsafe ?? false,
           DclAndCclReducedDueToVoltageFailsafe:
-            packet.WarningDclAndCclReducedDueToVoltageFailsafe ?? false,
+            packet.DclAndCclReducedDueToVoltageFailsafe ?? false,
           DclReducedDueToHighCellResistance:
-            packet.WarningDclReducedDueToHighCellResistance ?? false,
+            packet.DclReducedDueToHighCellResistance ?? false,
           DclReducedDueToLowCellVoltage:
-            packet.WarningDclReducedDueToLowCellVoltage ?? false,
+            packet.DclReducedDueToLowCellVoltage ?? false,
           DclReducedDueToLowPackVoltage:
-            packet.WarningDclReducedDueToLowPackVoltage ?? false,
-          DclReducedDueToLowSoc: packet.WarningDclReducedDueToLowSoc ?? false,
+            packet.DclReducedDueToLowPackVoltage ?? false,
+          DclReducedDueToLowSoc: packet.DclReducedDueToLowSoc ?? false,
           DclReducedDueToTemperature:
-            packet.WarningDclReducedDueToTemperature ?? false,
+            packet.DclReducedDueToTemperature ?? false,
         },
       },
       Contactor: {
-        ArrayBPSError: packet.ArrayBpsError ?? false,
+        ArrayBPSError: packet.ArrayBPSError ?? false,
         ArrayChargeCurrent: packet.ArrayChargeCurrent ?? 0,
         ArrayContactorClosed: packet.ArrayContactorClosed ?? false,
         ArrayContactorClosing: packet.ArrayContactorClosing ?? false,
@@ -249,7 +250,7 @@ export class TelemetryTransformer {
         ArrayPrechargerClosed: packet.ArrayPrechargerClosed ?? false,
         ArrayPrechargerClosing: packet.ArrayPrechargerClosing ?? false,
         ArrayPrechargerError: packet.ArrayPrechargerError ?? false,
-        ChargeBPSError: packet.ChargeBpsError ?? false,
+        ChargeBPSError: packet.ChargeBPSError ?? false,
         ChargeChargeCurrent: packet.ChargeChargeCurrent ?? 0,
         ChargeContactorClosed: packet.ChargeContactorClosed ?? false,
         ChargeContactorClosing: packet.ChargeContactorClosing ?? false,
@@ -279,7 +280,7 @@ export class TelemetryTransformer {
         LvPrechargerClosed: packet.LvPrechargerClosed ?? false,
         LvPrechargerClosing: packet.LvPrechargerClosing ?? false,
         LvPrechargerError: packet.LvPrechargerError ?? false,
-        MotorBPSError: packet.MotorBpsError ?? false,
+        MotorBPSError: packet.MotorBPSError ?? false,
         MotorChargeCurrent: packet.MotorChargeCurrent ?? 0,
         MotorContactorClosed: packet.MotorContactorClosed ?? false,
         MotorContactorClosing: packet.MotorContactorClosing ?? false,
@@ -302,7 +303,7 @@ export class TelemetryTransformer {
         ArrayHighCurrentTrip: packet.ArrayHighCurrentTrip ?? false,
         ArrayHighCurrentWarning: packet.ArrayHighCurrentWarning ?? false,
         AuxiliaryBatteryVoltage: packet.AuxiliaryBatteryVoltage ?? 0,
-        CanOc12VWarning: packet.CanOc12vWarning ?? false,
+        CanOc12VWarning: packet.CanOc12VWarning ?? false,
         ChargeContactorCommand: packet.ChargeContactorCommand ?? false,
         ChargeEnable: packet.ChargeEnable ?? false,
         ChargeHeartbeatDeadTrip: packet.ChargeHeartbeatDeadTrip ?? false,
@@ -354,7 +355,6 @@ export class TelemetryTransformer {
         SystemState: packet.SystemState ?? 0,
         ThreeAOc: packet.ThreeAOc ?? false,
       },
-
       MotorDetails0: {
         ActiveMotor: packet.Motor0ActiveMotor ?? 0,
         BEMF_D: packet.Motor0BemfD ?? 0,

@@ -2,7 +2,7 @@ _last updated March 29th, 2025_
 
 # Server Folder Documentation
 
-We use Express.js, MQTT, TimescaleDB, and Socket.io as our main tech on the backend.
+We use Express.js, MQTT, PostgreSQL, and Socket.io as our main tech on the backend.
 
 Our `index.ts` file handles the 'initiation' of our backend. You can find that file [here](../packages/server/src/index.ts)
 
@@ -96,7 +96,7 @@ export const getDrivers = async (
   );
 
   try {
-    const driverData = await backendController.timescaleDB.getDrivers();
+    const driverData = await backendController.databaseService.getDrivers();
 
     logger.info(`ENTRY - ${request.method} ${request.url}`);
     const data: DriversResponseDTO = {
@@ -134,13 +134,13 @@ Our controllers handle the main logic of our backend. They are classes that cont
 
 #### Backend Controller
 
-The Backend Controller serves as the central hub for managing backend services. It initializes and maintains instances of TimescaleDB, SocketIO, MQTT, and LapController, passing itself (this) to allow interaction between them.
+The Backend Controller serves as the central hub for managing backend services. It initializes and maintains instances of DatabaseService, SocketIO, MQTT, and LapController, passing itself (this) to allow interaction between them.
 
 ```typescript
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
   ) {
-    this.timescaleDB = new TimescaleDB(this);
+    this.databaseService = DatabaseService.getInstance();
     this.socketIO = new SocketIO(httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);

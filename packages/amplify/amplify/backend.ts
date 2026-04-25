@@ -63,7 +63,7 @@ const HeliosPasswords = secretsmanager.Secret.fromSecretNameV2(
   "HeliosPasswords",
 );
 
-const TimescaleConnectionString = secretsmanager.Secret.fromSecretNameV2(
+const DatabaseConnectionString = secretsmanager.Secret.fromSecretNameV2(
   TelemetryBackendStack,
   "TimescaleConnectionString",
   "TimescaleConnectionString",
@@ -181,19 +181,19 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     ),
     CHAIN: ecs.Secret.fromSecretsManager(TelemetryBackendSecretsManagerChain),
     DATABASE_HOST: ecs.Secret.fromSecretsManager(
-      TimescaleConnectionString,
+      DatabaseConnectionString,
       "DATABASE_HOST",
     ),
     DATABASE_PASSWORD: ecs.Secret.fromSecretsManager(
-      TimescaleConnectionString,
+      DatabaseConnectionString,
       "DATABASE_PASSWORD",
     ),
     DATABASE_PORT: ecs.Secret.fromSecretsManager(
-      TimescaleConnectionString,
+      DatabaseConnectionString,
       "DATABASE_PORT",
     ),
     DATABASE_USERNAME: ecs.Secret.fromSecretsManager(
-      TimescaleConnectionString,
+      DatabaseConnectionString,
       "DATABASE_USERNAME",
     ),
 
@@ -228,7 +228,7 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
   },
 });
 
-// Allow ECS Task to read the TimescaleDB connection string
+// Allow ECS Task to read the database connection string
 TelemetryBackendSecretsManagerPrivKey.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
@@ -241,7 +241,7 @@ TelemetryBackendSecretsManagerCertificate.grantRead(
 TelemetryBackendSecretsManagerMQTTCredentials.grantRead(
   TelemetryECSTaskDefinition.taskRole,
 );
-TimescaleConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
+DatabaseConnectionString.grantRead(TelemetryECSTaskDefinition.taskRole);
 MLCorrelationMatrixSecrets.grantRead(TelemetryECSTaskDefinition.taskRole);
 HeliosPasswords.grantRead(TelemetryECSTaskDefinition.taskRole);
 

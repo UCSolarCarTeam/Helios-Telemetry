@@ -32,14 +32,14 @@ const MAX_LAST_LAP_PACKETS = 7200;
  *
  * this controller is responsible for handling lap data, including:
  * - setting the finish line location (do we even do this anymore)
- * - handling sending lap data to timescale based on if a lap has been finished or not
+ * - handling sending lap data to the database based on if a lap has been finished or not
  * - also has other helper functions that are used to calculate the lap data
  *
  * basically the main thing function is handlePacket() which creates a lapData object
- * and sends it to timescale only when a lap has been completed
+ * and sends it to the database only when a lap has been completed
  *
  * then handleLapData() is called to broadcast the lap data to the frontend for real time changes
- * as well as to insert the lap data into the timescale database
+ * as well as to insert the lap data into the database
  */
 export class LapController implements LapControllerType {
   private lastLapPackets: Denque<ITelemetryData> = new Denque<ITelemetryData>();
@@ -168,7 +168,7 @@ export class LapController implements LapControllerType {
       this.backendController.mqtt
         .publishLapData(lapData)
         .catch((err) => logger.error("MQTT failed", err)),
-      this.backendController.timescaleDB
+      this.backendController.databaseService
         .insertLapData(lapData)
         .catch((err) => logger.error("DB insertion failed", err)),
     ]);

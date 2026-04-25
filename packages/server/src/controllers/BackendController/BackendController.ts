@@ -16,7 +16,7 @@ export class BackendController implements BackendControllerTypes {
   public socketIO: SocketIO;
   public lapController: LapController;
   public mqtt: SolarMQTTClient;
-  public timescaleDB: DatabaseService;
+  public databaseService: DatabaseService;
   public carLatency: number;
   constructor(
     httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>,
@@ -24,7 +24,7 @@ export class BackendController implements BackendControllerTypes {
     this.socketIO = new SocketIO(httpsServer, this);
     this.mqtt = new SolarMQTTClient(options, this);
     this.lapController = new LapController(this);
-    this.timescaleDB = DatabaseService.getInstance();
+    this.databaseService = DatabaseService.getInstance();
     this.establishCarPinging();
     this.carLatency = 0;
     this.initializeDatabase();
@@ -33,7 +33,7 @@ export class BackendController implements BackendControllerTypes {
 
   private async initializeDatabase() {
     try {
-      await this.timescaleDB.initialize();
+      await this.databaseService.initialize();
       logger.info("Database connection established successfully!");
     } catch (error) {
       logger.error("Failed to initialize database:", error);
@@ -59,7 +59,7 @@ export class BackendController implements BackendControllerTypes {
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
     try {
-      await this.timescaleDB.insertPacketData(message);
+      await this.databaseService.upsertPacketData(message);
     } catch (error) {
       logger.error("Failed to insert packet data:", error);
     }
@@ -84,7 +84,7 @@ export class BackendController implements BackendControllerTypes {
 
   public async cleanup() {
     try {
-      await this.timescaleDB.close();
+      await this.databaseService.close();
       logger.info("Database connection closed successfully");
     } catch (error) {
       logger.error("Error closing database connection:", error);

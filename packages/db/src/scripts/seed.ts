@@ -1,9 +1,7 @@
 import "dotenv/config";
 import { generateFakeTelemetryData } from "@shared/helios-types/src/functions";
-import { AppDataSource } from "../data-source";
-import { Driver } from "../entities/Driver.entity";
-import { Lap } from "../entities/Lap.entity";
-import { TelemetryPacket } from "../entities/TelemetryPacket.entity";
+import type { Prisma } from "@prisma/client";
+import { prisma } from "../data-source";
 import { flattenTelemetryData } from "../services/DatabaseService";
 
 /**
@@ -16,7 +14,7 @@ import { flattenTelemetryData } from "../services/DatabaseService";
  */
 
 // Sample driver data
-const sampleDrivers = [
+const sampleDrivers: Prisma.driverCreateManyInput[] = [
   { rfid: "DRIVER001", Name: "Alex Johnson" },
   { rfid: "DRIVER002", Name: "Sarah Chen" },
   { rfid: "DRIVER003", Name: "Marcus Williams" },
@@ -35,33 +33,41 @@ const pastTimestamp = (hoursAgo: number, minutesAgo: number = 0) => {
   return date;
 };
 
+function packetToCreateInput(
+  packet: Record<string, unknown>,
+): Prisma.telemetry_packetCreateManyInput {
+  const entries = Object.entries(packet).filter(([, v]) => v !== undefined);
+  return Object.fromEntries(
+    entries,
+  ) as Prisma.telemetry_packetCreateManyInput;
+}
+
 async function seed() {
   console.log("🌱 Starting database seeding...\n");
 
   try {
     // Initialize database connection
-    await AppDataSource.initialize();
+    await prisma.$connect();
     console.log("✅ Database connected");
-
-    const driverRepo = AppDataSource.getRepository(Driver);
-    const lapRepo = AppDataSource.getRepository(Lap);
-    const telemetryRepo = AppDataSource.getRepository(TelemetryPacket);
 
     // Clear existing data (optional - comment out if you want to keep existing data)
     console.log("\n🗑️  Clearing existing data...");
-    await telemetryRepo.clear();
-    await lapRepo.clear();
-    await driverRepo.clear();
+    await prisma.$transaction([
+      prisma.telemetry_packet.deleteMany(),
+      prisma.lap.deleteMany(),
+      prisma.driver.deleteMany(),
+    ]);
     console.log("✅ Existing data cleared");
 
     // Seed Drivers
     console.log("\n👤 Seeding drivers...");
-    const drivers = await driverRepo.save(sampleDrivers);
+    await prisma.driver.createMany({ data: sampleDrivers });
+    const drivers = sampleDrivers;
     console.log(`✅ Created ${drivers.length} drivers`);
 
     // Seed Lap Data
     console.log("\n🏁 Seeding lap data...");
-    const laps = [];
+    const laps: Prisma.lapCreateManyInput[] = [];
     for (let i = 0; i < drivers.length; i++) {
       const driver = drivers[i];
       // Create 3-5 laps per driver
@@ -85,12 +91,14 @@ async function seed() {
         });
       }
     }
-    await lapRepo.save(laps);
+    if (laps.length > 0) {
+      await prisma.lap.createMany({ data: laps });
+    }
     console.log(`✅ Created ${laps.length} lap records`);
 
     // Seed Telemetry Packets
     console.log("\n📡 Seeding telemetry packets...");
-    const packets = [];
+    const packetRows: Prisma.telemetry_packetCreateManyInput[] = [];
     for (let i = 0; i < drivers.length; i++) {
       const driver = drivers[i];
       // Create 10-15 telemetry packets per driver
@@ -107,14 +115,21 @@ async function seed() {
 
         const flatPacket = flattenTelemetryData(fakeTelemetry);
 
-        packets.push({
-          ...flatPacket,
-          RaceName: `Test Race ${i + 1}`,
-        });
+        packetRows.push(
+          packetToCreateInput({
+            ...flatPacket,
+            RaceName: `Test Race ${i + 1}`,
+          }),
+        );
       }
     }
-    await telemetryRepo.save(packets);
-    console.log(`✅ Created ${packets.length} telemetry packets`);
+    if (packetRows.length > 0) {
+      await prisma.telemetry_packet.createMany({
+        data: packetRows,
+        skipDuplicates: true,
+      });
+    }
+    console.log(`✅ Created ${packetRows.length} telemetry packets`);
 
     // Summary
     console.log("\n" + "=".repeat(50));
@@ -123,21 +138,19 @@ async function seed() {
     console.log(`📊 Summary:`);
     console.log(`   - Drivers: ${drivers.length}`);
     console.log(`   - Laps: ${laps.length}`);
-    console.log(`   - Telemetry Packets: ${packets.length}`);
+    console.log(`   - Telemetry Packets: ${packetRows.length}`);
     console.log("=".repeat(50));
     console.log("\n💡 You can now query the database or start the server!");
     console.log("   - View drivers: SELECT * FROM driver;");
     console.log("   - View laps: SELECT * FROM lap LIMIT 10;");
     console.log("   - View telemetry: SELECT * FROM telemetry_packet LIMIT 10;\n");
-
   } catch (error) {
     console.error("\n❌ Error seeding database:", error);
     process.exit(1);
   } finally {
-    await AppDataSource.destroy();
+    await prisma.$disconnect();
     console.log("👋 Database connection closed\n");
   }
 }
 
-// Run the seed script
 seed();

@@ -2,20 +2,15 @@ version: "3.9"
 
 services:
   db:
-    # Using timescaledb-ha image which includes timescaledb_toolkit extension
-    # Required for TypeORM migrations to work properly
-    image: timescale/timescaledb-ha:pg17 # TimescaleDB HA with toolkit support
+    image: postgres:17 # Plain Postgres image
     env_file:
-      - .db.env # contains the information regarding our user, password, and database
+      - .env # contains the information regarding our user, password, and database
     ports:
       - "5432:5432" # map host port to internal port
     volumes:
-      - timescaledb_data:/var/lib/postgresql/data # Docker volume for persistence
+      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped # try to restart it unless manually stopped
-    environment:
-      # Disable HA features for local development (we just want the toolkit)
-      PATRONI_SCOPE: local-dev
 
 volumes:
-  timescaledb_data: # Named volume for database persistence
+  postgres_data:
 
