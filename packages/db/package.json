@@ -16,10 +16,11 @@
     "migrate:run": "prisma migrate deploy",
     "migrate:revert": "prisma migrate reset --force",
     "migrate:reset": "prisma migrate reset --force",
-    "schema:sync": "prisma db push",
-    "schema:drop": "prisma migrate reset --force --skip-seed",
-    "prisma:generate": "prisma generate",
-    "prisma:pull": "prisma db pull"
+    "db:push": "prisma db push",
+    "db:reset:force": "prisma migrate reset --force --skip-seed",
+    "db:generate": "prisma generate",
+    "db:pull": "prisma db pull",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^6.17.0",

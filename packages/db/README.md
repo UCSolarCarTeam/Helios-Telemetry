@@ -71,9 +71,10 @@ Run from `packages/db`:
 - `yarn db:up` start local Postgres container
 - `yarn db:down` stop local Postgres container
 - `yarn db:logs` follow Postgres logs
-- `yarn prisma:pull` introspect DB schema into `prisma/schema.prisma`
-- `yarn prisma:generate` generate Prisma client
-- `yarn schema:sync` push Prisma schema to DB
+- `yarn db:pull` introspect DB schema into `prisma/schema.prisma`
+- `yarn db:generate` generate Prisma client
+- `yarn db:push` push Prisma schema to DB
+- `yarn db:studio` open Prisma Studio (uses `DATABASE_URL` from `.env`)
 - `yarn migrate:generate` create and apply dev migration
 - `yarn migrate:run` apply deploy migrations
 - `yarn migrate:reset` reset DB and reapply migrations
@@ -94,8 +95,8 @@ When adding or removing telemetry fields, follow this order:
 Run from repo root:
 
 ```bash
-yarn workspace db schema:sync
-yarn workspace db prisma:generate
+yarn workspace db db:push
+yarn workspace db db:generate
 yarn workspace db build
 yarn workspace server build
 ```

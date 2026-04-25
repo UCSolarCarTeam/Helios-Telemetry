@@ -56,14 +56,14 @@ At minimum, set `DATABASE_URL`. For migration/pull/push commands, also set `DIRE
 From `packages/db`:
 
 ```bash
-yarn prisma:pull
-yarn prisma:generate
+yarn db:pull
+yarn db:generate
 ```
 
 Or push schema changes:
 
 ```bash
-yarn schema:sync
+yarn db:push
 ```
 
 ### 4) Start the server
@@ -141,8 +141,8 @@ Use this checklist any time telemetry fields are added, renamed, or removed.
 From repo root:
 
 ```bash
-yarn workspace db schema:sync
-yarn workspace db prisma:generate
+yarn workspace db db:push
+yarn workspace db db:generate
 ```
 
 ### 5) Validate build

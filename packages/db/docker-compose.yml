@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:17 # Plain Postgres image
     env_file:
-      - .db.env # contains the information regarding our user, password, and database
+      - .env # contains the information regarding our user, password, and database
     ports:
       - "5432:5432" # map host port to internal port
     volumes:
