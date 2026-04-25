@@ -1,11 +1,10 @@
 import {
   ILapData,
   ITelemetryData,
-  type UpdateDriverInfoResponseDTO,
 } from "@shared/helios-types";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../data-source";
 import { GenericResponse } from "./DatabaseService.types";
-import { TelemetryTransformer } from "../utils";
 
 export class DatabaseService {
   private isConnected = false;
@@ -28,9 +27,9 @@ export class DatabaseService {
   public async getDrivers() {
     this.assertConnected();
 
-    const drivers = (await prisma.$queryRawUnsafe(
-      'SELECT "rfid", "Name" FROM "driver"',
-    )) as Array<{ Name: string; rfid: string }>;
+    const drivers = await prisma.driver.findMany({
+      select: { rfid: true, Name: true },
+    });
 
     return drivers.map((driver) => ({
       driver: driver.Name,
@@ -41,25 +40,25 @@ export class DatabaseService {
   public async getDriverNameUsingRfid(Rfid: string) {
     this.assertConnected();
 
-    const rows = (await prisma.$queryRawUnsafe(
-      'SELECT "Name" FROM "driver" WHERE "rfid" = $1 LIMIT 1',
-      Rfid,
-    )) as Array<{ Name: string }>;
+    const row = await prisma.driver.findUnique({
+      where: { rfid: Rfid },
+      select: { Name: true },
+    });
 
-    if (rows.length === 0) {
+    if (!row) {
       return "Driver not found";
     }
 
-    return rows[0].Name;
+    return row.Name;
   }
 
   public async getDriverLaps(Rfid: string) {
     this.assertConnected();
 
-    return prisma.$queryRawUnsafe(
-      'SELECT * FROM "lap" WHERE "rfid" = $1 ORDER BY "timestamp" DESC',
-      Rfid,
-    );
+    return prisma.lap.findMany({
+      where: { rfid: Rfid },
+      orderBy: { timestamp: "desc" },
+    });
   }
 
   public async updateDriverInfo(Rfid: string, name: string) {
@@ -69,21 +68,20 @@ export class DatabaseService {
       throw new Error("Rfid must be a string");
     }
 
-    const existing = (await prisma.$queryRawUnsafe(
-      'SELECT "Name" FROM "driver" WHERE "rfid" = $1 LIMIT 1',
-      Rfid,
-    )) as Array<{ Name: string }>;
+    const existing = await prisma.driver.findUnique({
+      where: { rfid: Rfid },
+      select: { Name: true },
+    });
 
-    if (existing.length === 0) {
+    if (!existing) {
       return { message: "Driver Rfid not found in driver table" };
     }
 
-    const oldName = existing[0].Name;
-    await prisma.$executeRawUnsafe(
-      'UPDATE "driver" SET "Name" = $1 WHERE "rfid" = $2',
-      name,
-      Rfid,
-    );
+    const oldName = existing.Name;
+    await prisma.driver.update({
+      where: { rfid: Rfid },
+      data: { Name: name },
+    });
 
     return {
       message: `Driver name updated from ${oldName} to ${name}`,
@@ -100,12 +98,9 @@ export class DatabaseService {
   public async getPacketData(timestamp: string) {
     this.assertConnected();
 
-    const rows = (await prisma.$queryRawUnsafe(
-      'SELECT * FROM "telemetry_packet" WHERE "timestamp" = $1 LIMIT 1',
-      new Date(timestamp),
-    )) as unknown[];
-
-    return rows[0] ?? null;
+    return prisma.telemetry_packet.findFirst({
+      where: { timestamp: new Date(timestamp) },
+    });
   }
 
   public async scanPacketDataBetweenDates(
@@ -114,14 +109,25 @@ export class DatabaseService {
   ) {
     this.assertConnected();
 
-    return prisma.$queryRawUnsafe(
-      'SELECT * FROM "telemetry_packet" WHERE "timestamp" BETWEEN $1 AND $2 ORDER BY "timestamp" ASC',
-      new Date(startUTCDate),
-      new Date(endUTCDate),
-    );
+    return prisma.telemetry_packet.findMany({
+      where: {
+        timestamp: {
+          gte: new Date(startUTCDate),
+          lte: new Date(endUTCDate),
+        },
+      },
+      orderBy: { timestamp: "asc" },
+    });
   }
 
-  public async insertPacketData(
+  /**
+   * Inserts a telemetry row, or updates non-key columns if `(timestamp, rfid)` already exists.
+   * That upsert behavior matches the previous SQL `ON CONFLICT … DO UPDATE` and helps when the
+   * same logical packet is published more than once (MQTT redelivery, reconnects) without
+   * failing on the composite primary key. If you need strict “insert only, error on duplicate”
+   * instead, switch this to `create` and handle Prisma P2002.
+   */
+  public async upsertPacketData(
     packet: ITelemetryData,
   ): Promise<GenericResponse> {
     this.assertConnected();
@@ -138,23 +144,38 @@ export class DatabaseService {
       };
     }
 
-    const columns = entries.map(([key]) => quoteIdentifier(key));
-    const values = entries.map(([, value]) => value);
-    const placeholders = entries.map((_, i) => `$${i + 1}`);
+    const row = Object.fromEntries(
+      entries,
+    ) as Prisma.telemetry_packetUncheckedCreateInput;
 
-    const updateAssignments = entries
-      .filter(([key]) => key !== "timestamp" && key !== "rfid")
-      .map(([key]) => `${quoteIdentifier(key)} = EXCLUDED.${quoteIdentifier(key)}`);
+    if (row.timestamp === undefined || row.rfid === undefined) {
+      return {
+        httpStatusCode: 400,
+        message: "Missing timestamp or rfid in telemetry payload",
+      };
+    }
 
-    const conflictClause =
-      updateAssignments.length > 0
-        ? `ON CONFLICT ("timestamp", "rfid") DO UPDATE SET ${updateAssignments.join(", ")}`
-        : 'ON CONFLICT ("timestamp", "rfid") DO NOTHING';
+    const { timestamp, rfid, ...updateFields } = row;
+    const hasFieldsToPatch = Object.keys(updateFields).length > 0;
 
-    await prisma.$executeRawUnsafe(
-      `INSERT INTO "telemetry_packet" (${columns.join(", ")}) VALUES (${placeholders.join(", ")}) ${conflictClause}`,
-      ...values,
-    );
+    if (hasFieldsToPatch) {
+      await prisma.telemetry_packet.upsert({
+        where: { timestamp_rfid: { timestamp, rfid } },
+        create: row,
+        update: updateFields as Prisma.telemetry_packetUncheckedUpdateInput,
+      });
+    } else {
+      // Same as ON CONFLICT DO NOTHING when the row is only the composite key: skip update path.
+      await prisma.telemetry_packet.create({ data: row }).catch((error: unknown) => {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002"
+        ) {
+          return;
+        }
+        throw error;
+      });
+    }
 
     return {
       httpStatusCode: 201,
@@ -168,32 +189,27 @@ export class DatabaseService {
   }> {
     this.assertConnected();
 
-    const firstRows = (await prisma.$queryRawUnsafe(
-      'SELECT "timestamp" FROM "telemetry_packet" ORDER BY "timestamp" ASC LIMIT 1',
-    )) as Array<{ timestamp: Date }>;
-
-    const lastRows = (await prisma.$queryRawUnsafe(
-      'SELECT "timestamp" FROM "telemetry_packet" ORDER BY "timestamp" DESC LIMIT 1',
-    )) as Array<{ timestamp: Date }>;
+    const [first, last] = await prisma.$transaction([
+      prisma.telemetry_packet.findFirst({
+        orderBy: { timestamp: "asc" },
+        select: { timestamp: true },
+      }),
+      prisma.telemetry_packet.findFirst({
+        orderBy: { timestamp: "desc" },
+        select: { timestamp: true },
+      }),
+    ]);
 
     return {
-      firstDateUTC: firstRows[0] ? Number(firstRows[0].timestamp.getTime()) : null,
-      lastDateUTC: lastRows[0] ? Number(lastRows[0].timestamp.getTime()) : null,
+      firstDateUTC: first?.timestamp ? first.timestamp.getTime() : null,
+      lastDateUTC: last?.timestamp ? last.timestamp.getTime() : null,
     };
   }
 
   public async insertLapData(lapData: ILapData): Promise<GenericResponse> {
     this.assertConnected();
 
-    const entries = Object.entries(lapData).filter(([, value]) => value !== undefined);
-    const columns = entries.map(([key]) => quoteIdentifier(key));
-    const values = entries.map(([, value]) => value);
-    const placeholders = entries.map((_, i) => `$${i + 1}`);
-
-    await prisma.$executeRawUnsafe(
-      `INSERT INTO "lap" (${columns.join(", ")}) VALUES (${placeholders.join(", ")})`,
-      ...values,
-    );
+    await prisma.lap.create({data: lapData});
 
     return {
       httpStatusCode: 201,
@@ -201,12 +217,12 @@ export class DatabaseService {
     };
   }
 
-  public async getLapData(): Promise<unknown[]> {
+  public async getLapData() {
     this.assertConnected();
 
-    return (await prisma.$queryRawUnsafe(
-      'SELECT * FROM "lap" ORDER BY "timestamp" DESC',
-    )) as unknown[];
+    return prisma.lap.findMany({
+      orderBy: { timestamp: "desc" },
+    });
   }
 
   private assertConnected() {
@@ -214,10 +230,6 @@ export class DatabaseService {
       throw new Error("Database not connected");
     }
   }
-}
-
-function quoteIdentifier(identifier: string): string {
-  return `"${identifier.replace(/"/g, '""')}"`;
 }
 
 // TODO: Check every once in a while if Rfid and Timestamp can be made back into Uppercase

@@ -28,7 +28,7 @@ yarn dev:server
 Note: When running test MQTT publishers you may not want those fake packets written into PostgreSQL. Locate the packet handler in the server code (the `handlePacketReceive` flow) and comment out the DB insert line when running locally:
 
 ```typescript
-// this.databaseService.insertPacketData(message); // comment out for local testing
+// this.databaseService.upsertPacketData(message); // comment out for local testing
 ```
 
 ## 2) Telemetry-Visualizer

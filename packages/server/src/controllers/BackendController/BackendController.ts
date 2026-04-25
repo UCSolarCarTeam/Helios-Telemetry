@@ -59,7 +59,7 @@ export class BackendController implements BackendControllerTypes {
   public async handlePacketReceive(message: ITelemetryData) {
     // Insert the packet into the database
     try {
-      await this.databaseService.insertPacketData(message);
+      await this.databaseService.upsertPacketData(message);
     } catch (error) {
       logger.error("Failed to insert packet data:", error);
     }
