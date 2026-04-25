@@ -37,9 +37,17 @@ WORKDIR /opt/helios-backend/src
 COPY . .
 
 WORKDIR /opt/helios-backend/src/packages/server
-RUN npm i -g corepack 
+RUN npm i -g corepack
 RUN corepack enable
 RUN yarn workspaces focus --production server
+# @prisma/client is the generic stub until prisma generate runs; devDependency `prisma` is not
+# installed in production-focused installs, so we invoke the CLI with npx.
+# Dummy URLs: generate only needs the schema, not a live database.
+ENV DATABASE_URL=postgresql://prisma:prisma@127.0.0.1:5432/dummy
+ENV DIRECT_URL=postgresql://prisma:prisma@127.0.0.1:5432/dummy
+WORKDIR /opt/helios-backend/src
+RUN npx --yes prisma@6.17.0 generate --schema=packages/db/prisma/schema.prisma
+WORKDIR /opt/helios-backend/src/packages/server
 RUN yarn build
 
 ###################################################################

@@ -1,5 +1,8 @@
 generator client {
   provider = "prisma-client-js"
+  // Hoisted workspace installs resolve @prisma/client from the repo root; the default output
+  // (under packages/db) would leave the root stub in place. Path is relative to this folder.
+  output   = "../../../node_modules/.prisma/client"
 }
 
 datasource db {
