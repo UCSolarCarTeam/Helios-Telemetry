@@ -12881,7 +12881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.13.4, axios@npm:^1.7.2, axios@npm:^1.8.3":
+"axios@npm:^1.13.5, axios@npm:^1.7.2, axios@npm:^1.8.3":
   version: 1.13.6
   resolution: "axios@npm:1.13.6"
   dependencies:
@@ -13870,7 +13870,7 @@ __metadata:
     "@types/react-plotly.js": "npm:^2.6.3"
     "@types/three": "npm:^0.161.2"
     autoprefixer: "npm:^10.4.19"
-    axios: "npm:^1.13.4"
+    axios: "npm:^1.13.5"
     babel-plugin-react-compiler: "npm:^1.0.0"
     chart.js: "npm:^4.4.8"
     dayjs: "npm:^1.11.13"
@@ -22627,7 +22627,7 @@ __metadata:
     "@types/prettier": "npm:^3.0.0"
     "@types/sqlite3": "npm:^3.1.11"
     aedes: "npm:^0.51.2"
-    axios: "npm:^1.7.2"
+    axios: "npm:^1.13.5"
     axios-retry: "npm:^4.0.0"
     cors: "npm:^2.8.5"
     db: "npm:*"

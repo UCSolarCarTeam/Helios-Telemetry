@@ -1,19 +1,43 @@
 import { IFormattedLapData } from "@shared/helios-types";
-import { Table, flexRender } from "@tanstack/react-table";
+import {
+  ColumnFiltersState,
+  Table,
+  VisibilityState,
+  flexRender,
+} from "@tanstack/react-table";
 
 /**
  *  The actual table that displays the lap data
  */
 export default function RaceTabTable({
+  columnFilters,
   table,
+  visibleColumns,
 }: {
   table: Table<IFormattedLapData>;
+  visibleColumns: VisibilityState;
+  columnFilters: ColumnFiltersState;
 }) {
+  const filteredHeaders = table
+    .getHeaderGroups()
+    .filter((headerGroup) =>
+      headerGroup.headers.filter((header) => visibleColumns[header.id]),
+    );
+  const filteredRows = table
+    .getRowModel()
+    .rows.filter((row) =>
+      row.getVisibleCells().some((cell) => visibleColumns[cell.column.id]),
+    )
+    .filter(
+      (row) =>
+        columnFilters.length === 0 ||
+        columnFilters.some((filter) => filter.value === row.original.Rfid),
+    );
   return (
     <div className="grid max-h-[200px] w-full grid-cols-1 overflow-auto overflow-x-auto">
       <table className="w-full border-separate border-spacing-0 divide-gray-200">
         <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {filteredHeaders.map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
@@ -43,7 +67,7 @@ export default function RaceTabTable({
           ))}
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {table.getRowModel().rows.map((row) => (
+          {filteredRows.map((row) => (
             <tr
               className="odd:bg-white even:bg-slate dark:odd:bg-darkergrey dark:even:bg-lightergrey"
               key={row.id}

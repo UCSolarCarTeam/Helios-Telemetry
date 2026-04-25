@@ -413,11 +413,6 @@ export type ITelemetry = t.TypeOf<typeof ITelemetryType>;
 // the codec: large io-ts type for incoming packets (ITelemetryDataType)
 
 //old data type definitions
-export interface IDriverData {
-  driver: string;
-  Rfid: string;
-}
-
 export interface ILapData {
   AmpHours: number;
   AverageMotorWattage: number;

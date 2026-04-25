@@ -36,6 +36,13 @@ export const columns = [
       return dateB - dateA;
     },
   }),
+  // show driver rfid
+  columnHelper.accessor("Rfid", {
+    cell: (info) => info.getValue(),
+    filterFn: "equalsString",
+    header: "Driver RFID",
+    id: "data_rfid",
+  }),
   columnHelper.accessor("AmpHours", {
     cell: (info) => info.getValue(),
     header: "Amp Hours",

@@ -4,7 +4,15 @@ import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
 
-export const getLapData = async (request: Request, response: Response) => {
+import {
+  type LapDataResponseDTO,
+  type LapHealthResponseDTO,
+} from "@shared/helios-types";
+
+export const getLapData = async (
+  request: Request,
+  response: Response<LapDataResponseDTO>,
+) => {
   const backendController = request.app.locals
     .backendController as BackendController;
 
@@ -16,7 +24,7 @@ export const getLapData = async (request: Request, response: Response) => {
   const lapData = await backendController.timescaleDB.getLapData();
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
-  const data = {
+  const data: LapDataResponseDTO = {
     data: lapData,
     message: "OK",
     uptime: process.uptime() + " seconds",
@@ -26,14 +34,17 @@ export const getLapData = async (request: Request, response: Response) => {
   return response.status(200).json(data);
 };
 
-export const getHealthLapData = (request: Request, response: Response) => {
+export const getHealthLapData = (
+  request: Request,
+  response: Response<LapHealthResponseDTO>,
+) => {
   const logger = createApplicationLogger(
     "driver.controller.ts",
     request,
     response,
   );
   logger.info(`ENTRY - ${request.method} ${request.url}`);
-  const data = {
+  const data: LapHealthResponseDTO = {
     date: new Date(),
     message: "OK",
     uptime: process.uptime() + " seconds",

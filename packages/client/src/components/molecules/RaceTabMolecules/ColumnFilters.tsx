@@ -16,11 +16,11 @@ import { Table } from "@tanstack/react-table";
  */
 export default function ColumnFilters({
   columnName,
-  setColumnName,
+  onColumnNameChange,
   table,
 }: {
   columnName: string[];
-  setColumnName: React.Dispatch<React.SetStateAction<string[]>>;
+  onColumnNameChange: (columnNames: string[]) => void;
   table: Table<IFormattedLapData>;
 }) {
   const { resolvedTheme } = useTheme();
@@ -38,23 +38,15 @@ export default function ColumnFilters({
         target: { value },
       } = event;
 
-      setColumnName(typeof value === "string" ? value.split(",") : value);
-
-      table.getAllLeafColumns().forEach((col) => {
-        const columnInstance = table.getColumn(col.id);
-        if (columnInstance) {
-          columnInstance.toggleVisibility(value.includes(col.id));
-        }
-      });
+      onColumnNameChange(typeof value === "string" ? value.split(",") : value);
     },
-    [table, setColumnName],
+    [onColumnNameChange],
   );
   return (
     <FormControl
       sx={{
         display: "flex",
         maxWidth: "100%",
-        minWidth: "16rem",
       }}
     >
       <InputLabel

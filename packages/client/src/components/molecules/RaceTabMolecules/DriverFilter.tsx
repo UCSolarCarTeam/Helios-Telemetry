@@ -1,9 +1,11 @@
 import { useTheme } from "next-themes";
 
+import { useDrivers } from "@/hooks/useDrivers";
 import { gray, helios, heliosCompliment } from "@/styles/colors";
 import { ContentCopy, ContentCopyTwoTone } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
@@ -15,21 +17,26 @@ import Select, { type SelectChangeEvent } from "@mui/material/Select";
 export default function DriverFilter({
   Rfid,
   copy,
-  driverData,
   handleCopy,
   handleDropdown,
 }: {
-  driverData: { Rfid: string; driver: string }[];
-  handleDropdown: (event: SelectChangeEvent<string>) => Promise<void>;
+  handleDropdown: (event: SelectChangeEvent<string>) => void;
   handleCopy: () => Promise<void>;
-  Rfid: string | number;
+  Rfid: string;
   copy: number;
 }) {
   const { resolvedTheme } = useTheme();
+  const { data: driverData, isError, isLoading } = useDrivers();
+  const helperText = isLoading
+    ? "Loading drivers..."
+    : isError
+      ? "Unable to load drivers."
+      : " ";
+
   return (
     <div className="flex flex-row items-center gap-2">
       <Box className="min-w-[120px]" component="div">
-        <FormControl fullWidth>
+        <FormControl error={isError} fullWidth>
           <InputLabel
             sx={{
               "&.Mui-focused": {
@@ -78,24 +85,25 @@ export default function DriverFilter({
                 borderColor: resolvedTheme === "dark" ? "white" : "",
               },
             }}
-            value={Rfid?.toString()}
+            value={Rfid}
           >
             <MenuItem value={"Show all data"}>Show all data</MenuItem>
-            {driverData.map((driver) => (
-              <MenuItem key={driver.Rfid} value={driver.Rfid}>
+            {isLoading && <MenuItem disabled>Loading drivers...</MenuItem>}
+            {isError && <MenuItem disabled>Unable to load drivers</MenuItem>}
+            {driverData?.map((driver) => (
+              <MenuItem key={driver.rfid} value={driver.rfid}>
                 {driver.driver ? `${driver.driver}` : `NO NAME`}
               </MenuItem>
             ))}
           </Select>
+          <FormHelperText>{helperText}</FormHelperText>
         </FormControl>
       </Box>
       {Number.isNaN(Rfid) || Rfid === "Show all data" ? "" : Rfid}
-      {Rfid && Rfid !== "Show all data" ? (
+      {Rfid && Rfid !== "Show all data" && (
         <button className="items-center" onClick={() => void handleCopy()}>
           {copy === 0 ? <ContentCopy /> : <ContentCopyTwoTone />}
         </button>
-      ) : (
-        <></>
       )}
     </div>
   );
