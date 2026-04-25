@@ -88,6 +88,11 @@ Deployment available at: https://telemetry-beta.calgarysolarcar.ca
 - [Other Responsibilities](./docs/ML.md#the-telemetry-ml-team-does-not-solely-focus-on-machine-learning-models-however-there-are-several-considerations-that-need-to-be-made-in-the-following-areas)
 - [Grafana + Visualizer Setup](./docs/GRAFANA.md)
 
+### [Database Setup](./docs/DB.md)
+
+- [Complete Database Documentation](./packages/db/README.md) - Full package documentation
+- [Database Architecture](./docs/DB.md) - How the backend connects to the database
+
 ### Development Setup
 
 - Make sure you're using Node 18+
@@ -126,8 +131,6 @@ In packages/server `.env`:
 ```
 FINISH_LINE_UPDATE_PASSWORD=
 LAP_TABLE_NAME=
-PACKET_TABLE_NAME=
-DRIVER_TABLE_NAME=
 GPS_CALCULATED_LAP_DATA_TABLE=
 MQTT_USERNAME=
 MQTT_PASSWORD=

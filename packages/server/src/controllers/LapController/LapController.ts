@@ -1,3 +1,5 @@
+import Denque from "denque";
+
 import { type BackendController } from "@/controllers/BackendController/BackendController";
 import { type LapControllerType } from "@/controllers/LapController/LapController.types";
 
@@ -22,23 +24,26 @@ import type {
 } from "@shared/helios-types";
 
 const logger = createLightweightApplicationLogger("LapController.ts");
+const MIN_PACKETS_FOR_LAP = 5;
+const MAX_LAST_LAP_PACKETS = 7200;
 /**
  *
  * There is some general documentation on this file in the docs, but it is not very detailed
  *
  * this controller is responsible for handling lap data, including:
  * - setting the finish line location (do we even do this anymore)
- * - handling sending lap data to timescale based on if a lap has been finished or not
+ * - handling sending lap data to the database based on if a lap has been finished or not
  * - also has other helper functions that are used to calculate the lap data
  *
  * basically the main thing function is handlePacket() which creates a lapData object
- * and sends it to timescale only when a lap has been completed
+ * and sends it to the database only when a lap has been completed
  *
  * then handleLapData() is called to broadcast the lap data to the frontend for real time changes
- * as well as to insert the lap data into the timescale database
+ * as well as to insert the lap data into the database
  */
 export class LapController implements LapControllerType {
-  public lastLapPackets: ITelemetryData[] = [] as ITelemetryData[];
+  private lastLapPackets: Denque<ITelemetryData> = new Denque<ITelemetryData>();
+  public previousLapDigital: boolean | null = null;
   public previouslyInFinishLineProximity = false;
   public passedDebouncedCheckpoint = false;
   public totalTime = 3600 * 1000 * 8; // 1000 ms/sec * 3600 sec/hr * 8 hr
@@ -163,13 +168,20 @@ export class LapController implements LapControllerType {
       this.backendController.mqtt
         .publishLapData(lapData)
         .catch((err) => logger.error("MQTT failed", err)),
-      this.backendController.timescaleDB
+      this.backendController.databaseService
         .insertLapData(lapData)
         .catch((err) => logger.error("DB insertion failed", err)),
     ]);
   }
 
   public async handlePacket(packet: ITelemetryData) {
+    // Always buffer packets so a lap boundary has data available for calculations.
+    // Keep only the most recent bounded window of packets.
+    this.lastLapPackets.push(packet);
+    if (this.lastLapPackets.length > MAX_LAST_LAP_PACKETS) {
+      this.lastLapPackets.shift(); // remove the oldest packet to maintain the size limit
+    }
+
     const motorDetails0 = packet.MotorDetails0.VehicleVelocity;
     const motorDetails1 = packet.MotorDetails1.VehicleVelocity;
     if (this.raceInfo.raceDay >= 3)
@@ -185,54 +197,84 @@ export class LapController implements LapControllerType {
       this.calculateRaceDistance(motorDetails0, motorDetails1);
     }
 
-    if (this.checkLap(packet) && this.lastLapPackets.length > 5) {
-      logger.info("lap completed for geofence");
+    const lapDigital = Boolean(packet.B3.LapDigital);
+
+    // Single source of truth for LapDigital-triggered laps:
+    // only fire on a false -> true transition after we have a previous sample.
+    const canInsertLapFromDigital =
+      this.previousLapDigital !== null &&
+      this.previousLapDigital === false &&
+      lapDigital === true;
+
+    // Update state for next packet.
+    this.previousLapDigital = lapDigital;
+
+    if (lapDigital) {
+      // logger.info("lap completed for geofence");
+      logger.info("LapDigital is true, lap completed.");
     }
 
     if (
       // TEST: The condition was commented out because, in the current fakePacket data, packet.B3.LapDigital is always false. As a result, the code for broadcasting lap data (broadcastLapData) would never execute during testing with fakePacket. By commenting out this condition, it allows the code to proceed and broadcast lap data even when LapDigital is false.
       // packet.B3.LapDigital &&
-      this.lastLapPackets.length > 5
+      // this.lastLapPackets.length > 5
+      canInsertLapFromDigital
     ) {
+      if (this.lastLapPackets.length < MIN_PACKETS_FOR_LAP) {
+        logger.warn(
+          `Ignoring lap boundary: only ${this.lastLapPackets.length} packet(s) buffered, need at least ${MIN_PACKETS_FOR_LAP}.`,
+        );
+        this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
+        return;
+      }
+
       await this.backendController.socketIO.broadcastLapComplete();
       // mark lap, calculate lap, and add to lap table in database
       // send lap over socket
 
       // update last lap packet
-      const amphoursValue = this.lastLapPackets[this.lastLapPackets.length - 1]
-        ?.Battery.PackAmphours as number;
+      const amphoursValue = this.lastLapPackets.get(
+        this.lastLapPackets.length - 1,
+      )?.Battery.PackAmphours as number;
       const averagePackCurrent = this.calculateAveragePackCurrent(
-        this.lastLapPackets,
+        this.lastLapPackets.toArray(),
       );
 
       const lapData: ILapData = {
         AmpHours: amphoursValue, // NOTE THIS IS THE LATEST BATTERY PACK AMPHOURS
         AveragePackCurrent: averagePackCurrent,
-        AverageSpeed: this.calculateAverageLapSpeed(this.lastLapPackets),
-        BatterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
-          amphoursValue,
-          averagePackCurrent,
+        AverageSpeed: this.calculateAverageLapSpeed(
+          this.lastLapPackets.toArray(),
         ),
-        Distance: this.getDistanceTravelled(this.lastLapPackets), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
-        EnergyConsumed: this.getEnergyConsumption(this.lastLapPackets),
-        LapTime: this.calculateLapTime(this.lastLapPackets),
-        NetPowerOut: this.netPower(this.lastLapPackets),
-        TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets),
-        TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets),
+        AverageMotorWattage: this.getAverageMotorWattage(
+          this.lastLapPackets.toArray(),
+        ),
+        BatterySecondsRemaining: this.getSecondsRemainingUntilChargedOrDepleted(
+          averagePackCurrent,
+          amphoursValue,
+        ),
+        Distance: this.getDistanceTravelled(this.lastLapPackets.toArray()), // CHANGE THIS BASED ON ODOMETER/MOTOR INDEX OR CHANGE TO ITERATE
+        EnergyConsumed: this.getEnergyConsumption(
+          this.lastLapPackets.toArray(),
+        ),
+        LapTime: this.calculateLapTime(this.lastLapPackets.toArray()),
+        NetPowerOut: this.netPower(this.lastLapPackets.toArray()),
+        TotalPowerIn: this.getAveragePowerIn(this.lastLapPackets.toArray()),
+        TotalPowerOut: this.getAveragePowerOut(this.lastLapPackets.toArray()),
         rfid: packet.Pi.Rfid,
         timestamp: new Date(packet.TimeStamp * 1000),
       };
 
       this.handleLapData(lapData);
-      this.lastLapPackets = [];
+      this.raceInfo.lapNumber += 1;
+      this.lastLapPackets = new Denque<ITelemetryData>(); // clear the lap packets for the next lap
     }
 
     this.backendController.socketIO.broadcastRaceInfo(this.raceInfo);
-    this.lastLapPackets.push(packet);
   }
 
   public getLastPacket(): ITelemetryData[] {
-    return this.lastLapPackets;
+    return this.lastLapPackets.toArray();
   }
 
   private checkDebounce(packet: ITelemetryData) {
@@ -251,6 +293,7 @@ export class LapController implements LapControllerType {
   }
 
   // checks if lap has been acheived (using geofencing)
+  // if geofence approach is used, use this function to check if lap has been completed instead of using LapDigital
   private checkLap(packet: ITelemetryData) {
     const inProximity =
       haversineDistance(
@@ -440,6 +483,27 @@ export class LapController implements LapControllerType {
     const avgRegenPower = regenPowerSum / packetArray.length;
 
     return Math.abs(mpptPowerIn + avgRegenPower);
+  }
+
+  public getAverageMotorWattage(packetArray: ITelemetryData[]): number {
+    // If no packets, then no power out
+    if (packetArray.length === 0) {
+      return 0;
+    }
+
+    const totalWattage = packetArray.reduce((sum, packet) => {
+      let wattage = 0;
+
+      const motorDetails = [packet.MotorDetails0, packet.MotorDetails1];
+
+      for (const motor of motorDetails) {
+        wattage += motor.BusCurrent * motor.BusVoltage;
+      }
+
+      return sum + wattage;
+    }, 0);
+
+    return totalWattage / packetArray.length;
   }
 
   public getAveragePowerOut(packetArray: ITelemetryData[]): number {

@@ -179,7 +179,7 @@ const IB3Type = t.exact(
     ForwardDigital: t.boolean,
     HandbrakeSwitchDigital: t.boolean,
     HazardLightsInput: t.boolean,
-    HeadightsSwitchInput: t.boolean,
+    HeadlightsSwitchInput: t.boolean,
     HeadlightSignalStatus: t.boolean,
     HornSignalStatus: t.boolean,
     HornSwitchDigital: t.boolean,
@@ -413,13 +413,9 @@ export type ITelemetry = t.TypeOf<typeof ITelemetryType>;
 // the codec: large io-ts type for incoming packets (ITelemetryDataType)
 
 //old data type definitions
-export interface IDriverData {
-  driver: string;
-  Rfid: string;
-}
-
 export interface ILapData {
   AmpHours: number;
+  AverageMotorWattage: number;
   AveragePackCurrent: number;
   AverageSpeed: number;
   BatterySecondsRemaining: number;
@@ -486,6 +482,7 @@ export interface IRaceInfo {
 
 export interface IFormattedLapData {
   AmpHours: number;
+  AverageMotorWattage: number;
   AveragePackCurrent: number;
   AverageSpeed: number;
   BatterySecondsRemaining: number;

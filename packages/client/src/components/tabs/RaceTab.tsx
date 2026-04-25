@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { columns } from "@/components/config/lapTableConfig";
 import ColumnFilters from "@/components/molecules/RaceTabMolecules/ColumnFilters";
@@ -9,14 +8,11 @@ import { useLapDataStore } from "@/stores/useLapData";
 import { notifications } from "@mantine/notifications";
 import { SelectChangeEvent } from "@mui/material/Select";
 import {
-  IDriverData,
-  type IFormattedLapData,
-  ILapData,
-  prodURL,
-} from "@shared/helios-types";
-import {
+  ColumnFiltersState,
   SortingState,
+  VisibilityState,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -30,44 +26,66 @@ import {
  * Tanstack table is used to display the data in a table format
  *
  * The flow of data is as follows:
- * Lap data is initially fetched from timescale with useLapData()
- * Driver names are also fetched from timescale in the useEffect() with the fetchDriveNames()
+ * Lap data is initially fetched from the backend with useLapDataStore()
+ * Driver names are also fetched from the backend in the useEffect() with the fetchDriverNames()
  * When the dropdown is pressed for the driver, the handleDropdown() is called and then the
  * fetchFilteredLaps() is called to get the lap data for the selected driver
  * When the column filter is changed, the setColumnName() is called to set the column name
  */
 function RaceTab() {
-  const [Rfid, setDriverRFID] = useState<number | string>("");
-  const [driverData, setDriverData] = useState<IDriverData[]>([]);
+  const showAllDataValue = "Show all data";
+  const [driverRFID, setDriverRFID] = useState(showAllDataValue);
   const [copy, setCopy] = useState<number>(0);
-  const { formatLapData, lapData } = useLapDataStore();
-  const [filteredLaps, setFilteredLaps] =
-    useState<IFormattedLapData[]>(lapData);
+  const { lapData } = useLapDataStore();
   const [sorting, setSorting] = useState<SortingState>([
     { desc: false, id: "TimeStamp" },
   ]);
+  const defaultVisibility = columns.reduce<VisibilityState>(
+    (visibility, column) => {
+      visibility[column.id ?? ""] = true;
+      return visibility;
+    },
+    {},
+  );
+  const [columnVisibility, setColumnVisibility] =
+    useState<VisibilityState>(defaultVisibility);
+
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]); // can set initial column filter state here
 
   const table = useReactTable({
     columns,
-    data: filteredLaps,
+    data: lapData,
     defaultColumn: { enableSorting: true },
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(), // needed for client-side filtering
     getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: [{ desc: false, id: "TimeStamp" }],
-    },
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     onSortingChange: setSorting,
-    state: { sorting },
+    state: { columnFilters, columnVisibility, sorting },
   });
 
-  const [columnName, setColumnName] = React.useState<string[]>(
-    table.getAllLeafColumns().map((col) => col.id),
-  );
+  const columnName = table
+    .getAllLeafColumns()
+    .filter((column, index) => index !== 0 && column.getIsVisible())
+    .map((column) => column.id);
+
+  const handleColumnFilterChange = (selectedColumns: string[]) => {
+    const nextVisibility = table
+      .getAllLeafColumns()
+      .reduce<VisibilityState>((visibility, column, index) => {
+        visibility[column.id] =
+          index === 0 ? true : selectedColumns.includes(column.id);
+        return visibility;
+      }, {});
+
+    setColumnVisibility(nextVisibility);
+  };
 
   // copy rfid to clipboard
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(String(Rfid));
+      await navigator.clipboard.writeText(driverRFID);
       setCopy(1);
       setTimeout(() => setCopy(0), 5000);
       notifications.show({
@@ -85,88 +103,39 @@ function RaceTab() {
   };
 
   // dropdown handler for the drivers
-  const handleDropdown = useCallback(
-    async (event: SelectChangeEvent<number | string>) => {
-      const newRFID = event.target.value;
-      setDriverRFID(newRFID);
-      setCopy(0);
-
-      if (Number.isNaN(newRFID) || newRFID === "Show all data") {
-        setFilteredLaps(lapData);
-      } else {
-        const response = await fetchFilteredLaps(Number(newRFID));
-        const formattedData = response.map(formatLapData);
-        setFilteredLaps(formattedData);
-      }
-    },
-    [formatLapData, lapData],
-  );
-
-  // fetch the driver names from timescale
-  const fetchDriverNames = async () => {
-    try {
-      const response = await axios.get<IDriverData[]>(`${prodURL}/drivers`);
-
-      return response.data;
-    } catch (error) {
-      return { error: "Error fetching drivers" };
-    }
+  const handleDropdown = (event: SelectChangeEvent<string>) => {
+    const newRFID = String(event.target.value);
+    setDriverRFID(newRFID);
+    setColumnFilters(
+      newRFID === "" || newRFID === showAllDataValue
+        ? []
+        : [{ id: "data_rfid", value: newRFID }],
+    );
+    setCopy(0);
   };
-
-  // get the driver laps based on the selected rfid
-  const fetchFilteredLaps = async (Rfid: number) => {
-    try {
-      const response = await axios.get<ILapData[]>(`${prodURL}/driver/${Rfid}`);
-      return response.data;
-    } catch (error) {
-      setFilteredLaps([]);
-      return [];
-    }
-  };
-
-  // fetching driver names when component mounts
-  useEffect(() => {
-    void (async (): Promise<void> => {
-      try {
-        const response = await fetchDriverNames();
-
-        if (!Array.isArray(response)) {
-          setDriverData([]);
-          return;
-        }
-
-        const driverData = response.map((driver: IDriverData) => ({
-          Rfid: driver.Rfid,
-          driver: driver.driver,
-        }));
-
-        setDriverData(driverData);
-      } catch (error) {
-        setDriverData([]);
-      }
-    })();
-  }, []);
-
   return (
     <div className="m-3 flex flex-col justify-center gap-4">
       <p className="-mb-2 font-bold text-helios">Lap Data</p>
       <hr className="border-[1.4px] border-helios" />
       <div className="flex w-full flex-col items-center gap-2 sm:flex-row">
+        <ColumnFilters
+          columnName={columnName}
+          onColumnNameChange={handleColumnFilterChange}
+          table={table}
+        />
         <DriverFilter
-          Rfid={Rfid}
+          Rfid={driverRFID}
           copy={copy}
-          driverData={driverData}
           handleCopy={handleCopy}
           handleDropdown={handleDropdown}
         />
-        <ColumnFilters
-          columnName={columnName}
-          setColumnName={setColumnName}
-          table={table}
-        />
       </div>
 
-      <RaceTabTable table={table} />
+      <RaceTabTable
+        columnFilters={columnFilters}
+        table={table}
+        visibleColumns={columnVisibility}
+      />
     </div>
   );
 }

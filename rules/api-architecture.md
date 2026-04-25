@@ -126,6 +126,38 @@ const response = await fetch("/api/getNewFeatureData");
 
 ---
 
+### 5. Use Shared DTOs for Client ↔ Server Contracts
+
+Request and response types that cross the client/server boundary must live in `packages/shared/src/dto` and be imported from `@shared/helios-types`.
+
+**✅ DO:**
+
+```typescript
+import { BACKEND_ROUTES } from '@/constants/apiRoutes';
+import { backendApi } from '@/lib/api';
+import type { DriversResponseDTO } from '@shared/helios-types';
+
+const response = await backendApi.get<DriversResponseDTO>(
+  BACKEND_ROUTES.drivers.base,
+);
+```
+
+**❌ DON'T:**
+
+```typescript
+interface DriversResponse {
+  data: { rfid: string; driver: string }[];
+  message: string;
+  uptime: string;
+}
+
+const response = await backendApi.get(BACKEND_ROUTES.drivers.base);
+```
+
+**Why:** Shared DTOs keep the client and server on the same contract and prevent API drift.
+
+---
+
 ## 📚 Type Safety Guidelines
 
 ### Use Exported Types for Route Values
@@ -201,10 +233,14 @@ export const API_ROUTES = {
 ```typescript
 import { backendApi } from '@/lib/api';
 import { BACKEND_ROUTES } from '@/constants/apiRoutes';
+import type { PlaybackDataResponseDTO } from '@shared/helios-types';
 
-const response = await backendApi.get(BACKEND_ROUTES.playback.packetsBetween, {
-  params: { startTime, endTime }
-});
+const response = await backendApi.get<PlaybackDataResponseDTO>(
+  BACKEND_ROUTES.playback.packetsBetween,
+  {
+    params: { startTime, endTime },
+  },
+);
 ```
 
 ### Pattern 2: POST Request with Body Data
@@ -212,12 +248,23 @@ const response = await backendApi.get(BACKEND_ROUTES.playback.packetsBetween, {
 **✅ DO:**
 
 ```typescript
-import { api } from '@/lib/api';
-import { API_ROUTES } from '@/constants/apiRoutes';
+import { backendApi } from '@/lib/api';
+import { BACKEND_ROUTES } from '@/constants/apiRoutes';
+import type {
+  UpdateDriverInfoRequestDTO,
+  UpdateDriverInfoResponseDTO,
+} from '@shared/helios-types';
 
-const response = await api.post(API_ROUTES.auth.checkMQTTPassword, {
-  password: 'secret'
-});
+const payload: UpdateDriverInfoRequestDTO = {
+  Rfid: '12345',
+  name: 'Jane Driver',
+  password: 'secret',
+};
+
+const response = await backendApi.post<UpdateDriverInfoResponseDTO>(
+  BACKEND_ROUTES.drivers.updateInfo,
+  payload,
+);
 ```
 
 ### Pattern 3: Dynamic Route Parameters
@@ -227,9 +274,12 @@ const response = await api.post(API_ROUTES.auth.checkMQTTPassword, {
 ```typescript
 import { backendApi } from '@/lib/api';
 import { BACKEND_ROUTES } from '@/constants/apiRoutes';
+import type { LapDataResponseDTO } from '@shared/helios-types';
 
-const rfid = 12345;
-const response = await backendApi.get(BACKEND_ROUTES.drivers.byRfid(rfid));
+const rfid = '12345';
+const response = await backendApi.get<LapDataResponseDTO>(
+  BACKEND_ROUTES.drivers.byRfid(rfid),
+);
 ```
 
 **❌ DON'T:**
@@ -244,19 +294,23 @@ const response = await axios.get(`${prodURL}/driver/${rfid}`);
 **✅ DO:**
 
 ```typescript
-import { api } from '@/lib/api';
-import { API_ROUTES } from '@/constants/apiRoutes';
+import { BACKEND_ROUTES } from '@/constants/apiRoutes';
+import { backendApi } from '@/lib/api';
+import type { DriversResponseDTO, IDriverData } from '@shared/helios-types';
 import { useQuery } from '@tanstack/react-query';
 
-async function fetchData(endpoint: string) {
-  const response = await api.get(endpoint);
-  return response.data;
+async function fetchDrivers(): Promise<IDriverData[]> {
+  const response = await backendApi.get<DriversResponseDTO>(
+    BACKEND_ROUTES.drivers.base,
+  );
+
+  return response.data.data;
 }
 
-export function useMLData() {
-  return useQuery({
-    queryKey: ['ml', 'correlation-matrix'],
-    queryFn: () => fetchData(API_ROUTES.ml.packetCorrelationMatrix),
+export function useDrivers() {
+  return useQuery<IDriverData[]>({
+    queryKey: ['drivers'],
+    queryFn: fetchDrivers,
   });
 }
 ```
@@ -319,12 +373,34 @@ const response = await fetch(`${prodURL}/laps`);
 ```typescript
 import { backendApi } from '@/lib/api';
 import { BACKEND_ROUTES } from '@/constants/apiRoutes';
+import type { DriversResponseDTO, LapDataResponseDTO } from '@shared/helios-types';
 
-const response = await backendApi.get(BACKEND_ROUTES.drivers.base);
-const response = await backendApi.get(BACKEND_ROUTES.laps.base);
+const driversResponse = await backendApi.get<DriversResponseDTO>(
+  BACKEND_ROUTES.drivers.base,
+);
+const lapsResponse = await backendApi.get<LapDataResponseDTO>(
+  BACKEND_ROUTES.laps.base,
+);
 ```
 
-### Mistake 4: Creating Custom Axios Instances
+### Mistake 4: Duplicating Transport Interfaces Locally
+
+**❌ BAD:**
+
+```typescript
+interface DriverResponse {
+  data: { rfid: string; driver: string }[];
+  message: string;
+}
+```
+
+**✅ GOOD:**
+
+```typescript
+import type { DriversResponseDTO } from '@shared/helios-types';
+```
+
+### Mistake 5: Creating Custom Axios Instances
 
 **❌ BAD:**
 
@@ -372,9 +448,12 @@ const fetchLapData = async () => {
 ```typescript
 import { backendApi } from '@/lib/api';
 import { BACKEND_ROUTES } from '@/constants/apiRoutes';
+import type { LapDataResponseDTO } from '@shared/helios-types';
 
-const fetchLapData = async () => {
-  const response = await backendApi.get(BACKEND_ROUTES.laps.base);
+const fetchLapData = async (): Promise<LapDataResponseDTO> => {
+  const response = await backendApi.get<LapDataResponseDTO>(
+    BACKEND_ROUTES.laps.base,
+  );
   return response.data;
 };
 ```
@@ -391,6 +470,7 @@ Before adding a new API call, ensure:
 - [ ] Using `backendApi` instance for direct backend calls
 - [ ] Not importing axios directly
 - [ ] Not using `prodURL` concatenation
+- [ ] Request/response contracts come from `packages/shared/src/dto`
 - [ ] Type safety is maintained (using `typeof` for route types)
 
 ---
@@ -399,6 +479,7 @@ Before adding a new API call, ensure:
 
 - **Route Constants**: `packages/client/src/constants/apiRoutes.ts`
 - **Axios Instances**: `packages/client/src/lib/api.ts`
+- **Shared DTOs**: `packages/shared/src/dto/`
 - **Example Usage**: `packages/client/src/hooks/useMLCorrelationMatrix.ts`
 
 ---

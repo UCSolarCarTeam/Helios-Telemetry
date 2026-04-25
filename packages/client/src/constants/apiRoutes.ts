@@ -17,14 +17,6 @@
  */
 export const API_ROUTES = {
   /**
-   * Authentication/Security endpoints
-   */
-  auth: {
-    /** Check MQTT password for driver updates */
-    checkMQTTPassword: "/api/checkMQTTPassword",
-  },
-
-  /**
    * Health check endpoint
    */
   health: {
@@ -56,7 +48,9 @@ export const BACKEND_ROUTES = {
     /** Get all drivers */
     base: "/drivers",
     /** Get driver by RFID */
-    byRfid: (rfid: number) => `/driver/${rfid}`,
+    byRfid: (rfid: string) => `/driver/${rfid}` as const,
+    /** Update driver information */
+    updateInfo: "/updatedriverinfo",
   },
 
   /**

@@ -22,12 +22,11 @@
     "db:down": "lerna run db:down --scope=db",
     "db:logs": "lerna run db:logs --scope=db",
     "db:build": "lerna run build --scope=db",
-    "migrate:generate": "lerna run migrate:generate --scope=db --",
     "migrate:run": "lerna run migrate:run --scope=db",
-    "migrate:revert": "lerna run migrate:revert --scope=db",
-    "migrate:reset": "lerna run migrate:reset --scope=db",
-    "schema:sync": "lerna run schema:sync --scope=db",
-    "schema:drop": "lerna run schema:drop --scope=db"
+    "db:push": "lerna run db:push --scope=db",
+    "db:reset:force": "lerna run db:reset:force --scope=db",
+    "db:studio": "lerna run db:studio --scope=db",
+    "db:generate": "lerna run db:generate --scope=db"
   },
   "devDependencies": {
     "@eslint/js": "9.39.3",

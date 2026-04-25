@@ -1,8 +1,4 @@
-export { AppDataSource } from "./data-source";
-export { BaseRepository } from "./repositories/BaseRepository";
-
-// interfaces
-export * from "./interfaces/repositories.interface";
+export { prisma } from "./data-source";
 
 // services
 export { DatabaseService } from "./services/DatabaseService";
