@@ -14,8 +14,8 @@ datasource db {
 model driver {
   rfid      String   @id(map: "PK_5ec5aa7279436b862c308d63f5b")
   Name      String
-  CreatedAt DateTime @default(now()) @db.Timestamp(6)
-  UpdatedAt DateTime @default(now()) @db.Timestamp(6)
+  CreatedAt DateTime @default(now()) @db.Timestamptz(6)
+  UpdatedAt DateTime @updatedAt @db.Timestamptz(6)
 }
 
 model lap {

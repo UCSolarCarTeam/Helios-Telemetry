@@ -68,14 +68,10 @@ export class DatabaseService {
       throw new Error("Rfid must be a string");
     }
 
-    const existing = await prisma.driver.findUnique({
+    const existing = await prisma.driver.findUniqueOrThrow({
       where: { rfid: Rfid },
       select: { Name: true },
     });
-
-    if (!existing) {
-      return { message: "Driver Rfid not found in driver table" };
-    }
 
     const oldName = existing.Name;
     await prisma.driver.update({

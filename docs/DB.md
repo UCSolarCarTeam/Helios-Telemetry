@@ -28,7 +28,6 @@ Notes:
 
 - Use `DATABASE_URL` for app runtime.
 - Use `DIRECT_URL` for schema operations and migrations.
-- `packages/db/src/data-source.ts` supports a fallback to `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD` if `DATABASE_URL` is missing.
 
 ## Local Setup
 
