@@ -142,6 +142,13 @@ yarn workspace db migrate:run
 - Local DB connection refused:
   - ensure `yarn db:up` is running
   - ensure port `5432` is available
+- `yarn migrate:run` fails with `relation "driver" already exists`:
+  - Your database was created before the migration system was introduced (e.g. via `db push`). Mark the init migration as already applied without re-running it:
+  ```bash
+  cd packages/db
+  npx prisma migrate resolve --applied "20260426224938_init"
+  ```
+  Then re-run `yarn migrate:run` for any subsequent migrations.
 
 ## Important Files
 
