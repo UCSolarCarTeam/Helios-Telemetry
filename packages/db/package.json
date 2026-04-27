@@ -11,7 +11,7 @@
     "db:down": "docker-compose down",
     "db:logs": "docker-compose logs -f db",
     "db:seed": "tsx src/scripts/seed.ts",
-    "db:reset": "yarn db:down && yarn db:up && sleep 10 && yarn db:seed",
+    "db:reset": "yarn db:down && yarn db:up && sleep 10 && yarn migrate:run && yarn db:seed",
     "migrate:generate": "prisma migrate dev",
     "migrate:run": "prisma migrate deploy",
     "db:push": "prisma db push",
