@@ -15,7 +15,6 @@
     "migrate:generate": "prisma migrate dev",
     "migrate:run": "prisma migrate deploy",
     "db:push": "prisma db push",
-    "db:backup": "bash scripts/backup.sh",
     "db:restore": "bash scripts/restore.sh",
     "db:reset:force": "prisma migrate reset --force --skip-seed",
     "db:generate": "prisma generate",

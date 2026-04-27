@@ -28,13 +28,15 @@ if [ -z "$DATABASE_URL" ]; then
   exit 1
 fi
 
-PSQL="${PSQL:-psql}"
-if [ -x "/opt/homebrew/opt/postgresql@17/bin/psql" ]; then
-  PSQL="/opt/homebrew/opt/postgresql@17/bin/psql"
+COMPOSE_FILE="$SCRIPT_DIR/../docker-compose.yml"
+
+if ! docker compose -f "$COMPOSE_FILE" ps --status running db 2>/dev/null | grep -q "db"; then
+  echo "Error: Docker container 'db' is not running — run 'yarn db:up' first."
+  exit 1
 fi
 
-"$PSQL" "$DATABASE_URL" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-
-"$PSQL" "$DATABASE_URL" < "$FILE"
+{ echo "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"; cat "$FILE"; } \
+  | docker compose -f "$COMPOSE_FILE" exec -T db \
+    psql --dbname="$DATABASE_URL" -v ON_ERROR_STOP=1 --single-transaction
 
 echo "Restored from: $FILE"

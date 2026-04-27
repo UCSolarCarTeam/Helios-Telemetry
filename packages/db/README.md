@@ -92,12 +92,9 @@ Run from `packages/db`:
 - `yarn migrate:reset` reset DB and reapply migrations
 - `yarn db:seed` seed sample data
 - `yarn db:reset` restart local DB and seed sample data
-- `yarn db:backup` dump current DB to `backups/backup_<timestamp>.sql`
-- `yarn db:restore <file>` restore DB from a dump file
+- `yarn db:restore <file>` restore a dump file into local Docker DB
 
 ## Field Change Workflow (Prisma)
-
-> **Before making schema changes in production, run `yarn db:backup` first.** Prisma does not automatically back up data before applying migrations — if a migration drops or renames a column, that data is gone.
 
 When adding or removing telemetry fields, follow this order:
 
@@ -133,6 +130,10 @@ yarn workspace db migrate:run
 ## Seeding
 
 `yarn db:seed` inserts sample drivers, laps, and telemetry packets.
+
+## Test with production data locally
+
+go to Supabase Console → Database → Backups → create or download a backup → save to `packages/db/backups/` → run `yarn db:restore backups/<file>`.
 
 ## Troubleshooting
 
