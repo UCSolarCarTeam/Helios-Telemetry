@@ -10,26 +10,38 @@ This package provides database access for the telemetry backend using PostgreSQL
 
 ## Local Database Setup
 
-1. Create `packages/db/.db.env` from the example:
+1. Create `packages/db/.env` from the example:
 
 ```bash
 cd packages/db
-cp .db.env.example .db.env
+cp .env.example .env
 ```
 
-2. Start PostgreSQL:
+2. Start Docker PostgreSQL:
 
 ```bash
 yarn db:up
 ```
 
-3. Check logs:
+3. Apply migrations to create tables:
+
+```bash
+yarn migrate:run
+```
+
+4. (Optional) Seed sample data:
+
+```bash
+yarn db:seed
+```
+
+5. Check logs:
 
 ```bash
 yarn db:logs
 ```
 
-4. Stop PostgreSQL when needed:
+6. Stop PostgreSQL when needed:
 
 ```bash
 yarn db:down
@@ -80,8 +92,12 @@ Run from `packages/db`:
 - `yarn migrate:reset` reset DB and reapply migrations
 - `yarn db:seed` seed sample data
 - `yarn db:reset` restart local DB and seed sample data
+- `yarn db:backup` dump current DB to `backups/backup_<timestamp>.sql`
+- `yarn db:restore <file>` restore DB from a dump file
 
 ## Field Change Workflow (Prisma)
+
+> **Before making schema changes in production, run `yarn db:backup` first.** Prisma does not automatically back up data before applying migrations — if a migration drops or renames a column, that data is gone.
 
 When adding or removing telemetry fields, follow this order:
 
@@ -105,7 +121,7 @@ For production-safe, reviewed changes, use a migration flow rather than schema p
 
 ```bash
 cd packages/db
-npx prisma migrate dev --name <descriptive_change_name>
+yarn migrate:generate --name <descriptive_change_name>
 ```
 
 Then deploy migrations in target environments:
