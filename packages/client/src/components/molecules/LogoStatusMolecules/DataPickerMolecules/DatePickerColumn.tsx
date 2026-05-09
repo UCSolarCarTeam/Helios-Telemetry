@@ -1,135 +1,102 @@
 import React from "react";
 
-import { useAppState } from "@/stores/useAppState";
-import { DatePicker, TimeInput } from "@mantine/dates";
-import { notifications } from "@mantine/notifications";
+import { getLocalDateKey, useAvailableDates } from "@/hooks/useAvailableDates";
+import { DatePicker } from "@mantine/dates";
 import { Button } from "@mui/material";
 
 import { IPlaybackDateTime } from "../PlaybackDatePicker";
 
 /*
- * This component is used to select a date and time for retrieving playback data.
- * It allows the user to select a date (day of the month) and time range (start and end time).
- * The selected date and time are then used to fetch playback data from the database.
+ * This component is used to select a date for retrieving playback data.
+ * It allows the user to select a date (day of the month), then load available segments.
+ * The selected date is then used to fetch playback data from the database.
  * This component is one of two columns in the PlaybackDatePicker component.
  *
  * handleDateChange: This function is called when the user selects the day of the month in the date picker.
- * It uses the current startTime and endTime as place holders.
- *
- * handleTimeChange: This function is called when the user selects the start or end time in the time input.
  */
 
 const DataPickerColumn = ({
   fetchPlaybackData,
+  onSegmentChange,
   playbackDateTime,
-  setConfirmedPlaybackDateTime,
+  segmentOptions,
+  segmentsLoaded,
+  segmentsLoading,
+  selectedSegmentStartUtc,
   setPlaybackDateTime,
 }: {
-  setPlaybackDateTime: React.Dispatch<React.SetStateAction<IPlaybackDateTime>>;
-  setConfirmedPlaybackDateTime: React.Dispatch<
-    React.SetStateAction<IPlaybackDateTime>
-  >;
-  playbackDateTime: IPlaybackDateTime;
   fetchPlaybackData: () => void;
+  onSegmentChange: (startUtc: number) => void;
+  playbackDateTime: IPlaybackDateTime;
+  segmentOptions: { label: string; startUtc: number }[];
+  segmentsLoaded: boolean;
+  segmentsLoading: boolean;
+  selectedSegmentStartUtc: number | null;
+  setPlaybackDateTime: React.Dispatch<React.SetStateAction<IPlaybackDateTime>>;
 }) => {
-  const { setCurrentAppState } = useAppState();
+  const { availableDateSet } = useAvailableDates();
+
+  const excludeUnavailableDate = (date: Date): boolean => {
+    const dateString = getLocalDateKey(date);
+    return !availableDateSet.has(dateString);
+  };
 
   const handleDateChange = (value: Date | null) => {
     if (value) {
       setPlaybackDateTime((prev) => {
         const selectedDate = new Date(value);
-        // Keep the current time for startTime and endTime as a placeholder
-        const newStartDate = new Date(prev.startTime ?? new Date());
-        newStartDate.setFullYear(selectedDate.getFullYear());
-        newStartDate.setMonth(selectedDate.getMonth());
-        newStartDate.setDate(selectedDate.getDate());
-
-        const newEndDate = new Date(prev.endTime ?? new Date());
-        newEndDate.setFullYear(selectedDate.getFullYear());
-        newEndDate.setMonth(selectedDate.getMonth());
-        newEndDate.setDate(selectedDate.getDate());
 
         return {
+          ...prev,
           date: selectedDate,
-          endTime: newEndDate,
-          startTime: newStartDate,
         };
       });
     }
   };
+
   const handleConfirm = () => {
-    if (
-      playbackDateTime.startTime &&
-      playbackDateTime.endTime &&
-      playbackDateTime.startTime > playbackDateTime.endTime
-    ) {
-      notifications.show({
-        color: "red",
-        message: "Start time cannot be after end time.",
-        title: "Invalid Time Range",
-      });
-      return;
-    }
-    setCurrentAppState((prev) => ({
-      ...prev,
-      playbackDateTime: {
-        date: playbackDateTime.date,
-        endTime: playbackDateTime.endTime,
-        startTime: playbackDateTime.startTime,
-      },
-    }));
-    setConfirmedPlaybackDateTime(playbackDateTime);
     void fetchPlaybackData();
-  };
-  // Handle TimeInput change to update startTime or endTime
-  const handleTimeChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    timeKey: "startTime" | "endTime",
-  ) => {
-    const timeValue = event.target.value;
-    if (!timeValue) return;
-
-    const [hours, minutes, seconds = 0] = timeValue.split(":").map(Number);
-    setPlaybackDateTime((prev) => {
-      const newTime = new Date(prev[timeKey] ?? new Date());
-      newTime.setHours(hours ?? 0, minutes ?? 0, seconds ?? 0);
-      let newEndTime = prev.endTime;
-      if (timeKey === "startTime" && prev.endTime && newTime >= prev.endTime) {
-        newEndTime = new Date(newTime);
-        newEndTime.setHours(newEndTime.getHours() + 1);
-      }
-
-      return {
-        ...prev,
-        endTime: newEndTime,
-        [timeKey]: newTime,
-      };
-    });
   };
 
   return (
     <div className="m-4 flex flex-col items-center gap-4 sm:w-[50%]">
       <DatePicker
+        excludeDate={excludeUnavailableDate}
         highlightToday={true}
         onChange={handleDateChange}
         value={playbackDateTime.date}
       />
 
-      <div className="flex flex-row items-center gap-1">
-        <TimeInput
-          onChange={(event) => handleTimeChange(event, "startTime")}
-          value={playbackDateTime.startTime?.toTimeString().split(" ")[0] ?? ""}
-        />
-        -
-        <TimeInput
-          onChange={(event) => handleTimeChange(event, "endTime")}
-          value={playbackDateTime.endTime?.toTimeString().split(" ")[0] ?? ""}
-        />
-      </div>
-
       <Button className="mb-1" onClick={handleConfirm}>
-        Confirm
+        Load Available Segments
       </Button>
+
+      {segmentOptions.length > 0 && (
+        <select
+          className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+          disabled={segmentsLoading}
+          onChange={(event) => onSegmentChange(Number(event.target.value))}
+          value={selectedSegmentStartUtc ?? ""}
+        >
+          {segmentOptions.map((segment) => (
+            <option key={segment.startUtc} value={segment.startUtc}>
+              {segment.label}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {segmentsLoading && (
+        <p className="text-gray-500 text-center text-sm">
+          Loading available 1-hour segments...
+        </p>
+      )}
+
+      {segmentsLoaded && !segmentsLoading && segmentOptions.length === 0 && (
+        <p className="text-gray-500 text-center text-sm">
+          No 1-hour data segments found for this day.
+        </p>
+      )}
     </div>
   );
 };

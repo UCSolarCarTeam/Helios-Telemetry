@@ -34,3 +34,22 @@ export interface PlaybackHealthResponseDTO {
   message: string;
   uptime: string;
 }
+
+/**
+ * DTO for available playback race dates.
+ */
+export interface AvailablePlaybackDatesResponseDTO {
+  data: { date: Date }[];
+  message: string;
+}
+
+/**
+ * DTO for available playback time segments in a day.
+ */
+export interface AvailablePlaybackSegmentsResponseDTO {
+  data: {
+    endUtc: number;
+    startUtc: number;
+  }[];
+  message: string;
+}

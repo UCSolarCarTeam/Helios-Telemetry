@@ -16,5 +16,13 @@ playbackRouter.get(
   asyncHandler(controllers.getFirstAndLastPacket),
 );
 playbackRouter.get("playback/health", controllers.getHealthPlayback);
+playbackRouter.get(
+  "/availableDates",
+  asyncHandler(controllers.getAvailableDates),
+);
+playbackRouter.get(
+  "/availableSegments",
+  asyncHandler(controllers.getAvailableSegments),
+);
 
 export default playbackRouter;
