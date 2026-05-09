@@ -79,6 +79,10 @@ export const BACKEND_ROUTES = {
    * Playback endpoints
    */
   playback: {
+    /** Get available race dates */
+    availableDates: "/availableDates",
+    /** Get available playback segments for a day */
+    availableSegments: "/availableSegments",
     /** Get packets between time range */
     packetsBetween: "/packetsBetween",
   },

@@ -221,6 +221,14 @@ export class DatabaseService {
     });
   }
 
+  public async getAvailablePlaybackDates() {
+    this.assertConnected();
+    
+    return prisma.race_days.findMany({
+      orderBy: { date: "asc" },
+    });
+  }
+
   private assertConnected() {
     if (!this.isConnected) {
       throw new Error("Database not connected");

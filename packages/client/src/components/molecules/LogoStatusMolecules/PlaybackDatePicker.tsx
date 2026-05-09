@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { usePlaybackData } from "@/hooks/usePlaybackData";
+import { usePlaybackSegments } from "@/hooks/usePlaybackSegments";
 import { downloadCSV } from "@/lib/utils";
 import { useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
 import { usePlaybackStore } from "@/stores/usePlayback";
-import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { Modal } from "@mui/material";
@@ -49,129 +49,151 @@ export type IPlaybackDataResponse = {
  * downloadable file.
  */
 
-const createDateTime = (time: Date, day: Date) =>
-  new Date(
-    day.getFullYear(),
-    day.getMonth(),
-    day.getDate(),
-    time.getHours(),
-    time.getMinutes(),
-    time.getSeconds(),
-  );
+const HOUR_IN_MS = 60 * 60 * 1000;
+
+const getDayStart = (date: Date) => {
+  const dayStart = new Date(date);
+  dayStart.setHours(0, 0, 0, 0);
+  return dayStart;
+};
+
+const formatSegmentLabel = (startUtc: number) => {
+  const start = new Date(startUtc);
+  const end = new Date(startUtc + HOUR_IN_MS);
+
+  const format = (value: Date) =>
+    value.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+  return `${format(start)} - ${format(end)}`;
+};
 
 function PlaybackDatePicker() {
-  const { currentAppState } = useAppState();
+  const { currentAppState, setCurrentAppState } = useAppState();
   const [open, setOpen] = useState(false);
   const [playbackDateTime, setPlaybackDateTime] = useState<IPlaybackDateTime>(
     () => {
-      return currentAppState.playbackDateTime?.date
-        ? currentAppState.playbackDateTime
-        : {
-            date: new Date(),
-            endTime: new Date(),
-            startTime: new Date(),
-          };
+      const savedPlaybackDateTime = currentAppState.playbackDateTime;
+
+      return {
+        date: savedPlaybackDateTime?.date ?? new Date(),
+        endTime: savedPlaybackDateTime?.endTime ?? null,
+        startTime: savedPlaybackDateTime?.startTime ?? null,
+      };
     },
   );
+  const [confirmedDate, setConfirmedDate] = useState<Date | null>(
+    playbackDateTime.date,
+  );
+  const [hasRequestedSegments, setHasRequestedSegments] = useState(false);
+  const [selectedSegmentStartUtc, setSelectedSegmentStartUtc] = useState<
+    number | null
+  >(null);
 
-  const [confirmedPlaybackDateTime, setConfirmedPlaybackDateTime] =
-    useState<IPlaybackDateTime>(playbackDateTime);
-
-  const { setCurrentPacket } = usePacketStore();
   const { playbackData, setPlaybackData } = usePlaybackStore((state) => ({
     playbackData: state.playbackData,
     setPlaybackData: state.setPlaybackData,
   }));
 
-  // Calculate time range for TanStack Query
-  const startTimeUTC =
-    confirmedPlaybackDateTime.date && confirmedPlaybackDateTime.startTime
-      ? createDateTime(
-          confirmedPlaybackDateTime.startTime,
-          confirmedPlaybackDateTime.date,
-        ).getTime()
-      : 0;
+  const dayStartUtc = confirmedDate ? getDayStart(confirmedDate).getTime() : 0;
 
-  const endTimeUTC =
-    confirmedPlaybackDateTime.date && confirmedPlaybackDateTime.endTime
-      ? createDateTime(
-          confirmedPlaybackDateTime.endTime,
-          confirmedPlaybackDateTime.date,
-        ).getTime()
-      : 0;
+  const { data: segmentRanges = [], isLoading: isLoadingSegments } =
+    usePlaybackSegments({
+      dayStartUtc,
+      enabled: hasRequestedSegments && dayStartUtc > 0,
+      segmentMs: HOUR_IN_MS,
+    });
 
-  // Use TanStack Query hook for data fetching
-  const { data: fetchedPlaybackData, isLoading } = usePlaybackData({
-    enabled: startTimeUTC > 0 && endTimeUTC > startTimeUTC,
-    endTime: endTimeUTC,
-    startTime: startTimeUTC,
-  });
+  const selectedSegment = React.useMemo(() => {
+    if (segmentRanges.length === 0) {
+      return null;
+    }
 
-  // Sync fetched playback data to Zustand store and seed the live packet for map/UI
+    if (
+      selectedSegmentStartUtc !== null &&
+      segmentRanges.some(
+        (segment) => segment.startUtc === selectedSegmentStartUtc,
+      )
+    ) {
+      return (
+        segmentRanges.find(
+          (segment) => segment.startUtc === selectedSegmentStartUtc,
+        ) ?? null
+      );
+    }
+
+    return segmentRanges[0] ?? null;
+  }, [segmentRanges, selectedSegmentStartUtc]);
+
+  const { data: fetchedPlaybackData = [], isLoading: isLoadingPlaybackData } =
+    usePlaybackData({
+      enabled:
+        selectedSegment !== null &&
+        selectedSegment.endUtc > selectedSegment.startUtc,
+      endTime: selectedSegment?.endUtc ?? 0,
+      startTime: selectedSegment?.startUtc ?? 0,
+    });
+
+  const availableSegments = React.useMemo(
+    () =>
+      segmentRanges.map((segment) => ({
+        label: formatSegmentLabel(segment.startUtc),
+        startUtc: segment.startUtc,
+      })),
+    [segmentRanges],
+  );
+
+  const confirmedSegmentDateTime = React.useMemo<IPlaybackDateTime>(() => {
+    if (confirmedDate === null || selectedSegment === null) {
+      return {
+        date: confirmedDate,
+        endTime: null,
+        startTime: null,
+      };
+    }
+
+    return {
+      date: confirmedDate,
+      endTime: new Date(selectedSegment.endUtc),
+      startTime: new Date(selectedSegment.startUtc),
+    };
+  }, [confirmedDate, selectedSegment]);
+
   useEffect(() => {
-    if (!fetchedPlaybackData) return;
+    if (!hasRequestedSegments || selectedSegment === null) {
+      setPlaybackData([]);
+      return;
+    }
 
     setPlaybackData(fetchedPlaybackData);
+  }, [
+    fetchedPlaybackData,
+    hasRequestedSegments,
+    selectedSegment,
+    setPlaybackData,
+  ]);
 
-    if (fetchedPlaybackData.length === 0) return;
-
-    const firstWithGps = fetchedPlaybackData.find(
-      (packet) =>
-        Number.isFinite(packet.Telemetry.GpsLatitude) &&
-        Number.isFinite(packet.Telemetry.GpsLongitude),
-    );
-    if (firstWithGps) setCurrentPacket(firstWithGps);
-  }, [fetchedPlaybackData, setCurrentPacket, setPlaybackData]);
-
-  // When the playback switch is on, auto-load the date if stored in local storage
   useEffect(() => {
-    if (
-      currentAppState.playbackSwitch &&
-      currentAppState.playbackDateTime?.date
-    ) {
-      setPlaybackDateTime(currentAppState.playbackDateTime);
-      setConfirmedPlaybackDateTime(currentAppState.playbackDateTime);
-    }
-  }, [currentAppState.playbackSwitch, currentAppState.playbackDateTime]);
+    setCurrentAppState((prev) => ({
+      ...prev,
+      playbackDateTime: confirmedSegmentDateTime,
+    }));
+  }, [confirmedSegmentDateTime, setCurrentAppState]);
 
-  /**
-   * Validates the time range before confirming the playback date/time.
-   * Shows an error notification if the range is too large (max 60 minutes).
-   * This is called by the DatePickerColumn when the user clicks the confirm button.
-   */
-  const validateAndConfirmDateTime = () => {
-    if (
-      !playbackDateTime.date ||
-      !playbackDateTime.startTime ||
-      !playbackDateTime.endTime
-    ) {
+  const isLoading = isLoadingSegments || isLoadingPlaybackData;
+
+  // Confirms date selection and triggers segment fetch for that selected day.
+  const loadDaySegments = () => {
+    if (!playbackDateTime.date) {
       return;
     }
 
-    const startDateTime = createDateTime(
-      playbackDateTime.startTime,
-      playbackDateTime.date,
-    );
-    const endDateTime = createDateTime(
-      playbackDateTime.endTime,
-      playbackDateTime.date,
-    );
-
-    const startTimeUTC = startDateTime.getTime();
-    const endTimeUTC = endDateTime.getTime();
-    const minutes = 60;
-    const maxInterval = minutes * 60 * 1000; // 60 minutes in ms
-    if (endTimeUTC - startTimeUTC > maxInterval) {
-      notifications.show({
-        color: "red",
-        message: `Please select a range of maximum ${minutes} minutes.`,
-        title: "Error",
-      });
-      return;
-    }
-
-    // Validation passed - the DatePickerColumn will call setConfirmedPlaybackDateTime
-    // which will trigger the usePlaybackData hook to fetch data automatically
+    setConfirmedDate(getDayStart(playbackDateTime.date));
+    setHasRequestedSegments(true);
+    setSelectedSegmentStartUtc(null);
+    setPlaybackData([]);
   };
 
   const updatePlaybackTime: React.Dispatch<
@@ -181,11 +203,11 @@ function PlaybackDatePicker() {
   };
   const handleDownloadCSV = () => {
     // Generate filename with date and time range
-    const start = confirmedPlaybackDateTime.startTime ?? new Date();
-    const end = confirmedPlaybackDateTime.endTime ?? new Date();
+    const start = confirmedSegmentDateTime.startTime ?? new Date();
+    const end = confirmedSegmentDateTime.endTime ?? new Date();
     const playbackDate =
-      confirmedPlaybackDateTime.startTime ??
-      confirmedPlaybackDateTime.endTime ??
+      confirmedSegmentDateTime.startTime ??
+      confirmedSegmentDateTime.endTime ??
       new Date();
     const dateStr = playbackDate.toLocaleDateString().replace(/\//g, "-");
     const formatTime = (date: Date) =>
@@ -214,13 +236,17 @@ function PlaybackDatePicker() {
         <div className="relative flex h-auto w-full max-w-lg rounded-lg border-none bg-white p-6 shadow-lg outline-none sm:max-w-xl md:max-w-2xl">
           <div className="flex w-full flex-col gap-6 sm:flex-row">
             <DatePickerColumn
-              fetchPlaybackData={validateAndConfirmDateTime}
+              fetchPlaybackData={loadDaySegments}
+              onSegmentChange={setSelectedSegmentStartUtc}
               playbackDateTime={playbackDateTime}
-              setConfirmedPlaybackDateTime={setConfirmedPlaybackDateTime}
+              segmentOptions={availableSegments}
+              segmentsLoaded={hasRequestedSegments}
+              segmentsLoading={isLoadingSegments}
+              selectedSegmentStartUtc={selectedSegment?.startUtc ?? null}
               setPlaybackDateTime={updatePlaybackTime}
             />
             <DatePickerResultColumn
-              confirmedPlaybackDateTime={confirmedPlaybackDateTime}
+              confirmedPlaybackDateTime={confirmedSegmentDateTime}
               loading={isLoading}
               playbackData={playbackData}
             />

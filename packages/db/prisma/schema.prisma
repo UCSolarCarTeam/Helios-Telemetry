@@ -358,3 +358,7 @@ model telemetry_packet {
   @@index([RaceName, timestamp], map: "IDX_667eee2eb4f507ee0f5f9552a6")
   @@index([rfid, timestamp], map: "IDX_9a0efd28da0c9c4ddb0a002345")
 }
+
+model race_days {
+  date  DateTime @id @db.Date 
+}
