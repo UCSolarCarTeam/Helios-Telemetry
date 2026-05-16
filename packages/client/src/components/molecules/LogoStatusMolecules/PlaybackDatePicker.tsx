@@ -111,14 +111,11 @@ function PlaybackDatePicker() {
   useEffect(() => {
     if (!fetchedPlaybackData) return;
 
-    const sorted = [...fetchedPlaybackData].sort(
-      (a, b) => a.TimeStamp - b.TimeStamp,
-    );
-    setPlaybackData(sorted);
+    setPlaybackData(fetchedPlaybackData);
 
-    if (sorted.length === 0) return;
+    if (fetchedPlaybackData.length === 0) return;
 
-    const firstWithGps = sorted.find(
+    const firstWithGps = fetchedPlaybackData.find(
       (packet) =>
         Number.isFinite(packet.Telemetry.GpsLatitude) &&
         Number.isFinite(packet.Telemetry.GpsLongitude),
