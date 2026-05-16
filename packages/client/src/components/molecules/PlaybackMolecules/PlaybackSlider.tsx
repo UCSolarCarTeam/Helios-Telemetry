@@ -128,7 +128,7 @@ export default function PlaybackSlider() {
           <div className="flex flex-col items-center gap-1">
             <p>Packet: {index + 1}</p>
             {`Timestamp: ${new Date(
-              sortedData[index].TimeStamp,
+              sortedData[index].TimeStamp * 1000,
             ).toLocaleString()}`}
           </div>
         );
