@@ -1,3 +1,4 @@
+import { OpenInNew } from "@mui/icons-material";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -52,6 +53,38 @@ export function TabContent({
   );
 }
 
+const grafanaLinks = [
+  {
+    label: "Grafana Live",
+    url: process.env.NEXT_PUBLIC_GRAFANA_LIVE_OPEN_URL,
+  },
+  {
+    label: "Grafana History",
+    url: process.env.NEXT_PUBLIC_GRAFANA_HISTORY_OPEN_URL,
+  },
+].filter((link): link is { url: string; label: string } => Boolean(link.url));
+
+function GrafanaLink({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      className="flex items-center gap-1 text-xs font-medium text-[#F05A28] hover:underline"
+      href={href}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <Image
+        alt="Grafana"
+        height={14}
+        src="/assets/grafana_icon.svg"
+        unoptimized
+        width={14}
+      />
+      {label}
+      <OpenInNew sx={{ fontSize: 12 }} />
+    </a>
+  );
+}
+
 function AnalysisTab() {
   const [value, setValue] = useState<number>(0);
   const { resolvedTheme } = useTheme();
@@ -60,7 +93,7 @@ function AnalysisTab() {
     <div className="flex flex-col gap-y-4 px-4">
       {/* NAVBAR */}
       <div
-        className="flex w-full items-center justify-between gap-y-2 border-b-[1px] border-black"
+        className="flex w-full flex-col border-b-[1px] border-black sm:flex-row sm:items-center sm:justify-between"
         id="navbar"
       >
         {/* <div className="flex items-center justify-center gap-x-2">
@@ -95,6 +128,14 @@ function AnalysisTab() {
             ))}
           </Tabs>
         </ThemeProvider>
+
+        {grafanaLinks.length > 0 && (
+          <div className="flex flex-shrink-0 items-center gap-3 pb-2 sm:pb-1">
+            {grafanaLinks.map(({ label, url }) => (
+              <GrafanaLink href={url} key={label} label={label} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* MAIN */}
