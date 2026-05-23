@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { usePlaybackData } from "@/hooks/usePlaybackData";
 import { downloadCSV } from "@/lib/utils";
 import { useAppState } from "@/stores/useAppState";
+import { usePacketStore } from "@/stores/usePacket";
 import { usePlaybackStore } from "@/stores/usePlayback";
 import { notifications } from "@mantine/notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -76,6 +77,7 @@ function PlaybackDatePicker() {
   const [confirmedPlaybackDateTime, setConfirmedPlaybackDateTime] =
     useState<IPlaybackDateTime>(playbackDateTime);
 
+  const { setCurrentPacket } = usePacketStore();
   const { playbackData, setPlaybackData } = usePlaybackStore((state) => ({
     playbackData: state.playbackData,
     setPlaybackData: state.setPlaybackData,
@@ -105,12 +107,21 @@ function PlaybackDatePicker() {
     startTime: startTimeUTC,
   });
 
-  // Sync fetched playback data to Zustand store
+  // Sync fetched playback data to Zustand store and seed the live packet for map/UI
   useEffect(() => {
-    if (fetchedPlaybackData) {
-      setPlaybackData(fetchedPlaybackData);
-    }
-  }, [fetchedPlaybackData, setPlaybackData]);
+    if (!fetchedPlaybackData) return;
+
+    setPlaybackData(fetchedPlaybackData);
+
+    if (fetchedPlaybackData.length === 0) return;
+
+    const firstWithGps = fetchedPlaybackData.find(
+      (packet) =>
+        Number.isFinite(packet.Telemetry.GpsLatitude) &&
+        Number.isFinite(packet.Telemetry.GpsLongitude),
+    );
+    if (firstWithGps) setCurrentPacket(firstWithGps);
+  }, [fetchedPlaybackData, setCurrentPacket, setPlaybackData]);
 
   // When the playback switch is on, auto-load the date if stored in local storage
   useEffect(() => {

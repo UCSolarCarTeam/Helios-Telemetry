@@ -43,7 +43,7 @@ function StatusComponent() {
 
   // Maybe server should have a reference to the last packet received from the vehicle.
   const packetTime = currentAppState.socketConnected
-    ? new Date(currentPacket.TimeStamp).toLocaleString()
+    ? new Date(currentPacket.TimeStamp * 1000).toLocaleString()
     : "DISCONNECTED";
 
   return (

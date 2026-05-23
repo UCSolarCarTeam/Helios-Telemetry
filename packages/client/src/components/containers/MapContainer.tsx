@@ -1,9 +1,10 @@
-import { type JSX, useEffect, useState } from "react";
+import { type JSX, useEffect, useMemo, useState } from "react";
 
 import Map from "@/components/molecules/MapMolecules/Map";
 import MapText from "@/components/molecules/MapMolecules/MapText";
 import { CONNECTIONTYPES, useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
+import { usePlaybackStore } from "@/stores/usePlayback";
 import { Coords } from "@shared/helios-types";
 
 import { GEO_DATA } from "../molecules/MapMolecules/MapSetup";
@@ -20,37 +21,50 @@ const startingLocation: Coords = {
 function MapContainer(): JSX.Element {
   const { currentAppState } = useAppState();
   const { currentPacket } = usePacketStore();
+  const { playbackData } = usePlaybackStore((state) => ({
+    playbackData: state.playbackData,
+  }));
 
-  const isDemo = currentAppState.connectionType === CONNECTIONTYPES.DEMO;
-  const [carLocation, setCarLocation] = useState(
-    isDemo ? startingLocation : currentAppState.lapCoords,
+  const hasPlaybackCoordinates =
+    currentAppState.playbackSwitch &&
+    playbackData.some(
+      (packet) =>
+        Number.isFinite(packet.Telemetry.GpsLatitude) &&
+        Number.isFinite(packet.Telemetry.GpsLongitude),
+    );
+  const isDemo =
+    currentAppState.connectionType === CONNECTIONTYPES.DEMO &&
+    !hasPlaybackCoordinates;
+
+  const liveCarLocation = useMemo<Coords>(
+    () => ({
+      lat: currentPacket.Telemetry.GpsLatitude,
+      long: currentPacket.Telemetry.GpsLongitude,
+    }),
+    [currentPacket],
   );
-  useEffect(() => {
-    if (isDemo) {
-      let positionPacket = 0;
-      const interval = setInterval(() => {
-        setCarLocation((prevState) => ({
-          lat: TRACK_COORDINATES[positionPacket]?.[1] ?? prevState.lat,
-          long: TRACK_COORDINATES[positionPacket]?.[0] ?? prevState.long,
-        }));
-        positionPacket++;
-        if (positionPacket >= TRACK_COORDINATES.length) {
-          positionPacket = 0;
-        }
-      }, 2000);
 
-      return () => clearInterval(interval);
-    }
+  const [demoCarLocation, setDemoCarLocation] = useState(startingLocation);
+
+  const carLocation = isDemo ? demoCarLocation : liveCarLocation;
+
+  useEffect(() => {
+    if (!isDemo) return;
+
+    let positionPacket = 0;
+    const interval = setInterval(() => {
+      setDemoCarLocation((prevState) => ({
+        lat: TRACK_COORDINATES[positionPacket]?.[1] ?? prevState.lat,
+        long: TRACK_COORDINATES[positionPacket]?.[0] ?? prevState.long,
+      }));
+      positionPacket++;
+      if (positionPacket >= TRACK_COORDINATES.length) {
+        positionPacket = 0;
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, [isDemo]);
-
-  useEffect(() => {
-    if (!isDemo) {
-      setCarLocation({
-        lat: currentPacket.Telemetry.GpsLatitude,
-        long: currentPacket.Telemetry.GpsLongitude,
-      });
-    }
-  }, [currentPacket, isDemo]);
 
   return (
     <div className="flex size-full flex-col">
