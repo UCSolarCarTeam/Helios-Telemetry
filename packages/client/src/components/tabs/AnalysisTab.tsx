@@ -62,7 +62,9 @@ const grafanaLinks = [
     label: "Grafana History",
     url: process.env.NEXT_PUBLIC_GRAFANA_HISTORY_OPEN_URL,
   },
-].filter((link): link is { url: string; label: string } => Boolean(link.url));
+].filter((link): link is { url: string; label: string } =>
+  Boolean(link.url?.trim()),
+);
 
 function GrafanaLink({ href, label }: { href: string; label: string }) {
   return (
