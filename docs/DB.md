@@ -135,14 +135,15 @@ Use this checklist any time telemetry fields are added, renamed, or removed.
 - Add/remove matching columns in `packages/db/prisma/schema.prisma` under `model telemetry_packet`.
 - Keep column names consistent with flattened packet keys (including exact casing, such as `12V` vs `12v`).
 
-### 4) Push schema + regenerate client
+### 4) Generate migration + regenerate client
 
 From repo root:
 
 ```bash
-yarn workspace db db:push
-yarn workspace db db:generate
+yarn workspace db migrate:dev --name <descriptive_change_name>
 ```
+
+> **Quick local iteration only (no migration file):** `yarn workspace db db:push` pushes the schema directly without creating a migration. Use this only for throwaway local experiments — never for changes going to production.
 
 ### 5) Validate build
 
@@ -161,8 +162,7 @@ yarn workspace server build
 1. Remove it from shared types and any packet generators.
 2. Remove it from `flattenTelemetryData()` mapping.
 3. Remove it from Prisma schema.
-4. Run schema sync and builds again.
-5. If production data must be preserved, create and review a migration instead of direct push.
+4. Run `yarn workspace db migrate:dev --name <descriptive_change_name>` and builds again.
 
 ## Common Issues
 

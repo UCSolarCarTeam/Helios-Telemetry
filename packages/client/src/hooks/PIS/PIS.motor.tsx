@@ -44,11 +44,11 @@ const Motor = (): I_PIS => {
         name: "Active Motor",
       },
       {
-        data: [{ value: MotorDetails0?.BEMF_D }],
+        data: [{ value: MotorDetails0?.BEMFd }],
         name: "BEMF D",
       },
       {
-        data: [{ value: MotorDetails0?.BEMF_Q }],
+        data: [{ value: MotorDetails0?.BEMFq }],
         name: "BEMF Q",
       },
       {
@@ -60,13 +60,11 @@ const Motor = (): I_PIS => {
         name: "Bus Voltage",
       },
       {
-        data: [{ value: MotorDetails0?.DC_Bus_Ah }],
+        data: [{ value: MotorDetails0?.DCBusAh }],
         name: "DC Bus Ah",
       },
       {
-        data: [
-          { unit: UnitType.TEMP, value: MotorDetails0?.DspBoardTemperature },
-        ],
+        data: [{ unit: UnitType.TEMP, value: MotorDetails0?.DspBoardTemp }],
         name: "DSP Board Temperature",
       },
       {
@@ -74,9 +72,7 @@ const Motor = (): I_PIS => {
         name: "Error Flags",
       },
       {
-        data: [
-          { unit: UnitType.TEMP, value: MotorDetails0?.HeatsinkTemperature },
-        ],
+        data: [{ unit: UnitType.TEMP, value: MotorDetails0?.HeatsinkTemp }],
         name: "Heatsink Temperature",
       },
       {
@@ -96,7 +92,7 @@ const Motor = (): I_PIS => {
         name: "Motor Id",
       },
       {
-        data: [{ unit: UnitType.TEMP, value: MotorDetails0?.MotorTemperature }],
+        data: [{ unit: UnitType.TEMP, value: MotorDetails0?.MotorTemp }],
         name: "Motor Temperature",
       },
       {
@@ -140,7 +136,7 @@ const Motor = (): I_PIS => {
         name: "Supply 3.3V",
       },
       {
-        data: [{ value: MotorDetails0?.TritiumId }],
+        data: [{ value: MotorDetails0?.TritiumID }],
         name: "Tritium Id",
       },
       {
@@ -220,11 +216,11 @@ const Motor = (): I_PIS => {
         name: "Active Motor",
       },
       {
-        data: [{ value: MotorDetails1?.BEMF_D }],
+        data: [{ value: MotorDetails1?.BEMFd }],
         name: "BEMF D",
       },
       {
-        data: [{ value: MotorDetails1?.BEMF_Q }],
+        data: [{ value: MotorDetails1?.BEMFq }],
         name: "BEMF Q",
       },
       {
@@ -236,13 +232,11 @@ const Motor = (): I_PIS => {
         name: "Bus Voltage",
       },
       {
-        data: [{ value: MotorDetails1?.DC_Bus_Ah }],
+        data: [{ value: MotorDetails1?.DCBusAh }],
         name: "DC Bus Ah",
       },
       {
-        data: [
-          { unit: UnitType.TEMP, value: MotorDetails1?.DspBoardTemperature },
-        ],
+        data: [{ unit: UnitType.TEMP, value: MotorDetails1?.DspBoardTemp }],
         name: "DSP Board Temperature",
       },
       {
@@ -250,9 +244,7 @@ const Motor = (): I_PIS => {
         name: "Error Flags",
       },
       {
-        data: [
-          { unit: UnitType.TEMP, value: MotorDetails1?.HeatsinkTemperature },
-        ],
+        data: [{ unit: UnitType.TEMP, value: MotorDetails1?.HeatsinkTemp }],
         name: "Heatsink Temperature",
       },
       {
@@ -272,7 +264,7 @@ const Motor = (): I_PIS => {
         name: "Motor Id",
       },
       {
-        data: [{ unit: UnitType.TEMP, value: MotorDetails1?.MotorTemperature }],
+        data: [{ unit: UnitType.TEMP, value: MotorDetails1?.MotorTemp }],
         name: "Motor Temperature",
       },
       {
@@ -316,7 +308,7 @@ const Motor = (): I_PIS => {
         name: "Supply 3.3V",
       },
       {
-        data: [{ value: MotorDetails1?.TritiumId }],
+        data: [{ value: MotorDetails1?.TritiumID }],
         name: "Tritium Id",
       },
       {

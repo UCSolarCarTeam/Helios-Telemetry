@@ -75,8 +75,8 @@ Run from `packages/db`:
 - `yarn db:generate` generate Prisma client
 - `yarn db:push` push Prisma schema to DB
 - `yarn db:studio` open Prisma Studio (uses `DATABASE_URL` from `.env`)
-- `yarn migrate:generate` create and apply dev migration
-- `yarn migrate:run` apply deploy migrations
+- `yarn migrate:dev` create and apply dev migration (generates SQL migration file, applies it to local DB, and regenerates Prisma client)
+- `yarn migrate:run` apply pending migrations (production-safe, no schema generation)
 - `yarn migrate:reset` reset DB and reapply migrations
 - `yarn db:seed` seed sample data
 - `yarn db:reset` restart local DB and seed sample data
@@ -89,30 +89,26 @@ When adding or removing telemetry fields, follow this order:
 2. Update packet generators/fake data (if applicable).
 3. Update `flattenTelemetryData()` in `packages/db/src/services/DatabaseService.ts`.
 4. Update `packages/db/prisma/schema.prisma` (`telemetry_packet` model).
-5. Sync schema and regenerate Prisma client.
-6. Build and verify inserts.
-
-Run from repo root:
+5. Generate a migration, apply it to local DB, and regenerate Prisma client (from repo root):
 
 ```bash
-yarn workspace db db:push
-yarn workspace db db:generate
+yarn workspace db migrate:dev --name <descriptive_change_name>
+```
+
+6. Build and verify inserts (from repo root):
+
+```bash
 yarn workspace db build
 yarn workspace server build
 ```
 
-For production-safe, reviewed changes, use a migration flow rather than schema push:
-
-```bash
-cd packages/db
-npx prisma migrate dev --name <descriptive_change_name>
-```
-
-Then deploy migrations in target environments:
+7. Open a PR. After merge, deploy the migration to Supabase (from repo root):
 
 ```bash
 yarn workspace db migrate:run
 ```
+
+> **Quick local iteration only (no migration file):** `yarn workspace db db:push` pushes the schema directly without creating a migration. Use this only for throwaway local experiments — never for changes going to production.
 
 ## Seeding
 
