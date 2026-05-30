@@ -23,10 +23,13 @@ export const tabs: TabProps[] = [
     id: 0,
     name: "Graphs",
   },
-
   {
     id: 1,
     name: "Stats",
+  },
+  {
+    id: 2,
+    name: "Grafana",
   },
 ];
 

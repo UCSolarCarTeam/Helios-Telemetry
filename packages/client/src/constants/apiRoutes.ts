@@ -82,6 +82,14 @@ export const BACKEND_ROUTES = {
     /** Get packets between time range */
     packetsBetween: "/packetsBetween",
   },
+
+  /**
+   * Grafana snapshot endpoints
+   */
+  snapshots: {
+    /** Get all snapshots / create new snapshot */
+    base: "/snapshots",
+  },
 } as const;
 
 /**

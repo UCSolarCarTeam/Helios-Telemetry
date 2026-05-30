@@ -37,6 +37,13 @@ model lap {
   @@index([rfid, timestamp], map: "IDX_847b73ee1f3faf017fe4e9a6cb")
 }
 
+model grafana_snapshot {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  url        String   @unique
+  label      String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
 model telemetry_packet {
   timestamp                                  DateTime @db.Timestamptz(6)
   rfid                                       String
