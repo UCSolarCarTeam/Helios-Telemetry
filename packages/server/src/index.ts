@@ -1,5 +1,6 @@
 import { BackendController } from "./controllers/BackendController/BackendController";
 import lapRouter from "./routes/lap.route";
+import snapshotRouter from "./routes/snapshot.route";
 
 import axios from "axios";
 import axiosRetry from "axios-retry";
@@ -48,6 +49,7 @@ app.use("/", playbackRouter);
 app.use("/", lapRouter);
 app.use("/", driverRouter);
 app.use("/", machineLearningRouter);
+app.use("/", snapshotRouter);
 
 app.use(errorHandler);
 
