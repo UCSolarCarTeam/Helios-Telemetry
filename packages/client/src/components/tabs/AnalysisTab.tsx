@@ -7,10 +7,23 @@ import { useCreateSnapshot, useSnapshots } from "@/hooks/useSnapshots";
 import { tabs } from "@/objects/TabRoutes";
 import { useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
-import { helios, lightGray, mediumGray } from "@/styles/colors";
+import {
+  helios,
+  heliosCompliment,
+  lightGray,
+  mediumGray,
+} from "@/styles/colors";
 import { ThemeProvider } from "@emotion/react";
-import { OpenInNew } from "@mui/icons-material";
-import { CircularProgress, Tab, Tabs, createTheme } from "@mui/material";
+import { ExpandMore, OpenInNew } from "@mui/icons-material";
+import {
+  Button,
+  CircularProgress,
+  Collapse,
+  Tab,
+  Tabs,
+  TextField,
+  createTheme,
+} from "@mui/material";
 
 import MLContainer from "../containers/MLContainer";
 import StatsContainer from "../molecules/AnalysisMolecules/StatsContainer";
@@ -55,9 +68,10 @@ const grafanaLinks = [
     label: "Grafana History",
     url: process.env.NEXT_PUBLIC_GRAFANA_HISTORY_OPEN_URL,
   },
-].filter((link): link is { url: string; label: string } =>
-  Boolean(link.url?.trim()),
-);
+]
+  // Normalize once: trim here so the stored url (used as href) is clean.
+  .map((link) => ({ ...link, url: link.url?.trim() }))
+  .filter((link): link is { url: string; label: string } => Boolean(link.url));
 
 function GrafanaLink({ href, label }: { href: string; label: string }) {
   return (
@@ -82,6 +96,8 @@ function GrafanaLink({ href, label }: { href: string; label: string }) {
 
 function AddSnapshotForm() {
   const formRef = useRef<HTMLFormElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const { resolvedTheme } = useTheme();
   const { isPending, mutate } = useCreateSnapshot({
     onSuccess: () => formRef.current?.reset(),
   });
@@ -96,46 +112,95 @@ function AddSnapshotForm() {
     });
   }
 
+  // Outlined-field styling matched to the Lap Data filters (ColumnFilters /
+  // DriverFilter): helios borders, heliosCompliment floating label.
+  const fieldSx = {
+    "& .MuiInputLabel-root": {
+      "&.Mui-focused": { color: heliosCompliment },
+      "&.MuiInputLabel-shrink": { color: heliosCompliment },
+      color: heliosCompliment,
+    },
+    "& .MuiOutlinedInput-input": {
+      color: resolvedTheme === "dark" ? lightGray : "black",
+    },
+    "& .MuiOutlinedInput-notchedOutline": { borderColor: helios },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: heliosCompliment,
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: resolvedTheme === "dark" ? "white" : helios,
+    },
+  };
+
   return (
-    <form
-      className="mt-2 flex flex-col gap-2 rounded border border-black/10 bg-black/5 p-3 dark:border-white/10 dark:bg-white/5"
-      onSubmit={handleSubmit}
-      ref={formRef}
-    >
-      <p className="text-gray-600 dark:text-gray-400 text-xs font-semibold">
+    <div className="mt-2 flex flex-col">
+      <button
+        aria-controls="add-snapshot-form"
+        aria-expanded={expanded}
+        className="flex items-center justify-between border-b border-black pb-1 text-sm font-medium uppercase tracking-[0.02857em] text-[#00000099] dark:text-dark"
+        onClick={() => setExpanded((prev) => !prev)}
+        type="button"
+      >
         Add Snapshot
-      </p>
-      <input
-        className="rounded border border-black/20 bg-white px-2 py-1 text-xs dark:border-white/20 dark:bg-gray-800"
-        name="url"
-        placeholder="Grafana snapshot URL"
-        required
-        type="url"
-      />
-      <div className="flex gap-1.5">
-        <input
-          className="min-w-0 flex-1 rounded border border-black/20 bg-white px-2 py-1 text-xs dark:border-white/20 dark:bg-gray-800"
-          name="label"
-          placeholder="Label (e.g. Race Day 2025)"
-          required
-          type="text"
+        <ExpandMore
+          sx={{
+            fontSize: 20,
+            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.2s",
+          }}
         />
-        <input
-          className="w-32 rounded border border-black/20 bg-white px-2 py-1 text-xs dark:border-white/20 dark:bg-gray-800"
-          name="password"
-          placeholder="Password"
-          required
-          type="password"
-        />
-        <button
-          className="rounded bg-[#F05A28] px-3 py-1 text-xs font-medium text-white disabled:opacity-50"
-          disabled={isPending}
-          type="submit"
+      </button>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <form
+          className="flex flex-col gap-3 pt-3"
+          id="add-snapshot-form"
+          onSubmit={handleSubmit}
+          ref={formRef}
         >
-          {isPending ? "Saving…" : "Save"}
-        </button>
-      </div>
-    </form>
+          <TextField
+            label="Grafana snapshot URL"
+            name="url"
+            required
+            size="small"
+            sx={fieldSx}
+            type="url"
+          />
+          <div className="flex flex-wrap items-start gap-2">
+            <TextField
+              className="min-w-0 flex-1"
+              label="Label"
+              name="label"
+              required
+              size="small"
+              sx={fieldSx}
+              type="text"
+            />
+            <TextField
+              label="Password"
+              name="password"
+              required
+              size="small"
+              sx={{ ...fieldSx, width: 140 }}
+              type="password"
+            />
+            <Button
+              disabled={isPending}
+              sx={{
+                "&:hover": { backgroundColor: heliosCompliment },
+                backgroundColor: helios,
+                color: "white",
+                height: 40,
+                textTransform: "none",
+              }}
+              type="submit"
+              variant="contained"
+            >
+              {isPending ? "Saving…" : "Save"}
+            </Button>
+          </div>
+        </form>
+      </Collapse>
+    </div>
   );
 }
 
@@ -165,7 +230,10 @@ function GrafanaHistoryTabContent() {
     }
   }, [baseUrl, resolvedTheme]);
 
-  if (snapshotsLoading) {
+  // next-themes returns resolvedTheme === undefined on the server and the first
+  // client render; gating on it avoids loading the iframe with the wrong theme
+  // and flickering once the real theme resolves.
+  if (snapshotsLoading || !resolvedTheme) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
         <CircularProgress size={24} sx={{ color: helios }} />
