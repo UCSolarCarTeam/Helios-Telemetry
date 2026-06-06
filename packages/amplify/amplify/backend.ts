@@ -225,6 +225,10 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
       HeliosPasswords,
       "FINISH_LINE_UPDATE_PASSWORD",
     ),
+    SNAPSHOT_PASSWORD: ecs.Secret.fromSecretsManager(
+      HeliosPasswords,
+      "SNAPSHOT_PASSWORD",
+    ),
   },
 });
 
