@@ -221,6 +221,27 @@ export class DatabaseService {
     });
   }
 
+  public async getRecentSnapshot() {
+    this.assertConnected();
+
+    return prisma.grafana_snapshot.findFirst({
+      orderBy: { created_at: "desc" },
+    });
+  }
+
+  public async createSnapshot(
+    url: string,
+    label: string,
+    snapshot_from: Date,
+    snapshot_to: Date,
+  ) {
+    this.assertConnected();
+
+    return prisma.grafana_snapshot.create({
+      data: { url, label, snapshot_from, snapshot_to },
+    });
+  }
+
   private assertConnected() {
     if (!this.isConnected) {
       throw new Error("Database not connected");

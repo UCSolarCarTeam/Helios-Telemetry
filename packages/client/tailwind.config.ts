@@ -35,6 +35,7 @@ const config: Config = {
         helios: "#B94A6C",
         pink: "#9C0534",
         gray: "#807D7D",
+        grafana: "#F05A28",
       },
       backgroundColor: {
         light: "#D2D2D2",
