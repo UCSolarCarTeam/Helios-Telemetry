@@ -255,6 +255,11 @@ function AddSnapshotForm({
             <Button
               disabled={isPending || !urlHasValue || urlError}
               sx={{
+                "&.Mui-disabled": {
+                  backgroundColor: helios,
+                  color: "white",
+                  opacity: 0.5,
+                },
                 "&:hover": { backgroundColor: heliosCompliment },
                 backgroundColor: helios,
                 color: "white",
