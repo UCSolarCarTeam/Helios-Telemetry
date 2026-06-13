@@ -1,6 +1,6 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useCreateSnapshot, useSnapshots } from "@/hooks/useSnapshots";
@@ -127,18 +127,6 @@ function AddSnapshotForm() {
   const urlHasValue = urlValue.trim().length > 0;
   const urlError = urlHasValue && timeRange === null;
 
-  const prevTimeRange = useRef<typeof timeRange>(null);
-  useEffect(() => {
-    if (timeRange && !prevTimeRange.current) {
-      notifications.show({
-        color: "green",
-        message: `${new Date(timeRange.from).toLocaleDateString()} – ${new Date(timeRange.to).toLocaleDateString()}`,
-        title: "Time range detected",
-      });
-    }
-    prevTimeRange.current = timeRange;
-  }, [timeRange]);
-
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
@@ -221,11 +209,16 @@ function AddSnapshotForm() {
           ref={formRef}
         >
           <TextField
+            FormHelperTextProps={{
+              sx: timeRange ? { color: "success.main" } : undefined,
+            }}
             error={urlError}
             helperText={
               urlError
                 ? "URL must include ?from=…&to=… query params with valid dates."
-                : undefined
+                : timeRange
+                  ? `${new Date(timeRange.from).toLocaleDateString()} – ${new Date(timeRange.to).toLocaleDateString()} time range detected`
+                  : undefined
             }
             label="Grafana snapshot URL"
             name="url"
@@ -234,19 +227,20 @@ function AddSnapshotForm() {
             sx={fieldSx}
             value={urlValue}
           />
-          <div className="flex flex-wrap items-start gap-2">
+          <div className="flex w-full min-w-0 flex-wrap items-start gap-2">
             <TextField
-              className="min-w-0 flex-1"
+              className="min-w-0 flex-1 basis-full sm:basis-0"
               label="Label"
               name="label"
               size="small"
               sx={fieldSx}
             />
             <TextField
+              className="min-w-0 flex-1"
               label="Password"
               name="password"
               size="small"
-              sx={{ ...fieldSx, width: 140 }}
+              sx={{ ...fieldSx, maxWidth: 140 }}
               type="password"
             />
             <Button
@@ -255,6 +249,7 @@ function AddSnapshotForm() {
                 "&:hover": { backgroundColor: heliosCompliment },
                 backgroundColor: helios,
                 color: "white",
+                flexShrink: 0,
                 height: 40,
                 textTransform: "none",
               }}
@@ -347,7 +342,7 @@ function GrafanaHistoryTabContent() {
           */}
           <iframe
             allow="fullscreen"
-            className="h-[60vh] w-full rounded border border-black/10 dark:border-white/10"
+            className="h-[50vh] w-full rounded border border-black/10 dark:border-white/10"
             sandbox="allow-scripts allow-same-origin allow-popups"
             src={iframeUrl}
             title="Grafana History"
