@@ -114,28 +114,6 @@ Then deploy migrations in target environments:
 yarn workspace db migrate:run
 ```
 
-## Migrations (production)
-
-Schema changes go through Prisma **migrations**, not `db push`. Prod was
-baselined on 2026-05-30 (see `prisma/migrations/0_init`), so its history is
-tracked in `_prisma_migrations`.
-
-- Author a change locally: `npx prisma migrate dev --name <change>`
-- Apply to an environment: `yarn migrate:run` (= `prisma migrate deploy`)
-- Check state / drift: `npx prisma migrate status`
-
-Notes:
-
-- `migrate:run` / `deploy` and `migrate dev` use `DIRECT_URL` (Supabase: the
-  direct `:5432` connection, not the `:6543` pooler).
-- **Do not run `db push`, `migrate reset`, or `db:reset:force` against a remote
-  `.env`** — those mutate/drop whatever `DATABASE_URL`/`DIRECT_URL` point at. For
-  local experiments, point `.env` at the local container or pass an explicit
-  localhost URL inline.
-- Adopting migrations on an already-`db push`-ed DB: create a baseline migration
-  and mark it applied without running SQL via
-  `npx prisma migrate resolve --applied <migration_name>`.
-
 ## Seeding
 
 `yarn db:seed` inserts sample drivers, laps, and telemetry packets.
