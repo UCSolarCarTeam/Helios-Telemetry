@@ -229,11 +229,16 @@ export class DatabaseService {
     });
   }
 
-  public async createSnapshot(url: string, label: string) {
+  public async createSnapshot(
+    url: string,
+    label: string,
+    snapshot_from: Date,
+    snapshot_to: Date,
+  ) {
     this.assertConnected();
 
     return prisma.grafana_snapshot.create({
-      data: { url, label },
+      data: { url, label, snapshot_from, snapshot_to },
     });
   }
 

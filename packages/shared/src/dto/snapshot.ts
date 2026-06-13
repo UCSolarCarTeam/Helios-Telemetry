@@ -2,6 +2,8 @@ export interface IGrafanaSnapshot {
   id: string;
   url: string;
   label: string;
+  snapshot_from: string;
+  snapshot_to: string;
   created_at: string;
 }
 
@@ -14,6 +16,8 @@ export interface SnapshotListResponseDTO {
 export interface CreateSnapshotRequestDTO {
   url: string;
   label: string;
+  snapshot_from: string;
+  snapshot_to: string;
   password: string;
 }
 

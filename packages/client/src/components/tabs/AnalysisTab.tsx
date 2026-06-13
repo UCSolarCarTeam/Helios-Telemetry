@@ -1,6 +1,6 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useCreateSnapshot, useSnapshots } from "@/hooks/useSnapshots";
@@ -14,6 +14,7 @@ import {
   mediumGray,
 } from "@/styles/colors";
 import { ThemeProvider } from "@emotion/react";
+import { notifications } from "@mantine/notifications";
 import { ExpandMore, OpenInNew } from "@mui/icons-material";
 import {
   Button,
@@ -94,21 +95,83 @@ function GrafanaLink({ href, label }: { href: string; label: string }) {
   );
 }
 
+function parseSnapshotTimeRange(
+  rawUrl: string,
+): { from: string; to: string } | null {
+  try {
+    const parsed = new URL(rawUrl.trim());
+    const from = parsed.searchParams.get("from");
+    const to = parsed.searchParams.get("to");
+    if (!from || !to) return null;
+    if (isNaN(new Date(from).getTime()) || isNaN(new Date(to).getTime()))
+      return null;
+    return { from, to };
+  } catch {
+    return null;
+  }
+}
+
 function AddSnapshotForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [expanded, setExpanded] = useState(false);
+  const [urlValue, setUrlValue] = useState("");
   const { resolvedTheme } = useTheme();
   const { isPending, mutate } = useCreateSnapshot({
-    onSuccess: () => formRef.current?.reset(),
+    onSuccess: () => {
+      formRef.current?.reset();
+      setUrlValue("");
+    },
   });
+
+  const timeRange = parseSnapshotTimeRange(urlValue);
+  const urlHasValue = urlValue.trim().length > 0;
+  const urlError = urlHasValue && timeRange === null;
+
+  const prevTimeRange = useRef<typeof timeRange>(null);
+  useEffect(() => {
+    if (timeRange && !prevTimeRange.current) {
+      notifications.show({
+        color: "green",
+        message: `${new Date(timeRange.from).toLocaleDateString()} – ${new Date(timeRange.to).toLocaleDateString()}`,
+        title: "Time range detected",
+      });
+    }
+    prevTimeRange.current = timeRange;
+  }, [timeRange]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+    const url = (fd.get("url") as string).trim();
+    const label = (fd.get("label") as string).trim();
+    const password = (fd.get("password") as string).trim();
+
+    if (!url || !label || !password) {
+      notifications.show({
+        color: "red",
+        message: "Please fill in all fields before saving.",
+        title: "Missing fields",
+      });
+      return;
+    }
+
+    const range = parseSnapshotTimeRange(url);
+    if (!range) {
+      notifications.show({
+        color: "red",
+        message:
+          "The URL must contain valid `from` and `to` query parameters (e.g. ?from=2026-01-01T00:00:00Z&to=2026-12-31T23:59:59Z).",
+        title: "Cannot parse time range",
+      });
+      return;
+    }
+
     mutate({
-      label: fd.get("label") as string,
-      password: fd.get("password") as string,
-      url: fd.get("url") as string,
+      label,
+      password,
+      snapshot_from: range.from,
+      snapshot_to: range.to,
+      url,
     });
   }
 
@@ -152,39 +215,42 @@ function AddSnapshotForm() {
       </button>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <form
-          className="flex flex-col gap-3 pt-3"
+          className="flex flex-col gap-3 pb-3 pt-3"
           id="add-snapshot-form"
           onSubmit={handleSubmit}
           ref={formRef}
         >
           <TextField
+            error={urlError}
+            helperText={
+              urlError
+                ? "URL must include ?from=…&to=… query params with valid dates."
+                : undefined
+            }
             label="Grafana snapshot URL"
             name="url"
-            required
+            onChange={(e) => setUrlValue(e.target.value)}
             size="small"
             sx={fieldSx}
-            type="url"
+            value={urlValue}
           />
           <div className="flex flex-wrap items-start gap-2">
             <TextField
               className="min-w-0 flex-1"
               label="Label"
               name="label"
-              required
               size="small"
               sx={fieldSx}
-              type="text"
             />
             <TextField
               label="Password"
               name="password"
-              required
               size="small"
               sx={{ ...fieldSx, width: 140 }}
               type="password"
             />
             <Button
-              disabled={isPending}
+              disabled={isPending || !urlHasValue || urlError}
               sx={{
                 "&:hover": { backgroundColor: heliosCompliment },
                 backgroundColor: helios,

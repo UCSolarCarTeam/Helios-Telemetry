@@ -17,9 +17,18 @@ import type {
  * converting the Date `created_at` to an ISO string.
  */
 function serializeSnapshot(
-  snapshot: Omit<IGrafanaSnapshot, "created_at"> & { created_at: Date },
+  snapshot: Omit<IGrafanaSnapshot, "created_at" | "snapshot_from" | "snapshot_to"> & {
+    created_at: Date;
+    snapshot_from: Date;
+    snapshot_to: Date;
+  },
 ): IGrafanaSnapshot {
-  return { ...snapshot, created_at: snapshot.created_at.toISOString() };
+  return {
+    ...snapshot,
+    snapshot_from: snapshot.snapshot_from.toISOString(),
+    snapshot_to: snapshot.snapshot_to.toISOString(),
+    created_at: snapshot.created_at.toISOString(),
+  };
 }
 
 export const getSnapshots = async (
@@ -52,7 +61,7 @@ export const createSnapshot = async (
   request: Request<Record<string, string>, unknown, CreateSnapshotRequestDTO>,
   response: Response<CreateSnapshotResponseDTO | { error: string }>,
 ) => {
-  const { url, label, password } = request.body;
+  const { url, label, password, snapshot_from, snapshot_to } = request.body;
 
   const logger = createApplicationLogger(
     "snapshot.controller.ts",
@@ -62,11 +71,19 @@ export const createSnapshot = async (
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
 
-  if (!url || !label || !password) {
-    logger.warn("Missing required fields - url, label, or password");
+  if (!url || !label || !password || !snapshot_from || !snapshot_to) {
+    logger.warn("Missing required fields");
     return response
       .status(400)
-      .json({ error: "url, label, and password are required" });
+      .json({ error: "url, label, snapshot_from, snapshot_to, and password are required" });
+  }
+
+  const fromDate = new Date(snapshot_from);
+  const toDate = new Date(snapshot_to);
+  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+    return response
+      .status(400)
+      .json({ error: "snapshot_from and snapshot_to must be valid ISO date strings" });
   }
 
   if (!validateSnapshotPassword(password)) {
@@ -100,6 +117,8 @@ export const createSnapshot = async (
     snapshot = await backendController.databaseService.createSnapshot(
       url,
       label,
+      fromDate,
+      toDate,
     );
   } catch (error) {
     // Prisma P2002 = unique constraint violation (url is @unique).

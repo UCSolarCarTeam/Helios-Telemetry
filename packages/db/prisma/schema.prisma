@@ -38,10 +38,12 @@ model lap {
 }
 
 model grafana_snapshot {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  url        String   @unique
-  label      String
-  created_at DateTime @default(now()) @db.Timestamptz(6)
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  url           String   @unique
+  label         String
+  snapshot_from DateTime @db.Timestamptz(6)
+  snapshot_to   DateTime @db.Timestamptz(6)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
 }
 
 model telemetry_packet {
