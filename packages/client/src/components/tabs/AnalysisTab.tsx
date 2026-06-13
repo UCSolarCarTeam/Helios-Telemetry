@@ -111,9 +111,14 @@ function parseSnapshotTimeRange(
   }
 }
 
-function AddSnapshotForm() {
+function AddSnapshotForm({
+  expanded,
+  onToggle,
+}: {
+  expanded: boolean;
+  onToggle: () => void;
+}) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [expanded, setExpanded] = useState(false);
   const [urlValue, setUrlValue] = useState("");
   const { resolvedTheme } = useTheme();
   const { isPending, mutate } = useCreateSnapshot({
@@ -189,7 +194,7 @@ function AddSnapshotForm() {
         aria-controls="add-snapshot-form"
         aria-expanded={expanded}
         className="flex items-center justify-between border-b border-black pb-1 text-sm font-medium uppercase tracking-[0.02857em] text-[#00000099] dark:text-dark"
-        onClick={() => setExpanded((prev) => !prev)}
+        onClick={onToggle}
         type="button"
       >
         Add Snapshot
@@ -271,6 +276,12 @@ function GrafanaHistoryTabContent() {
   const { resolvedTheme } = useTheme();
   const { data: snapshots = [], isLoading: snapshotsLoading } = useSnapshots();
 
+  // Collapsed: give the iframe the full height. Expanded: shrink it so the
+  // Add Snapshot form has room without spilling past the tab into the rows
+  // below. CSS-only height change — the iframe resizes (Grafana reflows its
+  // panels) and is never re-fetched.
+  const [snapshotFormExpanded, setSnapshotFormExpanded] = useState(false);
+
   // Most recent snapshot is first (ordered by created_at desc from server).
   const latestSnapshot = snapshots[0] ?? null;
   const baseUrl = latestSnapshot?.url ?? null;
@@ -342,7 +353,10 @@ function GrafanaHistoryTabContent() {
           */}
           <iframe
             allow="fullscreen"
-            className="h-[50vh] w-full rounded border border-black/10 dark:border-white/10"
+            className={twMerge(
+              "w-full rounded border border-black/10 transition-[height] duration-300 ease-in-out dark:border-white/10",
+              snapshotFormExpanded ? "h-[50vh]" : "h-[60vh]",
+            )}
             sandbox="allow-scripts allow-same-origin allow-popups"
             src={iframeUrl}
             title="Grafana History"
@@ -357,7 +371,10 @@ function GrafanaHistoryTabContent() {
           </p>
         </div>
       )}
-      <AddSnapshotForm />
+      <AddSnapshotForm
+        expanded={snapshotFormExpanded}
+        onToggle={() => setSnapshotFormExpanded((prev) => !prev)}
+      />
     </div>
   );
 }
