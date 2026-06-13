@@ -1,6 +1,6 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useCreateSnapshot, useSnapshots } from "@/hooks/useSnapshots";
@@ -288,19 +288,19 @@ function GrafanaHistoryTabContent() {
 
   // The server only stores embeddable snapshots.raintank.io URLs, so we can
   // build the iframe src directly and just append the theme query param.
-  const iframeUrl = useMemo(() => {
-    if (!baseUrl) return null;
+  let iframeUrl: string | null = null;
+  if (baseUrl) {
     try {
       const url = new URL(baseUrl);
       url.searchParams.set(
         "theme",
         resolvedTheme === "dark" ? "dark" : "light",
       );
-      return url.toString();
+      iframeUrl = url.toString();
     } catch {
-      return null;
+      iframeUrl = null;
     }
-  }, [baseUrl, resolvedTheme]);
+  }
 
   // next-themes returns resolvedTheme === undefined on the server and the first
   // client render; gating on it avoids loading the iframe with the wrong theme
