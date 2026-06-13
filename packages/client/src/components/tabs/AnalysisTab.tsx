@@ -341,16 +341,6 @@ function GrafanaHistoryTabContent() {
               </span>
             </div>
           )}
-          {/*
-            allow-same-origin keeps the framed snapshots.raintank.io document
-            in its real origin so Grafana's SPA can read localStorage during
-            bootstrap. Verified: without it the iframe gets a unique opaque
-            origin, localStorage access throws ("Error bootstrapping Grafana
-            SecurityError ... lacks 'allow-same-origin'"), and Grafana renders
-            its "failed to load application files" error instead of the
-            dashboard. Safe to pair with allow-scripts here because the snapshot
-            is cross-origin to this app and cannot reach out to alter the parent.
-          */}
           <iframe
             allow="fullscreen"
             className={twMerge(
