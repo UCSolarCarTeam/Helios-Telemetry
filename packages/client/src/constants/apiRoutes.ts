@@ -87,8 +87,10 @@ export const BACKEND_ROUTES = {
    * Grafana snapshot endpoints
    */
   snapshots: {
-    /** Get all snapshots / create new snapshot */
+    /** Create new snapshot */
     base: "/snapshots",
+    /** Get the most recent snapshot */
+    recent: "/snapshots/recent",
   },
 } as const;
 

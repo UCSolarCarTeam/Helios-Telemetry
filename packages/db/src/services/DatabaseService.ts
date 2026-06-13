@@ -221,7 +221,7 @@ export class DatabaseService {
     });
   }
 
-  public async getSnapshots() {
+  public async getRecentSnapshot() {
     this.assertConnected();
 
     return prisma.grafana_snapshot.findFirst({

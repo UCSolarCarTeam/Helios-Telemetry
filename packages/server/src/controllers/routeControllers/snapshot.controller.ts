@@ -9,20 +9,15 @@ import type {
   CreateSnapshotRequestDTO,
   CreateSnapshotResponseDTO,
   IGrafanaSnapshot,
-  SnapshotListResponseDTO,
+  IGrafanaSnapshotRow,
+  RecentSnapshotResponseDTO,
 } from "@shared/helios-types";
 
 /**
  * Maps a Prisma grafana_snapshot row to its serializable DTO shape,
- * converting the Date `created_at` to an ISO string.
+ * converting the Date columns to ISO strings.
  */
-function serializeSnapshot(
-  snapshot: Omit<IGrafanaSnapshot, "created_at" | "snapshot_from" | "snapshot_to"> & {
-    created_at: Date;
-    snapshot_from: Date;
-    snapshot_to: Date;
-  },
-): IGrafanaSnapshot {
+function serializeSnapshot(snapshot: IGrafanaSnapshotRow): IGrafanaSnapshot {
   return {
     ...snapshot,
     snapshot_from: snapshot.snapshot_from.toISOString(),
@@ -31,9 +26,9 @@ function serializeSnapshot(
   };
 }
 
-export const getSnapshots = async (
+export const getRecentSnapshot = async (
   request: Request,
-  response: Response<SnapshotListResponseDTO>,
+  response: Response<RecentSnapshotResponseDTO>,
 ) => {
   const backendController = request.app.locals
     .backendController as BackendController;
@@ -45,10 +40,11 @@ export const getSnapshots = async (
   );
 
   logger.info(`ENTRY - ${request.method} ${request.url}`);
-  const snapshots = await backendController.databaseService.getSnapshots();
+  const snapshot =
+    await backendController.databaseService.getRecentSnapshot();
 
-  const data: SnapshotListResponseDTO = {
-    data: snapshots.map(serializeSnapshot),
+  const data: RecentSnapshotResponseDTO = {
+    data: snapshot ? serializeSnapshot(snapshot) : null,
     message: "OK",
     uptime: process.uptime() + " seconds",
   };

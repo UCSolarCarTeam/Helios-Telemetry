@@ -7,16 +7,16 @@ import type {
   CreateSnapshotRequestDTO,
   CreateSnapshotResponseDTO,
   IGrafanaSnapshot,
-  SnapshotListResponseDTO,
+  RecentSnapshotResponseDTO,
 } from "@shared/helios-types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export const SNAPSHOTS_QUERY_KEY = "grafana-snapshots";
 
-async function fetchSnapshots(): Promise<IGrafanaSnapshot[]> {
-  const response = await backendApi.get<SnapshotListResponseDTO>(
-    BACKEND_ROUTES.snapshots.base,
+async function fetchRecentSnapshot(): Promise<IGrafanaSnapshot | null> {
+  const response = await backendApi.get<RecentSnapshotResponseDTO>(
+    BACKEND_ROUTES.snapshots.recent,
   );
   return response.data.data;
 }
@@ -31,11 +31,11 @@ async function postSnapshot(
   return response.data;
 }
 
-export function useSnapshots() {
+export function useRecentSnapshot() {
   const query = useQuery({
     gcTime: 1000 * 60 * 5,
-    placeholderData: [],
-    queryFn: fetchSnapshots,
+    placeholderData: null,
+    queryFn: fetchRecentSnapshot,
     queryKey: [SNAPSHOTS_QUERY_KEY] as const,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 2,

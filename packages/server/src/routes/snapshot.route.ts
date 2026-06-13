@@ -6,7 +6,10 @@ import { asyncHandler } from "@/middleware/errorHandler";
 
 const snapshotRouter = express.Router();
 
-snapshotRouter.get("/snapshots", asyncHandler(controllers.getSnapshots));
+snapshotRouter.get(
+  "/snapshots/recent",
+  asyncHandler(controllers.getRecentSnapshot),
+);
 snapshotRouter.post("/snapshots", asyncHandler(controllers.createSnapshot));
 
 export default snapshotRouter;

@@ -7,8 +7,22 @@ export interface IGrafanaSnapshot {
   created_at: string;
 }
 
-export interface SnapshotListResponseDTO {
-  data: IGrafanaSnapshot[];
+/**
+ * The raw DB row shape, before serialization: the date columns are still
+ * `Date` objects rather than the ISO strings exposed on `IGrafanaSnapshot`.
+ */
+export interface IGrafanaSnapshotRow
+  extends Omit<
+    IGrafanaSnapshot,
+    "created_at" | "snapshot_from" | "snapshot_to"
+  > {
+  snapshot_from: Date;
+  snapshot_to: Date;
+  created_at: Date;
+}
+
+export interface RecentSnapshotResponseDTO {
+  data: IGrafanaSnapshot | null;
   message: string;
   uptime: string;
 }

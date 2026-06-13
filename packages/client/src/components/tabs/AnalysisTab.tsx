@@ -1,9 +1,9 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useCreateSnapshot, useSnapshots } from "@/hooks/useSnapshots";
+import { useCreateSnapshot, useRecentSnapshot } from "@/hooks/useSnapshots";
 import { tabs } from "@/objects/TabRoutes";
 import { useAppState } from "@/stores/useAppState";
 import { usePacketStore } from "@/stores/usePacket";
@@ -77,7 +77,7 @@ const grafanaLinks = [
 function GrafanaLink({ href, label }: { href: string; label: string }) {
   return (
     <a
-      className="flex items-center gap-1 text-xs font-medium text-[#F05A28] hover:underline"
+      className="flex items-center gap-1 text-xs font-medium text-grafana hover:underline"
       href={href}
       rel="noopener noreferrer"
       target="_blank"
@@ -118,13 +118,15 @@ function AddSnapshotForm({
   expanded: boolean;
   onToggle: () => void;
 }) {
-  const formRef = useRef<HTMLFormElement>(null);
   const [urlValue, setUrlValue] = useState("");
+  const [labelValue, setLabelValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
   const { resolvedTheme } = useTheme();
   const { isPending, mutate } = useCreateSnapshot({
     onSuccess: () => {
-      formRef.current?.reset();
       setUrlValue("");
+      setLabelValue("");
+      setPasswordValue("");
     },
   });
 
@@ -134,10 +136,9 @@ function AddSnapshotForm({
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const url = (fd.get("url") as string).trim();
-    const label = (fd.get("label") as string).trim();
-    const password = (fd.get("password") as string).trim();
+    const url = urlValue.trim();
+    const label = labelValue.trim();
+    const password = passwordValue.trim();
 
     if (!url || !label || !password) {
       notifications.show({
@@ -211,7 +212,6 @@ function AddSnapshotForm({
           className="flex flex-col gap-3 pb-3 pt-3"
           id="add-snapshot-form"
           onSubmit={handleSubmit}
-          ref={formRef}
         >
           <TextField
             FormHelperTextProps={{
@@ -237,16 +237,20 @@ function AddSnapshotForm({
               className="min-w-0 flex-1 basis-full sm:basis-0"
               label="Label"
               name="label"
+              onChange={(e) => setLabelValue(e.target.value)}
               size="small"
               sx={fieldSx}
+              value={labelValue}
             />
             <TextField
               className="min-w-0 flex-1"
               label="Password"
               name="password"
+              onChange={(e) => setPasswordValue(e.target.value)}
               size="small"
               sx={{ ...fieldSx, maxWidth: 140 }}
               type="password"
+              value={passwordValue}
             />
             <Button
               disabled={isPending || !urlHasValue || urlError}
@@ -274,16 +278,14 @@ function GrafanaHistoryTabContent() {
   const playbackSwitch = useAppState((s) => s.currentAppState.playbackSwitch);
   const timestamp = usePacketStore((s) => s.currentPacket.TimeStamp);
   const { resolvedTheme } = useTheme();
-  const { data: snapshots = [], isLoading: snapshotsLoading } = useSnapshots();
+  const { data: latestSnapshot = null, isLoading: snapshotsLoading } =
+    useRecentSnapshot();
 
   // Collapsed: give the iframe the full height. Expanded: shrink it so the
   // Add Snapshot form has room without spilling past the tab into the rows
   // below. CSS-only height change — the iframe resizes (Grafana reflows its
   // panels) and is never re-fetched.
   const [snapshotFormExpanded, setSnapshotFormExpanded] = useState(false);
-
-  // Most recent snapshot is first (ordered by created_at desc from server).
-  const latestSnapshot = snapshots[0] ?? null;
   const baseUrl = latestSnapshot?.url ?? null;
 
   // The server only stores embeddable snapshots.raintank.io URLs, so we can
@@ -320,17 +322,17 @@ function GrafanaHistoryTabContent() {
           <div className="flex items-center justify-between">
             <p className="text-gray-500 text-xs">
               Showing snapshot:{" "}
-              <span className="font-medium text-[#F05A28]">
+              <span className="font-medium text-grafana">
                 {latestSnapshot?.label}
-              </span>{" "}
-              ·{" "}
+              </span>
+              {" · "}
               {latestSnapshot &&
                 new Date(latestSnapshot.created_at).toLocaleDateString()}
             </p>
           </div>
           {playbackSwitch && (
             <div className="flex items-center gap-2 rounded bg-black/5 px-3 py-1.5 text-xs dark:bg-white/5">
-              <span className="font-semibold text-[#F05A28]">
+              <span className="font-semibold text-grafana">
                 Playback position:
               </span>
               <span className="text-gray-700 dark:text-gray-300 font-mono">
