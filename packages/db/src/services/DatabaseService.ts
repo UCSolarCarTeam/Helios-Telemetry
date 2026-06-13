@@ -224,7 +224,7 @@ export class DatabaseService {
   public async getSnapshots() {
     this.assertConnected();
 
-    return prisma.grafana_snapshot.findMany({
+    return prisma.grafana_snapshot.findFirst({
       orderBy: { created_at: "desc" },
     });
   }
