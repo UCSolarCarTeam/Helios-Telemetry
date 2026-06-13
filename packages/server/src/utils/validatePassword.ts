@@ -30,3 +30,14 @@ if (!validPassword) {
 export function validateDriverUpdatePassword(password: string): boolean {
   return password === validPassword;
 }
+
+/**
+ * Validates the snapshot management password against SNAPSHOT_PASSWORD env var.
+ */
+export function validateSnapshotPassword(password: string): boolean {
+  const snapshotPassword = process.env.SNAPSHOT_PASSWORD;
+  if (!snapshotPassword) {
+    throw new Error("SNAPSHOT_PASSWORD environment variable is not configured");
+  }
+  return password === snapshotPassword;
+}

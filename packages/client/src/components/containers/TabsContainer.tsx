@@ -10,27 +10,29 @@ function TabsContainer() {
   const { slug } = router.query;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <NavBar />
-      {routes.map((route: SolarCarRoutes) => {
-        if (route.path === "/" + slug?.toString()) {
-          const isRaceOrAnalysisTab =
-            route.path === "/race" || route.path === "/analysis";
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {routes.map((route: SolarCarRoutes) => {
+          if (route.path === "/" + slug?.toString()) {
+            const isRaceOrAnalysisTab =
+              route.path === "/race" || route.path === "/analysis";
 
-          return (
-            <Fragment key={route.id}>
-              {isRaceOrAnalysisTab ? (
-                route.element
-              ) : (
-                <FullscreenWrapper componentName={`${route.id} Tab`}>
-                  {route.element}
-                </FullscreenWrapper>
-              )}
-            </Fragment>
-          );
-        }
-        return null;
-      })}
+            return (
+              <Fragment key={route.id}>
+                {isRaceOrAnalysisTab ? (
+                  route.element
+                ) : (
+                  <FullscreenWrapper componentName={`${route.id} Tab`}>
+                    {route.element}
+                  </FullscreenWrapper>
+                )}
+              </Fragment>
+            );
+          }
+          return null;
+        })}
+      </div>
     </div>
   );
 }
