@@ -217,17 +217,9 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
-    DRIVER_NAME_UPDATE_PASSWORD: ecs.Secret.fromSecretsManager(
+    MASTER_PASSWORD: ecs.Secret.fromSecretsManager(
       HeliosPasswords,
-      "DRIVER_NAME_UPDATE_PASSWORD",
-    ),
-    FINISH_LINE_UPDATE_PASSWORD: ecs.Secret.fromSecretsManager(
-      HeliosPasswords,
-      "FINISH_LINE_UPDATE_PASSWORD",
-    ),
-    SNAPSHOT_PASSWORD: ecs.Secret.fromSecretsManager(
-      HeliosPasswords,
-      "SNAPSHOT_PASSWORD",
+      "MASTER_PASSWORD",
     ),
   },
 });

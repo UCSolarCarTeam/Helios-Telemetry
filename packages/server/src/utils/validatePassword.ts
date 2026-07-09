@@ -1,7 +1,7 @@
-const validPassword = process.env.MQTT_PASSWORD;
+const validPassword = process.env.MASTER_PASSWORD;
 
 if (!validPassword) {
-  throw new Error("MQTT_PASSWORD environment variable is not configured");
+  throw new Error("MASTER_PASSWORD environment variable is not configured");
 }
 
 /**
@@ -12,10 +12,10 @@ if (!validPassword) {
  */
 
 /**
- * Validates the driver update password against the configured environment variable.
+ * Validates a frontend action password against the shared master password.
  *
- * This password is required for sensitive operations like updating driver information
- * in the database. The password is stored in the MQTT_PASSWORD environment variable.
+ * Required for sensitive operations like updating driver information in the
+ * database. Backed by the MASTER_PASSWORD environment variable.
  *
  * @param password - The password to validate
  * @returns true if the password matches the configured password, false otherwise
@@ -32,12 +32,8 @@ export function validateDriverUpdatePassword(password: string): boolean {
 }
 
 /**
- * Validates the snapshot management password against SNAPSHOT_PASSWORD env var.
+ * Validates the snapshot management password against the shared master password.
  */
 export function validateSnapshotPassword(password: string): boolean {
-  const snapshotPassword = process.env.SNAPSHOT_PASSWORD;
-  if (!snapshotPassword) {
-    throw new Error("SNAPSHOT_PASSWORD environment variable is not configured");
-  }
-  return password === snapshotPassword;
+  return password === validPassword;
 }
