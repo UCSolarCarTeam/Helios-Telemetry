@@ -1,7 +1,7 @@
-const validPassword = process.env.MASTER_PASSWORD;
+const validPassword = process.env.UI_MASTER_PASSWORD;
 
 if (!validPassword) {
-  throw new Error("MASTER_PASSWORD environment variable is not configured");
+  throw new Error("UI_MASTER_PASSWORD environment variable is not configured");
 }
 
 /**
@@ -14,7 +14,7 @@ if (!validPassword) {
 /**
  * Validates a password against the shared master password.
  *
- * Used by sensitive operations. Backed by the MASTER_PASSWORD environment
+ * Used by sensitive operations. Backed by the UI_MASTER_PASSWORD environment
  * variable.
  *
  * @param password - The password to validate

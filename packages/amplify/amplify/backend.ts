@@ -217,7 +217,7 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     PRIVATE_KEY: ecs.Secret.fromSecretsManager(
       TelemetryBackendSecretsManagerPrivKey,
     ),
-    MASTER_PASSWORD: ecs.Secret.fromSecretsManager(
+    UI_MASTER_PASSWORD: ecs.Secret.fromSecretsManager(
       HeliosPasswords,
       "MASTER_PASSWORD",
     ),
