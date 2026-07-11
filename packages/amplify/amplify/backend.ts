@@ -219,7 +219,7 @@ TelemetryECSTaskDefinition.addContainer("TheContainer", {
     ),
     UI_MASTER_PASSWORD: ecs.Secret.fromSecretsManager(
       HeliosPasswords,
-      "UI_MASTER_PASSWORD",
+      "MASTER_PASSWORD",
     ),
   },
 });
