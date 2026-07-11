@@ -3,7 +3,7 @@ import { BackendController } from "../BackendController/BackendController";
 import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
-import { validateMasterPassword } from "@/utils/validatePassword";
+import { validateDriverUpdatePassword } from "@/utils/validatePassword";
 
 import {
   type DriverHealthResponseDTO,
@@ -111,7 +111,7 @@ export const updateDriverInfo = async (
   }
 
   // Validate password
-  if (!validateMasterPassword(password)) {
+  if (!validateDriverUpdatePassword(password)) {
     logger.warn(`Invalid password attempt for driver update - Rfid: ${Rfid}`);
     return response.status(401).json({
       error: "Invalid password",
