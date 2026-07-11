@@ -3,7 +3,7 @@ import type { BackendController } from "../BackendController/BackendController";
 import { type Request, type Response } from "express";
 
 import { createApplicationLogger } from "@/utils/logger";
-import { validateMasterPassword } from "@/utils/validatePassword";
+import { validateSnapshotPassword } from "@/utils/validatePassword";
 
 import type {
   CreateSnapshotRequestDTO,
@@ -82,7 +82,7 @@ export const createSnapshot = async (
       .json({ error: "snapshot_from and snapshot_to must be valid ISO date strings" });
   }
 
-  if (!validateMasterPassword(password)) {
+  if (!validateSnapshotPassword(password)) {
     logger.warn("Invalid password attempt for snapshot creation");
     return response.status(401).json({ error: "Invalid password" });
   }
